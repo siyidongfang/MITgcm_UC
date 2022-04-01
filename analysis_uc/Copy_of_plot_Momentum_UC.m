@@ -328,5 +328,5 @@ xlim([20,420])
 xlabel('y (km)', 'FontSize', fontsize+1,'interpreter','latex');
 
 %% Write to file
-print('-dpng','-r200','jpo_momentum_cases.png');
+% print('-dpng','-r200','jpo_momentum_cases.png');
 

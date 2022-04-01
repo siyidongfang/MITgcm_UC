@@ -7,7 +7,7 @@
 rho0 = 999.8;
 
 loadexp;
-load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext');
+load([prodir '/' expname '_tavg_10yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext');
 % load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
 % 'Um_Cori','Um_AdvZ3','Um_AdvRe');
 
@@ -61,7 +61,7 @@ totalchange_tendency = Um_dPhiX_xzint+Um_Advec_xzint+Um_Diss_xzint+Um_Ext_xzint;
 
 %%% Wind stress
 rho_a = 1.3;               %%% Air density, kg/m^3
-load ([exppath '/input/setParams'],'Ua','Va')
+load ([exppath '/setParams'],'Ua','Va')
 Ua(Ua==0)=1e-8;
 uwind = [Ua:-Ua/(Ny-1):0].*ones(Nx,1); 
 vwind = [Va:-Va/(Ny-1):0].*ones(Nx,1);
