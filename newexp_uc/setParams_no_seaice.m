@@ -4,10 +4,10 @@
 %%% Sets basic MITgcm parameters plus parameters for included packages, and
 %%% writes out the appropriate input files.,
 %%%
-function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
+function [nTimeSteps,h,Ys,...
     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
-    = setParams_seaice(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun)  
+    = setParams_no_seaice(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun)  
 % % % inputpath = '/Users/ysi/Documents/MITgcm_ASF-csi/newexp/exp_02/input';
 % % % codepath = '/Users/ysi/Documents/MITgcm_ASF-csi/newexp/exp_02/code';
 % % % %%% List terminator character for parameter files - may be '/' or '&'
@@ -32,10 +32,6 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   addpath ../analysis_uc/;
 
 
-  %%% TODO impose zonal wind via EXF package - zonalWindFile isn't used inf
-  %%% EXF is turned on
-  %%% Done: add sea ice
-  %%% Done: add offshore winds to drive sea ice export
   %%% TODO redistribute vertical resolution more effectively - a few very
   %%% small grid spacings so we can handle very shallow MLs, and more
   %%% evenly-distributed grid spacings in the upper water column
@@ -85,8 +81,8 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   simTime = 20*t1year; %%% Simulation time   
-  simTime = 60*t1day;
+  simTime = 5*t1year; %%% Simulation time   
+%   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
   Ly = 450*m1km; %%% Domain size in y   
@@ -169,9 +165,9 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   useGMRedi=false;
   useDATAzonalwindstress = false;
   useDATAoffshorewindstress = false;
-  useSEAICE = true;
+  useSEAICE = false;
   useSHELFICE = false;
-  useEXF = useSEAICE;
+  useEXF = true;
   useEXFtides = false;
   useOBCS = true;
   useOBCStides = true;
@@ -189,8 +185,8 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   else
       useRBCS = false; 
       useEXFwindstress = false; %%% apply wind speed in EXF package
-      EXFoption = 3; %%% Read-in atemp, aqh, swdown, lwdown,precip, and runoff. Compute hflux, swflux and sflux.
-
+        %       EXFoption = 3; %%% Read-in atemp, aqh, swdown, lwdown,precip, and runoff. Compute hflux, swflux and sflux.
+      EXFoption = 1; %%% Read-in hflux, swflux and sflux
   end
   useSURFACE_SALT = false;
   Ypoly = 10*m1km; %%% Latitudinal location of polynya
@@ -286,11 +282,11 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   end
   parm03.addParm('nIter0',nIter0,PARM_INT);
   parm03.addParm('abEps',0.1,PARM_REAL);
-  parm03.addParm('chkptFreq',60*t1day,PARM_REAL); % rolling 
-  parm03.addParm('pChkptFreq',60*t1day,PARM_REAL); % permanent
+  parm03.addParm('chkptFreq',365*t1day,PARM_REAL); % rolling 
+  parm03.addParm('pChkptFreq',365*t1day,PARM_REAL); % permanent
   parm03.addParm('taveFreq',0,PARM_REAL); % it only works properly, if taveFreq is a multiple of the time step deltaT (or deltaTclock).
-  parm03.addParm('dumpFreq',60*t1day,PARM_REAL); % interval to write model state/snapshot data (s)
-  parm03.addParm('monitorFreq',60*t1day,PARM_REAL); % interval to write monitor output (s)
+  parm03.addParm('dumpFreq',365*t1day,PARM_REAL); % interval to write model state/snapshot data (s)
+  parm03.addParm('monitorFreq',365*t1day,PARM_REAL); % interval to write monitor output (s)
 %   parm03.addParm('chkptFreq',135/2*t1day,PARM_REAL); % rolling 
 %   parm03.addParm('pChkptFreq',135*t1day,PARM_REAL); % permanent
 %   parm03.addParm('taveFreq',0,PARM_REAL); % it only works properly, if taveFreq is a multiple of the time step deltaT (or deltaTclock).
@@ -910,7 +906,7 @@ rho_south_surf = gsw_rho(SA_south,CT_south,ref_pres_surf);
   %%% Upper bound for absolute horizontal fluid velocity (m/s)
   %%% At the moment this is just an estimate
 %   Umax = 1
-  Umax = 2
+  Umax = 1
   %%% Max gravity wave speed
   cmax = max(Cig)
   %%% Max gravity wave speed using total ocean depth
@@ -940,7 +936,7 @@ rho_south_surf = gsw_rho(SA_south,CT_south,ref_pres_surf);
   %%% Time step size  
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
-  deltaT = 60
+  deltaT = 140
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
   
@@ -1640,11 +1636,13 @@ if (useEXFtides)
   writeDataset(tidePot,fullfile(inputpath,tidePotFile),ieee,prec); 
   
 end
+
+
+
+
+
+
  
-  
-
-
-if(useSEAICE)
     exf_albedo = 0.15; 
  	exf_scal_BulkCdn  = 1.015;
  	exf_iprec         = 64;  
@@ -1653,7 +1651,7 @@ if(useSEAICE)
 %  	useRelativeWind   = true;
  	useRelativeWind   = false;
     repeatPeriod      = 20*t1year;
-    
+  
 %     exf_offset_atemp =  273.16;
     %%%runoff from ERA is in hours, need to convert to seconds
 %     exf_inscal_runoff = 1.14e-04;
@@ -1676,7 +1674,8 @@ if(useSEAICE)
      EXF_NML_01.addParm('readStressOnCgrid',readStressOnCgrid,PARM_BOOL);
   end
     
-    rho_a = 1.3;               %%% Air density, kg/m^3
+   
+        rho_a = 1.3;               %%% Air density, kg/m^3
 %     Ua = -6;
 %     Va = 6;
 
@@ -1781,6 +1780,11 @@ else
     EXF_NML_02.addParm('vwindfile',vwindfile,PARM_STR);
 end   
 
+    
+
+
+if(useSEAICE)
+
 
 % Read-in atemp, aqh, swdown, lwdown, precip, and runoff. Compute hflux, swflux and sflux.
     Kice = 2.1656; %%% Ice thermal conductivity, W/(m*degK)
@@ -1800,10 +1804,7 @@ end
     exf_iceCh = 1.63e-3; %%% sensible heat transfer coeff. over sea-ice   
     Cp_air = 1004; %%% Heat capacity at constant pressure 1004 J K-1 kg-1
     atemp = Ta.*ones(Nx,Ny); % Surface (2-m) air temperature in deg K
-    aqh = 6.1094/(rho_a*287*Tis/100)*exp(17.625*TisDegC/(TisDegC+243.04)).*ones(Nx,Ny); % 0.0057, Surface (2m) specific humidity in kg/kg. Typical range: 0 < aqh < 0.02
-    
-   
-    
+    aqh = 6.1094/(rho_a*287*Tis/100)*exp(17.625*TisDegC/(TisDegC+243.04)).*ones(Nx,Ny); % 0.0057, Surface (2m) specific humidity in kg/kg. Typical range: 0 < aqh < 0.02 
     
 if(EXFoption == 3)
     swdown = 0.*ones(Nx,Ny); 
@@ -1960,7 +1961,28 @@ elseif (EXFoption == 4)
      
 end
 
+
+else % no sea ice
+    if (EXFoption == 1)   
+        hflux = 0.*ones(Nx,Ny);  
+        sflux = 0.*ones(Nx,Ny);  
+        swflux = 0.*ones(Nx,Ny);  
+        hfluxfile  = 'hfluxfile.bin';
+        sfluxfile    = 'sfluxfile.bin';
+        swfluxfile  = 'swfluxfile.bin';
+        writeDataset(hflux,fullfile(inputpath,hfluxfile),ieee,prec);
+        writeDataset(sflux,fullfile(inputpath,sfluxfile),ieee,prec);
+        writeDataset(swflux,fullfile(inputpath,swfluxfile),ieee,prec);
+        EXF_NML_02.addParm('hfluxfile',hfluxfile,PARM_STR);
+        EXF_NML_02.addParm('sfluxfile',sfluxfile,PARM_STR);
+        EXF_NML_02.addParm('swfluxfile',swfluxfile,PARM_STR);
+    end
 end
+
+
+
+
+
 
 
   %%% Create the data.exf file
@@ -1989,12 +2011,12 @@ end
 
   %%% Number of fields for which to calculate layer fluxes
   % The number of possible layers coordinates (max number of tracer fields used for layer averaging)
-  layers_maxNum = 2;
-%   layers_maxNum = 1;
+%   layers_maxNum = 2;
+  layers_maxNum = 1;
 
 %   %%% Specify potential density
-  layers_name = char('RHO','TH'); 
-%     layers_name = char('RHO'); 
+%   layers_name = char('RHO','TH'); 
+    layers_name = char('RHO'); 
 
 % % % %%% Hires, sdiff3, sdiff2.5, sdiff2
 % % %      layers_bounds(:,1) = [0 30 36.4 36.54:0.02:36.66 ...
@@ -2007,20 +2029,26 @@ end
      
      
 % % % % % %%%%% Hires, ssurf33, surf33.56, surf34.12_0dS, surf34.12_1dS
-     layers_bounds(:,1) = [0 35 ...
+%      layers_bounds(:,1) = [0 35 ...
+%          35.8:0.05:36.3 ...
+%          36.4 36.54:0.02:36.66 ...
+%          36.7 36.73 36.76 36.8:0.1:37.1 ...
+%          37.13:0.02:37.17 37.18:0.004:37.206 ...
+%          37.21:0.003:37.3 37.5 40]; 
+%      layers_bounds(:,2) = [-10 -1.88:0.01:-1.78 -1.76:0.05:-1.2 -1.18:0.02:-1.16 -1.144:0.002:-1.18 -1.15:0.05:1 10];
+% 
+
+     layers_bounds = [0 35 ...
          35.8:0.05:36.3 ...
          36.4 36.54:0.02:36.66 ...
          36.7 36.73 36.76 36.8:0.1:37.1 ...
          37.13:0.02:37.17 37.18:0.004:37.206 ...
          37.21:0.003:37.3 37.5 40]; 
-     layers_bounds(:,2) = [-10 -1.88:0.01:-1.78 -1.76:0.05:-1.2 -1.18:0.02:-1.16 -1.144:0.002:-1.18 -1.15:0.05:1 10];
-
-
 
 
   %%% Reference level for calculation of potential density
-  layers_krho = [51 1];    %%% Pressure reference level, level indice k
-  %   layers_krho = 51 % High-resolution zz (51)=-1.9943e+03 m;
+%   layers_krho = [51 1];    %%% Pressure reference level, level indice k
+  layers_krho = 51 % High-resolution zz (51)=-1.9943e+03 m;
 
   
   %%% If set true, the GM bolus velocity is added to the calculation
@@ -2028,12 +2056,12 @@ end
    
   %%% Layers
     for nl=1:layers_maxNum    
-%       layers_parm01.addParm(['layers_bounds'],layers_bounds,PARM_REALS); 
-%       layers_parm01.addParm(['layers_krho'],layers_krho,PARM_INT); 
-%       layers_parm01.addParm(['layers_name'],strtrim(layers_name),PARM_STR); 
-      layers_parm01.addParm(['layers_name(' num2str(nl) ')'],strtrim(layers_name(nl,:)),PARM_STR); 
-      layers_parm01.addParm(['layers_krho(' num2str(nl) ')'],layers_krho(nl),PARM_INT); 
-      layers_parm01.addParm(['layers_bounds(:,' num2str(nl) ')'],layers_bounds(:,nl),PARM_REALS); 
+      layers_parm01.addParm(['layers_bounds'],layers_bounds,PARM_REALS); 
+      layers_parm01.addParm(['layers_krho'],layers_krho,PARM_INT); 
+      layers_parm01.addParm(['layers_name'],strtrim(layers_name),PARM_STR); 
+%       layers_parm01.addParm(['layers_name(' num2str(nl) ')'],strtrim(layers_name(nl,:)),PARM_STR); 
+%       layers_parm01.addParm(['layers_krho(' num2str(nl) ')'],layers_krho(nl),PARM_INT); 
+%       layers_parm01.addParm(['layers_bounds(:,' num2str(nl) ')'],layers_bounds(:,nl),PARM_REALS); 
     end
       layers_parm01.addParm('layers_bolus',layers_bolus,PARM_BOOL); 
 
@@ -2083,50 +2111,21 @@ end
 %   diag_parm01.addParm('diag_pickup_read_mnc',false,PARM_BOOL);  
 %   diag_parm01.addParm('diag_pickup_write_mnc',false,PARM_BOOL); 
    
-        
-
 
 %          'LaTh1RHO','LaTz1RHO','LTha1RHO','LTza1RHO','LTto1RHO','LaSh1RHO','LaSz1RHO','LSha1RHO','LSza1RHO','LSto1RHO',...
 %          'LaTh2TH','LaTz2TH','LTha2TH','LTza2TH','LTto2TH'...
 
 
 %%% Annual mean diagnostics
-diag_fields_avg = {...   
-%     ... %%%%%%%%% for spin-up
-    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet',...
-    'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
-    'UVELSQ','VVELSQ','WVELSQ'...
-%       ... %%%%%%%%% for analysis
-%       ... %%% Heat budget
-%          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
-%          'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
-%          ...
-%          'VVELTH', ...
-%          'oceQnet','UVELTH','WVELTH',...
-%       ... %%% Energy budget
-%          'UVELSQ','VVELSQ','WVELSQ',...
-%          'UV_VEL_Z','WU_VEL','WV_VEL',...
-%       ... %%% Sea ice
-%          'SIarea','SIheff','SIuice','SIvice','SIsig12',...
-%          'SItices','SIqnet','SIempmr','SIatmQnt',...
-%          ...
-%       ... %%% Salt budget
-%          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
-%          'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
-%          ...
-%          'VVELSLT',...
-%          'oceSflux','UVELSLT','WVELSLT',...
-%       ... %%% Momentum budget
-%          'ETAN',...
-%          'oceTAUX','oceTAUY',...
-%      ... %%% Overturning streamfunction
-%          'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
-%                     'LaUH2TH','LaHw2TH',... 
-%      ...
-%          'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
-%          'SItaux','SItauy','SIatmTx','SIatmTy',...   
-%          'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
-%          'VISrI_Um','VISrI_Vm',...
+diag_fields_avg = {...  
+     'UVEL','VVEL','WVEL','SALT','THETA','PHIHYD','ETAN',...%%% Basic state 
+     'TOTTTEND','TFLUX','ADVy_TH','VVELTH','oceQnet',...%%% Heat budget
+     'UVELSQ','VVELSQ','WVELSQ','UV_VEL_Z','WU_VEL','WV_VEL',...%%% Energy budget
+     'LaVH1RHO','LaHs1RHO',...%%% Overturning circ
+     'oceTAUX','oceTAUY','Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
+     'Um_Cori','Um_AdvZ3','Um_AdvRe',...%%% Momentum budget
+%      'SIarea','SIheff','SIuice','SItices','SIvice','SItaux','SItauy','SIsig12',...
+%      'SIempmr','oceSflux','SIatmTx','SIatmTy','SIqnet','SIatmQnt',...%%% Sea ice
      };
       
   numdiags_avg = length(diag_fields_avg);  
@@ -2149,9 +2148,9 @@ diag_fields_avg = {...
   
  %%%%%% Daily output 
   diag_fields_avg2 = {...  
-         'UVEL','VVEL', 'WVEL',...
-         'SALT','THETA',...
-         'PHIHYD','LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH'...
+%          'UVEL','VVEL', 'WVEL',...
+%          'SALT','THETA',...
+%          'PHIHYD','LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH'...
          };
   
   numdiags_avg2 = length(diag_fields_avg2);  
@@ -2174,15 +2173,8 @@ diag_fields_avg = {...
 
   
 diag_fields_inst = {...
-%     'SALT','THETA',...
-%   'ETAN', 'PHIHYD',...
-%   'UVEL','VVEL', 'WVEL',,
-%     'SIheff',...
-%         'LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH', ...
-%         'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO','LaUH2TH','LaHw2TH'...
       };
   numdiags_inst = length(diag_fields_inst);  
-%    diag_freq_inst = 1*t1day;
   diag_freq_inst =1*t1year;
   diag_phase_inst = 0;
   

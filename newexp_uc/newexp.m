@@ -31,8 +31,8 @@
   
   
   %%% Local directory in which to create experiments
-%   runsdir = '/Users/csi/MITgcm_ASF-csi/';
-  runsdir = '/Volumes/si/MITgcm_UC/';
+  runsdir = '/Users/csi/MITgcm_UC/';
+%   runsdir = '/Volumes/si/MITgcm_UC/';
  
   %%% Experiment subdirectories 
   builddir = 'build';
