@@ -19,8 +19,13 @@
 %%% NOTE: 'expname' MUST NOT be set to 'DEFAULTS'
 %%%
 
- function newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires)
+ function newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE)
 
+  if(useSEAICE)
+        select_DEFAULTS = 'DEFAULTS_seaice';
+  else
+        select_DEFAULTS = 'DEFAULTS_no_seaice';
+  end
    
 %    addpath /data/MITgcm_ASF-csi/newexp_utils/;
   addpath ../newexp_utils/;
@@ -306,25 +311,20 @@
 
   
   %%% Copy other files across
-  codelist = dir('./DEFAULTS/input/');
+  codelist = dir(['./' select_DEFAULTS '/input/']);
   for n=1:1:length(codelist)
     %%% Ignore hidden files
     if (codelist(n).name(1) == '.')
       continue;
     end    
-    copyfile(fullfile('./DEFAULTS/input/',codelist(n).name),fullfile(inputpath,codelist(n).name));
+    copyfile(fullfile(['./' select_DEFAULTS '/input/'],codelist(n).name),fullfile(inputpath,codelist(n).name));
   end   
 
   %%% Generate 'data' and 'data.rbcs'
-  [nTimeSteps,h,Ys,...
+  [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
-    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun);  
-
-%   [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
-%     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
-%     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
-%     = setParams_seaice(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);  
+    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,useSEAICE);  
 
 
   %%% Generate 'eedata'
@@ -338,12 +338,12 @@
 
   %%% Generate SIZE.h and just copy other code files
   createSIZEh(codepath,sNx,sNy,nSx,nSy,nPx,nPy,OLx,OLy,Nr);
-  codelist = dir('./DEFAULTS/code/');
+  codelist = dir(['./' select_DEFAULTS '/code/']);
   for n=1:1:length(codelist)
     if (codelist(n).name(1) == '.')
       continue;
     end
-    copyfile(fullfile('./DEFAULTS/code/',codelist(n).name),fullfile(codepath,codelist(n).name));
+    copyfile(fullfile(['./' select_DEFAULTS '/code/'],codelist(n).name),fullfile(codepath,codelist(n).name));
   end
   
   
@@ -457,13 +457,13 @@
   fclose(fid);
   
   %%% Copy other files across
-  resultslist = dir('./DEFAULTS/results/');
+  resultslist = dir(['./' select_DEFAULTS '/results/']);
   for n=1:1:length(resultslist)
     %%% Ignore hidden files and run script template
     if ((resultslist(n).name(1) == '.') || strcmp(resultslist(n).name,'run_mitgcm'))
       continue;
     end    
-    copyfile(fullfile('./DEFAULTS/results/',resultslist(n).name),fullfile(resultspath,resultslist(n).name));
+    copyfile(fullfile(['./' select_DEFAULTS '/results/'],resultslist(n).name),fullfile(resultspath,resultslist(n).name));
   end    
 
 

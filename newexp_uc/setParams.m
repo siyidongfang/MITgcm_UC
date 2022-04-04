@@ -7,7 +7,7 @@
 function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
-    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun)  
+    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,useSEAICE)  
 
   addpath ../../Software/gsw_matlab_v3_06_11/thermodynamics_from_t/;
   addpath ../../Software/gsw_matlab_v3_06_11/library/;
@@ -138,26 +138,18 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   end
   
 
-  useSEAICE = true;
-  useEXF = useSEAICE;
+  useEXF = true;
   useOBCS = true;
   useOBCStides = true;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useobcsNorth = true;
   useLAYERS = false;
-  useRelaxSurfT = false;
-  if(useRelaxSurfT)
-      useRBCS = true; %%% Restore surface T
-      useEXFwindstress = true; %%% use wind stress instead of wind speed in EXF
-      EXFoption = 5; %%% Read-in hs, hl, swdown, lwdown, evap, precip and runoff. 
-                     %%% Compute hflux, swflux and sflux.
-                     %%% To use the SEAICE pkg, ALLOW_ATM_TEMP and ALLOW_DOWNWARD_RADIATION are required in EXF.
-                     %%% Only #3 or #5 is allowed.
-  else
-      useRBCS = false; 
-      useEXFwindstress = false; %%% apply wind speed in EXF package
+  useRBCS = false; 
+  useEXFwindstress = false; %%% apply wind speed in EXF package
+  if(useSEAICE)
       EXFoption = 3; %%% Read-in atemp, aqh, swdown, lwdown,precip, and runoff. Compute hflux, swflux and sflux.
-
+  else
+      EXFoption = 1; %%% Read-in hflux, swflux and sflux.
   end
   
   
@@ -239,13 +231,11 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%% PARM03
   parm03.addParm('alph_AB',1/2,PARM_REAL);
   parm03.addParm('beta_AB',5/12,PARM_REAL);
-  if (useSEAICE)
-      parm03.addParm('forcing_In_AB',false,PARM_BOOL); 
+  parm03.addParm('forcing_In_AB',false,PARM_BOOL); 
       % This flag makes to model do a  separate (Eulerian?) time step 
       % for the tendencies due to surface forcing. This is sometime 
       % favorable for stability reasons (and some package such as 
       % seaice work only with this).
-  end
   parm03.addParm('nIter0',nIter0,PARM_INT);
   parm03.addParm('abEps',0.1,PARM_REAL);
   parm03.addParm('chkptFreq',t1year,PARM_REAL); % rolling 
@@ -368,7 +358,7 @@ fontsize = 12;
     ref_pres_sigma2 = 2000;
 
     addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
-    load WOA81winter_Lon103W_LatS71.875S.mat;
+    load WOA81summer_Lon103W_LatS71.875S.mat;
 
     tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
     sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
@@ -1138,96 +1128,26 @@ if(EXFoption == 3)
     EXF_NML_02.addParm('precipfile',precipfile,PARM_STR);
     EXF_NML_02.addParm('runofffile',runofffile,PARM_STR);
 
-elseif(EXFoption == 5)    
-    hs = 0.*ones(Nx,Ny); 
-    hl = 0.*ones(Nx,Ny);  
-    swdown = 0.*ones(Nx,Ny); 
-    Tisurf = 273.16+temp_relax(:,:,1); %%% assume ice temperature at surface equals bottom
-%     lwdown = SEAICE_emissivity*sigma.*Tisurf.^4/(1-ice_abs);
-    lwdown = SEAICE_emissivity*sigma.*Tisurf.^4;
-    evap = 0.*ones(Nx,Ny);  
-    precip = 0.*ones(Nx,Ny); 
-    runoff = 0.*ones(Nx,Ny);  
-    hsfile  = 'hsfile.bin';
-    hlfile  = 'hlfile.bin';
-    swdownfile = 'swdownfile.bin';
-    lwdownfile = 'lwdownfile.bin';
-    evapfile  = 'evapfile.bin';
-    precipfile = 'precipfile.bin'; 
-    runofffile = 'runofffile.bin'; 
-    writeDataset(hs,fullfile(inputpath,hsfile),ieee,prec);
-    writeDataset(hl,fullfile(inputpath,hlfile),ieee,prec);
-    writeDataset(swdown,fullfile(inputpath,swdownfile),ieee,prec);
-    writeDataset(lwdown,fullfile(inputpath,lwdownfile),ieee,prec);
-    writeDataset(evap,fullfile(inputpath,evapfile),ieee,prec);    
-    writeDataset(precip,fullfile(inputpath,precipfile),ieee,prec);
-    writeDataset(runoff,fullfile(inputpath,runofffile),ieee,prec);
-    EXF_NML_02.addParm('hsfile',hsfile,PARM_STR);
-    EXF_NML_02.addParm('hlfile',hlfile,PARM_STR);
-    EXF_NML_02.addParm('swdownfile',swdownfile,PARM_STR);
-    EXF_NML_02.addParm('lwdownfile',lwdownfile,PARM_STR);
-    EXF_NML_02.addParm('evapfile',evapfile,PARM_STR); 
-    EXF_NML_02.addParm('precipfile',precipfile,PARM_STR);
-    EXF_NML_02.addParm('runofffile',runofffile,PARM_STR);
-    
-    
-elseif (EXFoption == 6)
-    hs = 0.*ones(Nx,Ny); 
-    hl = 0.*ones(Nx,Ny);  
-    swflux = 0.*ones(Nx,Ny);  
-    lwflux = 0.*ones(Nx,Ny);  
-    evap = 0.*ones(Nx,Ny);  
-    precip = 0.*ones(Nx,Ny); 
-    runoff = 0.*ones(Nx,Ny);  
-    hsfile  = 'hsfile.bin';
-    hlfile  = 'hlfile.bin';
-    swfluxfile  = 'swfluxfile.bin';
-    lwfluxfile  = 'lwfluxfile.bin';
-    evapfile  = 'evapfile.bin';
-    precipfile = 'precipfile.bin'; 
-    runofffile = 'runofffile.bin'; 
-    writeDataset(hs,fullfile(inputpath,hsfile),ieee,prec);
-    writeDataset(hl,fullfile(inputpath,hlfile),ieee,prec);
-    writeDataset(swflux,fullfile(inputpath,swfluxfile),ieee,prec);
-    writeDataset(lwflux,fullfile(inputpath,lwfluxfile),ieee,prec);
-    writeDataset(evap,fullfile(inputpath,evapfile),ieee,prec);    
-    writeDataset(precip,fullfile(inputpath,precipfile),ieee,prec);
-    writeDataset(runoff,fullfile(inputpath,runofffile),ieee,prec);
-    EXF_NML_02.addParm('hsfile',hsfile,PARM_STR);
-    EXF_NML_02.addParm('hlfile',hlfile,PARM_STR);
-    EXF_NML_02.addParm('swfluxfile',swfluxfile,PARM_STR);
-    EXF_NML_02.addParm('lwfluxfile',lwfluxfile,PARM_STR);
-    EXF_NML_02.addParm('evapfile',evapfile,PARM_STR); 
-    EXF_NML_02.addParm('precipfile',precipfile,PARM_STR);
-    EXF_NML_02.addParm('runofffile',runofffile,PARM_STR);
-    
-elseif (EXFoption == 4)   
-    swflux = 0.*ones(Nx,Ny);  
-    lwflux = 0.*ones(Nx,Ny);  
-    precip = 0.*ones(Nx,Ny); 
-    runoff = 0.*ones(Nx,Ny);  
-    atempfile  = 'atempfile.bin';
-    aqhfile    = 'aqhfile.bin';
-    swfluxfile  = 'swfluxfile.bin';
-    lwfluxfile  = 'lwfluxfile.bin';
-    precipfile = 'precipfile.bin'; 
-    runofffile = 'runofffile.bin'; 
-    writeDataset(atemp,fullfile(inputpath,atempfile),ieee,prec);
-    writeDataset(aqh,fullfile(inputpath,aqhfile),ieee,prec);
-    writeDataset(swflux,fullfile(inputpath,swfluxfile),ieee,prec);
-    writeDataset(lwflux,fullfile(inputpath,lwfluxfile),ieee,prec);
-    writeDataset(precip,fullfile(inputpath,precipfile),ieee,prec);
-    writeDataset(runoff,fullfile(inputpath,runofffile),ieee,prec);
-    EXF_NML_02.addParm('atempfile',atempfile,PARM_STR);
-    EXF_NML_02.addParm('aqhfile',aqhfile,PARM_STR);
-    EXF_NML_02.addParm('swfluxfile',swfluxfile,PARM_STR);
-    EXF_NML_02.addParm('lwfluxfile',lwfluxfile,PARM_STR);
-    EXF_NML_02.addParm('precipfile',precipfile,PARM_STR);
-    EXF_NML_02.addParm('runofffile',runofffile,PARM_STR);
-     
 end
 
 end
+
+
+    %%% No sea ice
+    if (EXFoption == 1)   
+        hflux = 0.*ones(Nx,Ny);  
+        sflux = 0.*ones(Nx,Ny);  
+        swflux = 0.*ones(Nx,Ny);  
+        hfluxfile  = 'hfluxfile.bin';
+        sfluxfile    = 'sfluxfile.bin';
+        swfluxfile  = 'swfluxfile.bin';
+        writeDataset(hflux,fullfile(inputpath,hfluxfile),ieee,prec);
+        writeDataset(sflux,fullfile(inputpath,sfluxfile),ieee,prec);
+        writeDataset(swflux,fullfile(inputpath,swfluxfile),ieee,prec);
+        EXF_NML_02.addParm('hfluxfile',hfluxfile,PARM_STR);
+        EXF_NML_02.addParm('sfluxfile',sfluxfile,PARM_STR);
+        EXF_NML_02.addParm('swfluxfile',swfluxfile,PARM_STR);
+    end
 
 
   %%% Create the data.exf file
@@ -1354,9 +1274,9 @@ diag_fields_avg = {...
 %     ... %%%%%%%%% for spin-up
     'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet',...
-    'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
+    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
     'UVELSQ','VVELSQ','WVELSQ'...
+%     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
 %       ... %%%%%%%%% for analysis
 %       ... %%% Heat budget
 %          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
@@ -1408,28 +1328,49 @@ diag_fields_avg = {...
   end
   
   
- %%%%%% Daily output 
-  diag_fields_avg2 = {...  
-           'SIheff'
-%          'PHIHYD','LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH'...
-         };
-  
-  numdiags_avg2 = length(diag_fields_avg2);  
-  diag_freq_avg2 = 30*t1day;
-%   diag_freq_avg2 = 1*t1year;
-  diag_phase_avg2 = 0;    
-
-  for n=1:numdiags_avg2    
-    ndiags = ndiags + 1;
-    diag_parm01.addParm(['fields(1,',num2str(ndiags),')'],diag_fields_avg2{n},PARM_STR);  
-    diag_parm01.addParm(['fileName(',num2str(ndiags),')'],diag_fields_avg2{n},PARM_STR);  
-    diag_parm01.addParm(['frequency(',num2str(ndiags),')'],diag_freq_avg2,PARM_REAL);  
-    diag_parm01.addParm(['timePhase(',num2str(ndiags),')'],diag_phase_avg2,PARM_REAL); 
-    diag_matlab_parm01.addParm(['diag_fields{1,',num2str(ndiags),'}'],diag_fields_avg2{n},PARM_STR);  
-    diag_matlab_parm01.addParm(['diag_fileNames{',num2str(ndiags),'}'],diag_fields_avg2{n},PARM_STR);  
-    diag_matlab_parm01.addParm(['diag_frequency(',num2str(ndiags),')'],diag_freq_avg2,PARM_REAL);  
-    diag_matlab_parm01.addParm(['diag_timePhase(',num2str(ndiags),')'],diag_phase_avg2,PARM_REAL);  
+  if(useSEAICE)
+      diag_fields_avg2 = {...  
+               'SIheff'
+    %          'PHIHYD','LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH'...
+             };
+      numdiags_avg2 = length(diag_fields_avg2);  
+      diag_freq_avg2 = 30*t1day;
+      diag_phase_avg2 = 0;   
     
+
+      diag_fields_avg3 = {...  
+            'SIarea','SIheff','SIuice','SIvice','SIempmr'...
+             };
+      numdiags_avg3 = length(diag_fields_avg2);  
+      diag_freq_avg3 = 1*t1year;
+      diag_phase_avg3 = 0;  
+
+
+
+      for n=1:numdiags_avg2    
+        ndiags = ndiags + 1;
+        diag_parm01.addParm(['fields(1,',num2str(ndiags),')'],diag_fields_avg2{n},PARM_STR);  
+        diag_parm01.addParm(['fileName(',num2str(ndiags),')'],diag_fields_avg2{n},PARM_STR);  
+        diag_parm01.addParm(['frequency(',num2str(ndiags),')'],diag_freq_avg2,PARM_REAL);  
+        diag_parm01.addParm(['timePhase(',num2str(ndiags),')'],diag_phase_avg2,PARM_REAL); 
+        diag_matlab_parm01.addParm(['diag_fields{1,',num2str(ndiags),'}'],diag_fields_avg2{n},PARM_STR);  
+        diag_matlab_parm01.addParm(['diag_fileNames{',num2str(ndiags),'}'],diag_fields_avg2{n},PARM_STR);  
+        diag_matlab_parm01.addParm(['diag_frequency(',num2str(ndiags),')'],diag_freq_avg2,PARM_REAL);  
+        diag_matlab_parm01.addParm(['diag_timePhase(',num2str(ndiags),')'],diag_phase_avg2,PARM_REAL);  
+      end
+
+      for n=1:numdiags_avg3   
+        ndiags = ndiags + 1;
+        diag_parm01.addParm(['fields(1,',num2str(ndiags),')'],diag_fields_avg3{n},PARM_STR);  
+        diag_parm01.addParm(['fileName(',num2str(ndiags),')'],diag_fields_avg3{n},PARM_STR);  
+        diag_parm01.addParm(['frequency(',num2str(ndiags),')'],diag_freq_avg3,PARM_REAL);  
+        diag_parm01.addParm(['timePhase(',num2str(ndiags),')'],diag_phase_avg3,PARM_REAL); 
+        diag_matlab_parm01.addParm(['diag_fields{1,',num2str(ndiags),'}'],diag_fields_avg3{n},PARM_STR);  
+        diag_matlab_parm01.addParm(['diag_fileNames{',num2str(ndiags),'}'],diag_fields_avg3{n},PARM_STR);  
+        diag_matlab_parm01.addParm(['diag_frequency(',num2str(ndiags),')'],diag_freq_avg3,PARM_REAL);  
+        diag_matlab_parm01.addParm(['diag_timePhase(',num2str(ndiags),')'],diag_phase_avg3,PARM_REAL);  
+      end
+
   end
 
   
@@ -1685,11 +1626,6 @@ diag_fields_inst = {...
     obsvice = Svi(ui_idx)
     
 
-    if (useRelaxSurfT)
-        obsuice = 0
-        obsvice = 0
-    end
-   
     if(Ua == 0 && Va == 0)
         obsuice = 0
         obsvice = 0
@@ -1738,6 +1674,13 @@ diag_fields_inst = {...
     
     end
 
+
+   
+    if(~useSEAICE)
+        obsuice=NaN;
+        obsvice=NaN;
+        lwdown=NaN;
+    end
 
 if(useOBCSsponge)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
