@@ -1,18 +1,19 @@
 clear;
 addpath ../.
 addpath ../utils/matlab; 
-addpath ../analysis_uc/colormaps;
-addpath ../analysis_uc/jpo_analysis-hires/;
-expdir='/Volumes/si/MITgcm_UC/exps_uc/';
-expname = 'ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi1Ai1_Ws25_prod';
+addpath ../analysis/colormaps;
+addpath ../analysis/jpo_analysis-hires/;
+% expdir='/Volumes/si/MITgcm_UC/exps_uc/';
+expdir = '/Users/csi/MITgcm_UC/exps_uc/';
+expname = 'amundsen_summer_lores_Ua-2Va2_Atide0.05_Hi0Ai0_Ws25';
 loadexp;
-nIter = 736822;
+nIter = 14011;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
     figure(11)
     subplot(1,2,1)
-    aaaa1 = rdmds([exppath,'/results/S'],nIter);
+    aaaa1 = rdmds([exppath,'/results/SALT'],nIter);
     aaa1 = squeeze(mean(aaaa1));
     pcolor(yy/1000,-zz/1000,aaa1')
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.67:0.001:34.69],'EdgeColor','k');hold off;
@@ -24,7 +25,7 @@ nIter = 736822;
     ylabel('z (km)');xlabel('y (km)')
 
     subplot(1,2,2)
-    aaaa1 = rdmds([exppath,'/results/T'],nIter);
+    aaaa1 = rdmds([exppath,'/results/THETA'],nIter);
     aaa1 = squeeze(mean(aaaa1));
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-1.8:0.1:1.8],'EdgeColor','k');hold off;
@@ -64,7 +65,7 @@ caxis([0 1])
 figure(1)
 clf;
 subplot(2,2,1)
-aaaa1 = rdmds([exppath,'/results/U'],nIter);
+aaaa1 = rdmds([exppath,'/results/UVEL'],nIter);
 aaaa1(aaaa1==0)=NaN;
 aaa1 = squeeze(nanmean(aaaa1));
 pcolor(yy/1000,-zz/1000,aaa1');
