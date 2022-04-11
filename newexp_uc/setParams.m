@@ -139,10 +139,7 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   
 
   useEXF = true;
-  useOBCS = true;
-  useOBCStides = true;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useobcsNorth = true;
   useLAYERS = false;
   useRBCS = false; 
   useEXFwindstress = false; %%% apply wind speed in EXF package
@@ -152,6 +149,14 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
       EXFoption = 1; %%% Read-in hflux, swflux and sflux.
   end
   
+  %%% OBCS package options
+  useOBCS = true;
+  useOBCStides = true;
+  useobcsNorth = true;
+  useOrlanskiNorth = false;
+  useOrlanskiWest = true;
+  useOrlanskiEast = true;
+
   
   %%% Flag for barotropic mode
   isBarotropic = Nr == 1;
@@ -1443,12 +1448,7 @@ diag_fields_inst = {...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% DEFINE OPEN BOUNDARY TYPES (OBCS_PARM01) %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  %%% Set true to use Orlanski open boundary conditions at zonal
-  %%% boundaries, and false to use sponge layers
-  zonal_orlanski = false;
-  
-    
+
   %%% Set boundary points that are open   
   if (useobcsNorth)
       OB_Jnorth= Ny*ones(1,Nx);
@@ -1541,15 +1541,7 @@ diag_fields_inst = {...
   end
   
   
-  
-  %%% Enables/disables Orlanski radiation conditions at the boundaries -
-  %%% allows waves to propagate out through the boundary with minimal
-  %%% reflection  
-  
-  if (useobcsNorth)
-      useOrlanskiNorth = false;
-      obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
-  end
+ 
   
   %%% Enforces mass conservation across the northern boundary by adding a
   %%% barotropic inflow/outflow  
@@ -1674,13 +1666,39 @@ diag_fields_inst = {...
     
     end
 
-
-   
     if(~useSEAICE)
         obsuice=NaN;
         obsvice=NaN;
         lwdown=NaN;
     end
+
+
+
+  %%% Enables/disables Orlanski radiation conditions at the boundaries -
+  %%% allows waves to propagate out through the boundary with minimal
+  %%% reflection  
+  obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% ORLANSKI OPTIONS (OBCS_PARM02) %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %%% Velocity averaging time scale - must be larger than deltaT.
+  %%% The Orlanski radiation condition computes the characteristic velocity
+  %%% at the boundary by averaging the spatial derivative normal to the 
+  %%% boundary divided by the time step over this period.
+  %%% At the moment we're using the magic engineering factor of 3.
+  cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
+  %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
+  CMAX = 0.45; 
+  
+  obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
+  obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
+
+
 
 if(useOBCSsponge)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1692,6 +1710,9 @@ if(useOBCSsponge)
     Vrelaxobcsinner = 864000;
     Vrelaxobcsbound = 43200;
 
+%   %% Relaxation time at meridional boundaries set to time for inflow to
+%   %% cross the sponge layer
+%   Vrelaxobcsbound = spongeThicknessDim/(abs(alpha)*Ly/2);
   
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
@@ -1731,6 +1752,9 @@ end
   
   
  
+
+
+
   
   %%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%
