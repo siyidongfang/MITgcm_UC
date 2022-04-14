@@ -22,14 +22,14 @@ is_ContinuedRun = false;
 is_hires = false;
 
 %%% Use sea ice or not
-useSEAICE=false;
+useSEAICE = false;
 
 %%% Name pf the simulation
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
-exp_name = ['amundsen_summer_' exp_name]
-% exp_name = 'test'
+% exp_name = ['amundsen_summer_' exp_name]
+exp_name = 'test_bathy'
 
 
 

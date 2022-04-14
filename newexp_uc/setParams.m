@@ -105,11 +105,15 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   
   %%% Trough parameters
   slope_trough = false;
-  N_trough = 4;
-  H_trough = 300; %%% Positive for a trough, negative for a ridge
-  H_bump = -H_trough;
-  W_trough = Lx/N_trough/4; %%% Default 50*m1km
+%   N_trough = 4;
+%   H_trough = 300; %%% Positive for a trough, negative for a ridge
+%   W_trough = Lx/N_trough/4; %%% Default 50*m1km
+
+  N_trough = 1;
+  H_trough = 500;
+  W_trough = 50*m1km;
 %   X_trough = 0*m1km;
+  H_bump = -H_trough;
   X_trough = zeros(1,N_trough);
   X_bump = zeros(1,N_trough);
   for nrt = 1:N_trough

@@ -4,17 +4,23 @@
 %%% Sets basic MITgcm parameters plus parameters for included packages, and
 %%% writes out the appropriate input files.,
 %%%
-function nTimeSteps = setParams (exp_name,inputpath,codepath,listterm,Nx,Ny,Nr)
+function nTimeSteps = setParams_Garrett (exp_name,inputpath,codepath,listterm,Nx,Ny,Nr)
 
-  %%% Load EOS utilities
-  addpath ~/Documents/GSW/
-  addpath ~/Documents/GSW/library/
+%   %%% Load EOS utilities
+%   addpath ~/Documents/GSW/
+%   addpath ~/Documents/GSW/library/
+%   
+%   %%% Other required tools
+%   addpath ../utils/matlab;
+%   addpath ../newexp_utils/;
   
-  %%% Other required tools
-  addpath ../utils/matlab;
+  addpath ../../Software/gsw_matlab_v3_06_11/thermodynamics_from_t/;
+  addpath ../../Software/gsw_matlab_v3_06_11/library/;
+  addpath ../../Software/gsw_matlab_v3_06_11/;
+  addpath ../utils/;
   addpath ../newexp_utils/;
-  
-  
+  addpath ../analysis_uc/;
+
   
   
   %%%%%%%%%%%%%%%%%%
