@@ -9,7 +9,7 @@ batch_name = 'exps_uc';
 %%% Input parameters
 Ua = -2;      %%% Reference value -6
 Va = 2;       %%% Reference value 6
-Atide = 0.05; %%% Reference value 0.05
+Atide = 0; %%% Reference value 0.05
 Hi0 =0;       %%% Reference value 1
 Ai0 =0;       %%% Reference value 1
 m1km = 1000;
@@ -29,7 +29,7 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
 % exp_name = ['amundsen_summer_' exp_name]
-exp_name = 'test_bathy'
+exp_name = 'test'
 
 
 

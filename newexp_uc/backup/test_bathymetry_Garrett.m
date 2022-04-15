@@ -1,15 +1,11 @@
-  Nx = 400;
-  Ny = 400;
+  Nx = 200;
+  Ny = 250;
   Nr = 100;
 
   m1km = 1000;
   H = 4000; %%% Domain size in z 
   Lx = 400*m1km; %%% Domain size in x 
-  Ly = 400*m1km; %%% Domain size in y   
-
-  fignum = 1;
-
-
+  Ly = 450*m1km; %%% Domain size in y   
 
   %%% Topographic parameters 
   Wslope = 30*m1km; %%% Continental slope half-width
@@ -156,7 +152,7 @@
 
 
 
-  %%
+  
 
   %%% Plot bathymetry and ice draft
   figure(1)
@@ -190,17 +186,18 @@
   p.EdgeColor = 'none';
   hold off;
 
-  %%% Decorations
-  view(-206,14);
-  axis tight;
   xlabel('x (km)','interpreter','latex');
   ylabel('y (km)','interpreter','latex');
   zlabel('z (m)','interpreter','latex');
+
+  
+  %%% Decorations
+  view(-206,14);
+  axis tight;
   pbaspect([Lx/Ly 1 1]);
   camlight('headlight');
   lightangle(-206,34);
-  lighting gouraud;
-
+  lighting flat;
 
 
 
@@ -217,4 +214,7 @@ function f = coastShape (x)
   
 end
   
+ imgpath = '/Users/csi/MITgcm_UC/figures_uc/model/';
+%  savefig([imgpath '/model_Garrett.fig']);
+ saveas(gcf,[imgpath '/model_Garrett_2.png']);
 
