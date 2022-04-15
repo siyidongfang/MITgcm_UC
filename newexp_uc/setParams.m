@@ -58,8 +58,8 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  simTime = 10*t1year; %%% Simulation time   
-%   simTime = 60*t1day;
+%   simTime = 10*t1year; %%% Simulation time   
+  simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
   Ly = 450*m1km; %%% Domain size in y   
@@ -615,7 +615,7 @@ fontsize = 12;
   %%% Upper bound for absolute horizontal fluid velocity (m/s)
   %%% At the moment this is just an estimate
 %   Umax = 1
-  Umax = 1.5
+  Umax = 2
   %%% Max gravity wave speed
   cmax = max(Cig)
   %%% Max gravity wave speed using total ocean depth
@@ -645,7 +645,7 @@ fontsize = 12;
   %%% Time step size  
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
-%   deltaT = 60
+  deltaT = 140
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
   
@@ -1295,47 +1295,48 @@ end
 
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
-% % %     ... %%%%%%%%% for spin-up
-% %     'UVEL','VVEL', 'WVEL',...
-% %     'SALT','THETA',...
-% %     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
-% %     'UVELSQ','VVELSQ','WVELSQ'...
+%     ... %%%%%%%%% for spin-up
+    'UVEL','VVEL', 'WVEL',...
+    'SALT','THETA',...
+    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
+    'UVELSQ','VVELSQ','WVELSQ'...
 %     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
-      ... %%%%%%%%% for analysis
-      ... %%% Heat budget
-         'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
-         'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
-         ...
-         'VVELTH', ...
-         'oceQnet','UVELTH','WVELTH',...
-      ... %%% Energy budget
-         'UVELSQ','VVELSQ','WVELSQ',...
-         'UV_VEL_Z','WU_VEL','WV_VEL',...
-      ... %%% Sea ice
-         'SIarea','SIheff','SIuice','SIvice','SIsig12',...
-         'SItices','SIqnet','SIempmr','SIatmQnt',...
-         ...
-      ... %%% Salt budget
-         'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
-         'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
-         ...
-         'VVELSLT',...
-         'oceSflux','UVELSLT','WVELSLT',...
-      ... %%% Momentum budget
-         'ETAN',...
-         'oceTAUX','oceTAUY',...
-     ... %%% Overturning streamfunction
-         'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
-                    'LaUH2TH','LaHw2TH',... 
-     ...
-         'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
-         'SItaux','SItauy','SIatmTx','SIatmTy',...   
-         'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
-         'VISrI_Um','VISrI_Vm',...
+% % % %       ... %%%%%%%%% for analysis
+% % % %       ... %%% Heat budget
+% % % %          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
+% % % %          'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
+% % % %          ...
+% % % %          'VVELTH', ...
+% % % %          'oceQnet','UVELTH','WVELTH',...
+% % % %       ... %%% Energy budget
+% % % %          'UVELSQ','VVELSQ','WVELSQ',...
+% % % %          'UV_VEL_Z','WU_VEL','WV_VEL',...
+% % % %       ... %%% Sea ice
+% % % %          'SIarea','SIheff','SIuice','SIvice','SIsig12',...
+% % % %          'SItices','SIqnet','SIempmr','SIatmQnt',...
+% % % %          ...
+% % % %       ... %%% Salt budget
+% % % %          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
+% % % %          'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
+% % % %          ...
+% % % %          'VVELSLT',...
+% % % %          'oceSflux','UVELSLT','WVELSLT',...
+% % % %       ... %%% Momentum budget
+% % % %          'ETAN',...
+% % % %          'oceTAUX','oceTAUY',...
+% % % %      ... %%% Overturning streamfunction
+% % % %          'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
+% % % %                     'LaUH2TH','LaHw2TH',... 
+% % % %      ...
+% % % %          'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
+% % % %          'SItaux','SItauy','SIatmTx','SIatmTy',...   
+% % % %          'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
+% % % %          'VISrI_Um','VISrI_Vm',...
      };
       
   numdiags_avg = length(diag_fields_avg);  
-  diag_freq_avg = 1*t1year;
+%   diag_freq_avg = 1*t1year;
+  diag_freq_avg = 30*t1day;
 
   diag_phase_avg = 0;    
       
@@ -1407,8 +1408,8 @@ diag_fields_inst = {...
 %         'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO','LaUH2TH','LaHw2TH'...
       };
   numdiags_inst = length(diag_fields_inst);  
-%    diag_freq_inst = 1*t1day;
-  diag_freq_inst =1*t1year;
+   diag_freq_inst = 30*t1day;
+%   diag_freq_inst =1*t1year;
   diag_phase_inst = 0;
   
   for n=1:numdiags_inst    
@@ -1478,7 +1479,13 @@ diag_fields_inst = {...
       OB_Jsouth = Nx*0;   %%% Need to modify data.obcs (eg, OB_Jsouth=200*0,)
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
-  
+
+  OB_Ieast= Nx*ones(1,Ny);
+  obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
+  OB_Iwest= ones(1,Ny);
+  obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
+
+ 
   
   tidalPeriod= [43200,43200,43200,43200,43200,43200,43200,43200,43200,43200];
 %   tidalPeriod= [86400,86400,86400,86400,86400,86400,86400,86400,86400,86400];
@@ -1500,7 +1507,7 @@ diag_fields_inst = {...
 
 
 
-          % create tidal input files
+     % create tidal input files
         tidalComponents=10;
      if (useobcsNorth)
          OBns = {'N','S'};
@@ -1566,17 +1573,24 @@ diag_fields_inst = {...
   %%% barotropic inflow/outflow  
   useOBCSbalance = true;  
   obcs_parm01.addParm('useOBCSbalance',useOBCSbalance,PARM_BOOL);
-  if (useOBCSbalance)
-      if (useobcsNorth)
-        OBCS_balanceFacN = 1; %%% A value -1 balances an individual boundary
-        OBCS_balanceFacS = 1;
-        obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL); 
-        obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
-      else 
-        OBCS_balanceFacS = -1;
-        obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
-      end
+
+  if (useobcsNorth)
+    OBCS_balanceFacN = 1; %%% A value -1 balances an individual boundary
+    OBCS_balanceFacS = 1;
+    obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL); 
+    obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
+  else 
+    OBCS_balanceFacS = -1;
+    obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
   end
+
+  OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
+  OBCS_balanceFacW = 1;
+  obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
+  obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+
+  
+
   
   %%% Enables/disables sponge layers   
   useOBCSsponge = true;
@@ -1693,17 +1707,19 @@ diag_fields_inst = {...
 
 
 
-  %%% Enables/disables Orlanski radiation conditions at the boundaries -
-  %%% allows waves to propagate out through the boundary with minimal
-  %%% reflection  
-  obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
-  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
-  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
-
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% ORLANSKI OPTIONS (OBCS_PARM02) %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %%% Enables/disables Orlanski radiation conditions at the boundaries -
+  %%% allows waves to propagate out through the boundary with minimal
+  %%% reflection  
+  obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
+
 
   %%% Velocity averaging time scale - must be larger than deltaT.
   %%% The Orlanski radiation condition computes the characteristic velocity
@@ -1718,8 +1734,7 @@ diag_fields_inst = {...
   obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
 
 
-
-if(useOBCSsponge)
+  
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% SPONGE LAYER OPTIONS (OBCS_PARM03) %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1729,15 +1744,20 @@ if(useOBCSsponge)
     Vrelaxobcsinner = 864000;
     Vrelaxobcsbound = 43200;
 
+    Urelaxobcsinner = 864000;
+    Urelaxobcsbound = 43200;
 %   %% Relaxation time at meridional boundaries set to time for inflow to
 %   %% cross the sponge layer
 %   Vrelaxobcsbound = spongeThicknessDim/(abs(alpha)*Ly/2);
   
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
+
+
+  obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
+  obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  
+
   
-  
-end
     
   if (useSeaiceSponge)
        T_relaxinner = 864000/10;

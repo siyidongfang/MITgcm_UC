@@ -1,12 +1,12 @@
 clear;close all;
-expdir = '/Volumes/si/MITgcm_UC/exps_uc/';
-expname_old = 'ssurf33_0dS_lores_Ua0Va0_Atide0_Hi1Ai1_Ws25_init';
-expname_new = 'ssurf33_0dS_lores_Ua0Va0_Atide0_Hi1Ai1_Ws25_new';
+expdir = ['/Users/csi/MITgcm_UC/exps_uc/'];
+expname_old = 'noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_prod';
+expname_new = 'noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski4';
 
 
-expiter = 86400;
+expiter = 1126286;
 
-useSEAICE = true;
+useSEAICE = false;
 
 initialize_3DuvtspIce (expdir,expname_old,expname_new,expiter,useSEAICE);
 

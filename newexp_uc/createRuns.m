@@ -29,7 +29,8 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
 % exp_name = ['amundsen_summer_' exp_name]
-exp_name = 'test'
+% exp_name = 'test_orlanski'
+exp_name = ['noice_ssurf33_0dS_' exp_name '_orlanski5'];
 
 
 
