@@ -1,0 +1,112 @@
+
+Test experiments:
+
+
+1. Use Orlanski for the east and west boundaries, and obcs for the north and south boundaries:
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski
+-----------------------------------------------------------
+Initialized from the last output of noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_prod
+Time step: 140s
+All the settings are the same as noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_prod, except
+     useOrlanskiNorth=.FALSE.,
+     useOrlanskiSouth=.FALSE.,
+     useOrlanskiEast=.TRUE.,
+     useOrlanskiWest=.TRUE.,
+     OBCS_balanceFacE=1.00000000e+00,
+     OBCS_balanceFacW=1.00000000e+00,
+
+
+
+2. the same as test1, except defining OB_Ieast and OB_Iwest
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski2
+-----------------------------------------------------------
+
+
+
+
+3. Same as test 2, except using Orlanski for all 4 boundaries
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski3
+-----------------------------------------------------------
+     useOrlanskiNorth=.FALSE.,
+     useOrlanskiSouth=.FALSE.,
+
+
+4. Same as test 2, add sponge layers to east and west boundaries
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski4
+-----------------------------------------------------------
+    Urelaxobcsinner=8.64000000e+05,
+    Urelaxobcsbound=4.32000000e+04,
+
+
+
+5. Same as test 4, but use OBCS to the east, and orlanski to the west
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski5
+-----------------------------------------------------------
+
+
+
+
+
+
+Ken: "In general, I have found Orlanski BCs to work better than anything else I tested, so I do recommend it. 
+Basically, it appears to do a decent job in preventing spurious along-boundary pressure gradients 
+(set up by a mismatch between the rest of the flow and the boundary condition).
+
+In addition to Orlanski, you can choose to set OBCSbalance to be true as I have below (in this case,
+ OBCS_balanceFacE=-1.0000e+00, OBCS_balanceFacW=1.0000e+00  means that the integrated inflow from EBC
+is nudged uniformly to the integrated outflow from WBC)."
+
+
+
+
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ useOBCSprescribe=.TRUE.,
+ useOBCSsponge=.TRUE.,
+ OB_Ieast  =  600*-1,
+ OBEtFile='EBCt.bin',
+ OBEsFile='EBCs.bin',
+ OBEuFile='EBCu.bin',
+ OBEvFile='EBCv.bin',
+ OB_Jnorth = 510*-1,
+# OBNtFile='NBCt.bin',
+# OBNsFile='NBCs.bin',
+# OBNuFile='NBCu.bin',
+# OBNvFile='NBCv.bin',
+ OB_Iwest = 600*1,
+ OBWtFile='WBCt.bin',
+ OBWsFile='WBCs.bin’,
+ OBWuFile='WBCu.bin',
+ OBWvFile='WBCv.bin',
+ OB_Jsouth = 510*1,
+# OBStFile='SBCt.bin',
+# OBSsFile='SBCs.bin',
+# OBSuFile='SBCu.bin',
+# OBSvFile='SBCv.bin',
+ useOrlanskiNorth=.FALSE.,
+ useOrlanskiEast=.TRUE.,
+ useOrlanskiSouth=.FALSE.,
+ useOrlanskiWest=.TRUE.,
+ useOBCSbalance=.TRUE.,
+# OBCS_balanceFacN=0.0000e+00,
+ OBCS_balanceFacE=-1.0000e+00,
+# OBCS_balanceFacS=0.0000e+00,
+ OBCS_balanceFacW=1.0000e+00,
+
+ &
+# Orlanski parameters
+ &OBCS_PARM02
+ cvelTimeScale=9.5600e+02,
+ CMAX=4.5000e-01,
+ &
+
+# sponge layer
+ &OBCS_PARM03
+ spongeThickness=20,
+ Urelaxobcsbound=2160.
+ Urelaxobcsinner=4320000.,
+ Vrelaxobcsbound=2160.
+ Vrelaxobcsinner=4320000.,
+ &
