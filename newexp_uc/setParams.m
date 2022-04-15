@@ -158,7 +158,7 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
   useOrlanskiWest = true;
-  useOrlanskiEast = true;
+  useOrlanskiEast = false;
 
   
   %%% Flag for barotropic mode
@@ -1620,6 +1620,9 @@ diag_fields_inst = {...
   writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
   writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
 
+  writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
+  writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
+
   %%% Set OBCS prescription parameters
   obcs_parm01.addParm('useOBCSprescribe',useOBCSprescribe,PARM_BOOL);
   if (useobcsNorth)
@@ -1628,6 +1631,11 @@ diag_fields_inst = {...
   end
   obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
   obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
+
+  obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
+  obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
+
+
 
     if(useSEAICE)
 
@@ -1752,7 +1760,6 @@ diag_fields_inst = {...
   
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
-
 
   obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  

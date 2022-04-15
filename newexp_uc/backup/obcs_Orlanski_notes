@@ -42,6 +42,20 @@ noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski4
 5. Same as test 4, but use OBCS to the east, and orlanski to the west
 noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski5
 -----------------------------------------------------------
+    110  useOrlanskiNorth=.FALSE.,
+    111  useOrlanskiSouth=.FALSE.,
+    112  useOrlanskiEast=.FALSE.,
+    113  useOrlanskiWest=.TRUE.,
+
+
+6. Same as test 5, add restoring temperature/salinity/velocity to the eastern boundary
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski5
+-----------------------------------------------------------
+Use the T/S/U from the equibrium state of (5-year average) 
+noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_prod
+
+
+
 
 
 
