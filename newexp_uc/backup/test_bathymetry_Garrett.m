@@ -214,7 +214,7 @@ function f = coastShape (x)
   
 end
   
- imgpath = '/Users/csi/MITgcm_UC/figures_uc/model/';
-%  savefig([imgpath '/model_Garrett.fig']);
- saveas(gcf,[imgpath '/model_Garrett_2.png']);
+%  imgpath = '/Users/csi/MITgcm_UC/figures_uc/model/';
+% %  savefig([imgpath '/model_Garrett.fig']);
+%  saveas(gcf,[imgpath '/model_Garrett_2.png']);
 

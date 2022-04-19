@@ -3,7 +3,7 @@
 %%% Creates simulations using newexp with specified input parameters.
 %%%
 
-batch_name = 'exps_uc'; 
+batch_name = 'exps_test'; 
 
 
 
@@ -30,10 +30,9 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
 % exp_name = ['amundsen_summer_' exp_name]
-exp_name = 'test_orlanski1'
 % exp_name = ['noice_ssurf33_0dS_' exp_name '_orlanski6'];
 
-
+exp_name = ['km5_' exp_name]
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
 

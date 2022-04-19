@@ -58,8 +58,8 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   simTime = 10*t1year; %%% Simulation time   
-  simTime = 30*t1day;
+  simTime = 20*t1year; %%% Simulation time   
+%   simTime = 30*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
   Ly = 450*m1km; %%% Domain size in y   
@@ -646,7 +646,7 @@ fontsize = 12;
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
 %   deltaT = 140
-  deltaT = round(deltaT/2)
+%   deltaT = round(deltaT/2)
 
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
