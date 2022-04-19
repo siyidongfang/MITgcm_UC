@@ -4,7 +4,7 @@
 %%% Sets basic MITgcm parameters plus parameters for included packages, and
 %%% writes out the appropriate input files.,
 %%%
-function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
+function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
     = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,useSEAICE)  
@@ -58,8 +58,8 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  simTime = 20*t1year; %%% Simulation time   
-%   simTime = 30*t1day;
+%   simTime = 20*t1year; %%% Simulation time   
+  simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
   Ly = 450*m1km; %%% Domain size in y   
@@ -96,37 +96,57 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
 
   
   
-  use_trough = true;
-  %%% Topographic parameters 
-  Hshelf = 500; %%% Continental shelf depth
-  Hs = H - Hshelf; %%% Shelf height
-  Ys = Ws+125*m1km %%% Meridional slope position
-  
-  
-  %%% Trough parameters
-  N_trough = 4;
-  H_trough = 300; %%% Positive for a trough, negative for a ridge
-  W_trough = Lx/N_trough/4; %%% Default 50*m1km
-%   N_trough = 1;
-%   H_trough = 500;
-%   W_trough = 50*m1km;
-%   X_trough = 0*m1km;
-  H_bump = -H_trough;
-  X_trough = zeros(1,N_trough);
-  X_bump = zeros(1,N_trough);
-  for nrt = 1:N_trough
-      X_trough(1,nrt) = (2*nrt-1-N_trough)/2*Lx/N_trough;
-      X_bump(1,nrt)= (2*nrt-N_trough)/2*Lx/N_trough;
-  end
-  Y_trough = 0; %%% Southern edge of trough
-  
-  if(use_trough)
-%      Zs = 2850; %%% Vertical slope position  (Exponentials: Zs=1000; Tanh-like: 2250)
-     Zs = 2250 + H_trough/2*N_trough;
-  else
-     Zs = 2250; 
-  end
-  
+    % % % %   %%% MITgcm_ASF Topographic parameters 
+    % % % %   use_trough = true;
+    % % % %   Hshelf = 500; %%% Continental shelf depth
+    % % % %   Hs = H - Hshelf; %%% Shelf height
+    % % % %   Ys = Ws+125*m1km %%% Meridional slope position
+    % % % %   
+    % % % %   %%% Trough parameters
+    % % % %   N_trough = 4;
+    % % % %   H_trough = 300; %%% Positive for a trough, negative for a ridge
+    % % % %   W_trough = Lx/N_trough/4; %%% Default 50*m1km
+    % % % % %   N_trough = 1;
+    % % % % %   H_trough = 500;
+    % % % % %   W_trough = 50*m1km;
+    % % % % %   X_trough = 0*m1km;
+    % % % %   H_bump = -H_trough;
+    % % % %   X_trough = zeros(1,N_trough);
+    % % % %   X_bump = zeros(1,N_trough);
+    % % % %   for nrt = 1:N_trough
+    % % % %       X_trough(1,nrt) = (2*nrt-1-N_trough)/2*Lx/N_trough;
+    % % % %       X_bump(1,nrt)= (2*nrt-N_trough)/2*Lx/N_trough;
+    % % % %   end
+    % % % %   Y_trough = 0; %%% Southern edge of trough
+    % % % %   
+    % % % %   if(use_trough)
+    % % % % %      Zs = 2850; %%% Vertical slope position  (Exponentials: Zs=1000; Tanh-like: 2250)
+    % % % %      Zs = 2250 + H_trough/2*N_trough;
+    % % % %   else
+    % % % %      Zs = 2250; 
+    % % % %   end
+    % % % % 
+
+    %%% Topographic parameters 
+    Wslope = 30*m1km; %%% Continental slope half-width
+    Hshelf = 500; %%% Continental shelf depth
+    Wshelf = 150*m1km; %%% Width of continental shelf
+    Ycoast = 10*m1km; %%% Latitude of coastline
+    Wcoast = 20*m1km; %%% Width of coastal wall slope
+    Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
+    Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
+    Ydeep = 300*m1km; %%% Latitude of deep ocean
+    Xeast = 275*m1km; %%% Longitude of eastern trough wall
+    Xwest = 125*m1km; %%% Longitude of western trough wall
+    Yicefront = 0*m1km; %%% Latitude of ice shelf face
+    Hicefront = 0; %%% Depth of ice shelf frace
+    Hbed = -400; %%% Change in bed elevation from shelf break to southern domain edge
+    Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+    Htrough = 400; %%% Trough depth
+    Wtrough = 40*m1km; %%% Trough width
+    Xtrough = Lx/2; %%% Longitude of trough
+
+
  
   %%% Parameters related to periodic forcing
   periodicExternalForcing = false;
@@ -263,11 +283,36 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% GRID SPACING %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%    
-    
+  
+    % % % % % MITgcm_ASF grid spacing    
+    % % % %   %%% Zonal grid
+    % % % %   dx = Lx/Nx;  
+    % % % %   xx = (1:Nx)*dx;
+    % % % %   xx = xx-mean(xx);
+    % % % %   
+    % % % %   %%% Uniform meridional grid   
+    % % % %   dy = (Ly/Ny)*ones(1,Ny);  
+    % % % %   yy = cumsum((dy + [0 dy(1:end-1)])/2);
+    % % % %  
+    % % % %   %%% Plotting mesh
+    % % % %   [Y,X] = meshgrid(yy,xx);
+    % % % %   
+    % % % %   %%% Grid spacing increases with depth, but spacings exactly sum to H
+    % % % %   zidx = 1:Nr;
+    % % % %   gamma = 10;  
+    % % % %   alpha = 10;
+    % % % %   dz1 = 2*H/Nr/(alpha+1);
+    % % % %   dz2 = alpha*dz1;
+    % % % %   dz = dz1 + ((dz2-dz1)/2)*(1+tanh((zidx-((Nr+1)/2))/gamma));
+    % % % %   zz = -cumsum((dz+[0 dz(1:end-1)])/2);
+    % % % % 
+    % % % %   zz_idx = (-zz<= Hshelf);  
+    % % % %   zzidx = sum(zz_idx);
+
+
   %%% Zonal grid
   dx = Lx/Nx;  
   xx = (1:Nx)*dx;
-  xx = xx-mean(xx);
   
   %%% Uniform meridional grid   
   dy = (Ly/Ny)*ones(1,Ny);  
@@ -275,18 +320,40 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
  
   %%% Plotting mesh
   [Y,X] = meshgrid(yy,xx);
-  
-  %%% Grid spacing increases with depth, but spacings exactly sum to H
-  zidx = 1:Nr;
-  gamma = 10;  
-  alpha = 10;
-  dz1 = 2*H/Nr/(alpha+1);
-  dz2 = alpha*dz1;
-  dz = dz1 + ((dz2-dz1)/2)*(1+tanh((zidx-((Nr+1)/2))/gamma));
-  zz = -cumsum((dz+[0 dz(1:end-1)])/2);
 
-  zz_idx = (-zz<= Hshelf);  
-  zzidx = sum(zz_idx);
+
+  %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
+%   dz0 = 2;
+%   dz1 = 15; 
+%   dz2 = 20;
+%   dz3 = 100;
+%   dz4 = 200;  
+%   N0 = 1;
+%   N1 = 20; 
+%   N2 = 50;
+%   N3 = 15;
+%   N4 = 14;  
+  dz0 = 2*10/6;
+  dz1 = 15*10/6; 
+  dz2 = 20*10/6;
+  dz3 = 100*10/6;
+  dz4 = 200*10/6;  
+  N0 = 1;
+  N1 = 12; 
+  N2 = 30;
+  N3 = 9;
+  N4 = 8;
+  nn_c = cumsum([N0 N1 N2 N3 N4]);
+  dz_c = [dz0 dz1 dz2 dz3 dz4];
+  nn = 1:(N1+N2+N3+N4+1);
+  dz = interp1(nn_c,dz_c,nn,'pchip');
+
+  zz = -cumsum((dz+[0 dz(1:end-1)])/2);
+  if (length(zz) ~= Nr)
+    error('Vertical grid size does not match vertical array dimension!');
+  end
+  Nr = length(zz);
+
 
 
   %%% Thickness of sponge layers in gridpoints  
@@ -308,44 +375,163 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
 
   
   
-  %%%%%%%%%%%%%%%%%%%%%%
-  %%%%% BATHYMETRY %%%%%
-  %%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% BATHYMETRY AND ICE SHELF DRAFT %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
-
-    z_topog = Zs * ones(size(X));
-    h_topog = Hs * ones(size(X));
-  if (use_trough)    
-    for ntr = 1:N_trough
-        h_trough = H_trough * exp(-((X-X_trough(ntr))/W_trough).^4);
-        h_trough(Y<Y_trough) = 0;
-        yidx = (yy>Y_trough) & (yy<Ys-Ws);
-        h_trough(:,yidx) = h_trough(:,yidx) .* 0.5.*(1-cos(pi*(Y(:,yidx)-Y_trough)/(Ys-Ws-Y_trough)));
-        z_topog =  (z_topog-0.5*H_trough).*ones(size(X)) + h_trough;
-        h_topog = h_topog - 2 * h_trough;
-    end 
-  end  
-  h = -z_topog - (h_topog/2).*tanh((Y-Ys)/Ws);  
-
-
-fontsize = 12;
-
-  %%% Plot the bathymetry
-  if (showplots)
-    figure(fignum);
-    fignum = fignum + 1;
-    clf;
-    surf(X/1000,Y/1000,h,'EdgeColor','None');   
-    xlabel('x (km)');
-    ylabel('y (km)');
-    zlabel('hb','Rotation',0);
-%     plot(Y(1,:),h(1,:));
-    title('Model bathymetry');
-    set(gca,'fontsize',fontsize+2,'Ydir','reverse');
-    PLOT = gcf;
-    PLOT.Position = [248 284 655 442];  
-  end
+    % % % % % Bathymetry for MITgcm_ASF
+    % % % %     z_topog = Zs * ones(size(X));
+    % % % %     h_topog = Hs * ones(size(X));
+    % % % %   if (use_trough)    
+    % % % %     for ntr = 1:N_trough
+    % % % %         h_trough = H_trough * exp(-((X-X_trough(ntr))/W_trough).^4);
+    % % % %         h_trough(Y<Y_trough) = 0;
+    % % % %         yidx = (yy>Y_trough) & (yy<Ys-Ws);
+    % % % %         h_trough(:,yidx) = h_trough(:,yidx) .* 0.5.*(1-cos(pi*(Y(:,yidx)-Y_trough)/(Ys-Ws-Y_trough)));
+    % % % %         z_topog =  (z_topog-0.5*H_trough).*ones(size(X)) + h_trough;
+    % % % %         h_topog = h_topog - 2 * h_trough;
+    % % % %     end 
+    % % % %   end  
+    % % % %   h = -z_topog - (h_topog/2).*tanh((Y-Ys)/Ws);  
+    % % % % 
+    % % % % fontsize = 12;
+    % % % % 
+    % % % %   %%% Plot the bathymetry
+    % % % %   if (showplots)
+    % % % %     figure(fignum);
+    % % % %     fignum = fignum + 1;
+    % % % %     clf;
+    % % % %     surf(X/1000,Y/1000,h,'EdgeColor','None');   
+    % % % %     xlabel('x (km)');
+    % % % %     ylabel('y (km)');
+    % % % %     zlabel('hb','Rotation',0);
+    % % % % %     plot(Y(1,:),h(1,:));
+    % % % %     title('Model bathymetry');
+    % % % %     set(gca,'fontsize',fontsize+2,'Ydir','reverse');
+    % % % %     PLOT = gcf;
+    % % % %     PLOT.Position = [248 284 655 442];  
+    % % % %   end
   
+   
+  %%% Construct shelf/slope/deep ocean bathymetry profile via cubic
+  %%% interpolation
+  y_interp = [0 (Yslope-Wslope)/2 Yslope-Wslope Yslope Ydeep Ly];
+  h_interp = [-Hshelf+Hbed -Hshelf+Hbed/2 -Hshelf -(Hshelf+H)/2 -H -H];
+  h_profile = interp1(y_interp,h_interp,yy,'pchip');
+  h = repmat(h_profile,[Nx 1]);
+  
+  
+  %%% Add trough
+  y_interp = [0 Yshelfbreak Yslope Ly];
+  h_interp = [0 -Htrough 0 0];
+  h_trough_profile = interp1(y_interp,h_interp,yy,'pchip');
+  h_trough = repmat(h_trough_profile,[Nx 1]);
+  h_trough = h_trough .* 1./(cosh((X-Xtrough)/Wtrough)).^2;
+  h = h + h_trough;
+  
+    
+  %%% Add coastal wall %%%
+  h_coast = zeros(Nx,Ny);
+  
+  %%% Western coastline
+  coastidx = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X<=Xwest-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((Y(coastidx)-Ycoast+Wcoast/2)/Wcoast);
+  landidx = find((Y<=Ycoast-Wcoast/2) & (X<=Xwest-Wcoast/2));
+  h_coast(landidx) = -h(landidx);
+  
+  %%% Western corner
+  R = sqrt((X-(Xwest-Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
+  coastidx = (Y>Ycoast-Wcoast/2) & (X>Xwest-Wcoast/2) & (R <= Wcoast);  
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((R(coastidx))/Wcoast);
+  
+  %%% Western trough wall
+  coastidx = (Y<Ycoast-Wcoast/2) & (X<=Xwest+Wcoast/2) & (X>Xwest-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((X(coastidx)-Xwest+Wcoast/2)/Wcoast);   
+  
+  %%% Eastern coastline
+  coastidx = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((Y(coastidx)-Ycoast+Wcoast/2)/Wcoast);
+  landidx = find((Y<=Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2));
+  h_coast(landidx) = -h(landidx);
+  
+  %%% Eastern corner
+  R = sqrt((X-(Xeast+Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
+  coastidx = (Y>Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (R <= Wcoast);  
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((R(coastidx))/Wcoast);
+  
+  %%% Eastern trough wall
+  coastidx = (Y<Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (X>=Xeast-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape(-(X(coastidx)-Xeast-Wcoast/2)/Wcoast);   
+  
+  h = h + h_coast;
+
+ 
+  %%% Construct ice shelf
+  icedraft = zeros(Nx,Ny);
+  iceidx = find(Y<=Yicefront);  
+  icedraft(iceidx) = -Hicefront - (Y(iceidx)-Yicefront)/Yicefront * Hice;
+  icedraft(icedraft<h) = h(icedraft<h);
+  
+  
+  %%% Make sure there are no "holes" along the southern boundary, or MITgcm
+  %%% will think it's supposed to be north/south periodic
+  wallidx = find(icedraft(:,1)>h(:,1));
+  h(wallidx,1) = icedraft(wallidx,1);
+  
+  %%% Remove water column thicknesses less than a specified minimum
+  Hmin = 50;
+  wct = icedraft - h;
+  h(wct < Hmin) = icedraft(wct < Hmin);
+
+
+  %%% Plot bathymetry and ice draft
+  figure(fignum);
+  fignum = fignum + 1;
+  clf;   
+  fontsize = 12;
+
+  %%% Bathymetry  
+  p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,h(:,2:end-1));
+  p.FaceColor = [11*16+9 9*16+12 6*16+11]/255;
+  p.EdgeColor = 'none';
+
+  %%% Modified ice draft to look good in the plot
+  icedraft_plot = icedraft;
+  icedraft_plot(icedraft==0) = NaN;
+  icetop_plot = 0*icedraft_plot;
+  for i=1:Nx
+    j = find(~isnan(icetop_plot(i,:)),1,'last');
+    if (isempty(j))
+      continue;
+    else
+      icetop_plot(i,j+1) = max(-Hicefront,h(i,j+1));
+    end
+  end
+ 
+  %%% Plot ice
+  hold on;
+  p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,icedraft_plot(:,2:end-1));
+  p.FaceColor = [153, 255, 255]/255;
+  p.EdgeColor = 'none';
+  p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,icetop_plot(:,2:end-1));
+  p.FaceColor = [153, 255, 255]/255;
+  p.EdgeColor = 'none';
+  hold off;
+
+  
+  %%% Decorations
+  view(-206,14);
+  xlabel('x (km)','interpreter','latex');
+  ylabel('y (km)','interpreter','latex');
+  zlabel('z (m)','interpreter','latex');
+  axis tight;
+  pbaspect([Lx/Ly 1 1]);
+  camlight('headlight');
+  lightangle(-206,34);
+  lighting flat;
+
+
+
     %%% Save the figure
     savefig([imgpath '/bathymetry.fig']);
     saveas(gcf,[imgpath '/bathymetry.png']);
@@ -412,7 +598,7 @@ fontsize = 12;
     clf;
     plot(rho_north_sigma4,-zz,'LineWidth',1.5); axis ij;
     hold on;
-    plot(rho_south_sigma4(1:zzidx),-zz(1:zzidx),'LineWidth',1.5); axis ij;
+    plot(rho_south_sigma4,-zz,'LineWidth',1.5); axis ij;
     hold off;
     xlabel('\rho_r_e_f (\circC)');
     ylabel('Depth (m)');
@@ -434,7 +620,7 @@ fontsize = 12;
     plot(rho_north_sigma2,-zz,'LineWidth',1.5); axis ij;
     hold on;
     if (Nr > 1)
-        plot(rho_south_sigma2(1:zzidx),-zz(1:zzidx),'-','LineWidth',1.5); axis ij;
+        plot(rho_south_sigma2,-zz,'-','LineWidth',1.5); axis ij;
     else 
         plot(rho_south_sigma2,-zz,':','LineWidth',1.5); axis ij;        
     end
@@ -460,7 +646,7 @@ fontsize = 12;
     plot(rho_north_surf,-zz,'LineWidth',1.5); axis ij;
     hold on;
     if (Nr > 1)
-        plot(rho_south_surf(1:zzidx),-zz(1:zzidx),'-','LineWidth',1.5); axis ij;
+        plot(rho_south_surf,-zz,'-','LineWidth',1.5); axis ij;
     else 
         plot(rho_south_surf,-zz,':','LineWidth',1.5); axis ij;        
     end
@@ -487,7 +673,7 @@ fontsize = 12;
     plot(tNorth,-zz,'LineWidth',1.5); axis ij;
     hold on;
     if (Nr > 1)
-        plot(tSouth(1:zzidx),-zz(1:zzidx),'LineWidth',1.5); axis ij;
+        plot(tSouth,-zz,'LineWidth',1.5); axis ij;
     else 
         plot(tSouth,-zz,'LineWidth',1.5); axis ij;        
     end
@@ -512,7 +698,7 @@ fontsize = 12;
     plot(sNorth,-zz,'LineWidth',1.5);axis ij;
     hold on;
     if (Nr > 1)
-        plot(sSouth(1:zzidx),-zz(1:zzidx),'LineWidth',1.5); axis ij;
+        plot(sSouth,-zz,'LineWidth',1.5); axis ij;
     else 
         plot(sSouth,-zz,'LineWidth',1.5); axis ij;
     end
@@ -646,7 +832,7 @@ fontsize = 12;
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
 %   deltaT = 140
-%   deltaT = round(deltaT/2)
+  deltaT = round(deltaT/4)
 
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
@@ -1298,10 +1484,10 @@ end
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
 %     ... %%%%%%%%% for spin-up
-%     'UVEL','VVEL', 'WVEL',...
+    'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-%     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
-%     'UVELSQ','VVELSQ','WVELSQ'...
+    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
+    'UVELSQ','VVELSQ','WVELSQ'...
 %     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
 % % % %       ... %%%%%%%%% for analysis
 % % % %       ... %%% Heat budget
@@ -1338,8 +1524,8 @@ diag_fields_avg = {...
       
   numdiags_avg = length(diag_fields_avg);  
 %   diag_freq_avg = 1*t1year;
-%   diag_freq_avg = 30*t1day;
-  diag_freq_avg = 2*t1day;
+  diag_freq_avg = 10*t1day;
+%   diag_freq_avg = 2*t1day;
 
 
   diag_phase_avg = 0;    
@@ -1854,4 +2040,22 @@ diag_fields_inst = {...
   write_matlab_params(inputpath,ALL_PARMS,realfmt);
   
   
-  
+
+end
+
+
+
+
+
+
+    %%% Specifies shape of coastal walls. Must satisfy f=1 at x=0 and f=0 at
+    %%% x=1.
+    %%%
+    function f = coastShape (x)
+     
+      f = 0.5.*(1+cos(pi*x));
+    %   f = exp(-x);
+    %   f = 1-x;
+      
+    end
+

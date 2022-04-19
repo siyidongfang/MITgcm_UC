@@ -57,16 +57,21 @@
 
 
   %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
-  dz0 = 2;
-  dz1 = 15; 
-  dz2 = 20;
-  dz3 = 100;
-  dz4 = 200;  
+%   dz0 = 2;
+%   dz1 = 15; 
+%   dz2 = 20;
+%   dz3 = 100;
+%   dz4 = 200;  
 %   N0 = 1;
 %   N1 = 20; 
 %   N2 = 50;
 %   N3 = 15;
 %   N4 = 14;  
+  dz0 = 2*10/6;
+  dz1 = 15*10/6; 
+  dz2 = 20*10/6;
+  dz3 = 100*10/6;
+  dz4 = 200*10/6;  
   N0 = 1;
   N1 = 12; 
   N2 = 30;
