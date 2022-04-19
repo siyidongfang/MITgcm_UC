@@ -59,7 +59,7 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   simTime = 10*t1year; %%% Simulation time   
-  simTime = 60*t1day;
+  simTime = 30*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
   Ly = 450*m1km; %%% Domain size in y   
@@ -158,7 +158,7 @@ function [nTimeSteps,h,Ys,obsuice,obsvice,lwdown,...
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
   useOrlanskiWest = true;
-  useOrlanskiEast = false;
+  useOrlanskiEast = true;
 
   
   %%% Flag for barotropic mode
@@ -645,7 +645,9 @@ fontsize = 12;
   %%% Time step size  
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
-  deltaT = 140
+%   deltaT = 140
+  deltaT = round(deltaT/2)
+
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
   
@@ -1296,10 +1298,10 @@ end
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
 %     ... %%%%%%%%% for spin-up
-    'UVEL','VVEL', 'WVEL',...
+%     'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
-    'UVELSQ','VVELSQ','WVELSQ'...
+%     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
+%     'UVELSQ','VVELSQ','WVELSQ'...
 %     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
 % % % %       ... %%%%%%%%% for analysis
 % % % %       ... %%% Heat budget
@@ -1336,7 +1338,9 @@ diag_fields_avg = {...
       
   numdiags_avg = length(diag_fields_avg);  
 %   diag_freq_avg = 1*t1year;
-  diag_freq_avg = 30*t1day;
+%   diag_freq_avg = 30*t1day;
+  diag_freq_avg = 2*t1day;
+
 
   diag_phase_avg = 0;    
       
@@ -1620,8 +1624,8 @@ diag_fields_inst = {...
   writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
   writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
 
-  writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
-  writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
+%   writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
+%   writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
 
   %%% Set OBCS prescription parameters
   obcs_parm01.addParm('useOBCSprescribe',useOBCSprescribe,PARM_BOOL);
@@ -1632,8 +1636,8 @@ diag_fields_inst = {...
   obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
   obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
 
-  obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
-  obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
+%   obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
+%   obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
 
 
 
