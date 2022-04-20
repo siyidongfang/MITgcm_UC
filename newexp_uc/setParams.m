@@ -58,7 +58,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  simTime = 20*t1year; %%% Simulation time   
+  simTime = 12*t1year; %%% Simulation time   
 %   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
@@ -143,7 +143,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
     Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
     Htrough = 300; %%% Trough depth
-    Wtrough = 40*m1km; %%% Trough width
+    Wtrough = 40*m1km; %%% Trough width %%%Default 40 km
     Xtrough = Lx/2; %%% Longitude of trough
 
 
@@ -175,10 +175,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOBCS = true;
   useOBCStides = true;
   useobcsNorth = true;
+  use2Orlanski = false;
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
-  useOrlanskiWest = false;
-  useOrlanskiEast = false;
+  if(use2Orlanski)
+  useOrlanskiWest = true;
+  useOrlanskiEast = true;
+  end
 
   
   %%% Flag for barotropic mode
@@ -565,19 +568,20 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% measurements. We need these because the KN climatology only goes down
   %%% to 2000m
   %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
-
   s_bot = 34.65;
-  pt_bot = -0.5;
+  pt_bot = 0.4;
   s_mid = 34.67;
-  pt_mid = 1;
-  s_surf = 34.15;
-  pt_surf = -1.8;
+  pt_mid = 3.5;
+  s_surf = 33.95;
+  pt_surf = -1.5;
   Zsml = -50;
-  Zcdw_pt = -300;
-  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+  Zcdw_pt = -300;         %%% Default: -300
+  Zcdw_s = Zcdw_pt - 100;  %%% Default: Zcdw_pt -100
+                          %%% This is important - salinity maximum needs to 
                           %%% be deeper or else you end up with very weak 
                           %%% buoyancy frequency just below the pycnocline
   
+
   %%% Artificially construct a hydrographic profile
   depth_North_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
   depth_North_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
@@ -626,7 +630,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
                           %%% be deeper or else you end up with very weak 
                           %%% buoyancy frequency just below the pycnocline
-  
+  useFresher = true;
+  if(useFresher)
+      s_bot = s_bot-0.3;
+      s_mid = s_mid-0.3;
+      s_surf = s_surf-0.3;
+  end
+
   %%% Artificially construct a hydrographic profile
   depth_South_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
   depth_South_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
@@ -1573,7 +1583,6 @@ diag_fields_avg = {...
     'SALT','THETA',...
 ... % % %     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
 ... % % %     'UVELSQ','VVELSQ','WVELSQ'...
-... % % %     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
       ... %%%%%%%%% for analysis
       ... %%% Heat budget
          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
@@ -1584,10 +1593,6 @@ diag_fields_avg = {...
       ... %%% Energy budget
          'UVELSQ','VVELSQ','WVELSQ',...
          'UV_VEL_Z','WU_VEL','WV_VEL',...
-... %       ... %%% Sea ice
-... %          'SIarea','SIheff','SIuice','SIvice','SIsig12',...
-... %          'SItices','SIqnet','SIempmr','SIatmQnt',...
-... %          'SItaux','SItauy','SIatmTx','SIatmTy',...   
          ...
       ... %%% Salt budget
          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
@@ -1634,12 +1639,14 @@ diag_fields_avg = {...
     %          'PHIHYD','LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH'...
              };
       numdiags_avg2 = length(diag_fields_avg2);  
-      diag_freq_avg2 = 30*t1day;
+      diag_freq_avg2 = 1*t1year;
       diag_phase_avg2 = 0;   
     
 
       diag_fields_avg3 = {...  
-            'SIarea','SIheff','SIuice','SIvice','SIempmr'...
+         'SIarea','SIheff','SIuice','SIvice','SIsig12',...
+         'SItices','SIqnet','SIempmr','SIatmQnt',...
+         'SItaux','SItauy','SIatmTx','SIatmTy',...   
              };
       numdiags_avg3 = length(diag_fields_avg2);  
       diag_freq_avg3 = 1*t1year;
@@ -1755,11 +1762,12 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
 
-%   OB_Ieast= Nx*ones(1,Ny);
-%   obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
-%   OB_Iwest= ones(1,Ny);
-%   obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
-
+  if(use2Orlanski)
+  OB_Ieast= Nx*ones(1,Ny);
+  obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
+  OB_Iwest= ones(1,Ny);
+  obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
+  end
  
   
 %   tidalPeriod= [43200,43200,43200,43200,43200,43200,43200,43200,43200,43200];
@@ -1861,12 +1869,12 @@ diag_fields_inst = {...
     obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
   end
 
-%   OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
-%   OBCS_balanceFacW = 1;
-%   obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
-%   obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
-
-  
+  if(use2Orlanski)
+  OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
+  OBCS_balanceFacW = 1;
+  obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
+  obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+  end
 
   
   %%% Enables/disables sponge layers   
@@ -2002,22 +2010,22 @@ diag_fields_inst = {...
   %%% reflection  
   obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
+
+  if(use2Orlanski)
   obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
-
-
-%   %%% Velocity averaging time scale - must be larger than deltaT.
-%   %%% The Orlanski radiation condition computes the characteristic velocity
-%   %%% at the boundary by averaging the spatial derivative normal to the 
-%   %%% boundary divided by the time step over this period.
-%   %%% At the moment we're using the magic engineering factor of 3.
-%   cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
-%   %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
-%   CMAX = 0.45; 
-%   
-%   obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
-%   obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
-
+  %%% Velocity averaging time scale - must be larger than deltaT.
+  %%% The Orlanski radiation condition computes the characteristic velocity
+  %%% at the boundary by averaging the spatial derivative normal to the 
+  %%% boundary divided by the time step over this period.
+  %%% At the moment we're using the magic engineering factor of 3.
+  cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
+  %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
+  CMAX = 0.45; 
+  
+  obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
+  obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
+  end
 
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

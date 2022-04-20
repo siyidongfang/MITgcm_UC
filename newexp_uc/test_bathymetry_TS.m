@@ -34,7 +34,7 @@
   Hicefront = 0; %%% Depth of ice shelf frace
   Hbed = -400; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 400; %%% Trough depth
+  Htrough = 300; %%% Trough depth
   Wtrough = 40*m1km; %%% Trough width
   Xtrough = Lx/2; %%% Longitude of trough
   
@@ -233,10 +233,11 @@ fontsize = 14;
   %%% Bottom properties offshore, taken from Meijers et al. (2010)
   %%% measurements. We need these because the KN climatology only goes down
   %%% to 2000m
+  %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
   s_bot = 34.65;
   pt_bot = 0.4;
   s_mid = 34.67;
-  pt_mid = 4;
+  pt_mid = 3.5;
   s_surf = 33.95;
   pt_surf = -1.5;
   Zsml = -50;
@@ -276,7 +277,14 @@ fontsize = 14;
   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
                           %%% be deeper or else you end up with very weak 
                           %%% buoyancy frequency just below the pycnocline
-  
+
+  useFresher = true;
+  if(useFresher)
+      s_bot = s_bot-0.3;
+      s_mid = s_mid-0.25;
+      s_surf = s_surf-0.2;
+  end
+
   %%% Artificially construct a hydrographic profile
   depth_South_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
   depth_South_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];

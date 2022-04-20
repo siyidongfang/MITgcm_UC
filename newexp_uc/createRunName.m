@@ -11,8 +11,13 @@ function run_name = createRunName (Ua,Va,atide,Hi,Ai,Ws,is_hires)
   else
     resstr = 'lores_';
   end
-  run_name = [resstr 'Ua',num2str(Ua),'Va',num2str(Va),'_Atide',num2str(atide),...
+
+%   run_name = [resstr 'Ua',num2str(Ua),'Va',num2str(Va),'_Atide',num2str(atide),...
+%   '_Hi',num2str(Hi),'Ai',num2str(Ai),'_Ws',num2str(Ws/1000)];
+
+run_name=['Ua',num2str(Ua),'Va',num2str(Va),'_Atide',num2str(atide),...
   '_Hi',num2str(Hi),'Ai',num2str(Ai),'_Ws',num2str(Ws/1000)];
+
 %   if (is_relaxSurfT)
 %     run_name = [run_name,'_relaxSurfT'];
 %   end

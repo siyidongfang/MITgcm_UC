@@ -4,9 +4,9 @@ addpath ../utils/matlab;
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
 expdir = '/Users/csi/MITgcm_UC/exps_test/';
-expname = 'res5km_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws30';
+expname = 'res5km_Ua-2Va1_Atide0_Hi1Ai1_Ws30_ZcdwN300';
 loadexp;
-nIter = 817;
+nIter = 769171;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
@@ -19,48 +19,36 @@ nIter = 817;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.67:0.001:34.69],'EdgeColor','k');hold off;
     shading interp;
     axis ij;colormap('jet');colorbar
-    caxis([34.4 34.7]);
+    caxis([33.8 34.7]);
     xlim([0 450])
     title('Salinity (psu)')
     ylabel('z (km)');xlabel('y (km)')
 
-    %%
+    
 
     subplot(1,2,2)
     aaaa1 = rdmds([exppath,'/results/THETA'],nIter);
     aaa1 = squeeze(mean(aaaa1));
     pcolor(yy/1000,-zz/1000,aaa1');
-    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-1.8:0.1:1.8],'EdgeColor','k');hold off;
+    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-4:0.4:4],'EdgeColor','k');hold off;
     shading interp;
     axis ij;
-%     colormap('redblue');
+    colormap('redblue');
     colorbar
-    caxis([-1.8 1.8]);xlim([0 450])
+    caxis([-4 4]);xlim([0 450])
     title('Potential temperature (degC)')
     ylabel('z (km)');xlabel('y (km)')
  
-    
-%%
+   
 
-figure(3)
-bb = rdmds([exppath,'/results/SIheff'],nIter);
-pcolor(bb')
-shading interp;axis ij;colormap('gray');colorbar;
-caxis([0 1])
-
+% figure(3)
+% bb = rdmds([exppath,'/results/SIheff'],nIter);
+% pcolor(bb')
+% shading interp;axis ij;colormap('gray');colorbar;
+% caxis([0 1])
 
 
 
-
-% figure(5)
-% clf
-% aaaa1 = rdmds([exppath,'/results/SALT'],nIter);
-% aaa1 = squeeze(mean(aaaa1));
-% pcolor(yy/1000,-zz/1000,aaa1')
-% shading interp;axis ij;colormap('jet');colorbar
-% caxis([33 35])
-% title('Salinity (psu)')
-% ylabel('z (km)');xlabel('y (km)')
 
 
 
@@ -77,15 +65,15 @@ caxis([-0.4 0.4])
 title('Transient zonal velociy (m/s)')
 ylabel('z (km)');xlabel('y (km)')
 
-subplot(2,2,2)
-aaaa1 = rdmds([exppath,'/results/T'],nIter);
-aaa1 = squeeze(mean(aaaa1));
-pcolor(yy/1000,-zz/1000,aaa1')
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(25,:)/1000,'k','LineWidth',1.5);
-shading interp;axis ij;colormap('redblue');colorbar
-caxis([-1.8 1.8])
-title('Potential temperature (degC)')
-ylabel('z (km)');xlabel('y (km)')
+% subplot(2,2,2)
+% aaaa1 = rdmds([exppath,'/results/T'],nIter);
+% aaa1 = squeeze(mean(aaaa1));
+% pcolor(yy/1000,-zz/1000,aaa1')
+% hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(25,:)/1000,'k','LineWidth',1.5);
+% shading interp;axis ij;colormap('redblue');colorbar
+% caxis([-1.8 1.8])
+% title('Potential temperature (degC)')
+% ylabel('z (km)');xlabel('y (km)')
 
 %%
 subplot(2,2,3)
