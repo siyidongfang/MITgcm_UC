@@ -3,18 +3,18 @@ addpath ../.
 addpath ../utils/matlab; 
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
-expdir = '/Users/csi/MITgcm_UC/exps_uc/';
-expname = 'noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski5';
+expdir = '/Users/csi/MITgcm_UC/exps_test/';
+expname = 'res5km_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws30';
 loadexp;
-nIter = 37029;
+nIter = 817;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
     figure(11)
     subplot(1,2,1)
     aaaa1 = rdmds([exppath,'/results/SALT'],nIter);
-%     aaa1 = squeeze(mean(aaaa1));
-    aaa1 = squeeze(aaaa1(:,:,3));
+    aaa1 = squeeze(mean(aaaa1));
+%     aaa1 = squeeze(aaaa1(:,:,3));
     pcolor(yy/1000,-zz/1000,aaa1')
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.67:0.001:34.69],'EdgeColor','k');hold off;
     shading interp;
@@ -23,6 +23,8 @@ nIter = 37029;
     xlim([0 450])
     title('Salinity (psu)')
     ylabel('z (km)');xlabel('y (km)')
+
+    %%
 
     subplot(1,2,2)
     aaaa1 = rdmds([exppath,'/results/THETA'],nIter);
@@ -38,7 +40,7 @@ nIter = 37029;
     ylabel('z (km)');xlabel('y (km)')
  
     
-
+%%
 
 figure(3)
 bb = rdmds([exppath,'/results/SIheff'],nIter);

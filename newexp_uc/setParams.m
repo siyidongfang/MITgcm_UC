@@ -58,8 +58,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   simTime = 20*t1year; %%% Simulation time   
-  simTime = 60*t1day;
+  simTime = 20*t1year; %%% Simulation time   
+%   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
   Lx = 400*m1km; %%% Domain size in x 
   Ly = 450*m1km; %%% Domain size in y   
@@ -140,9 +140,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     Xwest = 125*m1km; %%% Longitude of western trough wall
     Yicefront = 0*m1km; %%% Latitude of ice shelf face
     Hicefront = 0; %%% Depth of ice shelf frace
-    Hbed = -400; %%% Change in bed elevation from shelf break to southern domain edge
+    Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
     Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-    Htrough = 400; %%% Trough depth
+    Htrough = 300; %%% Trough depth
     Wtrough = 40*m1km; %%% Trough width
     Xtrough = Lx/2; %%% Longitude of trough
 
@@ -162,7 +162,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   useEXF = true;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useLAYERS = false;
+  useLAYERS = true;
   useRBCS = false; 
   useEXFwindstress = false; %%% apply wind speed in EXF package
   if(useSEAICE)
@@ -902,7 +902,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
 %   deltaT = 140
-  deltaT = round(deltaT/4)
+%   deltaT = round(deltaT/4)
 
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
@@ -1197,24 +1197,23 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   EXF_PARM = {EXF_NML_01,EXF_NML_02,EXF_NML_03,EXF_NML_04,EXF_NML_OBCS}; 
     
 
-if(useSEAICE)
-    exf_albedo = 0.15; 
- 	exf_scal_BulkCdn  = 1.015;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% UWIND AND VWIND in EXF %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    exf_scal_BulkCdn  = 1.015;
  	exf_iprec         = 64;  
  	useExfYearlyFields= false;
  	useExfCheckRange  = false;
 %  	useRelativeWind   = true;
  	useRelativeWind   = false;
     repeatPeriod      = 20*t1year;
-    
-%     exf_offset_atemp =  273.16;
-    %%%runoff from ERA is in hours, need to convert to seconds
-%     exf_inscal_runoff = 1.14e-04;
-  
-  EXF_NML_01.addParm('exf_albedo',exf_albedo,PARM_INT);
+
   if (EXFoption ~= 5)
      EXF_NML_01.addParm('exf_scal_BulkCdn',exf_scal_BulkCdn,PARM_REAL);
   end
+
   EXF_NML_01.addParm('exf_iprec',exf_iprec,PARM_INT);
   EXF_NML_01.addParm('useExfYearlyFields',useExfYearlyFields,PARM_BOOL);
   EXF_NML_01.addParm('useExfCheckRange',useExfCheckRange,PARM_BOOL);
@@ -1335,6 +1334,17 @@ else
 end   
 
 
+
+if(useSEAICE)
+    exf_albedo = 0.15; 
+    
+%     exf_offset_atemp =  273.16;
+    %%%runoff from ERA is in hours, need to convert to seconds
+%     exf_inscal_runoff = 1.14e-04;
+  
+  EXF_NML_01.addParm('exf_albedo',exf_albedo,PARM_INT);
+
+
 % Read-in atemp, aqh, swdown, lwdown, precip, and runoff. Compute hflux, swflux and sflux.
     Kice = 2.1656; %%% Ice thermal conductivity, W/(m*degK)
     ice_abs = 1-SEAICE_dryIceAlb; %%% Ice absorption
@@ -1413,6 +1423,11 @@ if(EXFoption == 3)
 end
 
 end
+
+
+
+
+
 
 
     %%% No sea ice
@@ -1553,48 +1568,48 @@ end
 
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
-%     ... %%%%%%%%% for spin-up
-%     'UVEL','VVEL', 'WVEL',...
+% % %     ... %%%%%%%%% for spin-up
+    'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-%     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
-%     'UVELSQ','VVELSQ','WVELSQ'...
-%     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
-% % % %       ... %%%%%%%%% for analysis
-% % % %       ... %%% Heat budget
-% % % %          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
-% % % %          'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
-% % % %          ...
-% % % %          'VVELTH', ...
-% % % %          'oceQnet','UVELTH','WVELTH',...
-% % % %       ... %%% Energy budget
-% % % %          'UVELSQ','VVELSQ','WVELSQ',...
-% % % %          'UV_VEL_Z','WU_VEL','WV_VEL',...
-% % % %       ... %%% Sea ice
-% % % %          'SIarea','SIheff','SIuice','SIvice','SIsig12',...
-% % % %          'SItices','SIqnet','SIempmr','SIatmQnt',...
-% % % %          ...
-% % % %       ... %%% Salt budget
-% % % %          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
-% % % %          'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
-% % % %          ...
-% % % %          'VVELSLT',...
-% % % %          'oceSflux','UVELSLT','WVELSLT',...
-% % % %       ... %%% Momentum budget
-% % % %          'ETAN',...
-% % % %          'oceTAUX','oceTAUY',...
-% % % %      ... %%% Overturning streamfunction
-% % % %          'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
-% % % %                     'LaUH2TH','LaHw2TH',... 
-% % % %      ...
-% % % %          'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
-% % % %          'SItaux','SItauy','SIatmTx','SIatmTy',...   
-% % % %          'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
-% % % %          'VISrI_Um','VISrI_Vm',...
+... % % %     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
+... % % %     'UVELSQ','VVELSQ','WVELSQ'...
+... % % %     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
+      ... %%%%%%%%% for analysis
+      ... %%% Heat budget
+         'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
+         'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
+         ...
+         'VVELTH', ...
+         'oceQnet','UVELTH','WVELTH',...
+      ... %%% Energy budget
+         'UVELSQ','VVELSQ','WVELSQ',...
+         'UV_VEL_Z','WU_VEL','WV_VEL',...
+... %       ... %%% Sea ice
+... %          'SIarea','SIheff','SIuice','SIvice','SIsig12',...
+... %          'SItices','SIqnet','SIempmr','SIatmQnt',...
+... %          'SItaux','SItauy','SIatmTx','SIatmTy',...   
+         ...
+      ... %%% Salt budget
+         'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
+         'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
+         ...
+         'VVELSLT',...
+         'oceSflux','UVELSLT','WVELSLT',...
+      ... %%% Momentum budget
+         'ETAN',...
+         'oceTAUX','oceTAUY',...
+     ... %%% Overturning streamfunction
+         'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
+                    'LaUH2TH','LaHw2TH',... 
+     ...
+         'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
+         'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
+         'VISrI_Um','VISrI_Vm',...
      };
       
   numdiags_avg = length(diag_fields_avg);  
-%   diag_freq_avg = 1*t1year;
-  diag_freq_avg = 1*t1day;
+  diag_freq_avg = 1*t1year;
+%   diag_freq_avg = 1*t1day;
 %   diag_freq_avg = 2*t1day;
 
 
@@ -1805,7 +1820,9 @@ diag_fields_inst = {...
                 % specify (0.1 m/s, 2 hr) for South boundary tidal component 1
                 if strcmp(ob,'S')
                     if strcmp(fld,'am')
-                        tmp(:,1) = tmp(:,1) + Atide*H/Hshelf;
+%                         tmp(:,1) = tmp(:,1) + Atide*H/Hshelf;
+                        Atide_south =  Atide*H/(Hshelf-Hbed)*Lx/(Xeast-Xwest)
+                        tmp(:,1) = tmp(:,1) + Atide_south;
                     else
                         if(varyingtidalphase)
                             varyingphase = 0.5*t1hour;
@@ -1985,21 +2002,21 @@ diag_fields_inst = {...
   %%% reflection  
   obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
-%   obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
-%   obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
 
 
-  %%% Velocity averaging time scale - must be larger than deltaT.
-  %%% The Orlanski radiation condition computes the characteristic velocity
-  %%% at the boundary by averaging the spatial derivative normal to the 
-  %%% boundary divided by the time step over this period.
-  %%% At the moment we're using the magic engineering factor of 3.
-  cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
-  %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
-  CMAX = 0.45; 
-  
-  obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
-  obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
+%   %%% Velocity averaging time scale - must be larger than deltaT.
+%   %%% The Orlanski radiation condition computes the characteristic velocity
+%   %%% at the boundary by averaging the spatial derivative normal to the 
+%   %%% boundary divided by the time step over this period.
+%   %%% At the moment we're using the magic engineering factor of 3.
+%   cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
+%   %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
+%   CMAX = 0.45; 
+%   
+%   obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
+%   obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
 
 
   
