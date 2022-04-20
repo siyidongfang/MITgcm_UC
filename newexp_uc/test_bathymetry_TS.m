@@ -169,7 +169,7 @@
   
 
   %%% Plot bathymetry and ice draft
-  figure(3)
+  figure(1)
   clf;    
 
   %%% Bathymetry  
@@ -212,10 +212,123 @@
   lightangle(-206,34);
   lighting flat;
 
+%  imgpath = '/Users/csi/MITgcm_UC/figures_uc/model/';
+%  savefig([imgpath '/model_UC.fig']);
+%  saveas(gcf,[imgpath '/model_UC.png']);
 
 
 
-%%%
+
+
+
+showplots = true;
+fignum = 2;
+fontsize = 14;
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% NORTHERN TEMPERATURE/SALINITY PROFILES %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %%% Bottom properties offshore, taken from Meijers et al. (2010)
+  %%% measurements. We need these because the KN climatology only goes down
+  %%% to 2000m
+  s_bot = 34.65;
+  pt_bot = 0.4;
+  s_mid = 34.67;
+  pt_mid = 4;
+  s_surf = 33.95;
+  pt_surf = -1.5;
+  Zsml = -50;
+  Zcdw_pt = -300;
+  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+                          %%% be deeper or else you end up with very weak 
+                          %%% buoyancy frequency just below the pycnocline
+  
+  %%% Artificially construct a hydrographic profile
+  depth_North_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
+  depth_North_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
+  ptemp_North = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+  salt_North = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+  
+  %%% Interpolate to model grid
+  tNorth = interp1(depth_North_pt,ptemp_North,zz,'PCHIP'); %%% reference pressure level: sea surface
+  sNorth = interp1(depth_North_s,salt_North,zz,'PCHIP');  %%% reference pressure level: sea surface 
+  
+
+
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% SOUTHERN TEMPERATURE/SALINITY PROFILES %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %%% Bottom properties offshore, taken from Meijers et al. (2010)
+  %%% measurements. We need these because the KN climatology only goes down
+  %%% to 2000m
+  s_bot = 34.65;
+  pt_bot = 4;
+  s_mid = 34.62;
+  pt_mid = 3.5;
+  s_surf = 33.95;
+  pt_surf = -1.8;
+  Zsml = -100;             %%% Depth of the surface mixed layer
+  Zcdw_pt = -650;
+  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+                          %%% be deeper or else you end up with very weak 
+                          %%% buoyancy frequency just below the pycnocline
+  
+  %%% Artificially construct a hydrographic profile
+  depth_South_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
+  depth_South_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
+  ptemp_South = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+  salt_South = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+  
+  %%% Interpolate to model grid
+  tSouth = interp1(depth_South_pt,ptemp_South,zz,'PCHIP'); %%% reference pressure level: sea surface
+  sSouth = interp1(depth_South_s,salt_South,zz,'PCHIP');  %%% reference pressure level: sea surface 
+  
+
+  %%% Plot the relaxation temperature
+  if (showplots)
+    figure(fignum);
+    fignum = fignum + 1;
+    clf;
+    plot(tNorth,-zz,'LineWidth',1.5); 
+    hold on;
+    plot(tSouth,-zz,'LineWidth',1.5); 
+    axis ij; 
+    xlabel('\theta_r_e_f (\circC)');
+    ylabel('Depth (m)');
+    title('Relaxation temperature');
+    legend('Northern T','Southern T','Position',[0.3200 0.6468 0.3066 0.0738]);
+    set(gca,'fontsize',fontsize);
+    PLOT = gcf;
+    PLOT.Position = [644 148 380 562];  
+  end
+    
+  %%% Plot the relaxation salinity
+  if (showplots)
+    figure(fignum);
+    fignum = fignum + 1;
+    clf;
+    plot(sNorth,-zz,'LineWidth',1.5);
+    hold on;
+    plot(sSouth,-zz,'LineWidth',1.5);
+    axis ij;
+    xlabel('S_r_e_f (psu)');
+    ylabel('Depth (m)');
+%     ylabel('z','Rotation',0);
+    title('Relaxation salinity');
+    legend('Northern S','Southern S','Position',[0.3200 0.6468 0.3066 0.0738]);
+    set(gca,'fontsize',fontsize);
+    PLOT = gcf;
+    PLOT.Position = [644 148 380 562];  
+  end
+
+  
+  
+
+
 %%% Specifies shape of coastal walls. Must satisfy f=1 at x=0 and f=0 at
 %%% x=1.
 %%%
@@ -227,7 +340,3 @@ function f = coastShape (x)
   
 end
   
-%  imgpath = '/Users/csi/MITgcm_UC/figures_uc/model/';
-%  savefig([imgpath '/model_UC.fig']);
-%  saveas(gcf,[imgpath '/model_UC.png']);
-
