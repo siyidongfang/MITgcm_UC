@@ -8,13 +8,13 @@ batch_name = 'exps_test';
 
 
 %%% Input parameters
-Ua = -2;      %%% Reference value -6
-Va = 2;       %%% Reference value 6
-Atide = 0; %%% Reference value 0.05
+Ua = -2;      %%% Reference value -2
+Va = 2;       %%% Reference value 2
+Atide = 0; %%% Reference value 0.035 (based on Jourdain et al. 2019)
 Hi0 =0;       %%% Reference value 1
 Ai0 =0;       %%% Reference value 1
 m1km = 1000;
-Ws =25*m1km;      %%% Reference value 25km, slope half-width
+Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
                    %%% Note that in the manuscript Ws represents slope width. Slope width = [50 100 150 200 250]*m1km; 
                    %%% The corresponding Meridional slope position Ys = [150 175 200 225 250]*m1km;
 is_ContinuedRun = false;
@@ -31,9 +31,10 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 %%% Create simulations
 % exp_name = ['amundsen_summer_' exp_name]
 % exp_name = ['noice_ssurf33_0dS_' exp_name '_orlanski6'];
-% exp_name = ['km5_' exp_name '_init']
+exp_name = ['stampede2_km5_' exp_name '_init']
+%  exp_name = ['stampede2_km5_' exp_name '_tideP24h_init']
 
-expname = 'test'
+% expname = 'test'
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
 

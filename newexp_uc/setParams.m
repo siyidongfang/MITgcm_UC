@@ -128,13 +128,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     % % % % 
 
     %%% Topographic parameters 
-    Wslope = 30*m1km; %%% Continental slope half-width
+%     Ws = 30*m1km; %%% Continental slope half-width
     Hshelf = 500; %%% Continental shelf depth
     Wshelf = 150*m1km; %%% Width of continental shelf
     Ycoast = 10*m1km; %%% Latitude of coastline
     Wcoast = 20*m1km; %%% Width of coastal wall slope
     Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
-    Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
+    Yslope = Ycoast+Wshelf+Ws; %%% Latitude of mid-continental slope
     Ydeep = 300*m1km; %%% Latitude of deep ocean
     Xeast = 275*m1km; %%% Longitude of eastern trough wall
     Xwest = 125*m1km; %%% Longitude of western trough wall
@@ -177,8 +177,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useobcsNorth = true;
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
-  useOrlanskiWest = true;
-  useOrlanskiEast = true;
+  useOrlanskiWest = false;
+  useOrlanskiEast = false;
 
   
   %%% Flag for barotropic mode
@@ -415,7 +415,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
    
   %%% Construct shelf/slope/deep ocean bathymetry profile via cubic
   %%% interpolation
-  y_interp = [0 (Yslope-Wslope)/2 Yslope-Wslope Yslope Ydeep Ly];
+  y_interp = [0 (Yslope-Ws)/2 Yslope-Ws Yslope Ydeep Ly];
   h_interp = [-Hshelf+Hbed -Hshelf+Hbed/2 -Hshelf -(Hshelf+H)/2 -H -H];
   h_profile = interp1(y_interp,h_interp,yy,'pchip');
   h = repmat(h_profile,[Nx 1]);
@@ -1554,10 +1554,10 @@ end
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
 %     ... %%%%%%%%% for spin-up
-    'UVEL','VVEL', 'WVEL',...
+%     'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-    'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
-    'UVELSQ','VVELSQ','WVELSQ'...
+%     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
+%     'UVELSQ','VVELSQ','WVELSQ'...
 %     'SIarea','SIheff','SIuice','SIvice','SIempmr','oceSflux',...
 % % % %       ... %%%%%%%%% for analysis
 % % % %       ... %%% Heat budget
@@ -1594,7 +1594,7 @@ diag_fields_avg = {...
       
   numdiags_avg = length(diag_fields_avg);  
 %   diag_freq_avg = 1*t1year;
-  diag_freq_avg = 10*t1day;
+  diag_freq_avg = 1*t1day;
 %   diag_freq_avg = 2*t1day;
 
 
@@ -1740,15 +1740,15 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
 
-  OB_Ieast= Nx*ones(1,Ny);
-  obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
-  OB_Iwest= ones(1,Ny);
-  obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
+%   OB_Ieast= Nx*ones(1,Ny);
+%   obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
+%   OB_Iwest= ones(1,Ny);
+%   obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
 
  
   
-  tidalPeriod= [43200,43200,43200,43200,43200,43200,43200,43200,43200,43200];
-%   tidalPeriod= [86400,86400,86400,86400,86400,86400,86400,86400,86400,86400];
+%   tidalPeriod= [43200,43200,43200,43200,43200,43200,43200,43200,43200,43200];
+  tidalPeriod= [86400,86400,86400,86400,86400,86400,86400,86400,86400,86400];
 %   tidalPeriod=[44714.16,43200.,45569.88,43081.92,86164.2,92949.48,86637.24,96726.24,1180295.64,2380716];
   obcs_parm01.addParm('useOBCStides',useOBCStides,PARM_BOOL);
   
@@ -1844,10 +1844,10 @@ diag_fields_inst = {...
     obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
   end
 
-  OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
-  OBCS_balanceFacW = 1;
-  obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
-  obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+%   OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
+%   OBCS_balanceFacW = 1;
+%   obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
+%   obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
 
   
 
@@ -1985,8 +1985,8 @@ diag_fields_inst = {...
   %%% reflection  
   obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
-  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
-  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
+%   obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
+%   obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
 
 
   %%% Velocity averaging time scale - must be larger than deltaT.
@@ -2021,8 +2021,8 @@ diag_fields_inst = {...
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
 
-  obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
-  obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  
+%   obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
+%   obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  
 
   
     
