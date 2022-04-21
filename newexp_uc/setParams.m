@@ -1925,7 +1925,7 @@ diag_fields_inst = {...
 
   if(useEobcsWorlanski)
 
-TODO: DEFINE Eastern boundary values.
+TODO: DEFINE Eastern boundary values, size(Ny,Nr)
 
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
