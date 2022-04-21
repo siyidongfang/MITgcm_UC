@@ -31,7 +31,7 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 %%% Create simulations
 % exp_name = ['amundsen_summer_' exp_name]
 % exp_name = ['res5km_' exp_name '_ZcdwN300_2orlanski']
-exp_name = ['res5km_' exp_name '_ZcdwN400_fresherS']
+% exp_name = ['res5km_' exp_name '_ZcdwN400_fresherS']
 
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
