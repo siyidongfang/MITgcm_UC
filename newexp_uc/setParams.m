@@ -175,12 +175,19 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOBCS = true;
   useOBCStides = true;
   useobcsNorth = true;
-  use2Orlanski = false;
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
+  % Zonal boundary condition
+  use2Orlanski = false;
+  useEobcsWorlanski = true;
   if(use2Orlanski)
-  useOrlanskiWest = true;
-  useOrlanskiEast = true;
+      useOrlanskiWest = true;
+      useOrlanskiEast = true;
+  end
+  if(useEobcsWorlanski)
+      useOBCSeast = true;
+      useOrlanskiWest = true;
+      useOrlanskiEast = false;  
   end
 
   
@@ -606,46 +613,48 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
 
 %%% Use Amundsen-like relaxation profiles
-%     addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
-%     load WOA81summer_Lon103W_LatS71.875S.mat;
-%     tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
-%     sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
-%     tSouth = interp1(-depth(1:Ndepth_south),tsouth_woa_smooth,zz,'PCHIP');
-%     sSouth = interp1(-depth(1:Ndepth_south),ssouth_woa_smooth,zz,'PCHIP');
+    addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
+    load WOA81SouthernHWinter_Lon103W_LatS71.875S.mat;
+    tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
+    sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
+    tsouth_woa_fulldepth = [tsouth_woa_smooth tsouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
+    ssouth_woa_fulldepth = [ssouth_woa_smooth ssouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
+    tSouth = interp1(-depth,tsouth_woa_fulldepth,zz,'PCHIP');
+    sSouth = interp1(-depth,ssouth_woa_fulldepth,zz,'PCHIP');
 
 
-  %%% Bottom properties offshore, taken from Meijers et al. (2010)
-  %%% measurements. We need these because the KN climatology only goes down
-  %%% to 2000m
-  %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
-
-  s_bot = 34.65;
-  pt_bot = 4;
-  s_mid = 34.62;
-  pt_mid = 3.5;
-  s_surf = 33.95;
-  pt_surf = -1.8;
-  Zsml = -100;             %%% Depth of the surface mixed layer
-  Zcdw_pt = -650;
-  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
-                          %%% be deeper or else you end up with very weak 
-                          %%% buoyancy frequency just below the pycnocline
-  useFresher = true;
-  if(useFresher)
-      s_bot = s_bot-0.3;
-      s_mid = s_mid-0.3;
-      s_surf = s_surf-0.3;
-  end
-
-  %%% Artificially construct a hydrographic profile
-  depth_South_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
-  depth_South_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
-  ptemp_South = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-  salt_South = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
-  
-  %%% Interpolate to model grid
-  tSouth = interp1(depth_South_pt,ptemp_South,zz,'PCHIP'); %%% reference pressure level: sea surface
-  sSouth = interp1(depth_South_s,salt_South,zz,'PCHIP');  %%% reference pressure level: sea surface 
+% % %   %%% Bottom properties offshore, taken from Meijers et al. (2010)
+% % %   %%% measurements. We need these because the KN climatology only goes down
+% % %   %%% to 2000m
+% % %   %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
+% % % 
+% % %   s_bot = 34.65;
+% % %   pt_bot = 4;
+% % %   s_mid = 34.62;
+% % %   pt_mid = 3.5;
+% % %   s_surf = 33.95;
+% % %   pt_surf = -1.8;
+% % %   Zsml = -100;             %%% Depth of the surface mixed layer
+% % %   Zcdw_pt = -650;
+% % %   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+% % %                           %%% be deeper or else you end up with very weak 
+% % %                           %%% buoyancy frequency just below the pycnocline
+% % %   useFresher = true;
+% % %   if(useFresher)
+% % %       s_bot = s_bot-0.3;
+% % %       s_mid = s_mid-0.3;
+% % %       s_surf = s_surf-0.3;
+% % %   end
+% % % 
+% % %   %%% Artificially construct a hydrographic profile
+% % %   depth_South_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
+% % %   depth_South_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
+% % %   ptemp_South = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+% % %   salt_South = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+% % %   
+% % %   %%% Interpolate to model grid
+% % %   tSouth = interp1(depth_South_pt,ptemp_South,zz,'PCHIP'); %%% reference pressure level: sea surface
+% % %   sSouth = interp1(depth_South_s,salt_South,zz,'PCHIP');  %%% reference pressure level: sea surface 
   
 
 
@@ -1762,11 +1771,11 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
 
-  if(use2Orlanski)
-  OB_Ieast= Nx*ones(1,Ny);
-  obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
-  OB_Iwest= ones(1,Ny);
-  obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
+  if(use2Orlanski|useEobcsWorlanski)
+      OB_Ieast= Nx*ones(1,Ny);
+      obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
+      OB_Iwest= ones(1,Ny);
+      obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
   end
  
   
@@ -1869,11 +1878,11 @@ diag_fields_inst = {...
     obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
   end
 
-  if(use2Orlanski)
-  OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
-  OBCS_balanceFacW = 1;
-  obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
-  obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+  if(use2Orlanski|useEobcsWorlanski)
+      OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
+      OBCS_balanceFacW = 1;
+      obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
+      obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
   end
 
   
@@ -1905,9 +1914,6 @@ diag_fields_inst = {...
   writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
   writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
 
-%   writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
-%   writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
-
   %%% Set OBCS prescription parameters
   obcs_parm01.addParm('useOBCSprescribe',useOBCSprescribe,PARM_BOOL);
   if (useobcsNorth)
@@ -1917,8 +1923,18 @@ diag_fields_inst = {...
   obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
   obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
 
-%   obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
-%   obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
+  if(useEobcsWorlanski)
+
+TODO: DEFINE Eastern boundary values.
+
+      %%%%%% Define OBCS Eastern boundary
+      writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
+      writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
+      writeDataset(OBEu,fullfile(inputpath,'OBEuFile.bin'),ieee,prec);
+      obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBEuFile','OBEsFile.bin',PARM_STR);
+  end
 
 
 
@@ -2011,20 +2027,20 @@ diag_fields_inst = {...
   obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
 
-  if(use2Orlanski)
-  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
-  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
-  %%% Velocity averaging time scale - must be larger than deltaT.
-  %%% The Orlanski radiation condition computes the characteristic velocity
-  %%% at the boundary by averaging the spatial derivative normal to the 
-  %%% boundary divided by the time step over this period.
-  %%% At the moment we're using the magic engineering factor of 3.
-  cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
-  %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
-  CMAX = 0.45; 
-  
-  obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
-  obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
+  if(use2Orlanski|useEobcsWorlanski)
+      obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
+      obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
+      %%% Velocity averaging time scale - must be larger than deltaT.
+      %%% The Orlanski radiation condition computes the characteristic velocity
+      %%% at the boundary by averaging the spatial derivative normal to the 
+      %%% boundary divided by the time step over this period.
+      %%% At the moment we're using the magic engineering factor of 3.
+      cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
+      %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
+      CMAX = 0.45; 
+      
+      obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
+      obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
   end
 
   
@@ -2036,9 +2052,6 @@ diag_fields_inst = {...
 
     Vrelaxobcsinner = 864000;
     Vrelaxobcsbound = 43200;
-
-    Urelaxobcsinner = 864000;
-    Urelaxobcsbound = 43200;
 %   %% Relaxation time at meridional boundaries set to time for inflow to
 %   %% cross the sponge layer
 %   Vrelaxobcsbound = spongeThicknessDim/(abs(alpha)*Ly/2);
@@ -2046,8 +2059,12 @@ diag_fields_inst = {...
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
 
-%   obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
-%   obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  
+  if(useEobcsWorlanski)
+        Urelaxobcsinner = 864000;
+        Urelaxobcsbound = 43200;
+        obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
+        obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  
+  end
 
   
     

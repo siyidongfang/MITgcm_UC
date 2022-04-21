@@ -8,11 +8,11 @@ batch_name = 'exps_test';
 
 
 %%% Input parameters
-Ua = -2;      %%% Reference value -2
-Va = 1;       %%% Reference value 1
+Ua = -1;      %%% Reference value -2
+Va = 0.5;       %%% Reference value 1
 Atide = 0.02; %%% Reference value 0.02 (based on Jourdain et al. 2019)
-Hi0 =1;       %%% Reference value 1
-Ai0 =1;       %%% Reference value 1
+Hi0 =0;       %%% Reference value 1
+Ai0 =0;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
                    %%% Note that in the manuscript Ws represents slope width. Slope width = [50 100 150 200 250]*m1km; 
@@ -23,15 +23,16 @@ is_ContinuedRun = false;
 is_hires = false;
 
 %%% Use sea ice or not
-useSEAICE = true;
+useSEAICE = false;
 
 %%% Name pf the simulation
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
-% exp_name = ['amundsen_summer_' exp_name]
+% exp_name = ['amundsen_winter_res5km_' exp_name '_Eobcs_Worlanski']
 % exp_name = ['res5km_' exp_name '_ZcdwN300_2orlanski']
 % exp_name = ['res5km_' exp_name '_ZcdwN400_fresherS']
+exp_name = 'test'
 
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
