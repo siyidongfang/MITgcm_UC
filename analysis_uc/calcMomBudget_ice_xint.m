@@ -19,7 +19,7 @@ hi = SIheff(:,:,1);
 
 
 % ui = SIuice(:,:,1);  % u-grid
-vi = SIvice(:,:,1);  % v-grid
+vi = SIvice;  % v-grid
 % ui_mass = (ui(1:Nx,:) + ui([2:Nx 1],:))/2; % mass-grid
 vi_mass(:,1:Ny-1) = (vi(:,1:Ny-1) + vi(:,2:Ny))/2;  % mass-grid
 vi_mass(:,Ny) = 0;

@@ -1,30 +1,34 @@
 res5km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_ZcdwN300: no undercurrent
 
 res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN200: no undercurrent
-res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN300: ??? no output???
-res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN300_2orlanski: blow up
+res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN300: ??? no output??? (re-submitted)
+res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN300_2orlanski: blow up (reduced time step, re-submitted)
 
-res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN400: no undercurrent
-res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN200: no undercurrent
+res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN400: no undercurrent (blowup??)
+res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN200: no undercurrent (normal end)
 res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN400: no undercurrent
 
 res5km_Ua-2Va1_Atide0.05_Hi0Ai0_Ws30_ZcdwN300_Wtrough20km: seems to have very weak undercurrent over the shelf
 res5km_Ua-2Va1_Atide0.05_Hi1Ai1_Ws30_ZcdwN300:  seems to have very weak undercurrent at the bottom of the slope
 
-res5km_Ua-2Va1_Atide0_Hi0Ai0_Ws30_ZcdwN300: no undercurrent
-res5km_Ua-2Va1_Atide0_Hi1Ai1_Ws30_ZcdwN300: no undercurrent
+res5km_Ua-2Va1_Atide0_Hi0Ai0_Ws30_ZcdwN300 (normal end): no undercurrent
+res5km_Ua-2Va1_Atide0_Hi1Ai1_Ws30_ZcdwN300 (normal end): no undercurrent
 
 
 
 res5km_Ua-1Va0.5_Atide0_Hi1Ai1_Ws30_ZcdwN300: undercurrent!! at the bottom of the slope
 res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN300_fresherS: undercurrents both over the shelf and at the bottom of the slope
-res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN400_fresherS: undercurrents both over the shelf and at the bottom of the slope
+res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN400_fresherS (normal end): undercurrents both over the shelf and at the bottom of the slope
 
 
 
-%%%% use Southern Hemisphere winter profile
+%%%% use Southern Hemisphere winter profile at the Amundsen Sea
 amundsen_winter_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30: no sea ice, same restoring profiles
 amundsen_winter_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_2orlanski: no sea ice, same restoring profiles
 amundsen_winter_res5km_Ua-1Va0.5_Atide0.02_Hi1Ai1_Ws30: with sea ice
 amundsen_winter_res5km_Ua-1Va0.5_Atide0.02_Hi1Ai1_Ws30_2orlanski: can not run (Orlanski boundary condition has not yet been implemented for sea ice)
 
+%%%% use Southern Hemisphere summer profile at the Amundsen Sea
+amundsen_summer_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30: no sea ice
+amundsen_summer_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_fresherS0.3: southern boundary is 0.3 psu fresher than the woa profile (ssouth=ssouth-0.3)
+amundsen_summer_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_fresherS0.6: southern boundary is 0.6 psu fresher than the woa profile

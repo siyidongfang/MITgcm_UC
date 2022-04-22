@@ -4,9 +4,9 @@ addpath ../utils/matlab;
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
 expdir = '/Users/csi/MITgcm_UC/exps_test/';
-expname = 'res5km_Ua-2Va1_Atide0.02_Hi0Ai0_Ws30_ZcdwN300_2orlanski';
+expname = 'res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN400_fresherS';
 loadexp;
-nIter = 2154;
+nIter = 923005;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
@@ -14,15 +14,19 @@ nIter = 2154;
     subplot(1,2,1)
     aaaa1 = rdmds([exppath,'/results/SALT'],nIter);
     aaa1 = squeeze(mean(aaaa1));
+    aaa1(aaa1==0)=NaN;
 %     aaa1 = squeeze(aaaa1(:,:,3));
     pcolor(yy/1000,-zz/1000,aaa1')
-    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.67:0.001:34.69],'EdgeColor','k');hold off;
+    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[32:0.1:35],'EdgeColor','k');hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(40,:)/1000,'k','LineWidth',1.5);
+
     shading interp;
     axis ij;colormap('jet');colorbar
     caxis([33.8 34.7]);
     xlim([0 450])
     title('Salinity (psu)')
     ylabel('z (km)');xlabel('y (km)')
+ set(gca,'FontSize',15)
 
     
 
@@ -31,6 +35,8 @@ nIter = 2154;
     aaa1 = squeeze(mean(aaaa1));
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-4:0.4:4],'EdgeColor','k');hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(40,:)/1000,'k','LineWidth',1.5);
+
     shading interp;
     axis ij;
     colormap('redblue');
@@ -38,7 +44,7 @@ nIter = 2154;
     caxis([-4 4]);xlim([0 450])
     title('Potential temperature (degC)')
     ylabel('z (km)');xlabel('y (km)')
- 
+ set(gca,'FontSize',15)
    
 
 % figure(3)
@@ -59,11 +65,13 @@ aaaa1 = rdmds([exppath,'/results/UVEL'],nIter);
 aaaa1(aaaa1==0)=NaN;
 aaa1 = squeeze(nanmean(aaaa1));
 pcolor(yy/1000,-zz/1000,aaa1');
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(25,:)/1000,'k','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(40,:)/1000,'k','LineWidth',1.5);
 shading interp;axis ij;colormap('redblue');colorbar
 caxis([-0.4 0.4])
 title('Transient zonal velociy (m/s)')
 ylabel('z (km)');xlabel('y (km)')
+ set(gca,'FontSize',15)
+
 
 % subplot(2,2,2)
 % aaaa1 = rdmds([exppath,'/results/T'],nIter);

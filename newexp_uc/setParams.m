@@ -179,7 +179,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = true;
+  useEobcsWorlanski = false;
   if(use2Orlanski)
       useOrlanskiWest = true;
       useOrlanskiEast = true;
@@ -571,34 +571,34 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     % % % %     sNorth = interp1(depth_North,salt_North,zz,'PCHIP');  %%% reference pressure level: sea surface
 
 
-  %%% Bottom properties offshore, taken from Meijers et al. (2010)
-  %%% measurements. We need these because the KN climatology only goes down
-  %%% to 2000m
-  %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
-  s_bot = 34.65;
-  pt_bot = 0.4;
-  s_mid = 34.67;
-  pt_mid = 3.5;
-  s_surf = 33.95;
-  pt_surf = -1.5;
-  Zsml = -50;
-  Zcdw_pt = -300;         %%% Default: -300
-  Zcdw_s = Zcdw_pt - 100;  %%% Default: Zcdw_pt -100
-                          %%% This is important - salinity maximum needs to 
-                          %%% be deeper or else you end up with very weak 
-                          %%% buoyancy frequency just below the pycnocline
-  
-
-  %%% Artificially construct a hydrographic profile
-  depth_North_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
-  depth_North_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
-  ptemp_North = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-  salt_North = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
- 
-  
-  %%% Interpolate to model grid
-  tNorth = interp1(depth_North_pt,ptemp_North,zz,'PCHIP'); %%% reference pressure level: sea surface
-  sNorth = interp1(depth_North_s,salt_North,zz,'PCHIP');  %%% reference pressure level: sea surface 
+% % % % %   %%% Bottom properties offshore, taken from Meijers et al. (2010)
+% % % % %   %%% measurements. We need these because the KN climatology only goes down
+% % % % %   %%% to 2000m
+% % % % %   %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
+% % % % %   s_bot = 34.65;
+% % % % %   pt_bot = 0.4;
+% % % % %   s_mid = 34.67;
+% % % % %   pt_mid = 3.5;
+% % % % %   s_surf = 33.95;
+% % % % %   pt_surf = -1.5;
+% % % % %   Zsml = -50;
+% % % % %   Zcdw_pt = -300;         %%% Default: -300
+% % % % %   Zcdw_s = Zcdw_pt - 100;  %%% Default: Zcdw_pt -100
+% % % % %                           %%% This is important - salinity maximum needs to 
+% % % % %                           %%% be deeper or else you end up with very weak 
+% % % % %                           %%% buoyancy frequency just below the pycnocline
+% % % % %   
+% % % % % 
+% % % % %   %%% Artificially construct a hydrographic profile
+% % % % %   depth_North_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
+% % % % %   depth_North_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
+% % % % %   ptemp_North = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+% % % % %   salt_North = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+% % % % %  
+% % % % %   
+% % % % %   %%% Interpolate to model grid
+% % % % %   tNorth = interp1(depth_North_pt,ptemp_North,zz,'PCHIP'); %%% reference pressure level: sea surface
+% % % % %   sNorth = interp1(depth_North_s,salt_North,zz,'PCHIP');  %%% reference pressure level: sea surface 
   
   
 
@@ -614,7 +614,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
 %%% Use Amundsen-like relaxation profiles
     addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
-    load WOA81SouthernHWinter_Lon103W_LatS71.875S.mat;
+%     load WOA81SouthernHWinter_Lon103W_LatS71.875S.mat;
+    load WOA81SouthernHSummer_Lon103W_LatS71.875S.mat;
     tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
     sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
     tsouth_woa_fulldepth = [tsouth_woa_smooth tsouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
@@ -622,6 +623,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     tSouth = interp1(-depth,tsouth_woa_fulldepth,zz,'PCHIP');
     sSouth = interp1(-depth,ssouth_woa_fulldepth,zz,'PCHIP');
 
+    useFresherS = true;
+    if(useFresherS)
+        sSouth = sSouth -0.6;
+    end
 
 % % %   %%% Bottom properties offshore, taken from Meijers et al. (2010)
 % % %   %%% measurements. We need these because the KN climatology only goes down
@@ -1925,7 +1930,7 @@ diag_fields_inst = {...
 
   if(useEobcsWorlanski)
 
-TODO: DEFINE Eastern boundary values, size(Ny,Nr)
+% TODO: DEFINE Eastern boundary values, size(Ny,Nr)
 
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
