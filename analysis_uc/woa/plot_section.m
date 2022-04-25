@@ -60,7 +60,7 @@
     xlabel('Latitude')
     set(gca,'FontSize',fontsize)
     
-    print('-djpeg','-r250','Section_TS_summer.jpeg');
+%     print('-djpeg','-r250','Section_TS_summer.jpeg');
     
     
     
@@ -113,7 +113,7 @@
     ylim([0 5000])
     set(gca,'FontSize',fontsize)
     
-    print('-djpeg','-r250','Restoring_TS_summer.jpeg');
+%     print('-djpeg','-r250','Restoring_TS_summer.jpeg');
     
     
 %     save('WOA81summer_Lon103W_LatS71.875S.mat','depth','latS','latN','lon_sec','Ndepth_south',...
