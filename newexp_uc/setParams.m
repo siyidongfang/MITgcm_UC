@@ -614,8 +614,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
 %%% Use Amundsen-like relaxation profiles
     addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
-%     load WOA81SouthernHWinter_Lon103W_LatS71.875S.mat;
-    load WOA81SouthernHSummer_Lon103W_LatS71.875S.mat;
+    load WOA81summer_Lon103W_LatS72.125S_latN69.875S.mat;
     tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
     sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
     tsouth_woa_fulldepth = [tsouth_woa_smooth tsouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
@@ -623,7 +622,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     tSouth = interp1(-depth,tsouth_woa_fulldepth,zz,'PCHIP');
     sSouth = interp1(-depth,ssouth_woa_fulldepth,zz,'PCHIP');
 
-    useFresherS = true;
+    useFresherS = false;
     if(useFresherS)
         sSouth = sSouth -0.6;
     end
@@ -661,8 +660,6 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 % % %   tSouth = interp1(depth_South_pt,ptemp_South,zz,'PCHIP'); %%% reference pressure level: sea surface
 % % %   sSouth = interp1(depth_South_s,salt_South,zz,'PCHIP');  %%% reference pressure level: sea surface 
   
-
-
 
     ref_pres_surf = 0; 
     ref_pres_sigma4 = 4000;

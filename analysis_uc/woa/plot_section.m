@@ -2,21 +2,21 @@
     clear
     
     addpath /Users/csi/MITgcm_ASF-csi/data_WOA18_etopo;
-    
+
 %     load ss81_winter.mat
 %     ss=ss81_winter;
 %     load tt81_winter.mat
 %     tt=tt81_winter;
+% 
+%     load ss81_summer.mat
+%     ss=ss81_summer;
+%     load tt81_summer.mat
+%     tt=tt81_summer;
 
-    load ss81_summer.mat
-    ss=ss81_summer;
-    load tt81_summer.mat
-    tt=tt81_summer;
-
-%     load ss81_annual.mat
-%     ss=ss81_annual;
-%     load tt81_annual.mat
-%     tt=tt81_annual;
+    load ss81_annual.mat
+    ss=ss81_annual;
+    load tt81_annual.mat
+    tt=tt81_annual;
     %% Plot temperature and salinity sections
     
     lon_selected = -103;

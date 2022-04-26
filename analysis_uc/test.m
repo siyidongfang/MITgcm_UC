@@ -4,9 +4,9 @@ addpath ../utils/matlab;
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
 expdir = '/Users/csi/MITgcm_UC/exps_test/';
-expname = 'res5km_Ua-2Va1_Atide0.02_Hi1Ai1_Ws30_ZcdwN400_fresherS';
+expname = 'summer_new_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_periodic';
 loadexp;
-nIter = 923005;
+nIter = 570787;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
