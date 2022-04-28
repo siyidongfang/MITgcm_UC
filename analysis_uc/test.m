@@ -4,9 +4,9 @@ addpath ../utils/matlab;
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
 expdir = '/Users/csi/MITgcm_UC/exps_test/';
-expname = 'summer_new_res5km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_periodic';
+expname = 'summer_new_res3km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_periodic';
 loadexp;
-nIter = 570787;
+nIter = 235343;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
@@ -26,7 +26,7 @@ nIter = 570787;
     xlim([0 450])
     title('Salinity (psu)')
     ylabel('z (km)');xlabel('y (km)')
- set(gca,'FontSize',15)
+    set(gca,'FontSize',15)
 
     
 
