@@ -1,0 +1,481 @@
+
+addpath /Users/csi/Software/eos80_legacy_gamma_n/;
+addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
+addpath /Users/csi/Software/gsw_matlab_v3_06_11;
+addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+
+
+  Nx = 200;
+  Ny = 225;
+  Nr = 60;
+
+  m1km = 1000;
+  H = 4000; %%% Domain size in z 
+  Lx = 400*m1km; %%% Domain size in x 
+  Ly = 450*m1km; %%% Domain size in y   
+
+  %%% Topographic parameters 
+%   Wslope = 30*m1km; %%% Continental slope half-width
+%   Hshelf = 800; %%% Continental shelf depth
+%   Ycoast = 200*m1km; %%% Latitude of coastline
+%   Wshelf = 50*m1km; %%% Width of continental shelf
+%   Ydeep = 350*m1km; %%% Latitude of deep ocean
+%   Xeast = 275*m1km; %%% Longitude of eastern trough wall
+%   Xwest = 125*m1km; %%% Longitude of western trough wall
+%   Yicefront = 150*m1km; %%% Latitude of ice shelf face
+%   Hicefront = 200; %%% Depth of ice shelf frace
+%   Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
+%   Wtrough = 15*m1km; %%% Trough width
+
+  Wslope = 30*m1km; %%% Continental slope half-width
+  Hshelf = 500; %%% Continental shelf depth
+  Wshelf = 150*m1km; %%% Width of continental shelf
+  Ycoast = 30*m1km; %%% Latitude of coastline
+  Wcoast = 20*m1km; %%% Width of coastal wall slope
+  Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
+  Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
+  Ydeep = 300*m1km; %%% Latitude of deep ocean
+  Xeast = 275*m1km; %%% Longitude of eastern trough wall
+  Xwest = 125*m1km; %%% Longitude of western trough wall
+  Yicefront = 0*m1km; %%% Latitude of ice shelf face
+  Hicefront = 0; %%% Depth of ice shelf frace
+  Hbed = -400; %%% Change in bed elevation from shelf break to southern domain edge
+  Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+  Htrough = 300; %%% Trough depth
+  Wtrough = 40*m1km; %%% Trough width
+  Xtrough = Lx/2; %%% Longitude of trough
+  
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% GRID SPACING %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%    
+
+  %%% Zonal grid
+  dx = Lx/Nx;  
+  xx = (1:Nx)*dx;
+  
+  %%% Uniform meridional grid   
+  dy = (Ly/Ny)*ones(1,Ny);  
+  yy = cumsum((dy + [0 dy(1:end-1)])/2);
+ 
+  %%% Plotting mesh
+  [Y,X] = meshgrid(yy,xx);
+
+
+  %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
+%   dz0 = 2;
+%   dz1 = 15; 
+%   dz2 = 20;
+%   dz3 = 100;
+%   dz4 = 200;  
+%   N0 = 1;
+%   N1 = 20; 
+%   N2 = 50;
+%   N3 = 15;
+%   N4 = 14;  
+  dz0 = 2*10/6;
+  dz1 = 15*10/6; 
+  dz2 = 20*10/6;
+  dz3 = 100*10/6;
+  dz4 = 200*10/6;  
+  N0 = 1;
+  N1 = 12; 
+  N2 = 30;
+  N3 = 9;
+  N4 = 8;
+  nn_c = cumsum([N0 N1 N2 N3 N4]);
+  dz_c = [dz0 dz1 dz2 dz3 dz4];
+  nn = 1:(N1+N2+N3+N4+1);
+  dz = interp1(nn_c,dz_c,nn,'pchip');
+
+  zz = -cumsum((dz+[0 dz(1:end-1)])/2);
+  if (length(zz) ~= Nr)
+    error('Vertical grid size does not match vertical array dimension!');
+  end
+  Nr = length(zz);
+
+
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% BATHYMETRY AND ICE SHELF DRAFT %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+  %%% Construct shelf/slope/deep ocean bathymetry profile via cubic
+  %%% interpolation
+  y_interp = [0 (Yslope-Wslope)/2 Yslope-Wslope Yslope Ydeep Ly];
+  h_interp = [-Hshelf+Hbed -Hshelf+Hbed/2 -Hshelf -(Hshelf+H)/2 -H -H];
+  h_profile = interp1(y_interp,h_interp,yy,'pchip');
+  h = repmat(h_profile,[Nx 1]);
+  
+  
+  %%% Add trough
+  y_interp = [0 Yshelfbreak Yslope Ly];
+  h_interp = [0 -Htrough 0 0];
+  h_trough_profile = interp1(y_interp,h_interp,yy,'pchip');
+  h_trough = repmat(h_trough_profile,[Nx 1]);
+  h_trough = h_trough .* 1./(cosh((X-Xtrough)/Wtrough)).^2;
+  h = h + h_trough;
+  
+    
+  %%% Add coastal wall %%%
+  h_coast = zeros(Nx,Ny);
+  
+  %%% Western coastline
+  coastidx = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X<=Xwest-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((Y(coastidx)-Ycoast+Wcoast/2)/Wcoast);
+  landidx = find((Y<=Ycoast-Wcoast/2) & (X<=Xwest-Wcoast/2));
+  h_coast(landidx) = -h(landidx);
+  
+  %%% Western corner
+  R = sqrt((X-(Xwest-Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
+  coastidx = (Y>Ycoast-Wcoast/2) & (X>Xwest-Wcoast/2) & (R <= Wcoast);  
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((R(coastidx))/Wcoast);
+  
+  %%% Western trough wall
+  coastidx = (Y<Ycoast-Wcoast/2) & (X<=Xwest+Wcoast/2) & (X>Xwest-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((X(coastidx)-Xwest+Wcoast/2)/Wcoast);   
+  
+  %%% Eastern coastline
+  coastidx = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((Y(coastidx)-Ycoast+Wcoast/2)/Wcoast);
+  landidx = find((Y<=Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2));
+  h_coast(landidx) = -h(landidx);
+  
+  %%% Eastern corner
+  R = sqrt((X-(Xeast+Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
+  coastidx = (Y>Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (R <= Wcoast);  
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((R(coastidx))/Wcoast);
+  
+  %%% Eastern trough wall
+  coastidx = (Y<Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (X>=Xeast-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape(-(X(coastidx)-Xeast-Wcoast/2)/Wcoast);   
+  
+  h = h + h_coast;
+
+ 
+  %%% Construct ice shelf
+  icedraft = zeros(Nx,Ny);
+  iceidx = find(Y<=Yicefront);  
+  icedraft(iceidx) = -Hicefront - (Y(iceidx)-Yicefront)/Yicefront * Hice;
+  icedraft(icedraft<h) = h(icedraft<h);
+  
+  
+  %%% Make sure there are no "holes" along the southern boundary, or MITgcm
+  %%% will think it's supposed to be north/south periodic
+  wallidx = find(icedraft(:,1)>h(:,1));
+  h(wallidx,1) = icedraft(wallidx,1);
+  
+  %%% Remove water column thicknesses less than a specified minimum
+  Hmin = 50;
+  wct = icedraft - h;
+  h(wct < Hmin) = icedraft(wct < Hmin);
+
+
+  
+
+  %%% Plot bathymetry and ice draft
+  figure(1)
+  clf;    
+
+  %%% Bathymetry  
+  p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,h(:,2:end-1));
+  p.FaceColor = [11*16+9 9*16+12 6*16+11]/255;
+  p.EdgeColor = 'none';
+
+  %%% Modified ice draft to look good in the plot
+  icedraft_plot = icedraft;
+  icedraft_plot(icedraft==0) = NaN;
+  icetop_plot = 0*icedraft_plot;
+  for i=1:Nx
+    j = find(~isnan(icetop_plot(i,:)),1,'last');
+    if (isempty(j))
+      continue;
+    else
+      icetop_plot(i,j+1) = max(-Hicefront,h(i,j+1));
+    end
+  end
+ 
+  %%% Plot ice
+  hold on;
+  p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,icedraft_plot(:,2:end-1));
+  p.FaceColor = [153, 255, 255]/255;
+  p.EdgeColor = 'none';
+  p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,icetop_plot(:,2:end-1));
+  p.FaceColor = [153, 255, 255]/255;
+  p.EdgeColor = 'none';
+  hold off;
+
+  
+  %%% Decorations
+  view(-206,14);
+  xlabel('x (km)','interpreter','latex');
+  ylabel('y (km)','interpreter','latex');
+  zlabel('z (m)','interpreter','latex');
+  axis tight;
+  pbaspect([Lx/Ly 1 1]);
+  camlight('headlight');
+  lightangle(-206,34);
+  lighting flat;
+
+%  imgpath = '/Users/csi/MITgcm_UC/figures_uc/model/';
+%  savefig([imgpath '/model_UC.fig']);
+%  saveas(gcf,[imgpath '/model_UC.png']);
+
+
+
+showplots = true;
+fignum = 2;
+fontsize = 16;
+
+
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%%%% SOUTHERN TEMPERATURE/SALINITY PROFILES %%%%%
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    %%% Use Amundsen-like relaxation profiles
+        addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
+        load WOA81summer_Lon103W_LatS72.125S_latN69.875S.mat;
+        tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
+        sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
+        tsouth_woa_fulldepth = [tsouth_woa_smooth tsouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
+        ssouth_woa_fulldepth = [ssouth_woa_smooth ssouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
+        tSouth = interp1(-depth,tsouth_woa_fulldepth,zz,'PCHIP');
+        sSouth = interp1(-depth,ssouth_woa_fulldepth,zz,'PCHIP');
+    
+        useFresherS = false;
+        if(useFresherS)
+            sSouth = sSouth -0.6;
+        end
+    
+    
+        ref_pres_surf = 0; 
+        ref_pres_sigma4 = 4000;
+        ref_pres_sigma2 = 2000;
+    
+        lon_sec = -12;
+        latS = -70;
+        latN = -64;
+    
+        SA_north = gsw_SA_from_SP(sNorth,ref_pres_surf,lon_sec,latN);  
+        CT_north = gsw_CT_from_pt(SA_north,tNorth); 
+        SA_south = gsw_SA_from_SP(sSouth,ref_pres_surf,lon_sec,latS);  
+        CT_south = gsw_CT_from_pt(SA_south,tSouth); 
+    
+        rho_north_sigma4  = gsw_rho(SA_north,CT_north,ref_pres_sigma4); 
+        rho_north_sigma2  = gsw_rho(SA_north,CT_north,ref_pres_sigma2); 
+        rho_north_surf  = gsw_rho(SA_north,CT_north,ref_pres_surf); 
+    
+        rho_south_sigma4 = gsw_rho(SA_south,CT_south,ref_pres_sigma4);
+        rho_south_sigma2 = gsw_rho(SA_south,CT_south,ref_pres_sigma2);
+        rho_south_surf = gsw_rho(SA_south,CT_south,ref_pres_surf);
+    
+        
+        %%% Plot the relaxation density
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        plot(rho_north_surf,-zz,'LineWidth',1.5); axis ij;
+        hold on;
+        if (Nr > 1)
+            plot(rho_south_surf,-zz,'-','LineWidth',1.5); axis ij;
+        else 
+            plot(rho_south_surf,-zz,':','LineWidth',1.5); axis ij;        
+        end
+        hold off;
+        xlabel('\rho_r_e_f (\circC)');
+        ylabel('Depth (m)');
+        title('Relaxation density (P_{ref} = 0)');
+        legend('Northern \rho','Southern \rho','Position',[0.3200 0.6468 0.3066 0.0738]);
+        set(gca,'fontsize',fontsize);
+        PLOT = gcf;
+        PLOT.Position = [644 148 380 562];  
+      end
+    
+      
+      %%% Plot the relaxation temperature
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        plot(tNorth,-zz,'LineWidth',1.5); axis ij;
+        hold on;
+        if (Nr > 1)
+            plot(tSouth,-zz,'LineWidth',1.5); axis ij;
+        else 
+            plot(tSouth,-zz,'LineWidth',1.5); axis ij;        
+        end
+        hold off;
+        xlabel('\theta_r_e_f (\circC)');
+        ylabel('Depth (m)');
+        title('Relaxation temperature');
+        legend('Northern T','Southern T','Position',[0.3200 0.6468 0.3066 0.0738]);
+        set(gca,'fontsize',fontsize);
+        PLOT = gcf;
+        PLOT.Position = [644 148 380 562];  
+      end
+        
+      %%% Plot the relaxation salinity
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        plot(sNorth,-zz,'LineWidth',1.5);axis ij;
+        hold on;
+        if (Nr > 1)
+            plot(sSouth,-zz,'LineWidth',1.5); axis ij;
+        else 
+            plot(sSouth,-zz,'LineWidth',1.5); axis ij;
+        end
+        hold off;
+        xlabel('S_r_e_f (psu)');
+        ylabel('Depth (m)');
+    %     ylabel('z','Rotation',0);
+        title('Relaxation salinity');
+        legend('Northern S','Southern S','Position',[0.3200 0.6468 0.3066 0.0738]);
+        set(gca,'fontsize',fontsize);
+        PLOT = gcf;
+        PLOT.Position = [644 148 380 562];  
+      end
+    
+      
+      
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%%%% DEFORMATION RADIUS %%%%%
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+        %%% Check Brunt-Vaisala frequency using full EOS
+        [N2_north, pp_mid_north] = gsw_Nsquared(SA_north,CT_north,-zz,latN);
+        [N2_south, pp_mid_south] = gsw_Nsquared(SA_south,CT_south,-zz,latS);
+        dzData = zz(1:end-1)-zz(2:end);
+    
+    
+        if (showplots)
+          figure(fignum);
+          fignum = fignum + 1;
+          clf;
+          semilogx(N2_north,pp_mid_north,'LineWidth',1.5);axis ij;
+          hold on;
+    %       semilogx(N2_south(1:zzidx),pp_mid_south(1:zzidx),'LineWidth',1.5);axis ij;
+          semilogx(N2_south,pp_mid_south,'LineWidth',1.5);axis ij;
+          hold off;
+          legend('Northern N^2','Southern N^2','Position',[0.5181 0.6192 0.3313 0.0899]);
+          xlabel('N^2 (s^-^2)');
+          ylabel('Depth (m)');
+    %       ylabel('z (km)','Rotation',0);
+          title('Buoyancy frequency');
+          set(gca,'fontsize',fontsize);
+          PLOT = gcf;
+          PLOT.Position = [644 148 380 562];  
+        end
+    
+
+    
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%%%% OBCS EASTERN BOUNDARY CONDITIONS %%%%%%%%%%%
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+      [YY,ZZ] = meshgrid(yy,zz);
+    
+      %%% Get tEast and sEast by 2D interpolation
+      tEast = interp2(y_grid,-p_grid,tt_new,YY,ZZ,'linear'); 
+      sEast = interp2(y_grid,-p_grid,ss_new,YY,ZZ,'linear'); 
+
+      %%% Calculate the neutral density of the eastern boundary
+      [SA, in_ocean] = gsw_SA_from_SP(sEast,-ZZ,lon_sec,lat_sec);
+      T_insitu = gsw_t_from_pt0(SA,tEast,-ZZ);
+      gamma_n = eos80_legacy_gamma_n(sEast,T_insitu,-ZZ,lon_sec,lat_sec);
+
+
+      bathy_east = ones(Nr,Ny);
+      for jj = 1:Ny
+          for kk = 1:Nr
+              if(zz(kk)<h(kk,jj))
+                  bathy_east(kk,jj)=NaN;
+              end
+          end
+      end
+
+
+      if (showplots)
+          figure(fignum);
+          fignum = fignum + 1;
+          clf;
+
+          subplot(1,2,1)
+          pcolor(yy/1000,-zz/1000,tEast.*bathy_east);
+          hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+          clabel(M,c,'LabelSpacing',300);hold off;
+          hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+          title('Eastern boundary restoring temperature (^oC)');colormap(jet);
+          ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
+          caxis([-2 2])
+          shading interp;colorbar;
+          set(gca,'fontsize',fontsize);
+
+          subplot(1,2,2)
+          pcolor(yy/1000,-zz/1000,sEast.*bathy_east);shading interp;
+          hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+          clabel(M,c,'LabelSpacing',300);hold off;
+          hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+          title('Eastern boundary restoring salinity (PSU)');colormap(jet);
+          ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
+          shading interp;caxis([33.8 34.8])
+          colorbar;
+          set(gca,'fontsize',fontsize);
+      end
+    
+    
+
+
+        %%% Calculate thermal-wind velocity (vEast==0). Assume zero bottom
+        %%% velocity.
+        uEast = zeros(Nr,Ny);
+
+        bot_idx = zeros(1,Ny);
+        for j = 1:Ny
+            if(find(isnan(bathy_east(:,j)),1,'first')==1)
+                bot_idx(j) = NaN;
+            elseif (find(isnan(bathy_east(:,j)),1,'first')>1)
+                bot_idx(j) = find(isnan(bathy_east(:,j)),1,'first')-1;
+            else
+                bot_idx(j) = Nr;
+            end
+        end
+
+        g = 9.81;
+        rho0 = 1000;
+        f0 = -1.3e-4; %%% Coriolis parameter
+        beta = 1e-11; %%% Beta parameter  
+        f = f0+beta*YY;
+
+%         drhody = 
+%         uEast = g/rho0./f;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%% Specifies shape of coastal walls. Must satisfy f=1 at x=0 and f=0 at
+%%% x=1.
+%%%
+function f = coastShape (x)
+ 
+  f = 0.5.*(1+cos(pi*x));
+%   f = exp(-x);
+%   f = 1-x;
+  
+end
+  

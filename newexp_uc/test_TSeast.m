@@ -1,3 +1,10 @@
+
+addpath /Users/csi/Software/eos80_legacy_gamma_n/;
+addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
+addpath /Users/csi/Software/gsw_matlab_v3_06_11;
+addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+
+
   Nx = 200;
   Ny = 225;
   Nr = 60;
@@ -8,17 +15,6 @@
   Ly = 450*m1km; %%% Domain size in y   
 
   %%% Topographic parameters 
-%   Wslope = 30*m1km; %%% Continental slope half-width
-%   Hshelf = 800; %%% Continental shelf depth
-%   Ycoast = 200*m1km; %%% Latitude of coastline
-%   Wshelf = 50*m1km; %%% Width of continental shelf
-%   Ydeep = 350*m1km; %%% Latitude of deep ocean
-%   Xeast = 275*m1km; %%% Longitude of eastern trough wall
-%   Xwest = 125*m1km; %%% Longitude of western trough wall
-%   Yicefront = 150*m1km; %%% Latitude of ice shelf face
-%   Hicefront = 200; %%% Depth of ice shelf frace
-%   Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
-%   Wtrough = 15*m1km; %%% Trough width
 
   Wslope = 30*m1km; %%% Continental slope half-width
   Hshelf = 500; %%% Continental shelf depth
@@ -57,16 +53,6 @@
 
 
   %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
-%   dz0 = 2;
-%   dz1 = 15; 
-%   dz2 = 20;
-%   dz3 = 100;
-%   dz4 = 200;  
-%   N0 = 1;
-%   N1 = 20; 
-%   N2 = 50;
-%   N3 = 15;
-%   N4 = 14;  
   dz0 = 2*10/6;
   dz1 = 15*10/6; 
   dz2 = 20*10/6;
@@ -369,10 +355,6 @@ fontsize = 16;
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       %%%%% OBCS EASTERN BOUNDARY CONDITIONS %%%%%%%%%%%
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
       [YY,ZZ] = meshgrid(yy,zz);
     
@@ -448,12 +430,8 @@ fontsize = 16;
         beta = 1e-11; %%% Beta parameter  
         f = f0+beta*YY;
 
-        drhody = 
-        uEast = g/rho0./f;
-
-
-
-
+%         drhody = 
+%         uEast = g/rho0./f;
 
 
 
