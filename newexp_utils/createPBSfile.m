@@ -42,8 +42,7 @@ function createPBSfile (dirname,expname,nodes,queue)
   '# \n' ...
   '# Use full pathname to make sure we are using the right mpirun \n' ...
   '# Gridengine will set NSLOTS and TMPDIR for you \n' ...  
-  '/opt/intel/compilers_and_libraries_2017.1.132/linux/mpi/intel64/bin/mpirun -iface ib0 -genv I_MPI_DEBUG 6 -genv I_MPI_FABRICS shm:ofa -genv I_MPI_DAPL_PROVIDER ofa-v2-mlx4_0-1 -np $NSLOTS -machinefile $TMPDIR/machines ./mitgcmuv'];
-  
+  '/opt/intel/oneapi/mpi/2021.2.0/bin/mpirun -iface ib0 -genv I_MPI_DEBUG 6 -genv I_MPI_FABRICS shm:ofa -genv I_MPI_DAPL_PROVIDER ofa-v2-mlx4_0-1 -np $NSLOTS -machinefile $TMPDIR/machines ./mitgcmuv'];
   %%% Open template script
   templatename = './DEFAULTS/results/run_mitgcm';
   tfid = fopen(templatename,'r');
