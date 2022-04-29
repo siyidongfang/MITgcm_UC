@@ -1,8 +1,10 @@
 
+clear;close all;
 addpath /Users/csi/Software/eos80_legacy_gamma_n/;
 addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
 addpath /Users/csi/Software/gsw_matlab_v3_06_11;
 addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+addpath /Users/csi/MITgcm_UC/analysis/colormaps/
 
 
   Nx = 200;
@@ -28,7 +30,7 @@ addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
   Xwest = 125*m1km; %%% Longitude of western trough wall
   Yicefront = 0*m1km; %%% Latitude of ice shelf face
   Hicefront = 0; %%% Depth of ice shelf frace
-  Hbed = -400; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
   Htrough = 300; %%% Trough depth
   Wtrough = 40*m1km; %%% Trough width
@@ -209,33 +211,163 @@ fignum = 2;
 fontsize = 16;
 
 
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      %%%%% SOUTHERN TEMPERATURE/SALINITY PROFILES %%%%%
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% EASTERN BOUNDARY %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  s_bot = 34.65; 
+  pt_bot = -0.3;
+  s_mid = 34.75;
+  pt_mid = 2; 
+  s_surf = 33.95;
+  pt_surf = -1.8; 
+  Zsml = -50;  %%% Depth of the surface mixed layer
+
+  tEast = zeros(Ny,Nr);
+  sEast = zeros(Ny,Nr);
+  uEast = zeros(Ny,Nr);
+  N2_east = zeros(Ny,Nr-1);
+  gamma_n_east = zeros(Ny,Nr);
+  depth_East_pt = zeros(Ny,5);
+  depth_East_s  = zeros(Ny,5);
+
+  Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
+  Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+
+  lat_Zcdw_pt = [0 Yshelfbreak Ly];
+  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South]; %%% Piecewise function
+
+  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'linear'); 
+  Zcdw_s = Zcdw_pt - 100;
+
+
+  %%% Artificially construct a hydrographic profile
+  ptemp_East = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+  salt_East = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+ 
+  
+  %%% Interpolate to model grid
+  for jj = 1:Ny
+      depth_East_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
+      depth_East_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      tEast(jj,:) = interp1(depth_East_pt(jj,:),ptemp_East,zz,'PCHIP'); %%% reference pressure level: sea surface
+      sEast(jj,:) = interp1(depth_East_s(jj,:),salt_East,zz,'PCHIP');  %%% reference pressure level: sea surface 
+  end
+
+  lon_sec = -115;
+  lat_sec = -71;
+
+  %%% Calculate the neutral density of the eastern boundary
+  [ZZ,YY] = meshgrid(zz,yy);
+  [SA_east, in_ocean] = gsw_SA_from_SP(sEast,-ZZ,lon_sec,lat_sec);
+  T_insitu = gsw_t_from_pt0(SA_east,tEast,-ZZ);
+  CT_east = gsw_CT_from_pt(SA_east,tEast); 
+
+  for jj = 1:Ny
+      [gamma_n_east(jj,:)] = eos80_legacy_gamma_n(sEast(jj,:),T_insitu(jj,:),-zz,lon_sec,lat_sec);
+      [N2_east(jj,:), pp_mid_east] = gsw_Nsquared(SA_east(jj,:),CT_east(jj,:),-zz,lat_sec);
+  end
+
+
+  bathy_east = ones(Ny,Nr);
+  for jj = 1:Ny
+      for kk = 1:Nr
+          if(zz(kk)<h(kk,jj))
+              bathy_east(jj,kk)=NaN;
+          end
+      end
+  end
+
+
+  figure(20)
+  subplot(1,2,1)
+  pcolor(yy/1000,-zz/1000,tEast'.*bathy_east')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap(jet);
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary restoring temperature (^oC)');
+  set(gca,'fontsize',fontsize);
+  caxis([-2 2])
+  subplot(1,2,2)
+  pcolor(yy/1000,-zz/1000,sEast'.*bathy_east')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap(jet);
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary restoring salinity (psu)');
+  set(gca,'fontsize',fontsize);
+  caxis([33.3 34.7])
+  set(gcf,'Position',[-54 249 1285 459]);
+
+
+
+  figure(21)
+  bathy_mid = (bathy_east(:,[1:end-1])+bathy_east(:,[2:end]))/2;
+  pcolor(yy/1000,pp_mid_east/1000,N2_east'.*bathy_mid')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap('default');
+  caxis([0 3]/1e5)
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary N^2');
+  set(gca,'fontsize',fontsize);
+  set(gcf,'Position',[-54 249 1285/2 459]);
+
+
+%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% NORTHERN TEMPERATURE/SALINITY PROFILES %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    %%% Use Amundsen-like relaxation profiles
-        addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
-        load WOA81summer_Lon103W_LatS72.125S_latN69.875S.mat;
-        tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
-        sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
-        tsouth_woa_fulldepth = [tsouth_woa_smooth tsouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
-        ssouth_woa_fulldepth = [ssouth_woa_smooth ssouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
-        tSouth = interp1(-depth,tsouth_woa_fulldepth,zz,'PCHIP');
-        sSouth = interp1(-depth,ssouth_woa_fulldepth,zz,'PCHIP');
-    
-        useFresherS = false;
-        if(useFresherS)
-            sSouth = sSouth -0.6;
-        end
-    
-    
+  tNorth = tEast(end,:);
+  sNorth = sEast(end,:);
+
+
+%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% SOUTHERN TEMPERATURE/SALINITY PROFILES %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %%% Bottom properties offshore, taken from Meijers et al. (2010)
+  %%% measurements. We need these because the KN climatology only goes down
+  %%% to 2000m
+  %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
+
+  tSouth = tEast(1,:);
+  sSouth = sEast(1,:);
+
+  useFresher = true;
+  if(useFresher)
+    sSouth = sSouth-0.5;
+  end
+
+
+%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% Calculate density and make plots %%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
         ref_pres_surf = 0; 
         ref_pres_sigma4 = 4000;
         ref_pres_sigma2 = 2000;
     
-        lon_sec = -12;
-        latS = -70;
-        latN = -64;
+        lon_sec = -115;
+        latS = -71.5;
+        latN = -67;
     
         SA_north = gsw_SA_from_SP(sNorth,ref_pres_surf,lon_sec,latN);  
         CT_north = gsw_CT_from_pt(SA_north,tNorth); 
@@ -351,93 +483,69 @@ fontsize = 16;
         end
     
 
-    
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      %%%%% OBCS EASTERN BOUNDARY CONDITIONS %%%%%%%%%%%
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-      [YY,ZZ] = meshgrid(yy,zz);
-    
-      %%% Get tEast and sEast by 2D interpolation
-      tEast = interp2(y_grid,-p_grid,tt_new,YY,ZZ,'linear'); 
-      sEast = interp2(y_grid,-p_grid,ss_new,YY,ZZ,'linear'); 
+% 
 
-      %%% Calculate the neutral density of the eastern boundary
-      [SA, in_ocean] = gsw_SA_from_SP(sEast,-ZZ,lon_sec,lat_sec);
-      T_insitu = gsw_t_from_pt0(SA,tEast,-ZZ);
-      gamma_n = eos80_legacy_gamma_n(sEast,T_insitu,-ZZ,lon_sec,lat_sec);
-
-
-      bathy_east = ones(Nr,Ny);
-      for jj = 1:Ny
-          for kk = 1:Nr
-              if(zz(kk)<h(kk,jj))
-                  bathy_east(kk,jj)=NaN;
-              end
-          end
-      end
-
-
-      if (showplots)
-          figure(fignum);
-          fignum = fignum + 1;
-          clf;
-
-          subplot(1,2,1)
-          pcolor(yy/1000,-zz/1000,tEast.*bathy_east);
-          hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
-          clabel(M,c,'LabelSpacing',300);hold off;
-          hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
-          title('Eastern boundary restoring temperature (^oC)');colormap(jet);
-          ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
-          caxis([-2 2])
-          shading interp;colorbar;
-          set(gca,'fontsize',fontsize);
-
-          subplot(1,2,2)
-          pcolor(yy/1000,-zz/1000,sEast.*bathy_east);shading interp;
-          hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
-          clabel(M,c,'LabelSpacing',300);hold off;
-          hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
-          title('Eastern boundary restoring salinity (PSU)');colormap(jet);
-          ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
-          shading interp;caxis([33.8 34.8])
-          colorbar;
-          set(gca,'fontsize',fontsize);
-      end
-    
-    
-
-
-        %%% Calculate thermal-wind velocity (vEast==0). Assume zero bottom
-        %%% velocity.
-        uEast = zeros(Nr,Ny);
-
-        bot_idx = zeros(1,Ny);
-        for j = 1:Ny
-            if(find(isnan(bathy_east(:,j)),1,'first')==1)
-                bot_idx(j) = NaN;
-            elseif (find(isnan(bathy_east(:,j)),1,'first')>1)
-                bot_idx(j) = find(isnan(bathy_east(:,j)),1,'first')-1;
-            else
-                bot_idx(j) = Nr;
-            end
-        end
-
-        g = 9.81;
-        rho0 = 1000;
-        f0 = -1.3e-4; %%% Coriolis parameter
-        beta = 1e-11; %%% Beta parameter  
-        f = f0+beta*YY;
-
-%         drhody = 
-%         uEast = g/rho0./f;
-
-
-
-
-
-
+% 
+% 
+%       if (showplots)
+%           figure(fignum);
+%           fignum = fignum + 1;
+%           clf;
+% 
+%           subplot(1,2,1)
+%           pcolor(yy/1000,-zz/1000,tEast.*bathy_east);
+%           hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+%           clabel(M,c,'LabelSpacing',300);hold off;
+%           hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+%           title('Eastern boundary restoring temperature (^oC)');colormap(jet);
+%           ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
+%           caxis([-2 2])
+%           shading interp;colorbar;
+%           set(gca,'fontsize',fontsize);
+% 
+%           subplot(1,2,2)
+%           pcolor(yy/1000,-zz/1000,sEast.*bathy_east);shading interp;
+%           hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+%           clabel(M,c,'LabelSpacing',300);hold off;
+%           hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+%           title('Eastern boundary restoring salinity (PSU)');colormap(jet);
+%           ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
+%           shading interp;caxis([33.8 34.8])
+%           colorbar;
+%           set(gca,'fontsize',fontsize);
+%       end
+%     
+%     
+% 
+% 
+%         %%% Calculate thermal-wind velocity (vEast==0). Assume zero bottom
+%         %%% velocity.
+%         uEast = zeros(Nr,Ny);
+% 
+%         bot_idx = zeros(1,Ny);
+%         for j = 1:Ny
+%             if(find(isnan(bathy_east(:,j)),1,'first')==1)
+%                 bot_idx(j) = NaN;
+%             elseif (find(isnan(bathy_east(:,j)),1,'first')>1)
+%                 bot_idx(j) = find(isnan(bathy_east(:,j)),1,'first')-1;
+%             else
+%                 bot_idx(j) = Nr;
+%             end
+%         end
+% 
+%         g = 9.81;
+%         rho0 = 1000;
+%         f0 = -1.3e-4; %%% Coriolis parameter
+%         beta = 1e-11; %%% Beta parameter  
+%         f = f0+beta*YY;
+% 
+% %         drhody = 
+% %         uEast = g/rho0./f;
+% 
+% 
+% 
+% 
 
 
 
@@ -453,4 +561,4 @@ function f = coastShape (x)
 %   f = 1-x;
   
 end
-  
+

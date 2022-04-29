@@ -518,7 +518,7 @@ function nTimeSteps = setParams_Garrett (exp_name,inputpath,codepath,listterm,Nx
     plot(sNorth,-zz,'LineWidth',1.5);axis ij;
     xlabel('S_r_e_f (psu)');
     ylabel('Depth (m)');
-%     ylabel('z','Rotation',0);
+    %     ylabel('z','Rotation',0);
     title('Relaxation salinity');
     legend('Northern S','Southern S','Position',[0.3200 0.6468 0.3066 0.0738]);
     set(gca,'fontsize',fontsize);
@@ -528,9 +528,7 @@ function nTimeSteps = setParams_Garrett (exp_name,inputpath,codepath,listterm,Nx
 
   
   
-  
-  
-  
+
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% DEFORMATION RADIUS %%%%%
