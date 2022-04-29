@@ -28,7 +28,7 @@ useSEAICE = false;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_fresher0.5psu']
+exp_name = ['res2km_' exp_name '_fresher0.5psu_hoffman2']
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
 
