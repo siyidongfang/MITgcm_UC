@@ -179,7 +179,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = false;
+  useEobcsWorlanski = true;
   if(use2Orlanski)
       useOrlanskiWest = true;
       useOrlanskiEast = true;
@@ -551,123 +551,156 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   parm05.addParm('bathyFile','bathyFile.bin',PARM_STR); 
   
 
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% EASTERN BOUNDARY %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  s_bot = 34.65; 
+  pt_bot = -0.3;
+  s_mid = 34.75;
+  pt_mid = 2; 
+  s_surf = 33.95;
+  pt_surf = -1.8; 
+  Zsml = -50;  %%% Depth of the surface mixed layer
+
+  tEast = zeros(Ny,Nr);
+  sEast = zeros(Ny,Nr);
+  uEast = zeros(Ny,Nr);
+  N2_east = zeros(Ny,Nr-1);
+  gamma_n_east = zeros(Ny,Nr);
+  depth_East_pt = zeros(Ny,5);
+  depth_East_s  = zeros(Ny,5);
+
+  Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
+  Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+
+  lat_Zcdw_pt = [0 Yshelfbreak Ly];
+  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South]; %%% Piecewise function
+
+  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'linear'); 
+  Zcdw_s = Zcdw_pt - 100;
+
+
+  %%% Artificially construct a hydrographic profile
+  ptemp_East = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+  salt_East = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+ 
   
+  %%% Interpolate to model grid
+  for jj = 1:Ny
+      depth_East_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
+      depth_East_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      tEast(jj,:) = interp1(depth_East_pt(jj,:),ptemp_East,zz,'PCHIP'); %%% reference pressure level: sea surface
+      sEast(jj,:) = interp1(depth_East_s(jj,:),salt_East,zz,'PCHIP');  %%% reference pressure level: sea surface 
+  end
+
+  lon_sec = -115;
+  lat_sec = -71;
+
+  %%% Calculate the neutral density of the eastern boundary
+  [ZZ,YY] = meshgrid(zz,yy);
+  [SA_east, in_ocean] = gsw_SA_from_SP(sEast,-ZZ,lon_sec,lat_sec);
+  T_insitu = gsw_t_from_pt0(SA_east,tEast,-ZZ);
+  CT_east = gsw_CT_from_pt(SA_east,tEast); 
+
+  for jj = 1:Ny
+      [gamma_n_east(jj,:)] = eos80_legacy_gamma_n(sEast(jj,:),T_insitu(jj,:),-zz,lon_sec,lat_sec);
+      [N2_east(jj,:), pp_mid_east] = gsw_Nsquared(SA_east(jj,:),CT_east(jj,:),-zz,lat_sec);
+  end
+
+
+  bathy_east = ones(Ny,Nr);
+  for jj = 1:Ny
+      for kk = 1:Nr
+          if(zz(kk)<h(kk,jj))
+              bathy_east(jj,kk)=NaN;
+          end
+      end
+  end
+
+
+  if (showplots)
+  figure(fignum);
+  fignum = fignum + 1;
+  subplot(1,2,1)
+  pcolor(yy/1000,-zz/1000,tEast'.*bathy_east')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap(jet);
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary restoring temperature (^oC)');
+  set(gca,'fontsize',fontsize);
+  caxis([-2 2])
+  subplot(1,2,2)
+  pcolor(yy/1000,-zz/1000,sEast'.*bathy_east')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap(jet);
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary restoring salinity (psu)');
+  set(gca,'fontsize',fontsize);
+  caxis([33.3 34.7])
+  set(gcf,'Position',[-54 249 1285 459]);
+  savefig([imgpath '/Eastern_TS.fig']);
+  saveas(gcf,[imgpath '/Eastern_TS.png']);
+
+  figure(fignum);
+  fignum = fignum + 1;
+  bathy_mid = (bathy_east(:,[1:end-1])+bathy_east(:,[2:end]))/2;
+  pcolor(yy/1000,pp_mid_east/1000,N2_east'.*bathy_mid')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap('default');
+  caxis([0 3]/1e5)
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary N^2');
+  set(gca,'fontsize',fontsize);
+  set(gcf,'Position',[-54 249 1285/2 459]);
+  savefig([imgpath '/Eastern_N2.fig']);
+  saveas(gcf,[imgpath '/Eastern_N2.png']);
+  end
+
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% NORTHERN TEMPERATURE/SALINITY PROFILES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    % % % % % MITgcm_ASF northern boundary condition:
-    % % % %     %%% East Antarctica-like conditions: Kapp Norvegia climatology (Hattermann 2018) 
-    % % % %     s_bot = 34.66;
-    % % % %     pt_bot = -0.5;
-    % % % %     ptemp_KN = ncread('KappNorvegiaCLM.nc','ptemp'); %%% at sea level pressure
-    % % % %     salt_KN = ncread('KappNorvegiaCLM.nc','salt');
-    % % % %     pres_KN = ncread('KappNorvegiaCLM.nc','pressure');
-    % % % %     ptemp_North = [squeeze(mean(ptemp_KN(:,end,6:8),3))' pt_bot];
-    % % % %     salt_North = [squeeze(mean(salt_KN(:,end,6:8),3))' s_bot];
-    % % % %     depth_North = [-pres_KN' -H];
-    % % % %     tNorth = interp1(depth_North,ptemp_North,zz,'PCHIP'); %%% reference pressure level: sea surface
-    % % % %     sNorth = interp1(depth_North,salt_North,zz,'PCHIP');  %%% reference pressure level: sea surface
-
-
-% % % % %   %%% Bottom properties offshore, taken from Meijers et al. (2010)
-% % % % %   %%% measurements. We need these because the KN climatology only goes down
-% % % % %   %%% to 2000m
-% % % % %   %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
-% % % % %   s_bot = 34.65;
-% % % % %   pt_bot = 0.4;
-% % % % %   s_mid = 34.67;
-% % % % %   pt_mid = 3.5;
-% % % % %   s_surf = 33.95;
-% % % % %   pt_surf = -1.5;
-% % % % %   Zsml = -50;
-% % % % %   Zcdw_pt = -300;         %%% Default: -300
-% % % % %   Zcdw_s = Zcdw_pt - 100;  %%% Default: Zcdw_pt -100
-% % % % %                           %%% This is important - salinity maximum needs to 
-% % % % %                           %%% be deeper or else you end up with very weak 
-% % % % %                           %%% buoyancy frequency just below the pycnocline
-% % % % %   
-% % % % % 
-% % % % %   %%% Artificially construct a hydrographic profile
-% % % % %   depth_North_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
-% % % % %   depth_North_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
-% % % % %   ptemp_North = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-% % % % %   salt_North = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
-% % % % %  
-% % % % %   
-% % % % %   %%% Interpolate to model grid
-% % % % %   tNorth = interp1(depth_North_pt,ptemp_North,zz,'PCHIP'); %%% reference pressure level: sea surface
-% % % % %   sNorth = interp1(depth_North_s,salt_North,zz,'PCHIP');  %%% reference pressure level: sea surface 
-  
-  
+    
+  tNorth = tEast(end,:);
+  sNorth = sEast(end,:);
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% SOUTHERN TEMPERATURE/SALINITY PROFILES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% % % % % MITgcm_ASF profiles
-% % % %     tSouth =  tNorth(1).*single(ones(1,Nr)); %%% Set T profile to freezing temperature, reference pressure level: sea surface
-% % % %     ssouth_surf=33;
-% % % %     sSouth = ssouth_surf.*single(ones(1,Nr));
+  tSouth = tEast(1,:);
+  sSouth = sEast(1,:);
+
+  useFresher = true;
+  if(useFresher)
+    sSouth = sSouth-0.5;
+  end
 
 
-%%% Use Amundsen-like relaxation profiles
-    addpath /Users/csi/MITgcm_UC/analysis_uc/woa;
-    load WOA81summer_Lon103W_LatS72.125S_latN69.875S.mat;
-    tNorth = interp1(-depth,tnorth_woa_smooth,zz,'PCHIP'); 
-    sNorth = interp1(-depth,snorth_woa_smooth,zz,'PCHIP');
-    tsouth_woa_fulldepth = [tsouth_woa_smooth tsouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
-    ssouth_woa_fulldepth = [ssouth_woa_smooth ssouth_woa_smooth(end).*ones(1,length(depth)-Ndepth_south)];
-    tSouth = interp1(-depth,tsouth_woa_fulldepth,zz,'PCHIP');
-    sSouth = interp1(-depth,ssouth_woa_fulldepth,zz,'PCHIP');
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% Calculate density and make plots %%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    useFresherS = false;
-    if(useFresherS)
-        sSouth = sSouth -0.6;
-    end
-
-% % %   %%% Bottom properties offshore, taken from Meijers et al. (2010)
-% % %   %%% measurements. We need these because the KN climatology only goes down
-% % %   %%% to 2000m
-% % %   %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
-% % % 
-% % %   s_bot = 34.65;
-% % %   pt_bot = 4;
-% % %   s_mid = 34.62;
-% % %   pt_mid = 3.5;
-% % %   s_surf = 33.95;
-% % %   pt_surf = -1.8;
-% % %   Zsml = -100;             %%% Depth of the surface mixed layer
-% % %   Zcdw_pt = -650;
-% % %   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
-% % %                           %%% be deeper or else you end up with very weak 
-% % %                           %%% buoyancy frequency just below the pycnocline
-% % %   useFresher = true;
-% % %   if(useFresher)
-% % %       s_bot = s_bot-0.3;
-% % %       s_mid = s_mid-0.3;
-% % %       s_surf = s_surf-0.3;
-% % %   end
-% % % 
-% % %   %%% Artificially construct a hydrographic profile
-% % %   depth_South_pt = [-H (-H+3*Zcdw_pt)/4 Zcdw_pt Zsml 0];
-% % %   depth_South_s = [-H (-H+3*Zcdw_s)/4 Zcdw_s Zsml 0];
-% % %   ptemp_South = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-% % %   salt_South = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
-% % %   
-% % %   %%% Interpolate to model grid
-% % %   tSouth = interp1(depth_South_pt,ptemp_South,zz,'PCHIP'); %%% reference pressure level: sea surface
-% % %   sSouth = interp1(depth_South_s,salt_South,zz,'PCHIP');  %%% reference pressure level: sea surface 
-  
 
     ref_pres_surf = 0; 
     ref_pres_sigma4 = 4000;
     ref_pres_sigma2 = 2000;
 
-    lon_sec = -12;
-    latS = -70;
-    latN = -64;
+    lon_sec = -115;
+    latS = -71.5;
+    latN = -67;
 
     SA_north = gsw_SA_from_SP(sNorth,ref_pres_surf,lon_sec,latN);  
     CT_north = gsw_CT_from_pt(SA_north,tNorth); 
@@ -698,10 +731,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     set(gca,'fontsize',fontsize);
     PLOT = gcf;
     PLOT.Position = [644 148 380 562];  
-  end
     %%% Save the figure
     savefig([imgpath '/RelaxationDensity_sigma4.fig']);
     saveas(gcf,[imgpath '/RelaxationDensity_sigma4.png']);
+  end
+    
     
     %%% Plot the relaxation density
   if (showplots)
@@ -723,10 +757,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     set(gca,'fontsize',fontsize);
     PLOT = gcf;
     PLOT.Position = [644 148 380 562];  
-  end
     %%% Save the figure
     savefig([imgpath '/RelaxationDensity_sigma2.fig']);
     saveas(gcf,[imgpath '/RelaxationDensity_sigma2.png']);
+  end
+    
     
     
     %%% Plot the relaxation density
@@ -749,10 +784,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     set(gca,'fontsize',fontsize);
     PLOT = gcf;
     PLOT.Position = [644 148 380 562];  
-  end
     %%% Save the figure
     savefig([imgpath '/RelaxationDensity_surf.fig']);
     saveas(gcf,[imgpath '/RelaxationDensity_surf.png']);
+  end
+    
    
     
   
@@ -776,10 +812,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     set(gca,'fontsize',fontsize);
     PLOT = gcf;
     PLOT.Position = [644 148 380 562];  
-  end
     %%% Save the figure
     savefig([imgpath '/RelaxationT.fig']);
     saveas(gcf,[imgpath '/RelaxationT.png']);
+  end
+    
     
   %%% Plot the relaxation salinity
   if (showplots)
@@ -802,10 +839,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     set(gca,'fontsize',fontsize);
     PLOT = gcf;
     PLOT.Position = [644 148 380 562];  
-  end
     %%% Save the figure
     savefig([imgpath '/RelaxationS.fig']);
     saveas(gcf,[imgpath '/RelaxationS.png']);
+  end
+    
   
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -847,10 +885,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       set(gca,'fontsize',fontsize);
       PLOT = gcf;
       PLOT.Position = [644 148 380 562];  
+      %%% Save the figure
+      savefig([imgpath '/BuoyancyFrequency.fig']);
+      saveas(gcf,[imgpath '/BuoyancyFrequency.png']);
     end
-    %%% Save the figure
-    savefig([imgpath '/BuoyancyFrequency.fig']);
-    saveas(gcf,[imgpath '/BuoyancyFrequency.png']);
+    
 
     if (showplots)
       figure(fignum);
@@ -863,10 +902,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       set(gca,'fontsize',fontsize-1);
       PLOT = gcf;
       PLOT.Position = [263 149 567 336];  
+      %%% Save the figure
+      savefig([imgpath '/R_d.fig']);
+      saveas(gcf,[imgpath '/R_d.png']);
     end
-    %%% Save the figure
-    savefig([imgpath '/R_d.fig']);
-    saveas(gcf,[imgpath '/R_d.png']);
+    
   
   else
     
@@ -1926,9 +1966,9 @@ diag_fields_inst = {...
   obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
 
   if(useEobcsWorlanski)
-
-% TODO: DEFINE Eastern boundary values, size(Ny,Nr)
-
+      OBEt = tEast;
+      OBEs = sEast;
+      OBEu = uEast;
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
       writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);

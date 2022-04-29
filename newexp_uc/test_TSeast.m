@@ -285,6 +285,48 @@ fontsize = 16;
   end
 
 
+    %%% Calculate thermal-wind velocity (vEast==0). Assume zero bottom velocity.
+    uEast = zeros(Ny,Nr);
+
+    bot_idx = zeros(Ny,1);
+    for jj = 1:Ny
+        if(find(isnan(bathy_east(jj,:)),1,'first')==1)
+            bot_idx(jj) = NaN;
+        elseif (find(isnan(bathy_east(jj,:)),1,'first')>1)
+            bot_idx(jj) = find(isnan(bathy_east(jj,:)),1,'first')-1;
+        else
+            bot_idx(jj) = Nr;
+        end
+    end
+
+    g = 9.81;
+    rho0 = 1000;
+    f0 = -1.3e-4; %%% Coriolis parameter
+    beta = 1e-11; %%% Beta parameter  
+    f = f0+beta*YY;
+    f_mid = (f(2:end,:)+f(1:end-1,:))/2;
+
+    rho_east_surf  = gsw_rho(SA_east,CT_east,0); %%% surface-referenced potential density
+    drhody = (rho_east_surf(2:end,:)-rho_east_surf(1:end-1,:))./dy(1);
+    uEast_mid = g/rho0./f_mid.*cumsum(drhody,2,'reverse');
+    uEast(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2;
+
+    figure(23)
+    pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
+    shading flat;axis ij;
+    hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+    clabel(M,c,'LabelSpacing',200);hold off;
+    hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+    colorbar;colormap('redblue');
+    xlabel('y (km)');ylabel('Depth (km)');
+    title('Eastern boundary thermal wind velocity (m/s)');
+    set(gca,'fontsize',fontsize);
+    caxis([-1 1]/1000);
+
+
+
+
+
   figure(20)
   subplot(1,2,1)
   pcolor(yy/1000,-zz/1000,tEast'.*bathy_east')
@@ -327,7 +369,7 @@ fontsize = 16;
   set(gcf,'Position',[-54 249 1285/2 459]);
 
 
-%%
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% NORTHERN TEMPERATURE/SALINITY PROFILES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -336,15 +378,10 @@ fontsize = 16;
   sNorth = sEast(end,:);
 
 
-%%
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% SOUTHERN TEMPERATURE/SALINITY PROFILES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-  %%% Bottom properties offshore, taken from Meijers et al. (2010)
-  %%% measurements. We need these because the KN climatology only goes down
-  %%% to 2000m
-  %%% Modified by YS, based on Jacobs et al. (2011), doi 10.1038/NGEO1188
 
   tSouth = tEast(1,:);
   sSouth = sEast(1,:);
@@ -484,68 +521,6 @@ fontsize = 16;
     
 
 
-% 
-
-% 
-% 
-%       if (showplots)
-%           figure(fignum);
-%           fignum = fignum + 1;
-%           clf;
-% 
-%           subplot(1,2,1)
-%           pcolor(yy/1000,-zz/1000,tEast.*bathy_east);
-%           hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
-%           clabel(M,c,'LabelSpacing',300);hold off;
-%           hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
-%           title('Eastern boundary restoring temperature (^oC)');colormap(jet);
-%           ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
-%           caxis([-2 2])
-%           shading interp;colorbar;
-%           set(gca,'fontsize',fontsize);
-% 
-%           subplot(1,2,2)
-%           pcolor(yy/1000,-zz/1000,sEast.*bathy_east);shading interp;
-%           hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
-%           clabel(M,c,'LabelSpacing',300);hold off;
-%           hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
-%           title('Eastern boundary restoring salinity (PSU)');colormap(jet);
-%           ylabel('Depth (km)');xlabel('latitude (km)');axis ij;
-%           shading interp;caxis([33.8 34.8])
-%           colorbar;
-%           set(gca,'fontsize',fontsize);
-%       end
-%     
-%     
-% 
-% 
-%         %%% Calculate thermal-wind velocity (vEast==0). Assume zero bottom
-%         %%% velocity.
-%         uEast = zeros(Nr,Ny);
-% 
-%         bot_idx = zeros(1,Ny);
-%         for j = 1:Ny
-%             if(find(isnan(bathy_east(:,j)),1,'first')==1)
-%                 bot_idx(j) = NaN;
-%             elseif (find(isnan(bathy_east(:,j)),1,'first')>1)
-%                 bot_idx(j) = find(isnan(bathy_east(:,j)),1,'first')-1;
-%             else
-%                 bot_idx(j) = Nr;
-%             end
-%         end
-% 
-%         g = 9.81;
-%         rho0 = 1000;
-%         f0 = -1.3e-4; %%% Coriolis parameter
-%         beta = 1e-11; %%% Beta parameter  
-%         f = f0+beta*YY;
-% 
-% %         drhody = 
-% %         uEast = g/rho0./f;
-% 
-% 
-% 
-% 
 
 
 
