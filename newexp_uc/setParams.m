@@ -553,6 +553,283 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
 
 
+
+  %%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%
+  %%%%%%EXF PKG%%%%%
+  %%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%
+
+  %%% To store parameter names and values
+  EXF_NML_01 = parmlist;
+  EXF_NML_02 = parmlist;
+  EXF_NML_03 = parmlist;
+  EXF_NML_04 = parmlist;
+  EXF_NML_OBCS = parmlist;
+  EXF_PARM = {EXF_NML_01,EXF_NML_02,EXF_NML_03,EXF_NML_04,EXF_NML_OBCS}; 
+    
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% UWIND AND VWIND in EXF %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    exf_scal_BulkCdn  = 1.015;
+ 	exf_iprec         = 64;  
+ 	useExfYearlyFields= false;
+ 	useExfCheckRange  = false;
+%  	useRelativeWind   = true;
+ 	useRelativeWind   = false;
+    repeatPeriod      = 20*t1year;
+
+  if (EXFoption ~= 5)
+     EXF_NML_01.addParm('exf_scal_BulkCdn',exf_scal_BulkCdn,PARM_REAL);
+  end
+
+  EXF_NML_01.addParm('exf_iprec',exf_iprec,PARM_INT);
+  EXF_NML_01.addParm('useExfYearlyFields',useExfYearlyFields,PARM_BOOL);
+  EXF_NML_01.addParm('useExfCheckRange',useExfCheckRange,PARM_BOOL);
+  if(~useEXFwindstress)
+      EXF_NML_01.addParm('useRelativeWind',useRelativeWind,PARM_BOOL);
+  end
+  EXF_NML_01.addParm('repeatPeriod',repeatPeriod,PARM_REAL);
+%   EXF_NML_03.addParm('exf_offset_atemp',exf_offset_atemp,PARM_REAL);
+%   EXF_NML_03.addParm('exf_inscal_runoff',exf_inscal_runoff,PARM_REAL);
+  if (useEXFwindstress)
+     readStressOnCgrid = true;
+     EXF_NML_01.addParm('readStressOnCgrid',readStressOnCgrid,PARM_BOOL);
+  end
+    
+    rho_a = 1.3;               %%% Air density, kg/m^3
+%     Ua = -6;
+%     Va = 6;
+
+  if (Ua~=0)
+%     uwind = -sqrt(abs(tau_zonal)/rho_a/SEAICE_drag).*ones(Nx,Ny); % Zonal 10-m wind speed 
+    uwind = [Ua:-Ua/(Ny-1):0].*ones(Nx,1); 
+  else
+    uwind = zeros(Nx,Ny); 
+  end
+  if (Va~=0)
+%     vwind = sqrt(abs(tau_merid)/rho_a/SEAICE_drag).*ones(Nx,Ny); % Meridional 10-m wind speed
+     vwind = [Va:-Va/(Ny-1):0].*ones(Nx,1); 
+  else
+    vwind = zeros(Nx,Ny); 
+  end
+  
+   %%% Plot the wind speed 
+  if (showplots)
+    figure(fignum);
+    fignum = fignum + 1;
+    clf;
+    plot(yy/1000,uwind(1,:),'LineWidth',1.5);
+    xlabel('Offshore distance (km)');
+    ylabel('u_a');
+    title('Zonal wind velocity (m/s)');
+    set(gca,'fontsize',fontsize-1);
+    PLOT = gcf;
+    PLOT.Position = [263 149 567 336];  
+  end
+    %%% Save the figure
+    savefig([imgpath '/uwind.fig']);
+    saveas(gcf,[imgpath '/uwind.png']);
+    
+   %%% Plot the wind speed 
+  if (showplots)
+    figure(fignum);
+    fignum = fignum + 1;
+    clf;
+    plot(yy/1000,vwind(1,:),'LineWidth',1.5);
+    xlabel('Offshore distance (km)');
+    ylabel('v_a');
+    title('Meridional wind velocity (m/s)');
+    set(gca,'fontsize',fontsize-1);
+    PLOT = gcf;
+    PLOT.Position = [263 149 567 336];  
+  end
+    %%% Save the figure
+    savefig([imgpath '/vwind.fig']);
+    saveas(gcf,[imgpath '/vwind.png']);
+    
+    
+if(useEXFwindstress)
+    ustress = rho_a*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*uwind;    
+    vstress = rho_a*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*vwind;     
+    ustressfile = 'ustressfile.bin';
+    vstressfile = 'vstressfile.bin';
+    writeDataset(uwind,fullfile(inputpath,ustressfile),ieee,prec);
+    writeDataset(vwind,fullfile(inputpath,vstressfile),ieee,prec);
+    EXF_NML_02.addParm('ustressfile',ustressfile,PARM_STR);
+    EXF_NML_02.addParm('vstressfile',vstressfile,PARM_STR);
+              %%% Plot the wind stress 
+              if (showplots)
+                figure(fignum);
+                fignum = fignum + 1;
+                clf;
+                plot(yy/1000,ustress(1,:),'LineWidth',1.5);
+                xlabel('Offshore distance (km)');
+                ylabel('\tau_a^x');
+                title('Zonal wind stress (N/m^2)');
+                set(gca,'fontsize',fontsize-1);
+                PLOT = gcf;
+                PLOT.Position = [263 149 567 336];  
+              end
+                %%% Save the figure
+                savefig([imgpath '/ustress.fig']);
+                saveas(gcf,[imgpath '/ustress.png']);
+
+               %%% Plot the wind stress 
+              if (showplots)
+                figure(fignum);
+                fignum = fignum + 1;
+                clf;
+                plot(yy/1000,vstress(1,:),'LineWidth',1.5);
+                xlabel('Offshore distance (km)');
+                ylabel('\tau_a^y');
+                title('Meridional wind stress (N/m^2)');
+                set(gca,'fontsize',fontsize-1);
+                PLOT = gcf;
+                PLOT.Position = [263 149 567 336];  
+              end
+                %%% Save the figure
+                savefig([imgpath '/vstress.fig']);
+                saveas(gcf,[imgpath '/vstress.png']);
+    
+else
+%     Ur = sqrt((abs(tau_zonal)+abs(tau_merid))./rho_a./SEAICE_drag).*ones(Nx,Ny);
+    uwindfile = 'uwindfile.bin';
+    vwindfile = 'vwindfile.bin';
+    writeDataset(uwind,fullfile(inputpath,uwindfile),ieee,prec);
+    writeDataset(vwind,fullfile(inputpath,vwindfile),ieee,prec);
+    EXF_NML_02.addParm('uwindfile',uwindfile,PARM_STR);
+    EXF_NML_02.addParm('vwindfile',vwindfile,PARM_STR);
+end   
+
+
+
+if(useSEAICE)
+    exf_albedo = 0.15; 
+    
+%     exf_offset_atemp =  273.16;
+    %%%runoff from ERA is in hours, need to convert to seconds
+%     exf_inscal_runoff = 1.14e-04;
+  
+  EXF_NML_01.addParm('exf_albedo',exf_albedo,PARM_INT);
+
+
+% Read-in atemp, aqh, swdown, lwdown, precip, and runoff. Compute hflux, swflux and sflux.
+    Kice = 2.1656; %%% Ice thermal conductivity, W/(m*degK)
+    ice_abs = 1-SEAICE_dryIceAlb; %%% Ice absorption
+
+% meanLWdown = zeros(1,size([-50:10],2));
+%  for  TaDegC = -50:10
+    TaDegC = -10;
+    Ta = 273.16+TaDegC; %%% Surface air temperature, degK
+    Tw = 273.16+double(tNorth(1)); %%% surface water temperature
+    TisDegC = -0.65;
+%     TisDegC = double(tNorth(1)); 
+    Tis = 273.16+TisDegC; %%% Ice surface temperature
+    SEAICE_emissivity = 0.970018; %%% Ice emissivity
+    ocn_e = 5.50e-8 / 5.670e-8;  %%% Ocean emissivity, 0.97
+    sigma = 5.67/10^8; %%% Stefan-Boltzman'n constant
+    exf_iceCh = 1.63e-3; %%% sensible heat transfer coeff. over sea-ice   
+    Cp_air = 1004; %%% Heat capacity at constant pressure 1004 J K-1 kg-1
+    atemp = Ta.*ones(Nx,Ny); % Surface (2-m) air temperature in deg K
+    aqh = 6.1094/(rho_a*287*Tis/100)*exp(17.625*TisDegC/(TisDegC+243.04)).*ones(Nx,Ny); % 0.0057, Surface (2m) specific humidity in kg/kg. Typical range: 0 < aqh < 0.02
+    
+   
+    
+    
+if(EXFoption == 3)
+    swdown = 0.*ones(Nx,Ny); 
+    precip = 0.*ones(Nx,Ny); 
+    runoff = 0.*ones(Nx,Ny);  
+ 
+    CondHeat = 0.5*1/Hi0;  %%% SItice ~ -1.62 degC, Tio ~ -1.87 degC => Conductive heat flux from ice surface to ocean is about 0.5 W/m^2
+    lwdown = (CondHeat/ice_abs+320)*ones(Nx,Ny);
+    lwdown(1)
+    
+    if (Hi0==0)
+        lwdown = 324.1085*ones(Nx,Ny);
+        lwdown(1)
+    end
+    
+    
+    
+  %%% Plot the downward longwave radiation in W/m^2
+  if (showplots)
+    figure(fignum);
+    fignum = fignum + 1;
+    clf;
+    plot(yy/1000,squeeze(lwdown(1,:)),'LineWidth',1.5);
+    xlabel('Offshore distance (km)');
+    ylabel('LWdown (W/m^2)');
+    title('Downward longwave radiation');
+    set(gca,'fontsize',fontsize-1);
+    PLOT = gcf;
+    PLOT.Position = [263 149 567 336];  
+  end
+    %%% Save the figure
+    savefig([imgpath '/LWdown.fig']);
+    saveas(gcf,[imgpath '/LWdown.png']);
+      
+    atempfile  = 'atempfile.bin';
+    aqhfile    = 'aqhfile.bin';
+    swdownfile = 'swdownfile.bin';
+    lwdownfile = 'lwdownfile.bin';
+    precipfile = 'precipfile.bin'; 
+    runofffile = 'runofffile.bin';
+    writeDataset(atemp,fullfile(inputpath,atempfile),ieee,prec);
+    writeDataset(aqh,fullfile(inputpath,aqhfile),ieee,prec);
+    writeDataset(swdown,fullfile(inputpath,swdownfile),ieee,prec);
+    writeDataset(lwdown,fullfile(inputpath,lwdownfile),ieee,prec);
+    writeDataset(precip,fullfile(inputpath,precipfile),ieee,prec);
+    writeDataset(runoff,fullfile(inputpath,runofffile),ieee,prec);
+    EXF_NML_02.addParm('atempfile',atempfile,PARM_STR);
+    EXF_NML_02.addParm('aqhfile',aqhfile,PARM_STR);
+    EXF_NML_02.addParm('swdownfile',swdownfile,PARM_STR);
+    EXF_NML_02.addParm('lwdownfile',lwdownfile,PARM_STR);
+    EXF_NML_02.addParm('precipfile',precipfile,PARM_STR);
+    EXF_NML_02.addParm('runofffile',runofffile,PARM_STR);
+
+end
+
+end
+
+
+
+
+
+
+
+    %%% No sea ice
+    if (EXFoption == 1)   
+        hflux = 0.*ones(Nx,Ny);  
+        sflux = 0.*ones(Nx,Ny);  
+        swflux = 0.*ones(Nx,Ny);  
+        hfluxfile  = 'hfluxfile.bin';
+        sfluxfile    = 'sfluxfile.bin';
+        swfluxfile  = 'swfluxfile.bin';
+        writeDataset(hflux,fullfile(inputpath,hfluxfile),ieee,prec);
+        writeDataset(sflux,fullfile(inputpath,sfluxfile),ieee,prec);
+        writeDataset(swflux,fullfile(inputpath,swfluxfile),ieee,prec);
+        EXF_NML_02.addParm('hfluxfile',hfluxfile,PARM_STR);
+        EXF_NML_02.addParm('sfluxfile',sfluxfile,PARM_STR);
+        EXF_NML_02.addParm('swfluxfile',swfluxfile,PARM_STR);
+    end
+
+
+  %%% Create the data.exf file
+  write_data_exf(inputpath,EXF_PARM,listterm,realfmt);
+
+
+
+
+
+
+
+
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% EASTERN BOUNDARY %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -576,10 +853,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
 
-  lat_Zcdw_pt = [0 Yshelfbreak Ly];
-  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South]; %%% Piecewise function
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
 
-  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'linear'); 
+  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
   Zcdw_s = Zcdw_pt - 100;
 
 
@@ -621,7 +898,80 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
 
+
+  %%% Calculate thermal-wind velocity and wind-driven velocity, assuming vEast==0 and zero bottom velocity.
+    uEast_TWV = zeros(Ny,Nr); %%% Thermal-wind velocity
+    uEast_EK = zeros(Ny,Nr);  %%% Wind-driven velocity, based on Ekman theory
+
+    %%%%%% Calculate thermal-wind velocity
+    bot_idx = zeros(Ny,1);
+    for jj = 1:Ny
+        if(find(isnan(bathy_east(jj,:)),1,'first')==1)
+            bot_idx(jj) = NaN;
+        elseif (find(isnan(bathy_east(jj,:)),1,'first')>1)
+            bot_idx(jj) = find(isnan(bathy_east(jj,:)),1,'first')-1;
+        else
+            bot_idx(jj) = Nr;
+        end
+    end
+
+    rho0 = 1000;
+    f = f0+beta*YY;
+    f_mid = (f(2:end,:)+f(1:end-1,:))/2;
+
+    rho_east_surf  = gsw_rho(SA_east,CT_east,0); %%% surface-referenced potential density
+    drhody = (rho_east_surf(2:end,:)-rho_east_surf(1:end-1,:))./dy(1);
+    uEast_mid = g/rho0./f_mid.*cumsum(drhody,2,'reverse');
+    uEast_TWV(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2; %%% Thermal-wind velocity
+
+    %%%%%% Calculate wind-driven velocity in the surface Ekman layer
+    %%% Assume a constant vertical eddy viscosity (viscAr = 3e-4 m^2/s)
+    D_EK = sqrt(2*pi^2*viscAr./abs(f(:,1))); %%% Ekman-layer depth for each latitude
+    for jj=1:Ny
+        D_EK_idx(jj,1) = max(find(zz>=-D_EK(jj))); %%% Vertical index of Ekman-layer for each latitude
+    end
+
+    rho_a = 1.3; 
+    C_ao = 1e-3; %%% Air-ocean drag coefficient
+    rho_o = 1027;
+
+    tau_wind = rho_a*C_ao*abs(uwind(1,:).^2+vwind(1,:).^2)'; %%% Total surface wind stress
+    a_EK = sqrt(abs(f(:,1))/2/viscAr); %%% Constant 'a' in Ekman theory
+    V0_EK = tau_wind./sqrt(rho_o.^2.*abs(f(:,1))*viscAr);
+
+    angle_uvwind = atan(abs(Va/Ua))/pi*180; %%% Angle of zonal and meridional wind, in degrees
+    for jj = 1:Ny
+        for kk=1:D_EK_idx(jj)
+            az = a_EK(jj)*zz(kk);
+            v_ek(jj,kk) = V0_EK(jj)*exp(az)*cos(pi/4+az); %%% Ekman velocity aligned with the direction of the surface wind stress
+            u_ek(jj,kk) = V0_EK(jj)*exp(az)*sin(pi/4+az); %%% Ekman velocity perpendicular to the direction of the surface wind stress
+            uEast_EK(jj,kk) = -(v_ek(jj,kk)*cos(angle_uvwind)+u_ek(jj,kk)*sin(angle_uvwind)); %%% Ekman velocity in the zonal direction
+            if(uEast_EK(jj,kk)>0)
+                uEast_EK(jj,kk) = 0;
+            end
+        end
+    end
+
+    %%% Prescribe zonal velocity at the eastern boundary as the sum of wind-driven velocity 
+    %%% in the Ekman layer and thermal-wind velocity
+    uEast = uEast_TWV + uEast_EK; 
+
   if (showplots)
+  figure(fignum);
+  fignum = fignum + 1;
+  pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap('redblue');
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Eastern boundary restoring velocity (m/s)');
+  set(gca,'fontsize',fontsize);
+  caxis([-1 1]/1000);
+  savefig([imgpath '/Eastern_u.fig']);
+  saveas(gcf,[imgpath '/Eastern_u.png']);
+
   figure(fignum);
   fignum = fignum + 1;
   subplot(1,2,1)
@@ -932,7 +1282,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% Upper bound for absolute horizontal fluid velocity (m/s)
   %%% At the moment this is just an estimate
 %   Umax = 1
-  Umax = 1
+  Umax = 2
   %%% Max gravity wave speed
   cmax = max(Cig)
   %%% Max gravity wave speed using total ocean depth
@@ -1242,275 +1592,6 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   write_data_seaice(inputpath,SEAICE_PARM,listterm,realfmt);  
  end
   
-
-  %%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%
-  %%%%%%EXF PKG%%%%%
-  %%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%
-
-  %%% To store parameter names and values
-  EXF_NML_01 = parmlist;
-  EXF_NML_02 = parmlist;
-  EXF_NML_03 = parmlist;
-  EXF_NML_04 = parmlist;
-  EXF_NML_OBCS = parmlist;
-  EXF_PARM = {EXF_NML_01,EXF_NML_02,EXF_NML_03,EXF_NML_04,EXF_NML_OBCS}; 
-    
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%% UWIND AND VWIND in EXF %%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    exf_scal_BulkCdn  = 1.015;
- 	exf_iprec         = 64;  
- 	useExfYearlyFields= false;
- 	useExfCheckRange  = false;
-%  	useRelativeWind   = true;
- 	useRelativeWind   = false;
-    repeatPeriod      = 20*t1year;
-
-  if (EXFoption ~= 5)
-     EXF_NML_01.addParm('exf_scal_BulkCdn',exf_scal_BulkCdn,PARM_REAL);
-  end
-
-  EXF_NML_01.addParm('exf_iprec',exf_iprec,PARM_INT);
-  EXF_NML_01.addParm('useExfYearlyFields',useExfYearlyFields,PARM_BOOL);
-  EXF_NML_01.addParm('useExfCheckRange',useExfCheckRange,PARM_BOOL);
-  if(~useEXFwindstress)
-      EXF_NML_01.addParm('useRelativeWind',useRelativeWind,PARM_BOOL);
-  end
-  EXF_NML_01.addParm('repeatPeriod',repeatPeriod,PARM_REAL);
-%   EXF_NML_03.addParm('exf_offset_atemp',exf_offset_atemp,PARM_REAL);
-%   EXF_NML_03.addParm('exf_inscal_runoff',exf_inscal_runoff,PARM_REAL);
-  if (useEXFwindstress)
-     readStressOnCgrid = true;
-     EXF_NML_01.addParm('readStressOnCgrid',readStressOnCgrid,PARM_BOOL);
-  end
-    
-    rho_a = 1.3;               %%% Air density, kg/m^3
-%     Ua = -6;
-%     Va = 6;
-
-  if (Ua~=0)
-%     uwind = -sqrt(abs(tau_zonal)/rho_a/SEAICE_drag).*ones(Nx,Ny); % Zonal 10-m wind speed 
-    uwind = [Ua:-Ua/(Ny-1):0].*ones(Nx,1); 
-  else
-    uwind = zeros(Nx,Ny); 
-  end
-  if (Va~=0)
-%     vwind = sqrt(abs(tau_merid)/rho_a/SEAICE_drag).*ones(Nx,Ny); % Meridional 10-m wind speed
-     vwind = [Va:-Va/(Ny-1):0].*ones(Nx,1); 
-  else
-    vwind = zeros(Nx,Ny); 
-  end
-  
-   %%% Plot the wind speed 
-  if (showplots)
-    figure(fignum);
-    fignum = fignum + 1;
-    clf;
-    plot(yy/1000,uwind(1,:),'LineWidth',1.5);
-    xlabel('Offshore distance (km)');
-    ylabel('u_a');
-    title('Zonal wind velocity (m/s)');
-    set(gca,'fontsize',fontsize-1);
-    PLOT = gcf;
-    PLOT.Position = [263 149 567 336];  
-  end
-    %%% Save the figure
-    savefig([imgpath '/uwind.fig']);
-    saveas(gcf,[imgpath '/uwind.png']);
-    
-   %%% Plot the wind speed 
-  if (showplots)
-    figure(fignum);
-    fignum = fignum + 1;
-    clf;
-    plot(yy/1000,vwind(1,:),'LineWidth',1.5);
-    xlabel('Offshore distance (km)');
-    ylabel('v_a');
-    title('Meridional wind velocity (m/s)');
-    set(gca,'fontsize',fontsize-1);
-    PLOT = gcf;
-    PLOT.Position = [263 149 567 336];  
-  end
-    %%% Save the figure
-    savefig([imgpath '/vwind.fig']);
-    saveas(gcf,[imgpath '/vwind.png']);
-    
-    
-if(useEXFwindstress)
-    ustress = rho_a*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*uwind;    
-    vstress = rho_a*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*vwind;     
-    ustressfile = 'ustressfile.bin';
-    vstressfile = 'vstressfile.bin';
-    writeDataset(uwind,fullfile(inputpath,ustressfile),ieee,prec);
-    writeDataset(vwind,fullfile(inputpath,vstressfile),ieee,prec);
-    EXF_NML_02.addParm('ustressfile',ustressfile,PARM_STR);
-    EXF_NML_02.addParm('vstressfile',vstressfile,PARM_STR);
-              %%% Plot the wind stress 
-              if (showplots)
-                figure(fignum);
-                fignum = fignum + 1;
-                clf;
-                plot(yy/1000,ustress(1,:),'LineWidth',1.5);
-                xlabel('Offshore distance (km)');
-                ylabel('\tau_a^x');
-                title('Zonal wind stress (N/m^2)');
-                set(gca,'fontsize',fontsize-1);
-                PLOT = gcf;
-                PLOT.Position = [263 149 567 336];  
-              end
-                %%% Save the figure
-                savefig([imgpath '/ustress.fig']);
-                saveas(gcf,[imgpath '/ustress.png']);
-
-               %%% Plot the wind stress 
-              if (showplots)
-                figure(fignum);
-                fignum = fignum + 1;
-                clf;
-                plot(yy/1000,vstress(1,:),'LineWidth',1.5);
-                xlabel('Offshore distance (km)');
-                ylabel('\tau_a^y');
-                title('Meridional wind stress (N/m^2)');
-                set(gca,'fontsize',fontsize-1);
-                PLOT = gcf;
-                PLOT.Position = [263 149 567 336];  
-              end
-                %%% Save the figure
-                savefig([imgpath '/vstress.fig']);
-                saveas(gcf,[imgpath '/vstress.png']);
-    
-else
-%     Ur = sqrt((abs(tau_zonal)+abs(tau_merid))./rho_a./SEAICE_drag).*ones(Nx,Ny);
-    uwindfile = 'uwindfile.bin';
-    vwindfile = 'vwindfile.bin';
-    writeDataset(uwind,fullfile(inputpath,uwindfile),ieee,prec);
-    writeDataset(vwind,fullfile(inputpath,vwindfile),ieee,prec);
-    EXF_NML_02.addParm('uwindfile',uwindfile,PARM_STR);
-    EXF_NML_02.addParm('vwindfile',vwindfile,PARM_STR);
-end   
-
-
-
-if(useSEAICE)
-    exf_albedo = 0.15; 
-    
-%     exf_offset_atemp =  273.16;
-    %%%runoff from ERA is in hours, need to convert to seconds
-%     exf_inscal_runoff = 1.14e-04;
-  
-  EXF_NML_01.addParm('exf_albedo',exf_albedo,PARM_INT);
-
-
-% Read-in atemp, aqh, swdown, lwdown, precip, and runoff. Compute hflux, swflux and sflux.
-    Kice = 2.1656; %%% Ice thermal conductivity, W/(m*degK)
-    ice_abs = 1-SEAICE_dryIceAlb; %%% Ice absorption
-
-% meanLWdown = zeros(1,size([-50:10],2));
-%  for  TaDegC = -50:10
-    TaDegC = -10;
-    Ta = 273.16+TaDegC; %%% Surface air temperature, degK
-    Tw = 273.16+double(tNorth(1)); %%% surface water temperature
-    TisDegC = -0.65;
-%     TisDegC = double(tNorth(1)); 
-    Tis = 273.16+TisDegC; %%% Ice surface temperature
-    SEAICE_emissivity = 0.970018; %%% Ice emissivity
-    ocn_e = 5.50e-8 / 5.670e-8;  %%% Ocean emissivity, 0.97
-    sigma = 5.67/10^8; %%% Stefan-Boltzman'n constant
-    exf_iceCh = 1.63e-3; %%% sensible heat transfer coeff. over sea-ice   
-    Cp_air = 1004; %%% Heat capacity at constant pressure 1004 J K-1 kg-1
-    atemp = Ta.*ones(Nx,Ny); % Surface (2-m) air temperature in deg K
-    aqh = 6.1094/(rho_a*287*Tis/100)*exp(17.625*TisDegC/(TisDegC+243.04)).*ones(Nx,Ny); % 0.0057, Surface (2m) specific humidity in kg/kg. Typical range: 0 < aqh < 0.02
-    
-   
-    
-    
-if(EXFoption == 3)
-    swdown = 0.*ones(Nx,Ny); 
-    precip = 0.*ones(Nx,Ny); 
-    runoff = 0.*ones(Nx,Ny);  
- 
-    CondHeat = 0.5*1/Hi0;  %%% SItice ~ -1.62 degC, Tio ~ -1.87 degC => Conductive heat flux from ice surface to ocean is about 0.5 W/m^2
-    lwdown = (CondHeat/ice_abs+320)*ones(Nx,Ny);
-    lwdown(1)
-    
-    if (Hi0==0)
-        lwdown = 324.1085*ones(Nx,Ny);
-        lwdown(1)
-    end
-    
-    
-    
-  %%% Plot the downward longwave radiation in W/m^2
-  if (showplots)
-    figure(fignum);
-    fignum = fignum + 1;
-    clf;
-    plot(yy/1000,squeeze(lwdown(1,:)),'LineWidth',1.5);
-    xlabel('Offshore distance (km)');
-    ylabel('LWdown (W/m^2)');
-    title('Downward longwave radiation');
-    set(gca,'fontsize',fontsize-1);
-    PLOT = gcf;
-    PLOT.Position = [263 149 567 336];  
-  end
-    %%% Save the figure
-    savefig([imgpath '/LWdown.fig']);
-    saveas(gcf,[imgpath '/LWdown.png']);
-      
-    atempfile  = 'atempfile.bin';
-    aqhfile    = 'aqhfile.bin';
-    swdownfile = 'swdownfile.bin';
-    lwdownfile = 'lwdownfile.bin';
-    precipfile = 'precipfile.bin'; 
-    runofffile = 'runofffile.bin';
-    writeDataset(atemp,fullfile(inputpath,atempfile),ieee,prec);
-    writeDataset(aqh,fullfile(inputpath,aqhfile),ieee,prec);
-    writeDataset(swdown,fullfile(inputpath,swdownfile),ieee,prec);
-    writeDataset(lwdown,fullfile(inputpath,lwdownfile),ieee,prec);
-    writeDataset(precip,fullfile(inputpath,precipfile),ieee,prec);
-    writeDataset(runoff,fullfile(inputpath,runofffile),ieee,prec);
-    EXF_NML_02.addParm('atempfile',atempfile,PARM_STR);
-    EXF_NML_02.addParm('aqhfile',aqhfile,PARM_STR);
-    EXF_NML_02.addParm('swdownfile',swdownfile,PARM_STR);
-    EXF_NML_02.addParm('lwdownfile',lwdownfile,PARM_STR);
-    EXF_NML_02.addParm('precipfile',precipfile,PARM_STR);
-    EXF_NML_02.addParm('runofffile',runofffile,PARM_STR);
-
-end
-
-end
-
-
-
-
-
-
-
-    %%% No sea ice
-    if (EXFoption == 1)   
-        hflux = 0.*ones(Nx,Ny);  
-        sflux = 0.*ones(Nx,Ny);  
-        swflux = 0.*ones(Nx,Ny);  
-        hfluxfile  = 'hfluxfile.bin';
-        sfluxfile    = 'sfluxfile.bin';
-        swfluxfile  = 'swfluxfile.bin';
-        writeDataset(hflux,fullfile(inputpath,hfluxfile),ieee,prec);
-        writeDataset(sflux,fullfile(inputpath,sfluxfile),ieee,prec);
-        writeDataset(swflux,fullfile(inputpath,swfluxfile),ieee,prec);
-        EXF_NML_02.addParm('hfluxfile',hfluxfile,PARM_STR);
-        EXF_NML_02.addParm('sfluxfile',sfluxfile,PARM_STR);
-        EXF_NML_02.addParm('swfluxfile',swfluxfile,PARM_STR);
-    end
-
-
-  %%% Create the data.exf file
-  write_data_exf(inputpath,EXF_PARM,listterm,realfmt);
-
 
  
   %%%%%%%%%%%%%%%%%%%%%%%%%

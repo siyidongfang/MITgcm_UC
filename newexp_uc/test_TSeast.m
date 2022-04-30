@@ -240,10 +240,10 @@ fontsize = 16;
   Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
 
-  lat_Zcdw_pt = [0 Yshelfbreak Ly];
-  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South]; %%% Piecewise function
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
 
-  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'linear'); 
+  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
   Zcdw_s = Zcdw_pt - 100;
 
 
@@ -285,9 +285,12 @@ fontsize = 16;
   end
 
 
-    %%% Calculate thermal-wind velocity (vEast==0). Assume zero bottom velocity.
+  %%% Calculate thermal-wind velocity and wind-driven velocity, assuming vEast==0 and zero bottom velocity.
     uEast = zeros(Ny,Nr);
+    uEast_TWV = zeros(Ny,Nr); %%% Thermal-wind velocity
+    uEast_EK = zeros(Ny,Nr);  %%% Wind-driven velocity, based on Ekman theory
 
+    %%%%%% Calculate thermal-wind velocity
     bot_idx = zeros(Ny,1);
     for jj = 1:Ny
         if(find(isnan(bathy_east(jj,:)),1,'first')==1)
@@ -303,13 +306,49 @@ fontsize = 16;
     rho0 = 1000;
     f0 = -1.3e-4; %%% Coriolis parameter
     beta = 1e-11; %%% Beta parameter  
+    
+
     f = f0+beta*YY;
     f_mid = (f(2:end,:)+f(1:end-1,:))/2;
 
     rho_east_surf  = gsw_rho(SA_east,CT_east,0); %%% surface-referenced potential density
     drhody = (rho_east_surf(2:end,:)-rho_east_surf(1:end-1,:))./dy(1);
     uEast_mid = g/rho0./f_mid.*cumsum(drhody,2,'reverse');
-    uEast(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2;
+    uEast_TWV(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2; %%% Thermal-wind velocity
+
+
+    %%%%%% Calculate wind-driven velocity in the surface Ekman layer
+    A_z = 1e-3; %%% Assume a constant vertical eddy viscosity, in m^2/s (3e-4 in your JPO paper)
+    D_EK = sqrt(2*pi^2*A_z./abs(f(:,1))); %%% Ekman-layer depth for each latitude
+    for jj=1:Ny
+        D_EK_idx(jj,1) = max(find(zz>=-D_EK(jj))); %%% Vertical index of Ekman-layer for each latitude
+    end
+
+    rho_a = 1.3; 
+    C_ao = 1e-3; %%% Air-ocean drag coefficient
+    rho_o = 1027;
+
+    Ua = -1;Va=0.5;
+    uwind = [Ua:-Ua/(Ny-1):0].*ones(Nx,1); 
+    vwind = [Va:-Va/(Ny-1):0].*ones(Nx,1); 
+    tau_wind = rho_a*C_ao*abs(uwind(1,:).^2+vwind(1,:).^2)'; %%% Total surface wind stress
+    a_EK = sqrt(abs(f(:,1))/2/A_z); %%% Constant 'a' in Ekman theory
+    V0_EK = tau_wind./sqrt(rho_o.^2.*abs(f(:,1))*A_z);
+
+    angle_uvwind = atan(abs(Va/Ua))/pi*180; %%% Angle of zonal and meridional wind, in degrees
+
+    for jj = 1:Ny
+        for kk=1:D_EK_idx(jj)
+            az = a_EK(jj)*zz(kk);
+            v_ek(jj,kk) = V0_EK(jj)*exp(az)*cos(pi/4+az); %%% Ekman velocity aligned with the direction of the surface wind stress
+            u_ek(jj,kk) = V0_EK(jj)*exp(az)*sin(pi/4+az); %%% Ekman velocity perpendicular to the direction of the surface wind stress
+            uEast_EK(jj,kk) = -(v_ek(jj,kk)*cos(angle_uvwind)+u_ek(jj,kk)*sin(angle_uvwind)); %%% Ekman velocity in the zonal direction
+        end
+    end
+
+    %%% Prescribe zonal velocity at the eastern boundary as the sum of wind-driven velocity 
+    %%% in the Ekman layer and thermal-wind velocity
+    uEast = uEast_TWV + uEast_EK; 
 
     figure(23)
     pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
@@ -319,7 +358,7 @@ fontsize = 16;
     hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
     colorbar;colormap('redblue');
     xlabel('y (km)');ylabel('Depth (km)');
-    title('Eastern boundary thermal wind velocity (m/s)');
+    title('Eastern boundary restoring velocity (m/s)');
     set(gca,'fontsize',fontsize);
     caxis([-1 1]/1000);
 
@@ -386,7 +425,7 @@ fontsize = 16;
   tSouth = tEast(1,:);
   sSouth = sEast(1,:);
 
-  useFresher = true;
+  useFresher = false;
   if(useFresher)
     sSouth = sSouth-0.5;
   end

@@ -3,10 +3,10 @@ addpath ../.
 addpath ../utils/matlab; 
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
-expdir = '/Users/csi/MITgcm_UC/exps_test/';
+expdir = '/Users/csi/MITgcm_UC/experiments/exps_test/';
 expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_fresher0.5psu_hoffman2';
 loadexp;
-nIter = 13593;
+nIter = 78840;
 
 [ZZ,YY] = meshgrid(zz,yy);
 
