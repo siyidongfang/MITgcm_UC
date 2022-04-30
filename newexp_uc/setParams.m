@@ -179,7 +179,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = true;
+  useEobcsWorlanski = false;
+  useEobcsWobcs = true;
   if(use2Orlanski)
       useOrlanskiWest = true;
       useOrlanskiEast = true;
@@ -187,6 +188,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   if(useEobcsWorlanski)
       useOBCSeast = true;
       useOrlanskiWest = true;
+      useOrlanskiEast = false;  
+  end
+  if(useEobcsWobcs)
+      useOBCSeast = true;
+      useOBCSwest = true;
+      useOrlanskiWest = false;
       useOrlanskiEast = false;  
   end
 
@@ -956,6 +963,7 @@ end
     %%% in the Ekman layer and thermal-wind velocity
     uEast = uEast_TWV + uEast_EK; 
 
+      
   if (showplots)
   figure(fignum);
   fignum = fignum + 1;
@@ -1896,7 +1904,7 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
 
-  if(use2Orlanski|useEobcsWorlanski)
+  if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
       OB_Ieast= Nx*ones(1,Ny);
       obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
       OB_Iwest= ones(1,Ny);
@@ -2003,7 +2011,7 @@ diag_fields_inst = {...
     obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
   end
 
-  if(use2Orlanski|useEobcsWorlanski)
+  if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
       OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
       OBCS_balanceFacW = 1;
       obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
@@ -2061,6 +2069,25 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OBEuFile','OBEuFile.bin',PARM_STR);
   end
 
+  if(useEobcsWobcs)
+      OBEt = tEast;
+      OBEs = sEast;
+      OBEu = uEast;
+      %%%%%% Define OBCS Eastern boundary
+      writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
+      writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
+      writeDataset(OBEu,fullfile(inputpath,'OBEuFile.bin'),ieee,prec);
+      obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBEuFile','OBEuFile.bin',PARM_STR);
+      %%%%%% Define OBCS Western boundary, the same as OBCS Eastern boundary
+      writeDataset(OBEt,fullfile(inputpath,'OBWtFile.bin'),ieee,prec);
+      writeDataset(OBEs,fullfile(inputpath,'OBWsFile.bin'),ieee,prec);
+      writeDataset(OBEu,fullfile(inputpath,'OBWuFile.bin'),ieee,prec);
+      obcs_parm01.addParm('OBWtFile','OBWtFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBWsFile','OBWsFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBWuFile','OBWuFile.bin',PARM_STR);
+  end
 
 
     if(useSEAICE)
@@ -2152,7 +2179,7 @@ diag_fields_inst = {...
   obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
 
-  if(use2Orlanski|useEobcsWorlanski)
+  if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
       obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
       obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
       %%% Velocity averaging time scale - must be larger than deltaT.
@@ -2184,7 +2211,7 @@ diag_fields_inst = {...
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
 
-  if(useEobcsWorlanski)
+  if(useEobcsWorlanski|useEobcsWobcs)
         Urelaxobcsinner = 864000;
         Urelaxobcsbound = 43200;
         obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);

@@ -3,10 +3,13 @@ addpath ../.
 addpath ../utils/matlab; 
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
-expdir = '/Users/csi/MITgcm_UC/experiments/exps_test/';
-expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_fresher0.5psu_hoffman2';
+expdir = '/Users/csi/MITgcm_UC/experiments/obcsE_orlanskiW/';
+expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_ardbeg';
 loadexp;
-nIter = 78840;
+nIter = 13593;
+
+aaaa1 = rdmds([exppath,'/results/ETAN'],nIter);
+open aaaa1
 
 [ZZ,YY] = meshgrid(zz,yy);
 
