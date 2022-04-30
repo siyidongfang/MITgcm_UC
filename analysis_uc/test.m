@@ -4,9 +4,9 @@ addpath ../utils/matlab;
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
 expdir = '/Users/csi/MITgcm_UC/experiments/obcsE_orlanskiW/';
-expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_ardbeg';
+expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_fresher0.5psu_ardbeg';
 loadexp;
-nIter = 13593;
+nIter = 33549;
 
 aaaa1 = rdmds([exppath,'/results/ETAN'],nIter);
 open aaaa1
