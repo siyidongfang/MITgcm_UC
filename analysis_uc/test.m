@@ -6,10 +6,13 @@ addpath ../analysis/jpo_analysis-hires/;
 expdir = '/Users/csi/MITgcm_UC/experiments/obcsE_orlanskiW/';
 expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_fresher0.5psu_ardbeg';
 loadexp;
-nIter = 33549;
+nIter = 503234;
 
+figure(2)
 aaaa1 = rdmds([exppath,'/results/ETAN'],nIter);
-open aaaa1
+% open aaaa1
+pcolor(aaaa1)
+shading flat;colorbar
 
 [ZZ,YY] = meshgrid(zz,yy);
 

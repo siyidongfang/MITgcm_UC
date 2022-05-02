@@ -864,7 +864,9 @@ end
   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
-  Zcdw_s = Zcdw_pt - 100;
+  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+                          %%% be deeper or else you end up with very weak 
+                          %%% buoyancy frequency just below the pycnocline
 
 
   %%% Artificially construct a hydrographic profile
@@ -1024,6 +1026,22 @@ end
   set(gcf,'Position',[-54 249 1285/2 459]);
   savefig([imgpath '/Eastern_N2.fig']);
   saveas(gcf,[imgpath '/Eastern_N2.png']);
+
+
+  figure(fignum);
+  fignum = fignum + 1;
+  plot(yy/1000,Zcdw_pt,'LineWidth',2)
+  hold on
+  plot(yy/1000,Zcdw_s,'LineWidth',2)
+  hold off;
+  ylabel('z (m)')
+  xlabel('y (km)')
+  legend('Depth of \theta_{max}','Depth of S_{max}')
+  set(gca,'fontsize',fontsize);
+  title('Eastern boundary CDW depth')
+  savefig([imgpath '/Eastern_CDWdepth.fig']);
+  saveas(gcf,[imgpath '/Eastern_CDWdepth.png']);
+
   end
 
 
