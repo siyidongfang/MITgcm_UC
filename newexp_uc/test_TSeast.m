@@ -408,6 +408,18 @@ fontsize = 16;
   set(gcf,'Position',[-54 249 1285/2 459]);
 
 
+  figure(22)
+  plot(yy/1000,Zcdw_pt,'LineWidth',2)
+  hold on
+  plot(yy/1000,Zcdw_s,'LineWidth',2)
+  hold off;
+  ylabel('z (m)')
+  xlabel('y (km)')
+  legend('Depth of \theta_{max}','Depth of S_{max}')
+  set(gca,'fontsize',fontsize);
+  title('Eastern boundary CDW depth')
+
+
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% NORTHERN TEMPERATURE/SALINITY PROFILES %%%%%

@@ -179,18 +179,18 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = false;
-  useEobcsWobcs = true;
+  useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
+  useEobcsWobcs = true;      %%% OBCS to the east and west
   if(use2Orlanski)
       useOrlanskiWest = true;
       useOrlanskiEast = true;
   end
-  if(useEobcsWorlanski)
+  if(useEobcsWorlanski)      %%% OBCS to the east, and Orlanski to the west
       useOBCSeast = true;
       useOrlanskiWest = true;
       useOrlanskiEast = false;  
   end
-  if(useEobcsWobcs)
+  if(useEobcsWobcs)           %%% OBCS to the east and west
       useOBCSeast = true;
       useOBCSwest = true;
       useOrlanskiWest = false;
@@ -2074,7 +2074,7 @@ diag_fields_inst = {...
   obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
   obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
 
-  if(useEobcsWorlanski)
+  if(useEobcsWorlanski) %%% OBCS to the east, and Orlanski to the west
       OBEt = tEast;
       OBEs = sEast;
       OBEu = uEast;
@@ -2087,7 +2087,7 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OBEuFile','OBEuFile.bin',PARM_STR);
   end
 
-  if(useEobcsWobcs)
+  if(useEobcsWobcs) %%% OBCS to the east and west
       OBEt = tEast;
       OBEs = sEast;
       OBEu = uEast;
