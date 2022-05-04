@@ -311,14 +311,14 @@ fontsize = 16;
     f = f0+beta*YY;
     f_mid = (f(2:end,:)+f(1:end-1,:))/2;
 
-    rho_east_surf  = gsw_rho(SA_east,CT_east,0); %%% surface-referenced potential density
+    rho_east_surf  = gsw_rho(SA_east,CT_east,-zz); %%% in-situ density
     drhody = (rho_east_surf(2:end,:)-rho_east_surf(1:end-1,:))./dy(1);
     uEast_mid = g/rho0./f_mid.*cumsum(drhody,2,'reverse');
     uEast_TWV(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2; %%% Thermal-wind velocity
 
 
     %%%%%% Calculate wind-driven velocity in the surface Ekman layer
-    A_z = 1e-3; %%% Assume a constant vertical eddy viscosity, in m^2/s (3e-4 in your JPO paper)
+    A_z = 1e-1; 
     D_EK = sqrt(2*pi^2*A_z./abs(f(:,1))); %%% Ekman-layer depth for each latitude
     for jj=1:Ny
         D_EK_idx(jj,1) = max(find(zz>=-D_EK(jj))); %%% Vertical index of Ekman-layer for each latitude
