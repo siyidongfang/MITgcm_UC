@@ -11,14 +11,14 @@
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
     expdir = '/Users/csi/MITgcm_UC/experiments/obcsE_orlanskiW/';
-    expname = 'res2km_Ua-1Va0.5_Atide0_Hi0Ai0_Ws30_ardbeg';
+    expname = 'res2km_Ua-1Va0.5_Atide0.02_Hi0Ai0_Ws30_fresher0.5psu_ardbeg';
     loadexp;
 
     figdir = [exppath '/img/'];
-    year = num2str(9);
+    year = num2str(3);
 
     %%% Load data
-    nIter = 1103760;
+    nIter = 503234;
     tt = rdmds([exppath,'/results/THETA'],nIter);
     ss = rdmds([exppath,'/results/SALT'],nIter);
     uu = rdmds([exppath,'/results/UVEL'],nIter);
