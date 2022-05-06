@@ -930,7 +930,7 @@ end
 
     rho_east_insitu  = gsw_rho(SA_east,CT_east,-zz); %%% in-situ density
     drhody = (rho_east_insitu(2:end,:)-rho_east_insitu(1:end-1,:))./dy(1);
-    uEast_mid = g/rho0./f_mid.*cumsum(drhody,2,'reverse');
+    uEast_mid = g/rho0./f_mid.*cumsum(drhody.*dz,2,'reverse');
     uEast_TWV(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2; %%% Thermal-wind velocity
 
     %     %%%%%% Calculate wind-driven velocity in the surface Ekman layer
