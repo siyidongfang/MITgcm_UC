@@ -928,42 +928,44 @@ end
     f = f0+beta*YY;
     f_mid = (f(2:end,:)+f(1:end-1,:))/2;
 
-    rho_east_surf  = gsw_rho(SA_east,CT_east,0); %%% surface-referenced potential density
-    drhody = (rho_east_surf(2:end,:)-rho_east_surf(1:end-1,:))./dy(1);
+    rho_east_insitu  = gsw_rho(SA_east,CT_east,-zz); %%% in-situ density
+    drhody = (rho_east_insitu(2:end,:)-rho_east_insitu(1:end-1,:))./dy(1);
     uEast_mid = g/rho0./f_mid.*cumsum(drhody,2,'reverse');
     uEast_TWV(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2; %%% Thermal-wind velocity
 
-    %%%%%% Calculate wind-driven velocity in the surface Ekman layer
-    %%% Assume a constant vertical eddy viscosity (viscAr = 3e-4 m^2/s)
-    D_EK = sqrt(2*pi^2*viscAr./abs(f(:,1))); %%% Ekman-layer depth for each latitude
-    for jj=1:Ny
-        D_EK_idx(jj,1) = max(find(zz>=-D_EK(jj))); %%% Vertical index of Ekman-layer for each latitude
-    end
-
-    rho_a = 1.3; 
-    C_ao = 1e-3; %%% Air-ocean drag coefficient
-    rho_o = 1027;
-
-    tau_wind = rho_a*C_ao*abs(uwind(1,:).^2+vwind(1,:).^2)'; %%% Total surface wind stress
-    a_EK = sqrt(abs(f(:,1))/2/viscAr); %%% Constant 'a' in Ekman theory
-    V0_EK = tau_wind./sqrt(rho_o.^2.*abs(f(:,1))*viscAr);
-
-    angle_uvwind = atan(abs(Va/Ua))/pi*180; %%% Angle of zonal and meridional wind, in degrees
-    for jj = 1:Ny
-        for kk=1:D_EK_idx(jj)
-            az = a_EK(jj)*zz(kk);
-            v_ek(jj,kk) = V0_EK(jj)*exp(az)*cos(pi/4+az); %%% Ekman velocity aligned with the direction of the surface wind stress
-            u_ek(jj,kk) = V0_EK(jj)*exp(az)*sin(pi/4+az); %%% Ekman velocity perpendicular to the direction of the surface wind stress
-            uEast_EK(jj,kk) = -(v_ek(jj,kk)*cos(angle_uvwind)+u_ek(jj,kk)*sin(angle_uvwind)); %%% Ekman velocity in the zonal direction
-            if(uEast_EK(jj,kk)>0)
-                uEast_EK(jj,kk) = 0;
-            end
-        end
-    end
+    %     %%%%%% Calculate wind-driven velocity in the surface Ekman layer
+    %     %%% Assume a constant vertical eddy viscosity (A_z = 0.1 m^2/s)
+    %     A_z = 0.1; 
+    %     D_EK = sqrt(2*pi^2*A_z./abs(f(:,1))); %%% Ekman-layer depth for each latitude
+    %     for jj=1:Ny
+    %         D_EK_idx(jj,1) = max(find(zz>=-D_EK(jj))); %%% Vertical index of Ekman-layer for each latitude
+    %     end
+    % 
+    %     rho_a = 1.3; 
+    %     C_ao = 1e-3; %%% Air-ocean drag coefficient
+    %     rho_o = 1027;
+    % 
+    %     tau_wind = rho_a*C_ao*abs(uwind(1,:).^2+vwind(1,:).^2)'; %%% Total surface wind stress
+    %     a_EK = sqrt(abs(f(:,1))/2/A_z); %%% Constant 'a' in Ekman theory
+    %     V0_EK = tau_wind./sqrt(rho_o.^2.*abs(f(:,1))*A_z);
+    % 
+    %     angle_uvwind = atan(abs(Va/Ua))/pi*180; %%% Angle of zonal and meridional wind, in degrees
+    %     for jj = 1:Ny
+    %         for kk=1:D_EK_idx(jj)
+    %             az = a_EK(jj)*zz(kk);
+    %             v_ek(jj,kk) = V0_EK(jj)*exp(az)*cos(pi/4+az); %%% Ekman velocity aligned with the direction of the surface wind stress
+    %             u_ek(jj,kk) = V0_EK(jj)*exp(az)*sin(pi/4+az); %%% Ekman velocity perpendicular to the direction of the surface wind stress
+    %             uEast_EK(jj,kk) = -(v_ek(jj,kk)*cos(angle_uvwind)+u_ek(jj,kk)*sin(angle_uvwind)); %%% Ekman velocity in the zonal direction
+    %             if(uEast_EK(jj,kk)>0)
+    %                 uEast_EK(jj,kk) = 0;
+    %             end
+    %         end
+    %     end
 
     %%% Prescribe zonal velocity at the eastern boundary as the sum of wind-driven velocity 
     %%% in the Ekman layer and thermal-wind velocity
-    uEast = uEast_TWV + uEast_EK; 
+    %     uEast = uEast_TWV + uEast_EK; 
+    uEast = uEast_TWV;
 
       
   if (showplots)
@@ -978,7 +980,7 @@ end
   xlabel('y (km)');ylabel('Depth (km)');
   title('Eastern boundary restoring velocity (m/s)');
   set(gca,'fontsize',fontsize);
-  caxis([-1 1]/1000);
+  caxis([-0.08 0.08]);
   savefig([imgpath '/Eastern_u.fig']);
   saveas(gcf,[imgpath '/Eastern_u.png']);
 
