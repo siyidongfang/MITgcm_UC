@@ -61,8 +61,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   simTime = 10*t1year; %%% Simulation time   
 %   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
-  Lx = 400*m1km; %%% Domain size in x 
-  Ly = 450*m1km; %%% Domain size in y   
+%   Lx = 400*m1km; %%% Domain size in x 
+%   Ly = 450*m1km; %%% Domain size in y   
+  Lx = 600*m1km; %%% Domain size in x 
+  Ly = 370*m1km; %%% Domain size in y   
 %   Ls = 50*m1km; %%% Width of southern boundary region
   Ln = 20*m1km; %%% Width of northern boundary region
   H = 4000; %%% Domain size in z 
@@ -128,24 +130,41 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     % % % % 
 
     %%% Topographic parameters 
-%     Ws = 30*m1km; %%% Continental slope half-width
-    Hshelf = 500; %%% Continental shelf depth
-    Wshelf = 150*m1km; %%% Width of continental shelf
-    Ycoast = 10*m1km; %%% Latitude of coastline
-    Wcoast = 20*m1km; %%% Width of coastal wall slope
-    Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
-    Yslope = Ycoast+Wshelf+Ws; %%% Latitude of mid-continental slope
-    Ydeep = 300*m1km; %%% Latitude of deep ocean
-    Xeast = 275*m1km; %%% Longitude of eastern trough wall
-    Xwest = 125*m1km; %%% Longitude of western trough wall
-    Yicefront = 0*m1km; %%% Latitude of ice shelf face
-    Hicefront = 0; %%% Depth of ice shelf frace
-    Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
-    Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-    Htrough = 300; %%% Trough depth
-    Wtrough = 40*m1km; %%% Trough width %%%Default 40 km
-    Xtrough = Lx/2; %%% Longitude of trough
+% %     Ws = 30*m1km; %%% Continental slope half-width
+%     Hshelf = 500; %%% Continental shelf depth
+%     Wshelf = 150*m1km; %%% Width of continental shelf
+%     Ycoast = 10*m1km; %%% Latitude of coastline
+%     Wcoast = 20*m1km; %%% Width of coastal wall slope
+%     Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
+%     Yslope = Ycoast+Wshelf+Ws; %%% Latitude of mid-continental slope
+%     Ydeep = 300*m1km; %%% Latitude of deep ocean
+%     Xeast = 275*m1km; %%% Longitude of eastern trough wall
+%     Xwest = 125*m1km; %%% Longitude of western trough wall
+%     Yicefront = 0*m1km; %%% Latitude of ice shelf face
+%     Hicefront = 0; %%% Depth of ice shelf frace
+%     Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
+%     Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+%     Htrough = 300; %%% Trough depth
+%     Wtrough = 40*m1km; %%% Trough width %%%Default 40 km
+%     Xtrough = Lx/2; %%% Longitude of trough
 
+  Wslope = Ws; %%% Continental slope half-width
+  Hshelf = 500; %%% Continental shelf depth
+  Wshelf = 120*m1km; %%% Width of continental shelf
+  Ycoast = 130*m1km; %%% Latitude of coastline
+  Wcoast = 20*m1km; %%% Width of coastal wall slope
+  Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
+  Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
+  Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
+  Xeast = 350*m1km; %%% Longitude of eastern trough wall
+  Xwest = 150*m1km; %%% Longitude of western trough wall
+  Yicefront = 110*m1km; %%% Latitude of ice shelf face
+  Hicefront = 200; %%% Depth of ice shelf frace
+  Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
+  Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+  Htrough = 300; %%% Trough depth
+  Wtrough = 30*m1km; %%% Trough width
+  Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
  
   %%% Parameters related to periodic forcing
@@ -160,6 +179,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
   
 
+  useSHELFICE = true; 
   useEXF = true;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
@@ -1483,6 +1503,88 @@ end
   write_data_rbcs(inputpath,RBCS_PARM,listterm,realfmt);
   end
   
+
+
+
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%% SHELF ICE   %%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  
+  if (useSHELFICE)
+ 
+    %%% to store parameter names and values
+    shelfice_parm01 = parmlist;
+    SHELFICE_PARM = {shelfice_parm01}; 
+
+    SHELFICEHeatCapacity_Cp = 2000; %%% Default value
+    rhoShelfIce = 917;              %%% Default value
+    SHELFICEheatTransCoeff = 0;     %%% Turn off linear heat transfer
+    SHELFICEthetaSurface = -20;     %%% Defauly value
+    SHELFICEuseGammaFrict = true;   %%% Turn on friction-dependent heat transfer
+    SHELFICEboundaryLayer = false;  %%% Turn on to average velocities over top dz of water column when computing friction velocity
+    SHELFICEconserve = false;       %%% Turns on conservative form of 3-equation IOBL parameterization
+    
+    %%% Save as a parameter   
+    shelfice_parm01.addParm('SHELFICEHeatCapacity_Cp',SHELFICEHeatCapacity_Cp,PARM_REAL);
+    shelfice_parm01.addParm('rhoShelfIce',rhoShelfIce,PARM_REAL);
+    shelfice_parm01.addParm('SHELFICEheatTransCoeff',SHELFICEheatTransCoeff,PARM_REAL);
+    shelfice_parm01.addParm('SHELFICEthetaSurface',SHELFICEthetaSurface,PARM_REAL);
+    shelfice_parm01.addParm('SHELFICEuseGammaFrict',SHELFICEuseGammaFrict,PARM_BOOL);
+    shelfice_parm01.addParm('SHELFICEboundaryLayer',SHELFICEboundaryLayer,PARM_BOOL);
+    shelfice_parm01.addParm('SHELFICEconserve',SHELFICEconserve,PARM_BOOL);
+   
+      
+    %%% This code constructs the shelf ice load anomaly. Essentially the
+    %%% model needs to know something about the pressure in the ocean at
+    %%% the base of the ice shelf, and so we give it a "typical" pressure
+    %%% field for that depth at each horizontal point. Once the model
+    %%% starts running, it will continuously evolve that pressure, so the
+    %%% pressure we prescribe here doesn't really matter - we just don't
+    %%% want to blow up the model!        
+    SHELFICEloadAnomaly = zeros(Nx,Ny);
+    for i=1:Nx      
+      for j=1:Ny
+        SHELFICEloadAnomaly(i,j) = 0;
+        for k=1:Nr          
+          if (zz(k) < icedraft(i,j))
+            break;
+          end
+          Pressure = -rhoConst*g*zz(k);    
+          rhoShelfIce = densmdjwf(sNorth(k),tNorth(k),Pressure/Pa1dbar);
+          SHELFICEloadAnomaly(i,j) = SHELFICEloadAnomaly(i,j) + (g*(rhoShelfIce-rhoConst)*dz(k));                
+         end
+       end
+    end
+    
+    figure(fignum);
+    fignum = fignum+1;
+    pcolor(X,Y,SHELFICEloadAnomaly);
+    shading interp;
+    colorbar;    
+    
+    %%% Write load anomaly 
+    SHELFICEloadAnomalyFile='SHELFICEloadAnomalyFile.bin';
+    writeDataset(SHELFICEloadAnomaly,fullfile(inputpath,SHELFICEloadAnomalyFile),ieee,prec);       
+    shelfice_parm01.addParm('SHELFICEloadAnomalyFile','SHELFICEloadAnomalyFile.bin',PARM_STR); 
+    
+    %%% Ice shelf draft data
+    writeDataset(icedraft,fullfile(inputpath,'SHELFICEtopoFile.bin'),ieee,prec);
+    shelfice_parm01.addParm('SHELFICEtopoFile','SHELFICEtopoFile.bin',PARM_STR); 
+    
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%% WRITE THE 'data.shelfice' FILE %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    write_data_shelfice(inputpath,SHELFICE_PARM,listterm,realfmt);  
+
+  end
+  
+
+
+
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%% SEA ICE   %%%%%%%%%%%
@@ -2290,6 +2392,7 @@ diag_fields_inst = {...
   packages.addParm('useRBCS',useRBCS,PARM_BOOL);        
   packages.addParm('useEXF',useEXF,PARM_BOOL);        
   packages.addParm('useCAL',useEXF,PARM_BOOL); 
+  packages.addParm('useSHELFICE',useSHELFICE,PARM_BOOL);
   packages.addParm('useSEAICE',useSEAICE,PARM_BOOL);
   packages.addParm('useOBCS',useOBCS,PARM_BOOL);  
   packages.addParm('useLAYERS',useLAYERS,PARM_BOOL);  
@@ -2314,6 +2417,9 @@ diag_fields_inst = {...
   if (useEXF)
       ALL_PARMS = [ALL_PARMS EXF_PARM];
   end
+  if (useSHELFICE)
+    ALL_PARMS = [ALL_PARMS SHELFICE_PARM];
+  end  
   if (useSEAICE)
     ALL_PARMS = [ALL_PARMS SEAICE_PARM];
   end  

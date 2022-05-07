@@ -38,7 +38,7 @@ addpath /Users/csi/MITgcm_UC/analysis/colormaps/
   
 
   Wslope = 30*m1km; %%% Continental slope half-width
-  Hshelf = 800; %%% Continental shelf depth
+  Hshelf = 500; %%% Continental shelf depth
   Wshelf = 120*m1km; %%% Width of continental shelf
   Ycoast = 130*m1km; %%% Latitude of coastline
   Wcoast = 20*m1km; %%% Width of coastal wall slope
@@ -49,9 +49,9 @@ addpath /Users/csi/MITgcm_UC/analysis/colormaps/
   Xwest = 150*m1km; %%% Longitude of western trough wall
   Yicefront = 110*m1km; %%% Latitude of ice shelf face
   Hicefront = 200; %%% Depth of ice shelf frace
-  Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 250; %%% Trough depth
+  Htrough = 300; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
@@ -173,6 +173,18 @@ addpath /Users/csi/MITgcm_UC/analysis/colormaps/
 
 
   
+      figure(15);
+    clf;
+    surf(X/1000,Y/1000,h,'EdgeColor','None');   
+    xlabel('x (km)');
+    ylabel('y (km)');
+    zlabel('hb','Rotation',0);
+%     plot(Y(1,:),h(1,:));
+    title('Model bathymetry');
+    set(gca,'fontsize',fontsize+2);
+    PLOT = gcf;
+    PLOT.Position = [248 284 655 442];  
+    
 
   %%% Plot bathymetry and ice draft
   figure(1)
