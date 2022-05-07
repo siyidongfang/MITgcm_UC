@@ -13,29 +13,47 @@ addpath /Users/csi/MITgcm_UC/analysis/colormaps/
 
   m1km = 1000;
   H = 4000; %%% Domain size in z 
-  Lx = 400*m1km; %%% Domain size in x 
-  Ly = 450*m1km; %%% Domain size in y   
+  Lx = 600*m1km; %%% Domain size in x 
+  Ly = 370*m1km; %%% Domain size in y   
 
   %%% Topographic parameters 
 
+%   Wslope = 30*m1km; %%% Continental slope half-width
+%   Hshelf = 800; %%% Continental shelf depth
+%   Wshelf = 150*m1km; %%% Width of continental shelf
+%   Ycoast = 30*m1km; %%% Latitude of coastline
+%   Wcoast = 20*m1km; %%% Width of coastal wall slope
+%   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
+%   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
+%   Ydeep = 300*m1km; %%% Latitude of deep ocean
+%   Xeast = 275*m1km; %%% Longitude of eastern trough wall
+%   Xwest = 125*m1km; %%% Longitude of western trough wall
+%   Yicefront = 100*m1km; %%% Latitude of ice shelf face
+%   Hicefront = 200; %%% Depth of ice shelf frace
+%   Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
+%   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+%   Htrough = 300; %%% Trough depth
+%   Wtrough = 40*m1km; %%% Trough width
+%   Xtrough = Lx/2; %%% Longitude of trough
+  
+
   Wslope = 30*m1km; %%% Continental slope half-width
-  Hshelf = 500; %%% Continental shelf depth
-  Wshelf = 150*m1km; %%% Width of continental shelf
-  Ycoast = 30*m1km; %%% Latitude of coastline
+  Hshelf = 800; %%% Continental shelf depth
+  Wshelf = 120*m1km; %%% Width of continental shelf
+  Ycoast = 130*m1km; %%% Latitude of coastline
   Wcoast = 20*m1km; %%% Width of coastal wall slope
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
-  Ydeep = 300*m1km; %%% Latitude of deep ocean
-  Xeast = 275*m1km; %%% Longitude of eastern trough wall
-  Xwest = 125*m1km; %%% Longitude of western trough wall
-  Yicefront = 0*m1km; %%% Latitude of ice shelf face
-  Hicefront = 0; %%% Depth of ice shelf frace
+  Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
+  Xeast = 350*m1km; %%% Longitude of eastern trough wall
+  Xwest = 150*m1km; %%% Longitude of western trough wall
+  Yicefront = 110*m1km; %%% Latitude of ice shelf face
+  Hicefront = 200; %%% Depth of ice shelf frace
   Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 300; %%% Trough depth
-  Wtrough = 40*m1km; %%% Trough width
-  Xtrough = Lx/2; %%% Longitude of trough
-  
+  Htrough = 250; %%% Trough depth
+  Wtrough = 30*m1km; %%% Trough width
+  Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,8 +227,6 @@ addpath /Users/csi/MITgcm_UC/analysis/colormaps/
 showplots = true;
 fignum = 2;
 fontsize = 16;
-
-
 
 
 

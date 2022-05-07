@@ -910,7 +910,7 @@ end
 
   %%% Calculate thermal-wind velocity and wind-driven velocity, assuming vEast==0 and zero bottom velocity.
     uEast_TWV = zeros(Ny,Nr); %%% Thermal-wind velocity
-    uEast_EK = zeros(Ny,Nr);  %%% Wind-driven velocity, based on Ekman theory
+    %     uEast_EK = zeros(Ny,Nr);  %%% Wind-driven velocity, based on Ekman theory
 
     %%%%%% Calculate thermal-wind velocity
     bot_idx = zeros(Ny,1);
