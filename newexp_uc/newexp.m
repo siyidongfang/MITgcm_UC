@@ -195,12 +195,16 @@
   cluster = 'ardbeg';
   queue = 'all.q'; 
   %%%% ~ 2km grid spacing
+%   sNx = 25; %%% no. of x-gridpoints per tile
+%   sNy = 28; %%% no. of y-gridpoints per tile
+%   nPx = 8; %%% no. of processors in x-direction
+%   nPy = 8; %%% no. of processors in y-direction
+%   Nr = 70; %%% no. of z-gridpoints
   sNx = 25; %%% no. of x-gridpoints per tile
-  sNy = 28; %%% no. of y-gridpoints per tile
-  nPx = 8; %%% no. of processors in x-direction
-  nPy = 8; %%% no. of processors in y-direction
+  sNy = 30; %%% no. of y-gridpoints per tile
+  nPx = 12; %%% no. of processors in x-direction
+  nPy = 6; %%% no. of processors in y-direction
   Nr = 70; %%% no. of z-gridpoints
-
   
 
   %%% Set-up for Gordon

@@ -6,6 +6,7 @@ addpath /Users/csi/Software/gsw_matlab_v3_06_11;
 addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 addpath /Users/csi/MITgcm_UC/analysis/colormaps/
 
+fontsize = 14;
 
   Nx = 200;
   Ny = 225;

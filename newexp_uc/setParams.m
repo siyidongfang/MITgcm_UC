@@ -53,6 +53,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   t1year = 365*t1day;  
   %%% Metres in one kilometre
   m1km = 1000; 
+  %%% Pascals in 1 decibar
+  Pa1dbar = 1e4;
       
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,6 +76,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   lat0 = -70; %%% Latitude at southern boundary %%% Actually, lat0 to calc f0 and beta ~ 64S
   f0 = -1.3e-4; %%% Coriolis parameter
   beta = 1e-11; %%% Beta parameter      
+  rhoConst = 1027; %%% Reference density
   
   viscAh = 0; %%% Horizontal viscosity    
   viscA4 = 0; %%% Biharmonic viscosity
@@ -193,14 +196,17 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
   %%% OBCS package options
   useOBCS = true;
-  useOBCStides = true;
+  useOBCStides = false;
   useobcsNorth = true;
+  if(useSHELFICE)
+      useobcsSouth = false;
+  end
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = true;      %%% OBCS to the east and west
+  useEobcsWorlanski = true; %%% OBCS to the east, and Orlanski to the west
+  useEobcsWobcs = false;      %%% OBCS to the east and west
   if(use2Orlanski)
       useOrlanskiWest = true;
       useOrlanskiEast = true;
@@ -265,6 +271,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% full Coriolis force parameters
   parm01.addParm('quasiHydrostatic',false,PARM_BOOL);
   parm01.addParm('fPrime',0,PARM_REAL);
+  parm01.addParm('rhoConst',rhoConst,PARM_REAL);
   %%% implicit diffusion and convective adjustment  
   parm01.addParm('ivdc_kappa',0,PARM_REAL);
   parm01.addParm('implicitDiffusion',true,PARM_BOOL);
@@ -1067,6 +1074,174 @@ end
   end
 
 
+
+
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% WESTERN BOUNDARY %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  tWest = zeros(Ny,Nr);
+  sWest = zeros(Ny,Nr);
+  uWest = zeros(Ny,Nr);
+  N2_west = zeros(Ny,Nr-1);
+  gamma_n_west = zeros(Ny,Nr);
+  depth_West_pt = zeros(Ny,5);
+  depth_West_s  = zeros(Ny,5);
+
+  Zcdw_pt_shelf = -400+100; %%% CDW depth over the shelf
+  Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
+
+  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
+  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+                          %%% be deeper or else you end up with very weak 
+                          %%% buoyancy frequency just below the pycnocline
+
+
+  %%% Artificially construct a hydrographic profile
+  ptemp_West = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+  salt_West = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+ 
+  
+  %%% Interpolate to model grid
+  for jj = 1:Ny
+      depth_West_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
+      depth_West_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      tWest(jj,:) = interp1(depth_West_pt(jj,:),ptemp_West,zz,'PCHIP'); %%% reference pressure level: sea surface
+      sWest(jj,:) = interp1(depth_West_s(jj,:),salt_West,zz,'PCHIP');  %%% reference pressure level: sea surface 
+  end
+
+  lon_sec = -115-20;
+  lat_sec = -71;
+
+  %%% Calculate the neutral density of the eastern boundary
+  [ZZ,YY] = meshgrid(zz,yy);
+  [SA_west, in_ocean] = gsw_SA_from_SP(sWest,-ZZ,lon_sec,lat_sec);
+  T_insitu = gsw_t_from_pt0(SA_west,tWest,-ZZ);
+  CT_west = gsw_CT_from_pt(SA_west,tWest); 
+
+  for jj = 1:Ny
+      [gamma_n_west(jj,:)] = eos80_legacy_gamma_n(sWest(jj,:),T_insitu(jj,:),-zz,lon_sec,lat_sec);
+      [N2_west(jj,:), pp_mid_west] = gsw_Nsquared(SA_west(jj,:),CT_west(jj,:),-zz,lat_sec);
+  end
+
+
+  bathy_west = ones(Ny,Nr);
+  for jj = 1:Ny
+      for kk = 1:Nr
+          if(zz(kk)<h(kk,jj))
+              bathy_west(jj,kk)=NaN;
+          end
+      end
+  end
+
+
+    uWest_TWV = zeros(Ny,Nr); %%% Thermal-wind velocity
+
+    %%%%%% Calculate thermal-wind velocity
+    bot_idx = zeros(Ny,1);
+    for jj = 1:Ny
+        if(find(isnan(bathy_west(jj,:)),1,'first')==1)
+            bot_idx(jj) = NaN;
+        elseif (find(isnan(bathy_west(jj,:)),1,'first')>1)
+            bot_idx(jj) = find(isnan(bathy_west(jj,:)),1,'first')-1;
+        else
+            bot_idx(jj) = Nr;
+        end
+    end
+
+    rho_west_insitu  = gsw_rho(SA_west,CT_west,-zz); %%% in-situ density
+    drhody = (rho_west_insitu(2:end,:)-rho_west_insitu(1:end-1,:))./dy(1);
+    uWest_mid = g/rho0./f_mid.*cumsum(drhody.*dz,2,'reverse');
+    uWest_TWV(2:end-1,:) = (uWest_mid(1:end-1,:)+uWest_mid(2:end,:))/2; %%% Thermal-wind velocity
+    uWest = uWest_TWV;
+
+      
+  if (showplots)
+  figure(fignum);
+  fignum = fignum + 1;
+  pcolor(yy/1000,-zz/1000,uWest'.*bathy_west')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_west.*bathy_west,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap('redblue');
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Western boundary restoring velocity (m/s)');
+  set(gca,'fontsize',fontsize);
+  caxis([-0.08 0.08]);
+  savefig([imgpath '/Western_u.fig']);
+  saveas(gcf,[imgpath '/Western_u.png']);
+
+  figure(fignum);
+  fignum = fignum + 1;
+  subplot(1,2,1)
+  pcolor(yy/1000,-zz/1000,tWest'.*bathy_west')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_west.*bathy_west,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap(jet);
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Western boundary restoring temperature (^oC)');
+  set(gca,'fontsize',fontsize);
+  caxis([-2 2])
+  subplot(1,2,2)
+  pcolor(yy/1000,-zz/1000,sWest'.*bathy_west')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_west.*bathy_west,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap(jet);
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Western boundary restoring salinity (psu)');
+  set(gca,'fontsize',fontsize);
+  caxis([33.3 34.7])
+  set(gcf,'Position',[-54 249 1285 459]);
+  savefig([imgpath '/Western_TS.fig']);
+  saveas(gcf,[imgpath '/Western_TS.png']);
+
+  figure(fignum);
+  fignum = fignum + 1;
+  bathy_mid = (bathy_west(:,[1:end-1])+bathy_west(:,[2:end]))/2;
+  pcolor(yy/1000,pp_mid_west/1000,N2_west'.*bathy_mid')
+  shading flat;axis ij;
+  hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_west.*bathy_west,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+  clabel(M,c,'LabelSpacing',200);hold off;
+  hold on;plot(yy/1000,-h(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-h(round(Nx/2),:)/1000,'k--','LineWidth',3);
+  colorbar;colormap('default');
+  caxis([0 3]/1e5)
+  xlabel('y (km)');ylabel('Depth (km)');
+  title('Western boundary N^2');
+  set(gca,'fontsize',fontsize);
+  set(gcf,'Position',[-54 249 1285/2 459]);
+  savefig([imgpath '/Western_N2.fig']);
+  saveas(gcf,[imgpath '/Western_N2.png']);
+
+
+  figure(fignum);
+  fignum = fignum + 1;
+  plot(yy/1000,Zcdw_pt,'LineWidth',2)
+  hold on
+  plot(yy/1000,Zcdw_s,'LineWidth',2)
+  hold off;
+  ylabel('z (m)')
+  xlabel('y (km)')
+  legend('Depth of \theta_{max}','Depth of S_{max}')
+  set(gca,'fontsize',fontsize);
+  title('Western boundary CDW depth')
+  savefig([imgpath '/Western_CDWdepth.fig']);
+  saveas(gcf,[imgpath '/Western_CDWdepth.png']);
+
+  end
+
+
+
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% NORTHERN TEMPERATURE/SALINITY PROFILES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1081,7 +1256,7 @@ end
   tSouth = tEast(1,:);
   sSouth = sEast(1,:);
 
-  useFresher = true;
+  useFresher = false;
   if(useFresher)
     sSouth = sSouth-0.5;
   end
@@ -1564,7 +1739,11 @@ end
     pcolor(X,Y,SHELFICEloadAnomaly);
     shading interp;
     colorbar;    
-    
+    title('Shelf ice load anomaly')
+    %%% Save the figure
+    savefig([imgpath '/SHELFICEloadAnomaly.fig']);
+    saveas(gcf,[imgpath '/SHELFICEloadAnomaly.png']);
+
     %%% Write load anomaly 
     SHELFICEloadAnomalyFile='SHELFICEloadAnomalyFile.bin';
     writeDataset(SHELFICEloadAnomaly,fullfile(inputpath,SHELFICEloadAnomalyFile),ieee,prec);       
@@ -1846,6 +2025,7 @@ diag_fields_avg = {...
     'ETAN',...
     'UVELSQ','VVELSQ','WVELSQ'...
     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
+    'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
 ... % % %     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
 %       ... %%%%%%%%% for analysis
 %       ... %%% Heat budget
@@ -2019,9 +2199,12 @@ diag_fields_inst = {...
   if (useobcsNorth)
       OB_Jnorth= Ny*ones(1,Nx);
       obcs_parm01.addParm('OB_Jnorth',OB_Jnorth,PARM_INTS); 
+  end
+
+  if(useobcsSouth && useobcsNorth)
       OB_Jsouth = ones(1,Nx);
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
-  else
+  elseif (useobcsSouth)
       OB_Jsouth = Nx*0;   %%% Need to modify data.obcs (eg, OB_Jsouth=200*0,)
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
@@ -2123,14 +2306,15 @@ diag_fields_inst = {...
   useOBCSbalance = true;  
   obcs_parm01.addParm('useOBCSbalance',useOBCSbalance,PARM_BOOL);
 
-  if (useobcsNorth)
-    OBCS_balanceFacN = 1; %%% A value -1 balances an individual boundary
+  if (useobcsNorth && useobcsSouth)
+    OBCS_balanceFacN = 1; 
     OBCS_balanceFacS = 1;
     obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL); 
     obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
-  else 
-    OBCS_balanceFacS = -1;
-    obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
+  end
+  if(useobcsNorth && (~useobcsSouth)) 
+    OBCS_balanceFacN = 1; %%% A value -1 balances an individual boundary
+    obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL);  
   end
 
   if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
@@ -2166,8 +2350,10 @@ diag_fields_inst = {...
       writeDataset(OBNt,fullfile(inputpath,'OBNtFile.bin'),ieee,prec);
       writeDataset(OBNs,fullfile(inputpath,'OBNsFile.bin'),ieee,prec);
   end
-  writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
-  writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
+  if(useobcsSouth)
+      writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
+      writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
+  end
 
   %%% Set OBCS prescription parameters
   obcs_parm01.addParm('useOBCSprescribe',useOBCSprescribe,PARM_BOOL);
@@ -2175,8 +2361,10 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OBNtFile','OBNtFile.bin',PARM_STR);
       obcs_parm01.addParm('OBNsFile','OBNsFile.bin',PARM_STR);
   end
-  obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
-  obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
+  if(useobcsSouth)
+      obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
+      obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
+  end
 
   if(useEobcsWorlanski) %%% OBCS to the east, and Orlanski to the west
       OBEt = tEast;
@@ -2195,6 +2383,11 @@ diag_fields_inst = {...
       OBEt = tEast;
       OBEs = sEast;
       OBEu = uEast;
+
+      OBWt = tWest;
+      OBWs = sWest;
+      OBWu = uWest;
+
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
       writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
@@ -2202,10 +2395,10 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
       obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
       obcs_parm01.addParm('OBEuFile','OBEuFile.bin',PARM_STR);
-      %%%%%% Define OBCS Western boundary, the same as OBCS Eastern boundary
-      writeDataset(OBEt,fullfile(inputpath,'OBWtFile.bin'),ieee,prec);
-      writeDataset(OBEs,fullfile(inputpath,'OBWsFile.bin'),ieee,prec);
-      writeDataset(OBEu,fullfile(inputpath,'OBWuFile.bin'),ieee,prec);
+      %%%%%% Define OBCS Western boundary
+      writeDataset(OBWt,fullfile(inputpath,'OBWtFile.bin'),ieee,prec);
+      writeDataset(OBWs,fullfile(inputpath,'OBWsFile.bin'),ieee,prec);
+      writeDataset(OBWu,fullfile(inputpath,'OBWuFile.bin'),ieee,prec);
       obcs_parm01.addParm('OBWtFile','OBWtFile.bin',PARM_STR);
       obcs_parm01.addParm('OBWsFile','OBWsFile.bin',PARM_STR);
       obcs_parm01.addParm('OBWuFile','OBWuFile.bin',PARM_STR);
