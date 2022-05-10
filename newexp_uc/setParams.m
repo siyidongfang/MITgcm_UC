@@ -294,7 +294,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   parm01.addParm('useJamartWetPoints',true,PARM_BOOL);
   parm01.addParm('useJamartMomAdv',true,PARM_BOOL);
 %   parm01.addParm('rhoConst',1000,PARM_REAL);
-  parm01.addParm('useRealFreshWaterFlux',false,PARM_BOOL);
+  parm01.addParm('useRealFreshWaterFlux',false,PARM_BOOL);  
+  %%% useRealFreshWaterFlux: use true E-P-R freshwater flux (changes free
+  %%% surface/sea level) on/off flag, default: false
+  
   %%% PARM02
   parm02.addParm('useSRCGSolver',true,PARM_BOOL);  
   parm02.addParm('cg2dMaxIters',1000,PARM_INT);  
