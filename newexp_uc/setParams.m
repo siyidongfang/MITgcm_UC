@@ -12,6 +12,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   addpath ../../Software/gsw_matlab_v3_06_11/thermodynamics_from_t/;
   addpath ../../Software/gsw_matlab_v3_06_11/library/;
   addpath ../../Software/gsw_matlab_v3_06_11/;
+  addpath ../../Software/eos80_legacy_gamma_n/;
+  addpath ../../Software/eos80_legacy_gamma_n/library/;
   addpath ../utils/;
   addpath ../newexp_utils/;
   addpath ../analysis_uc/;
@@ -133,23 +135,6 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     % % % % 
 
     %%% Topographic parameters 
-% %     Ws = 30*m1km; %%% Continental slope half-width
-%     Hshelf = 500; %%% Continental shelf depth
-%     Wshelf = 150*m1km; %%% Width of continental shelf
-%     Ycoast = 10*m1km; %%% Latitude of coastline
-%     Wcoast = 20*m1km; %%% Width of coastal wall slope
-%     Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
-%     Yslope = Ycoast+Wshelf+Ws; %%% Latitude of mid-continental slope
-%     Ydeep = 300*m1km; %%% Latitude of deep ocean
-%     Xeast = 275*m1km; %%% Longitude of eastern trough wall
-%     Xwest = 125*m1km; %%% Longitude of western trough wall
-%     Yicefront = 0*m1km; %%% Latitude of ice shelf face
-%     Hicefront = 0; %%% Depth of ice shelf frace
-%     Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
-%     Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-%     Htrough = 300; %%% Trough depth
-%     Wtrough = 40*m1km; %%% Trough width %%%Default 40 km
-%     Xtrough = Lx/2; %%% Longitude of trough
 
   Wslope = Ws; %%% Continental slope half-width
   Hshelf = 500; %%% Continental shelf depth
@@ -183,7 +168,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
 
   useSHELFICE = true; 
-  useEXF = true;
+  useEXF = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
   useRBCS = false; 
@@ -193,6 +178,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   else
       EXFoption = 1; %%% Read-in hflux, swflux and sflux.
   end
+  useDATAzonalwindstress = true;
+  useDATAoffshorewindstress = true;
+  useSURFACE_SALT = true;
+  Ypoly = 10*m1km; %%% Latitudinal location of polynya
+  Wpoly = 20*m1km; %%% Latitudinal width of polynya
+
   
   %%% OBCS package options
   useOBCS = true;
@@ -589,7 +580,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
 
 
-
+if(useEXF)
 
   %%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%
@@ -861,7 +852,7 @@ end
 
 
 
-
+end
 
 
 
@@ -1601,6 +1592,266 @@ end
   parm01.addParm('diffK4T',diffK4T,PARM_REAL); 
   parm01.addParm('diffK4S',diffK4S,PARM_REAL); 
   
+  
+  
+  if(useDATAzonalwindstress)
+        
+      %%%%%%%%%%%%%%%%%%%%%%
+      %%%%% ZONAL WIND %%%%%
+      %%%%%%%%%%%%%%%%%%%%%%
+        
+      %%% Wind stress scale
+    %   tau_0 = -0.075; % ~ 6 m/s
+    %   tau_0 = -0.0375; %%% eastward wind velocity ~ -4 m/s
+    %    tau_0 = 0; % no wind
+    
+      tau_max = -0.05; 
+        
+      %%% Amplitude of slope wind variations - only used if
+      %%% periodicExternalForcing == true
+      tau_amp = 0.025;
+      
+      %%% Offset for the center of the sinusoidal wind profile.
+    %   Ymax = Ys;
+      
+      %%% Wind stress matrix  
+      tau_zonal = zeros(Nx,Ny,nForcingPeriods);
+      tau_y = zeros(size(yy));
+      
+      
+          %%% Set the wind stress at each forcing period
+          for n=1:nForcingPeriods    
+        %     for j=1:Ny                
+        %       %%% Matched sinusoidal profiles, zero at edge of AABW formation region
+        %       if (yy(j) >= Ymax)
+        %         tau_y(j) = cos((pi/2)*(yy(j)-Ymax)/(Ly-Ymax));                           
+        %       else        
+        %         tau_y(j) = cos((pi/2)*(yy(j)-Ymax)/Ymax);
+        %       end
+        %       tau_y(j) = tau_y(j) * (tau_0 + tau_amp * sin(2*pi*(n-1)/nForcingPeriods));    
+        %     end
+    
+             %%% linear zonal wind stress  
+              tau_y = [tau_max:-tau_max/(Ny-1):0];
+              tau_y = tau_y + tau_amp * sin(2*pi*(n-1)/nForcingPeriods);    
+    
+            %%% Fill in this time-component of the wind stress matrix
+            for j=1:Ny   
+              tau_zonal(:,j,n) = tau_y(j);          
+            end 
+    
+          end
+    
+      
+      %%% Plot the wind stress 
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        plot(yy/1000,squeeze(tau_zonal(1,:,:)),'LineWidth',1.5);
+        xlabel('Offshore distance (km)');
+        ylabel('\tau_w');
+        title('Zonal wind stress profile');
+        set(gca,'fontsize',fontsize-1);
+        PLOT = gcf;
+        PLOT.Position = [263 149 567 336];  
+      end
+        %%% Save the figure
+        savefig([imgpath '/ZonalWindStress.fig']);
+        saveas(gcf,[imgpath '/ZonalWindStress.png']);
+      
+      if (~useEXF)
+          %%% Save as a parameter  
+          writeDataset(tau_zonal,fullfile(inputpath,'zonalWindFile.bin'),ieee,prec); 
+          parm05.addParm('zonalWindFile','zonalWindFile.bin',PARM_STR);
+      end
+      
+      else 
+            tau_zonal = zeros(Nx,Ny);
+      end
+        
+        
+      if(useDATAoffshorewindstress)
+        
+      %%%%%%%%%%%%%%%%%%%%%%
+      %%% OFFSHORE WIND %%%%
+      %%%%%%%%%%%%%%%%%%%%%%
+        
+      %%% Wind stress scale
+      tau_0 = 0.1; 
+      %%% Amplitude of slope wind variations - only used if
+      %%% periodicExternalForcing == true
+      tau_amp = 0.025;
+      
+    %   Xs = Lx;
+    %   %%% Offset for the center of the sinusoidal wind profile.
+    %   Xmax = Xs;
+    
+      %%% Wind stress matrix  
+      tau_merid = zeros(Nx,Ny,nForcingPeriods);
+      tau_x = zeros(size(xx));
+      
+      %%% Set the wind stress at each forcing period
+      for n=1:nForcingPeriods    
+        
+        for i=1:Nx                
+    
+    %       %%% Matched sinusoidal profiles, zero at edge of AABW formation region
+    %       if (xx(i) >= Xmax)
+    %         tau_x(i) = cos((pi/2)*(xx(i)-Xmax)/(Lx-Xmax));                           
+    %       else        
+    %         tau_x(i) = cos((pi/2)*(xx(i)-Xmax)/Xmax);
+    %       end
+    
+      %%% Constant offshore wind stress
+          tau_x(i) = 1;
+          tau_x(i) = tau_x(i) * (tau_0 + tau_amp * sin(2*pi*(n-1)/nForcingPeriods));    
+                   
+        end
+    
+        %%% Fill in this time-component of the wind stress matrix
+        for i=1:Nx   
+          tau_merid(i,:,n) = tau_x(i);          
+        end 
+      
+      end
+      
+      %%% Plot the wind stress 
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        plot(xx/1000,squeeze(tau_merid(:,1,:)),'LineWidth',1.5);
+        xlabel('x, alongshore distance (km)');
+        ylabel('\tau_w');
+        title('Offshore wind stress profile');
+        set(gca,'fontsize',fontsize-1);
+        ylim([0 tau_0*2]);
+        PLOT = gcf;
+        PLOT.Position = [263 149 567 336];  
+      end
+        %%% Save the figure
+        savefig([imgpath '/meridWindStress.fig']);
+        saveas(gcf,[imgpath '/meridWindStress.png']);
+      
+      if (~useEXF)
+          %%% Save as a parameter  
+          writeDataset(tau_merid,fullfile(inputpath,'meridWindFile.bin'),ieee,prec); 
+          parm05.addParm('meridWindFile','meridWindFile.bin',PARM_STR);
+      end
+      
+      else 
+            tau_merid = zeros(Nx,Ny);
+      end
+      
+        
+      
+    if(useSURFACE_SALT)
+      
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%%%% SURFACE HEAT/SALT FLUXES %%%%%
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+      C1 = 1e4; %%% Constants from Anderson (1969) 
+      C2 = 510;
+      C3 = 6.7/86400;
+      C4 = C2/(2*C1);
+      C5 = C3/C1;
+      Theta = 40; %%% Difference between atmospheric temperature and ocean freezing temperature 
+      S_i = 5; %%% Salinity of ice
+      Smin = sNorth(1);
+     
+      %%% Fixed salt flux in the BW formation region  
+      salt_flux = zeros(Nx,Ny,nForcingPeriods);    
+      tt = zeros(1,nForcingPeriods);
+      for n=1:nForcingPeriods   
+        t = (n-1)*externForcingPeriod;
+        tt(n) = t;
+        for i=1:Nx      
+          for j=1:Ny             
+            if (abs(yy(j)-Ypoly)<Wpoly/2)
+              
+              %%% Linear decrease of salt flux from salt_amp to zero after Tpoly days
+    %           salt_amp = -1e-1;
+    %           Tpoly = 3*t1day;
+    %           salt_flux(i,j,n) = salt_amp - salt_amp*min(1,t/Tpoly);             
+              
+              %%% Empirical ice growth equation from Anderson (1969)
+    %           e(n) = -C4 + sqrt(C4^2+C5*t*Theta); %%% Ice thickness (m) as a function of time
+    %           dedt(n) = C3*Theta/(2*C1*e(n)+C2); %%% Ice growth rate (m/s) as a function of time
+    %           salt_flux(i,j,n) = -dedt(n)*rho_i*(Smin-S_i); %%% Equivalent salt flux (g/m^2/s) as a function of time
+                salt_flux(i,j,n) = 2.5/10^3; %%% constant salt flux
+            end
+          end
+        end         
+      end  
+      
+     
+    %   %%% Plot the surface salt flux
+    %   if (showplots)
+    %     figure(fignum);
+    %     fignum = fignum + 1;
+    %     clf;
+    % %     contourf(X,Y,squeeze(salt_flux(:,:,1)));
+    %     colorbar;
+    % %     plot(yy,squeeze(salt_flux(1,:,1)));    
+    % %     xlabel('y');
+    %     plot(tt/t1day,-squeeze(salt_flux(1,round(Ny*(Ypoly)/Ly),:)),'LineWidth',1.5);    
+    %     xlabel('t (days)');
+    %     ylabel('salt flux');
+    %     title('Downward surface salt flux (g/m^2/s)');
+    %     set(gca,'fontsize',fontsize);
+    %     xlim([-inf simTime/t1day]);
+    %     PLOT = gcf;
+    %     PLOT.Position = [239 236 591 213];
+    %     %%% Save the figure
+    %     savefig([imgpath '/saltflux.fig']);
+    %     saveas(gcf,[imgpath '/saltflux.png']);
+    %   end  
+      
+    %   %%% Plot the ice thickness
+    %   if (showplots)
+    %     figure(fignum);
+    %     fignum = fignum + 1;
+    %     clf;
+    %     colorbar;
+    %     plot(tt/t1day,e,'LineWidth',1.5);    
+    %     xlabel('t (days)');
+    %     ylabel('h_i');
+    %     title('Ice Thickness (m)');
+    %     set(gca,'fontsize',fontsize);
+    %     xlim([-inf simTime/t1day]);
+    %     PLOT = gcf;
+    %     PLOT.Position = [239 236 591 213];  
+    %     %%% Save the figure
+    %     savefig([imgpath '/hi.fig']);
+    %     saveas(gcf,[imgpath '/hi.png']);
+    %   end
+    %   
+    %   %%% Plot the ice growth rate
+    %     if (showplots)
+    %     figure(fignum);
+    %     fignum = fignum + 1;
+    %     clf;
+    %     colorbar;
+    %     plot(tt/t1day,dedt,'LineWidth',1.5);    
+    %     xlabel('t (days)');
+    %     ylabel('dh_i/dt');
+    %     title('Ice growth rate (m/s)');
+    %     set(gca,'fontsize',fontsize);
+    %     xlim([-inf simTime/t1day]);
+    %     PLOT = gcf;
+    %     PLOT.Position = [239 236 591 213];
+    %     %%% Save the figure
+    %     savefig([imgpath '/dhidt.fig']);
+    %     saveas(gcf,[imgpath '/dhidt.png']);
+    %     end  
+      
+      %%% Save as parameters  
+      writeDataset(salt_flux,fullfile(inputpath,'saltFluxFile.bin'),ieee,prec);
+      parm05.addParm('saltFluxFile','saltFluxFile.bin',PARM_STR);
+    end
+      
+      
   
   
   

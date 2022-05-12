@@ -3,7 +3,7 @@
 %%% Creates simulations using newexp with specified input parameters.
 %%%
 
-batch_name = 'experiments/shelfice_obcsE_orlanskiW'; 
+batch_name = 'experiments/shelfice_polynya'; 
 
 
 %%% Input parameters
@@ -30,8 +30,8 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 %%% Create simulations
 % exp_name = ['res2km_' exp_name '_fresher0.5psu_hoffman2']
 
-exp_name = ['res2km_' exp_name '_ardbeg']
-% expname = 'test'
+% exp_name = ['res2km_' exp_name '_ardbeg']
+exp_name = 'test'
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
 

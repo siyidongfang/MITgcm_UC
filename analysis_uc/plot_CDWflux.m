@@ -10,15 +10,15 @@
     addpath ../analysis/colormaps;
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
-    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
+    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
     expname = 'res2km_Ua-2Va1_Atide0_Hi0Ai0_Ws30_ardbeg';
     loadexp;
 
     figdir = [exppath '/img/'];
-    year = num2str(8);
+    year = num2str(14);
 
     %%% Load data
-    nIter = 1341957;
+    nIter = 2348426;
     tt = rdmds([exppath,'/results/THETA'],nIter);
     ss = rdmds([exppath,'/results/SALT'],nIter);
     uu = rdmds([exppath,'/results/UVEL'],nIter);
