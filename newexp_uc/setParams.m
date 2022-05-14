@@ -144,8 +144,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
   Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
-  Xeast = 350*m1km; %%% Longitude of eastern trough wall
-  Xwest = 150*m1km; %%% Longitude of western trough wall
+  Xeast = 400*m1km; %%% Longitude of eastern trough wall
+  Xwest = 200*m1km; %%% Longitude of western trough wall
   Yicefront = 110*m1km; %%% Latitude of ice shelf face
   Hicefront = 200; %%% Depth of ice shelf frace
   Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
@@ -157,15 +157,15 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
  
   %%% Parameters related to periodic forcing
   periodicExternalForcing = false;
-  externForcingCycle = simTime;  
+  externForcingCycle = 30*t1day;  %%% the length of a sub-sample
   if (~periodicExternalForcing)
     externForcingPeriod = externForcingCycle;
     nForcingPeriods = 1;
   else
-    externForcingPeriod = 30*t1day;
+    externForcingPeriod = 12/24*t1day; %%% the usual time step between time records
     nForcingPeriods = externForcingCycle/externForcingPeriod;
   end
-  
+
 
   useSHELFICE = true; 
   useEXF = false;
@@ -181,8 +181,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useDATAzonalwindstress = true;
   useDATAoffshorewindstress = true;
   useSURFACE_SALT = true;
-  Ypoly = 10*m1km; %%% Latitudinal location of polynya
   Wpoly = 20*m1km; %%% Latitudinal width of polynya
+  Ypoly = Yicefront; %%% Latitudinal location of polynya
+
 
   
   %%% OBCS package options
@@ -201,10 +202,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   if(use2Orlanski)
       useOrlanskiWest = true;
       useOrlanskiEast = true;
+      useOBCSeast = false;
+      useOBCSwest = false;
   end
   if(useEobcsWorlanski)      %%% OBCS to the east, and Orlanski to the west
       useOBCSeast = true;
-      useOrlanskiWest = true;
+      useOBCSwest = false;
+      useOrlanskiWest = false;
       useOrlanskiEast = false;  
   end
   if(useEobcsWobcs)           %%% OBCS to the east and west
@@ -311,7 +315,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   parm03.addParm('monitorFreq',1*t1year,PARM_REAL); % interval to write monitor output (s)
   parm03.addParm('dumpInitAndLast',true,PARM_BOOL);
   parm03.addParm('pickupStrictlyMatch',false,PARM_BOOL); 
-  
+
+  parm03.addParm('periodicExternalForcing',periodicExternalForcing,PARM_BOOL); 
+  parm03.addParm('externForcingPeriod',externForcingPeriod,PARM_REAL); 
+  parm03.addParm('externForcingCycle',externForcingCycle,PARM_REAL); 
+
+
+
   %%% PARM04
   parm04.addParm('usingCartesianGrid',true,PARM_BOOL);
 %   parm04.addParm('usingCurvilinearGrid',true,PARM_BOOL);
@@ -903,6 +913,9 @@ end
       sEast(jj,:) = interp1(depth_East_s(jj,:),salt_East,zz,'PCHIP');  %%% reference pressure level: sea surface 
   end
 
+
+  if(useOBCSeast)
+
   lon_sec = -115;
   lat_sec = -71;
 
@@ -1067,7 +1080,7 @@ end
 
   end
 
-
+end
 
 
 
@@ -1075,7 +1088,7 @@ end
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% WESTERN BOUNDARY %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+if(useOBCSwest)
   tWest = zeros(Ny,Nr);
   sWest = zeros(Ny,Nr);
   uWest = zeros(Ny,Nr);
@@ -1084,7 +1097,7 @@ end
   depth_West_pt = zeros(Ny,5);
   depth_West_s  = zeros(Ny,5);
 
-  Zcdw_pt_shelf = -400+100; %%% CDW depth over the shelf
+  Zcdw_pt_shelf = -400+200; %%% CDW depth over the shelf
   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
 
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
@@ -1233,7 +1246,7 @@ end
 
   end
 
-
+end
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1602,7 +1615,7 @@ end
         
       %%% Wind stress scale
     %   tau_0 = -0.075; % ~ 6 m/s
-    %   tau_0 = -0.0375; %%% eastward wind velocity ~ -4 m/s
+    %   tau_0 = -0.0375; %%% westward wind velocity ~ -4 m/s
     %    tau_0 = 0; % no wind
     
       tau_max = -0.05; 
@@ -1678,7 +1691,7 @@ end
       %%%%%%%%%%%%%%%%%%%%%%
         
       %%% Wind stress scale
-      tau_0 = 0.1; 
+      tau_max = 0.05; 
       %%% Amplitude of slope wind variations - only used if
       %%% periodicExternalForcing == true
       tau_amp = 0.025;
@@ -1689,44 +1702,53 @@ end
     
       %%% Wind stress matrix  
       tau_merid = zeros(Nx,Ny,nForcingPeriods);
-      tau_x = zeros(size(xx));
+      tau_y = zeros(size(yy));
       
       %%% Set the wind stress at each forcing period
       for n=1:nForcingPeriods    
         
-        for i=1:Nx                
-    
-    %       %%% Matched sinusoidal profiles, zero at edge of AABW formation region
-    %       if (xx(i) >= Xmax)
-    %         tau_x(i) = cos((pi/2)*(xx(i)-Xmax)/(Lx-Xmax));                           
-    %       else        
-    %         tau_x(i) = cos((pi/2)*(xx(i)-Xmax)/Xmax);
-    %       end
-    
-      %%% Constant offshore wind stress
-          tau_x(i) = 1;
-          tau_x(i) = tau_x(i) * (tau_0 + tau_amp * sin(2*pi*(n-1)/nForcingPeriods));    
-                   
-        end
-    
+        %         for i=1:Nx                
+        %     
+        %     %       %%% Matched sinusoidal profiles, zero at edge of AABW formation region
+        %     %       if (xx(i) >= Xmax)
+        %     %         tau_x(i) = cos((pi/2)*(xx(i)-Xmax)/(Lx-Xmax));                           
+        %     %       else        
+        %     %         tau_x(i) = cos((pi/2)*(xx(i)-Xmax)/Xmax);
+        %     %       end
+        %     
+        %       %%% Constant offshore wind stress
+        %           tau_x(i) = 1;
+        %           tau_x(i) = tau_x(i) * (tau_0 + tau_amp * sin(2*pi*(n-1)/nForcingPeriods));    
+        %                    
+        %         end
+        %     
+        %         %%% Fill in this time-component of the wind stress matrix
+        %         for i=1:Nx   
+        %           tau_merid(i,:,n) = tau_x(i);          
+        %         end 
+        %       
+      
+      
+        %%% linear zonal wind stress  
+          tau_y = [tau_max:-tau_max/(Ny-1):0];
+          tau_y = tau_y + tau_amp * sin(2*pi*(n-1)/nForcingPeriods);    
+
         %%% Fill in this time-component of the wind stress matrix
-        for i=1:Nx   
-          tau_merid(i,:,n) = tau_x(i);          
+        for j=1:Ny   
+          tau_merid(:,j,n) = tau_y(j);          
         end 
-      
       end
-      
+
       %%% Plot the wind stress 
       if (showplots)
         figure(fignum);
         fignum = fignum + 1;
         clf;
-        plot(xx/1000,squeeze(tau_merid(:,1,:)),'LineWidth',1.5);
-        xlabel('x, alongshore distance (km)');
+        plot(yy/1000,squeeze(tau_merid(1,:,:)),'LineWidth',1.5);
+        xlabel('y, offshore distance (km)');
         ylabel('\tau_w');
         title('Offshore wind stress profile');
         set(gca,'fontsize',fontsize-1);
-        ylim([0 tau_0*2]);
         PLOT = gcf;
         PLOT.Position = [263 149 567 336];  
       end
@@ -1763,13 +1785,17 @@ end
       %%% Fixed salt flux in the BW formation region  
       salt_flux = zeros(Nx,Ny,nForcingPeriods);    
       tt = zeros(1,nForcingPeriods);
+
+      rho_i = 920; %%% Density of sea ice
+      IceProduction = 4; %%% 4m/year
+      saltDifference = 29; %%% Ice-ocean salinity difference
+      constSaltFlux = IceProduction*rho_i*saltDifference/t1year; % g/m^2/s 0.0035
       for n=1:nForcingPeriods   
         t = (n-1)*externForcingPeriod;
         tt(n) = t;
-        for i=1:Nx      
-          for j=1:Ny             
-            if (abs(yy(j)-Ypoly)<Wpoly/2)
-              
+        polynya_idx_y = find(yy<=(Ypoly+Wpoly) & Ypoly<yy);
+        polynya_idx_x = find((xx<Xeast) & (xx>=Xwest));
+        salt_flux(polynya_idx_x,polynya_idx_y,n) = constSaltFlux;  
               %%% Linear decrease of salt flux from salt_amp to zero after Tpoly days
     %           salt_amp = -1e-1;
     %           Tpoly = 3*t1day;
@@ -1779,72 +1805,85 @@ end
     %           e(n) = -C4 + sqrt(C4^2+C5*t*Theta); %%% Ice thickness (m) as a function of time
     %           dedt(n) = C3*Theta/(2*C1*e(n)+C2); %%% Ice growth rate (m/s) as a function of time
     %           salt_flux(i,j,n) = -dedt(n)*rho_i*(Smin-S_i); %%% Equivalent salt flux (g/m^2/s) as a function of time
-                salt_flux(i,j,n) = 2.5/10^3; %%% constant salt flux
-            end
-          end
-        end         
+%                 salt_flux(i,j,n) = 2.5/10^3; %%% constant salt flux
       end  
       
-     
-    %   %%% Plot the surface salt flux
-    %   if (showplots)
-    %     figure(fignum);
-    %     fignum = fignum + 1;
-    %     clf;
-    % %     contourf(X,Y,squeeze(salt_flux(:,:,1)));
-    %     colorbar;
-    % %     plot(yy,squeeze(salt_flux(1,:,1)));    
-    % %     xlabel('y');
-    %     plot(tt/t1day,-squeeze(salt_flux(1,round(Ny*(Ypoly)/Ly),:)),'LineWidth',1.5);    
-    %     xlabel('t (days)');
-    %     ylabel('salt flux');
-    %     title('Downward surface salt flux (g/m^2/s)');
-    %     set(gca,'fontsize',fontsize);
-    %     xlim([-inf simTime/t1day]);
-    %     PLOT = gcf;
-    %     PLOT.Position = [239 236 591 213];
-    %     %%% Save the figure
-    %     savefig([imgpath '/saltflux.fig']);
-    %     saveas(gcf,[imgpath '/saltflux.png']);
-    %   end  
-      
-    %   %%% Plot the ice thickness
-    %   if (showplots)
-    %     figure(fignum);
-    %     fignum = fignum + 1;
-    %     clf;
-    %     colorbar;
-    %     plot(tt/t1day,e,'LineWidth',1.5);    
-    %     xlabel('t (days)');
-    %     ylabel('h_i');
-    %     title('Ice Thickness (m)');
-    %     set(gca,'fontsize',fontsize);
-    %     xlim([-inf simTime/t1day]);
-    %     PLOT = gcf;
-    %     PLOT.Position = [239 236 591 213];  
-    %     %%% Save the figure
-    %     savefig([imgpath '/hi.fig']);
-    %     saveas(gcf,[imgpath '/hi.png']);
-    %   end
-    %   
-    %   %%% Plot the ice growth rate
-    %     if (showplots)
-    %     figure(fignum);
-    %     fignum = fignum + 1;
-    %     clf;
-    %     colorbar;
-    %     plot(tt/t1day,dedt,'LineWidth',1.5);    
-    %     xlabel('t (days)');
-    %     ylabel('dh_i/dt');
-    %     title('Ice growth rate (m/s)');
-    %     set(gca,'fontsize',fontsize);
-    %     xlim([-inf simTime/t1day]);
-    %     PLOT = gcf;
-    %     PLOT.Position = [239 236 591 213];
-    %     %%% Save the figure
-    %     savefig([imgpath '/dhidt.fig']);
-    %     saveas(gcf,[imgpath '/dhidt.png']);
-    %     end  
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        pcolor(X/1000,Y/1000,squeeze(salt_flux(:,:,1)));
+        colorbar;shading flat;
+        xlabel('x (km)');
+        ylabel('y (km)');
+        title('Downward surface salt flux (g/m^2/s)');
+        set(gca,'fontsize',fontsize);
+        PLOT = gcf;
+        PLOT.Position = [239 236 591 213];
+        %%% Save the figure
+        savefig([imgpath '/saltflux.fig']);
+        saveas(gcf,[imgpath '/saltflux.png']);
+      end  
+
+%       %%% Plot the surface salt flux
+%       if (showplots)
+%         figure(fignum);
+%         fignum = fignum + 1;
+%         clf;
+%     %     contourf(X,Y,squeeze(salt_flux(:,:,1)));
+%         colorbar;
+%     %     plot(yy,squeeze(salt_flux(1,:,1)));    
+%     %     xlabel('y');
+%         plot(tt/t1day,-squeeze(salt_flux(1,round(Ny*(Ypoly)/Ly),:)),'LineWidth',1.5);    
+%         xlabel('t (days)');
+%         ylabel('salt flux');
+%         title('Downward surface salt flux (g/m^2/s)');
+%         set(gca,'fontsize',fontsize);
+%         xlim([-inf simTime/t1day]);
+%         PLOT = gcf;
+%         PLOT.Position = [239 236 591 213];
+%         %%% Save the figure
+%         savefig([imgpath '/saltflux.fig']);
+%         saveas(gcf,[imgpath '/saltflux.png']);
+%       end  
+%       
+%       %%% Plot the ice thickness
+%       if (showplots)
+%         figure(fignum);
+%         fignum = fignum + 1;
+%         clf;
+%         colorbar;
+%         plot(tt/t1day,e,'LineWidth',1.5);    
+%         xlabel('t (days)');
+%         ylabel('h_i');
+%         title('Ice Thickness (m)');
+%         set(gca,'fontsize',fontsize);
+%         xlim([-inf simTime/t1day]);
+%         PLOT = gcf;
+%         PLOT.Position = [239 236 591 213];  
+%         %%% Save the figure
+%         savefig([imgpath '/hi.fig']);
+%         saveas(gcf,[imgpath '/hi.png']);
+%       end
+%       
+%       %%% Plot the ice growth rate
+%         if (showplots)
+%         figure(fignum);
+%         fignum = fignum + 1;
+%         clf;
+%         colorbar;
+%         plot(tt/t1day,dedt,'LineWidth',1.5);    
+%         xlabel('t (days)');
+%         ylabel('dh_i/dt');
+%         title('Ice growth rate (m/s)');
+%         set(gca,'fontsize',fontsize);
+%         xlim([-inf simTime/t1day]);
+%         PLOT = gcf;
+%         PLOT.Position = [239 236 591 213];
+%         %%% Save the figure
+%         savefig([imgpath '/dhidt.fig']);
+%         saveas(gcf,[imgpath '/dhidt.png']);
+%         end  
       
       %%% Save as parameters  
       writeDataset(salt_flux,fullfile(inputpath,'saltFluxFile.bin'),ieee,prec);
@@ -2280,7 +2319,7 @@ diag_fields_avg = {...
     'UVELSQ','VVELSQ','WVELSQ'...
     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
     'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
-... % % %     'TOTTTEND','TFLUX','VVELTH','ADVy_TH','oceQnet','oceSflux',...
+... % % %     'oceQnet','oceSflux',...
 %       ... %%%%%%%%% for analysis
 %       ... %%% Heat budget
 %          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
@@ -2598,6 +2637,13 @@ diag_fields_inst = {...
   OBNs = ones(Nx,1)*sNorth;
   OBSt = ones(Nx,1)*tSouth;
   OBSs = ones(Nx,1)*sSouth;
+
+  if(periodicExternalForcing)
+      OBNt = repmat(OBNt,[1 1 nForcingPeriods]);
+      OBNs = repmat(OBNs,[1 1 nForcingPeriods]);
+      OBSt = repmat(OBSt,[1 1 nForcingPeriods]);
+      OBSs = repmat(OBSs,[1 1 nForcingPeriods]);
+  end
   
 %   %%% Write boundary variables to files  
   if (useobcsNorth)
@@ -2624,6 +2670,13 @@ diag_fields_inst = {...
       OBEt = tEast;
       OBEs = sEast;
       OBEu = uEast;
+
+      if(periodicExternalForcing)
+      OBEt = repmat(OBEt,[1 1 nForcingPeriods]);
+      OBEs = repmat(OBEs,[1 1 nForcingPeriods]);
+      OBEu = repmat(OBEu,[1 1 nForcingPeriods]);
+      end
+
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
       writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
@@ -2641,6 +2694,15 @@ diag_fields_inst = {...
       OBWt = tWest;
       OBWs = sWest;
       OBWu = uWest;
+
+      if(periodicExternalForcing)
+      OBEt = repmat(OBEt,[1 1 nForcingPeriods]);
+      OBEs = repmat(OBEs,[1 1 nForcingPeriods]);
+      OBEu = repmat(OBEu,[1 1 nForcingPeriods]);
+      OBWt = repmat(OBWt,[1 1 nForcingPeriods]);
+      OBWs = repmat(OBWs,[1 1 nForcingPeriods]);
+      OBWu = repmat(OBWu,[1 1 nForcingPeriods]);
+      end
 
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
