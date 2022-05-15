@@ -3,15 +3,15 @@
 %%% Creates simulations using newexp with specified input parameters.
 %%%
 
-batch_name = 'experiments/shelfice_obcsE_orlanskiW';
+batch_name = 'experiments/shelfice_double_obcs';
 
 
 %%% Input parameters
 Ua = -4.4;      %%% Reference value -2
 Va = 4.4;       %%% Reference value 1
 Atide = 0; %%% Reference value 0.02 (based on Jourdain et al. 2019)
-Hi0 =0;       %%% Reference value 1
-Ai0 =0;       %%% Reference value 1
+Hi0 =1;       %%% Reference value 1
+Ai0 =1;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
                    %%% Note that in the manuscript Ws represents slope width. Slope width = [50 100 150 200 250]*m1km; 
@@ -28,11 +28,8 @@ useSEAICE = false;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
-% exp_name = ['res2km_' exp_name '_fresher0.5psu_hoffman2']
-
-exp_name = ['res2km_' exp_name '_polynya_ardbeg']
-% exp_name = ['res2km_' exp_name '_periodicWind_ardbeg']
-% exp_name = ['res2km_' exp_name '_hoffman2']
+exp_name = ['res2km_' exp_name '_seaice_ardbeg']
+exp_name = 'test'
 
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
