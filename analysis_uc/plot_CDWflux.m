@@ -15,10 +15,10 @@
     loadexp;
 
     figdir = [exppath '/img/'];
-    year = num2str(1);
+    year = num2str(5);
 
     %%% Load data
-    nIter = 167745;
+    nIter = 838723;
     tt = rdmds([exppath,'/results/THETA'],nIter);
     ss = rdmds([exppath,'/results/SALT'],nIter);
     uu = rdmds([exppath,'/results/UVEL'],nIter);
@@ -157,7 +157,7 @@
 %%
     
     figure(4)
-        set(gcf,'Position',[284 349 636*2 400])
+    set(gcf,'Position',[284 349 636*2 400])
     clf;
     subplot(1,2,1)
     uu(uu==0)=NaN;
@@ -194,6 +194,7 @@
     set(gcf,'Position',[284 349 636*2 400])
     clf;
     subplot(1,2,1)
+    tt(tt==0)=NaN;
     aaa1 = zeros(Ny,Nr);
     aaa1(2:end,:) = squeeze(mean(tt(1:end-1,2:end,:)));
     aaa1(aaa1==0)=NaN;
@@ -210,6 +211,7 @@
 
     subplot(1,2,2)
     aaa1 = zeros(Ny,Nr);
+    ss(ss==0)=NaN;
     aaa1(2:end,:) = squeeze(mean(ss(1:end-1,2:end,:)));
     aaa1(aaa1==0)=NaN;
     pcolor(yy/1000,-zz/1000,aaa1');
@@ -226,3 +228,57 @@
 
 
     print('-dpng','-r150',[figdir 'Year' year '_fig5_zonal_T_S.png']);
+
+
+
+    figure(6)
+    [YY,XX] = meshgrid(yy,xx);
+    set(gcf,'Position',[1 203 1446 346])
+    u_surf = uu(:,:,1);
+    v_surf = vv(:,:,1);
+    u_surf_vorgrid = zeros(Nx,Ny);
+    u_surf_vorgrid(:,2:Ny) = (u_surf(:,1:Ny-1)+ u_surf(:,2:Ny))/2; % vorticity-gird
+    v_surf_vorgrid = (v_surf+ v_surf([2:Nx 1],:))/2; % vorticity-gird
+    speed_surf = sqrt(u_surf_vorgrid.^2+v_surf_vorgrid.^2);
+    u_depthavg = sum(uu.*DZ.*hFacC,3,'omitnan')./sum(DZ.*hFacC,3,'omitnan');
+    v_depthavg = sum(vv.*DZ.*hFacC,3,'omitnan')./sum(DZ.*hFacC,3,'omitnan');
+    u_depthavg_vorgrid = zeros(Nx,Ny);
+    u_depthavg_vorgrid(:,2:Ny) = (u_depthavg(:,1:Ny-1,:)+ u_depthavg(:,2:Ny,:))/2; % vorticity-gird 
+    v_depthavg_vorgrid = (v_depthavg+ v_depthavg([2:Nx 1],:))/2; % vorticity-gird
+    speed_depthavg = sqrt(u_depthavg_vorgrid.^2+v_depthavg_vorgrid.^2);
+    subplot(1,2,1)
+    pcolor(xx/1000,yy/1000,u_surf');
+    caxis([-0.5 0.5])
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;
+    svx = 8; svy = 8;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
+    u_surf(1:svx:end,1:svy:end)',v_surf(1:svx:end,1:svy:end)');
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    hold off;
+    shading flat;colorbar;colormap('redblue')
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title({'Surface zonal velocity (color, m/s)'})
+    set(gca,'FontSize',fontsize);
+    subplot(1,2,2)
+    pcolor(xx/1000,yy/1000,u_depthavg');
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;
+    svx = 8; svy = 8;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
+    u_depthavg(1:svx:end,1:svy:end)',v_depthavg(1:svx:end,1:svy:end)');
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    hold off;
+    caxis([-0.5 0.5])
+    shading flat;colorbar;colormap(cmocean('balance'));
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title({'Depth-mean zonal velocity (color, m/s)'})
+    set(gca,'FontSize',fontsize);
+    print('-dpng','-r150',[figdir 'Year' year '_fig6_surface_depthAvg_current.png']);
+
+
+

@@ -10,27 +10,31 @@
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-    expname = 'res2km_Ua-2Va1_Atide0_Hi0Ai0_Ws30_ardbeg';
+    expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_periodicWind_ardbeg';
     loadexp;
     figdir = [exppath '/img/'];
 
     %%% Load data
-    nIter = 1174213;
-    year = num2str(7);
+    nIter = 838723;
+    year = num2str(5);
     SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
     SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
     SHI_TauX = rdmds([exppath,'/results/SHI_TauX'],nIter);
     SHI_TauY = rdmds([exppath,'/results/SHI_TauY'],nIter);
     SHIForcT = rdmds([exppath,'/results/SHIForcT'],nIter);
     SHIForcS = rdmds([exppath,'/results/SHIForcS'],nIter);
+    RAC = rdmds([exppath,'/results/RAC']);
 
     %%% Grid spacing matrices
     DX = repmat(delX',[1 Ny Nr]);
     DY = repmat(delY,[Nx 1 Nr]);
     DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
     [YY,XX] = meshgrid(yy,xx);
+    t1day = 86400;
+    t1year = 365*t1day;
 
     %%% Calculate ice shelf melt rate
+    totalMelt = -sum(sum(SHIfwFlx.*RAC))*t1year/1e12 %%% Gt/yr
 
 
     %%% Plot
@@ -47,7 +51,7 @@
     ylabel('Latitude (km)');
     limc = max(max(abs(SHIfwFlx)));
     caxis([-limc limc])
-    ylim([0 150]);xlim([-200 100])
+    ylim([0 150]);xlim([-150 150])
     title('Ice shelf fresh water flux (kg/m^2/s), positive upward')
     set(gca,'FontSize',fontsize);
 
@@ -59,7 +63,7 @@
     ylabel('Latitude (km)');
     limc = max(max(abs(SHIhtFlx)));
     caxis([-limc limc])
-    ylim([0 150]);xlim([-200 100])
+    ylim([0 150]);xlim([-150 150])
     title('Ice shelf heat flux (W/m^2), positive upward')
     set(gca,'FontSize',fontsize);
 
@@ -71,7 +75,7 @@
     ylabel('Latitude (km)');
     limc = max(max(abs(SHIForcT)));
     caxis([-limc limc])
-    ylim([0 150]);xlim([-200 100])
+    ylim([0 150]);xlim([-150 150])
     title('Ice shelf forcing for theta (W/m^2), >0 increases theta')
     set(gca,'FontSize',fontsize);
 
@@ -83,7 +87,7 @@
     ylabel('Latitude (km)');
     limc = max(max(abs(SHIForcS)));
     caxis([-limc limc])
-    ylim([0 150]);xlim([-200 100])
+    ylim([0 150]);xlim([-150 150])
     title('Ice shelf forcing for salt (g/m^2/s), >0 increases salt')
     set(gca,'FontSize',fontsize);
 
@@ -95,7 +99,7 @@
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     limc = max(max(abs(SHI_TauX)));
     caxis([-limc limc]/10)
-    ylim([0 150]);xlim([-200 100])
+    ylim([0 150]);xlim([-150 150])
     title('Ice shelf bottom stress, >0 increases uVel')
     set(gca,'FontSize',fontsize);
 
@@ -107,7 +111,7 @@
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     limc = max(max(abs(SHI_TauY)));
     caxis([-limc limc]/10)
-    ylim([0 150]);xlim([-200 100])
+    ylim([0 150]);xlim([-150 150])
     title('Ice shelf bottom stress, >0 increases vVel')
     set(gca,'FontSize',fontsize);
 
