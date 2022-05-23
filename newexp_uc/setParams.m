@@ -148,9 +148,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Xwest = 200*m1km; %%% Longitude of western trough wall
   Yicefront = 110*m1km; %%% Latitude of ice shelf face
   Hicefront = 200; %%% Depth of ice shelf frace
-  Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -200; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 300; %%% Trough depth
+  Htrough = 200; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
@@ -167,11 +167,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
 
-  useSHELFICE = true; 
+  useSHELFICE = false; 
   useEXF = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
-  useRBCS = false; 
+  useRBCS = true; 
   useEXFwindstress = false; %%% apply wind speed in EXF package
   if(useSEAICE)
       EXFoption = 3; %%% Read-in atemp, aqh, swdown, lwdown,precip, and runoff. Compute hflux, swflux and sflux.
@@ -192,13 +192,15 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useobcsNorth = true;
   if(useSHELFICE)
       useobcsSouth = false;
+  else
+      useobcsSouth = true;
   end
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = true;      %%% OBCS to the east and west
+  useEobcsWorlanski = true; %%% OBCS to the east, and Orlanski to the west
+  useEobcsWobcs = false;      %%% OBCS to the east and west
   if(use2Orlanski)
       useOBCSeast = false;
       useOBCSwest = false;
@@ -610,11 +612,19 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   depth_East_pt = zeros(Ny,5);
   depth_East_s  = zeros(Ny,5);
 
-  Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
-  Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+%   Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
+%   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+% 
+%   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+%   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
 
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
+  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_deep = Zcdw_pt_North-20;
+  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
+  
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
+  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
@@ -819,16 +829,24 @@ if(useOBCSwest)
   depth_West_pt = zeros(Ny,5);
   depth_West_s  = zeros(Ny,5);
 
-  Zcdw_pt_shelf = -400+200; %%% CDW depth over the shelf
-  Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+%   Zcdw_pt_shelf = -400+200; %%% CDW depth over the shelf
+%   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
+% 
+%   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+%   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
+% 
+%   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
+%   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+%                           %%% be deeper or else you end up with very weak 
+%                           %%% buoyancy frequency just below the pycnocline
 
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
-
-  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
-  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
-                          %%% be deeper or else you end up with very weak 
-                          %%% buoyancy frequency just below the pycnocline
+  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_deep = Zcdw_pt_North-20;
+  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
+  
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
+  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
 
   %%% Artificially construct a hydrographic profile
@@ -1234,7 +1252,7 @@ end
   %%% Upper bound for absolute horizontal fluid velocity (m/s)
   %%% At the moment this is just an estimate
 %   Umax = 1
-  Umax = 2
+  Umax = 1.5
   %%% Max gravity wave speed
   cmax = max(Cig)
   %%% Max gravity wave speed using total ocean depth

@@ -46,13 +46,13 @@ fontsize = 14;
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
   Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
-  Xeast = 350*m1km; %%% Longitude of eastern trough wall
-  Xwest = 150*m1km; %%% Longitude of western trough wall
+  Xeast = 400*m1km; %%% Longitude of eastern trough wall
+  Xwest = 200*m1km; %%% Longitude of western trough wall
   Yicefront = 110*m1km; %%% Latitude of ice shelf face
   Hicefront = 200; %%% Depth of ice shelf frace
-  Hbed = -500; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -200; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 300; %%% Trough depth
+  Htrough = 200; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
@@ -266,11 +266,14 @@ fontsize = 16;
   depth_East_pt = zeros(Ny,5);
   depth_East_s  = zeros(Ny,5);
 
-  Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
-  Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
 
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-  Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
+  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_deep = Zcdw_pt_North-20;
+  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
+  
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
+  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
   Zcdw_s = Zcdw_pt - 100;

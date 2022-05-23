@@ -205,12 +205,16 @@
 %   nPx = 8; %%% no. of processors in x-direction
 %   nPy = 8; %%% no. of processors in y-direction
 %   Nr = 70; %%% no. of z-gridpoints
-  sNx = 25; %%% no. of x-gridpoints per tile
-  sNy = 30; %%% no. of y-gridpoints per tile
-  nPx = 12; %%% no. of processors in x-direction
-  nPy = 6; %%% no. of processors in y-direction
-  Nr = 70; %%% no. of z-gridpoints
-  
+% %   sNx = 25; %%% no. of x-gridpoints per tile
+% %   sNy = 30; %%% no. of y-gridpoints per tile
+% %   nPx = 12; %%% no. of processors in x-direction
+% %   nPy = 6; %%% no. of processors in y-direction
+% %   Nr = 70; %%% no. of z-gridpoints
+  sNx = 18; %%% no. of x-gridpoints per tile
+  sNy = 18; %%% no. of y-gridpoints per tile
+  nPx = 16; %%% no. of processors in x-direction
+  nPy = 10; %%% no. of processors in y-direction
+  Nr = 70; %%% no. of z-gridpoints 
 
   %%% Set-up for Gordon
 %    opt_file = 'xsede_gordon'; %%% options file name

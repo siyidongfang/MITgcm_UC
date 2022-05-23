@@ -4,28 +4,32 @@
     %%%
     
     
-    clear;
+%     clear;
     
     %%% Add path
     addpath ../analysis/colormaps;
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
-    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-    expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_periodicWind_ardbeg';
+
+    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_orlanski/';
+    expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_tau_max-0.05_hoffman2';
     loadexp;
 
     figdir = [exppath '/img/'];
-    year = num2str(5);
+
+    nIter = 167745;
+    year = num2str(1);
 
     %%% Load data
-    nIter = 838723;
+    
     tt = rdmds([exppath,'/results/THETA'],nIter);
     ss = rdmds([exppath,'/results/SALT'],nIter);
     uu = rdmds([exppath,'/results/UVEL'],nIter);
     vv = rdmds([exppath,'/results/VVEL'],nIter);
     %     ut = 
     vt = rdmds([exppath,'/results/VVELTH'],nIter);
-    
+    eta = rdmds([exppath,'/results/ETAN'],nIter);
+
     rho_o = 1000;
     cp_o = 3994; % Unit: J/kg/degC
 
@@ -119,7 +123,7 @@
     curr.Color = [0 102 0]/255;
     curr.LineWidth = 1.5;
     hold off;
-    shading flat;colorbar;colormap('redblue')
+    shading flat;colorbar;colormap('redblue');
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title({'Shoreward CDW heat flux (color, GW/m)', 'and CDW volume flux (vector)'})
     set(gca,'FontSize',fontsize);
@@ -136,7 +140,7 @@
     pcolor(xx/1000,yy/1000,-VV');
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap('redblue')
+    shading flat;colorbar;colormap('redblue');
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Shoreward CDW volume flux (m^2/s), -V')
     set(gca,'FontSize',fontsize);
@@ -146,7 +150,7 @@
     pcolor(xx/1000,yy/1000,UU');
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap('redblue')
+    shading flat;colorbar;colormap('redblue');
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Eastward CDW volume flux (m^2/s), U')
     set(gca,'FontSize',fontsize);
@@ -154,7 +158,7 @@
     %     caxis([-max(max(abs(Fheat/1e9))) max(max(abs(Fheat/1e9)))])
 
     print('-dpng','-r150',[figdir 'Year' year '_fig3_volume_flux.png']);
-%%
+
     
     figure(4)
     set(gcf,'Position',[284 349 636*2 400])
@@ -165,7 +169,7 @@
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
     shading interp;axis ij;colormap('redblue');colorbar
-    caxis([-0.4 0.4]/2)
+    caxis([-0.3 0.3])
     title('Zonal velocity (m/s)')
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:100:400]);
@@ -195,14 +199,12 @@
     clf;
     subplot(1,2,1)
     tt(tt==0)=NaN;
-    aaa1 = zeros(Ny,Nr);
-    aaa1(2:end,:) = squeeze(mean(tt(1:end-1,2:end,:)));
-    aaa1(aaa1==0)=NaN;
+    aaa1= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
     pcolor(yy/1000,-zz/1000,aaa1');
-    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-2:0.2:2],'EdgeColor','k');hold off;
+    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-2:0.3:2],'EdgeColor','k');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
-    shading flat;axis ij;colormap('redblue');colorbar
-    caxis([-2 2])
+    shading flat;axis ij;colormap(cmocean('balance'));colorbar
+    caxis([-2.3 2.3])
     title('Zonal-average potential temperature (^oC)')
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:100:400]);
@@ -212,13 +214,12 @@
     subplot(1,2,2)
     aaa1 = zeros(Ny,Nr);
     ss(ss==0)=NaN;
-    aaa1(2:end,:) = squeeze(mean(ss(1:end-1,2:end,:)));
-    aaa1(aaa1==0)=NaN;
+    aaa1= squeeze(mean(ss(2:end-1,:,:),'omitnan'));
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[32:0.1:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.66:0.01:35],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
-    shading flat;axis ij;colormap('redblue');colorbar
+    shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('Zonal-average salinity (psu)')
     ylabel('Depth (km)');xlabel('y (km)')
@@ -258,7 +259,7 @@
     curr.Color = [0 102 0]/255;
     curr.LineWidth = 1.5;
     hold off;
-    shading flat;colorbar;colormap('redblue')
+    shading flat;colorbar;colormap('redblue');
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title({'Surface zonal velocity (color, m/s)'})
     set(gca,'FontSize',fontsize);
@@ -274,11 +275,29 @@
     curr.LineWidth = 1.5;
     hold off;
     caxis([-0.5 0.5])
-    shading flat;colorbar;colormap(cmocean('balance'));
+    shading flat;colorbar;colormap('redblue');
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title({'Depth-mean zonal velocity (color, m/s)'})
     set(gca,'FontSize',fontsize);
     print('-dpng','-r150',[figdir 'Year' year '_fig6_surface_depthAvg_current.png']);
 
 
+
+    figure(7)
+    clf
+    %     set(gcf,'Position',[284 349 580 511])
+    set(gcf,'Position',[25 367 805 426])
+    pcolor(xx/1000,yy/1000,eta');
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    shading flat;colorbar;colormap('redblue');
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title('Surface Height Anomaly (m)')
+    set(gca,'FontSize',fontsize);
+%     caxis([-2.2 -1.8])
+%     colormap('jet')
+     caxis([-0.2 0.2])
+    %     caxis([-max(max(abs(Fheat/1e9))) max(max(abs(Fheat/1e9)))])
+
+    print('-dpng','-r150',[figdir 'Year' year '_fig7_eta.png']);
 

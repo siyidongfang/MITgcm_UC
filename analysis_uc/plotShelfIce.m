@@ -3,20 +3,23 @@
     %%%
     %%% Plot melt rate and heat flux of the ice shelf, and momentum tendency from ice-shelf drag
 
-    clear;
+%     clear;
     
     %%% Add path
     addpath ../analysis/colormaps;
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
-    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-    expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_periodicWind_ardbeg';
-    loadexp;
+
+%     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_orlanski/';
+%     expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_tau_max-0.05_hoffman2';
+%     loadexp;
+
     figdir = [exppath '/img/'];
 
     %%% Load data
-    nIter = 838723;
-    year = num2str(5);
+%     nIter = 167745;
+%     year = num2str(1);
+
     SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
     SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
     SHI_TauX = rdmds([exppath,'/results/SHI_TauX'],nIter);
