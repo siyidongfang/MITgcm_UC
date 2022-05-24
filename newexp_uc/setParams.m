@@ -150,18 +150,23 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
 
   useSHELFICE = true; 
-  useEXF = false;
+  
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
   useRBCS = true; 
   useEXFwindstress = false; %%% apply wind speed in EXF package
   if(useSEAICE)
+      useEXF = true;
       EXFoption = 3; %%% Read-in atemp, aqh, swdown, lwdown,precip, and runoff. Compute hflux, swflux and sflux.
+      useDATAzonalwindstress = false;
+      useDATAoffshorewindstress = false;
   else
+      useEXF = false;
       EXFoption = 1; %%% Read-in hflux, swflux and sflux.
+      useDATAzonalwindstress = true;
+      useDATAoffshorewindstress = true;
   end
-  useDATAzonalwindstress = true;
-  useDATAoffshorewindstress = true;
+
   useSURFACE_SALT = false;
   useEmPmRFile = false;
 
@@ -175,8 +180,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = true; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = false;      %%% OBCS to the east and west
+  useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
+  useEobcsWobcs = true;      %%% OBCS to the east and west
   if(use2Orlanski)
       useOBCSeast = false;
       useOBCSwest = false;
@@ -214,7 +219,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       Yicefront = 0;
       Hicefront = 0;
   end
-  Hbed = -150; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -200; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
   Htrough = 200; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
@@ -314,11 +319,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       % seaice work only with this).
   parm03.addParm('nIter0',nIter0,PARM_INT);
   parm03.addParm('abEps',0.1,PARM_REAL);
-  parm03.addParm('chkptFreq',t1year,PARM_REAL); % rolling 
-  parm03.addParm('pChkptFreq',t1year,PARM_REAL); % permanent
+  parm03.addParm('chkptFreq',t1year/2,PARM_REAL); % rolling 
+  parm03.addParm('pChkptFreq',t1year/2,PARM_REAL); % permanent
   parm03.addParm('taveFreq',0,PARM_REAL); % it only works properly, if taveFreq is a multiple of the time step deltaT (or deltaTclock).
-  parm03.addParm('dumpFreq',t1year,PARM_REAL); % interval to write model state/snapshot data (s)
-  parm03.addParm('monitorFreq',1*t1year,PARM_REAL); % interval to write monitor output (s)
+  parm03.addParm('dumpFreq',t1year/2,PARM_REAL); % interval to write model state/snapshot data (s)
+  parm03.addParm('monitorFreq',t1year/2,PARM_REAL); % interval to write monitor output (s)
   parm03.addParm('dumpInitAndLast',true,PARM_BOOL);
   parm03.addParm('pickupStrictlyMatch',false,PARM_BOOL); 
 
@@ -624,7 +629,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
+  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
   Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
   
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
@@ -838,11 +843,7 @@ if(useOBCSwest)
 % 
 %   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
 %   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
-% 
-%   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
-%   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
-%                           %%% be deeper or else you end up with very weak 
-%                           %%% buoyancy frequency just below the pycnocline
+
 
   Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
@@ -852,6 +853,10 @@ if(useOBCSwest)
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
+  Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
+  Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
+                          %%% be deeper or else you end up with very weak 
+                          %%% buoyancy frequency just below the pycnocline
 
   %%% Artificially construct a hydrographic profile
   ptemp_West = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
@@ -1256,7 +1261,7 @@ end
   %%% Upper bound for absolute horizontal fluid velocity (m/s)
   %%% At the moment this is just an estimate
 %   Umax = 1
-  Umax = 1
+  Umax = 2
   %%% Max gravity wave speed
   cmax = max(Cig)
   %%% Max gravity wave speed using total ocean depth
@@ -2407,7 +2412,7 @@ diag_fields_avg = {...
      };
       
   numdiags_avg = length(diag_fields_avg);  
-  diag_freq_avg = 1*t1year;
+  diag_freq_avg = 1*t1year/2;
 %   diag_freq_avg = 1*t1day;
 %   diag_freq_avg = 2*t1day;
 
@@ -2443,7 +2448,7 @@ diag_fields_avg = {...
          'SItaux','SItauy','SIatmTx','SIatmTy',...   
              };
       numdiags_avg3 = length(diag_fields_avg3);  
-      diag_freq_avg3 = 1*t1year;
+      diag_freq_avg3 = 1*t1year/2;
       diag_phase_avg3 = 0;  
 
 

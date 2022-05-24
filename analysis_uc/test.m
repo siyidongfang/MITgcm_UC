@@ -3,10 +3,10 @@ addpath ../.
 addpath ../utils/matlab; 
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
-expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW_surfaceT/';
-expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_ardbeg';
+expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_orlanski/';
+expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_tau_max-0.05_hoffman2';
 loadexp;
-nIter = 56064;
+nIter = 251617;
 
 figure(2)
 aaaa1 = rdmds([exppath,'/results/ETAN'],nIter);
