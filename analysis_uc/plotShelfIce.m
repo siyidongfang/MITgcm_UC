@@ -38,6 +38,9 @@
 
     %%% Calculate ice shelf melt rate
     totalMelt = -sum(sum(SHIfwFlx.*RAC))*t1year/1e12 %%% Gt/yr
+    rho_i = 920;
+    SHIfwFlx (SHIfwFlx==0)=NaN;
+    MeltRate = -mean(SHIfwFlx/rho_i,'all','omitnan')*t1year %%% m/yr
 
 
     %%% Plot

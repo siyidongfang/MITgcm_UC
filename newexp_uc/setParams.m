@@ -17,6 +17,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   addpath ../utils/;
   addpath ../newexp_utils/;
   addpath ../analysis_uc/;
+  addpath ../analysis/colormaps/;
+  addpath ../analysis;
 
 
   %%%%%%%%%%%%%%%%%%
@@ -134,26 +136,6 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     % % % %   end
     % % % % 
 
-    %%% Topographic parameters 
-
-  Wslope = Ws; %%% Continental slope half-width
-  Hshelf = 500; %%% Continental shelf depth
-  Wshelf = 120*m1km; %%% Width of continental shelf
-  Ycoast = 130*m1km; %%% Latitude of coastline
-  Wcoast = 20*m1km; %%% Width of coastal wall slope
-  Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
-  Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
-  Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
-  Xeast = 400*m1km; %%% Longitude of eastern trough wall
-  Xwest = 200*m1km; %%% Longitude of western trough wall
-  Yicefront = 110*m1km; %%% Latitude of ice shelf face
-  Hicefront = 200; %%% Depth of ice shelf frace
-  Hbed = -200; %%% Change in bed elevation from shelf break to southern domain edge
-  Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 200; %%% Trough depth
-  Wtrough = 30*m1km; %%% Trough width
-  Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
-
  
   %%% Parameters related to periodic forcing
   periodicExternalForcing = false;
@@ -167,7 +149,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
 
-  useSHELFICE = false; 
+  useSHELFICE = true; 
   useEXF = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
@@ -181,20 +163,14 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useDATAzonalwindstress = true;
   useDATAoffshorewindstress = true;
   useSURFACE_SALT = false;
-  Wpoly = 20*m1km; %%% Latitudinal width of polynya
-  Ypoly = Yicefront; %%% Latitudinal location of polynya
-
+  useEmPmRFile = false;
 
   
   %%% OBCS package options
   useOBCS = true;
   useOBCStides = false;
   useobcsNorth = true;
-  if(useSHELFICE)
-      useobcsSouth = false;
-  else
-      useobcsSouth = true;
-  end
+  useobcsSouth = false;
   useOrlanskiNorth = false;
   useOrlanskiSouth = false;
   % Zonal boundary condition
@@ -219,6 +195,34 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       useOrlanskiEast = false;  
       useOrlanskiWest = false;
   end
+  
+  %%% Topographic parameters 
+  Wslope = Ws; %%% Continental slope half-width
+  Hshelf = 500; %%% Continental shelf depth
+  Wshelf = 120*m1km; %%% Width of continental shelf
+  Ycoast = 130*m1km; %%% Latitude of coastline
+  Wcoast = 20*m1km; %%% Width of coastal wall slope
+  Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
+  Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
+  Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
+  Xeast = 400*m1km; %%% Longitude of eastern trough wall
+  Xwest = 200*m1km; %%% Longitude of western trough wall
+  if(useSHELFICE)
+      Yicefront = 110*m1km; %%% Latitude of ice shelf face
+      Hicefront = 200; %%% Depth of ice shelf frace
+  else
+      Yicefront = 0;
+      Hicefront = 0;
+  end
+  Hbed = -150; %%% Change in bed elevation from shelf break to southern domain edge
+  Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+  Htrough = 200; %%% Trough depth
+  Wtrough = 30*m1km; %%% Trough width
+  Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
+
+  Wpoly = 20*m1km; %%% Latitudinal width of polynya
+  Ypoly = Yicefront; %%% Latitudinal location of polynya
+
 
   
   %%% Flag for barotropic mode
@@ -601,7 +605,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   s_mid = 34.75;
   pt_mid = 2; 
   s_surf = 33.95;
-  pt_surf = -1.8; 
+  pt_surf = -1.86; 
   Zsml = -50;  %%% Depth of the surface mixed layer
 
   tEast = zeros(Ny,Nr);
@@ -620,7 +624,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
   Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
   
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
@@ -1252,7 +1256,7 @@ end
   %%% Upper bound for absolute horizontal fluid velocity (m/s)
   %%% At the moment this is just an estimate
 %   Umax = 1
-  Umax = 1.5
+  Umax = 1
   %%% Max gravity wave speed
   cmax = max(Cig)
   %%% Max gravity wave speed using total ocean depth
@@ -1507,12 +1511,11 @@ end
       end
       
         
-      
-    if(useSURFACE_SALT)
-      
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       %%%%% SURFACE HEAT/SALT FLUXES %%%%%
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+     if(useSURFACE_SALT)
       C1 = 1e4; %%% Constants from Anderson (1969) 
       C2 = 510;
       C3 = 6.7/86400;
@@ -1628,7 +1631,47 @@ end
       %%% Save as parameters  
       writeDataset(salt_flux,fullfile(inputpath,'saltFluxFile.bin'),ieee,prec);
       parm05.addParm('saltFluxFile','saltFluxFile.bin',PARM_STR);
-    end
+     end
+
+
+
+     if(useEmPmRFile) %%% 2D specification of net freshwater flux (m/s)
+        EmPmR = zeros(Nx,Ny,nForcingPeriods);    
+
+        Getz_melt_rate = -4.15; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+        constEmPmR = Getz_melt_rate/t1year; %%% ~ 1.316e-07 m/s
+        for n=1:nForcingPeriods   
+            empmr_idx_y = find(yy<=(Ypoly+Wpoly) & Ypoly<yy);
+            empmr_idx_x = find((xx<Xeast) & (xx>=Xwest));
+            EmPmR(empmr_idx_x,empmr_idx_y,n) = constEmPmR;  %%% In the case of melting this will be negative (freshwater flux is positive upward) 
+        end  
+
+        if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        pcolor(X/1000,Y/1000,EmPmR(:,:,1));
+        colorbar;shading flat;
+        xlabel('x (km)');
+        ylabel('y (km)');
+        title('Surface freshwater flux (m/s, positive upward)');
+        set(gca,'fontsize',fontsize);
+        PLOT = gcf;
+        PLOT.Position = [239 236 591 213];
+        %%% Save the figure
+        savefig([imgpath '/EmPmR.fig']);
+        saveas(gcf,[imgpath '/EmPmR.png']);
+        end  
+
+
+      %%% Save as parameters  
+      selectBalanceEmPmR = 0; %%% option to balance net surface freshwater flux every time step, default = 0 (off)
+      parm01.addParm('selectBalanceEmPmR',selectBalanceEmPmR,PARM_INT);
+
+      writeDataset(EmPmR,fullfile(inputpath,'EmPmRFile.bin'),ieee,prec);
+      parm05.addParm('EmPmRFile','EmPmRFile.bin',PARM_STR);
+
+     end
       
       
   
@@ -1669,7 +1712,7 @@ end
   useRBCsalt = false;
   useRBCuVel = false;
   useRBCvVel = false;
-  tauRelaxT = 1*t1hour;
+  tauRelaxT = 6*t1hour;
   rbcs_parm01.addParm('useRBCtemp',useRBCtemp,PARM_BOOL);
   rbcs_parm01.addParm('useRBCsalt',useRBCsalt,PARM_BOOL);
   rbcs_parm01.addParm('useRBCuVel',useRBCuVel,PARM_BOOL);

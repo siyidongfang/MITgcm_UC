@@ -11,8 +11,8 @@
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
 
-    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_orlanski/';
-    expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_tau_max-0.05_hoffman2';
+    expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
+    expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_polynya_ardbeg';
     loadexp;
 
     figdir = [exppath '/img/'];

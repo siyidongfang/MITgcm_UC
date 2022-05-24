@@ -3,16 +3,17 @@ addpath ../.
 addpath ../utils/matlab; 
 addpath ../analysis/colormaps;
 addpath ../analysis/jpo_analysis-hires/;
-expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-expname = 'res2km_Ua-2Va1_Atide0_Hi0Ai0_Ws30_ardbeg';
+expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW_surfaceT/';
+expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_ardbeg';
 loadexp;
-nIter = 100647;
+nIter = 56064;
 
 figure(2)
 aaaa1 = rdmds([exppath,'/results/ETAN'],nIter);
-% open aaaa1
 pcolor(aaaa1)
-shading flat;colorbar
+shading flat;colorbar;colormap('redblue');caxis([-0.2 0.2])
+
+%%
 
 [ZZ,YY] = meshgrid(zz,yy);
 

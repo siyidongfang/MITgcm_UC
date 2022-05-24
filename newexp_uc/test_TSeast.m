@@ -255,7 +255,7 @@ fontsize = 16;
   s_mid = 34.75;
   pt_mid = 2; 
   s_surf = 33.95;
-  pt_surf = -1.8; 
+  pt_surf = -1.86; 
   Zsml = -50;  %%% Depth of the surface mixed layer
 
   tEast = zeros(Ny,Nr);
