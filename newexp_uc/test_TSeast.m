@@ -38,21 +38,21 @@ fontsize = 14;
 %   Xtrough = Lx/2; %%% Longitude of trough
   
 
-  Wslope = 30*m1km; %%% Continental slope half-width
+  Wslope = 40*m1km; %%% Continental slope half-width
   Hshelf = 500; %%% Continental shelf depth
-  Wshelf = 120*m1km; %%% Width of continental shelf
-  Ycoast = 130*m1km; %%% Latitude of coastline
+  Wshelf = 100*m1km; %%% Width of continental shelf
+  Ycoast = 120*m1km; %%% Latitude of coastline
   Wcoast = 20*m1km; %%% Width of coastal wall slope
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
   Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
   Xeast = 400*m1km; %%% Longitude of eastern trough wall
   Xwest = 200*m1km; %%% Longitude of western trough wall
-  Yicefront = 110*m1km; %%% Latitude of ice shelf face
+  Yicefront = 100*m1km; %%% Latitude of ice shelf face
   Hicefront = 200; %%% Depth of ice shelf frace
-  Hbed = -200; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -180; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 200; %%% Trough depth
+  Htrough = 180; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
@@ -267,12 +267,12 @@ fontsize = 16;
   depth_East_s  = zeros(Ny,5);
 
 
-  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_North = -380; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
   Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
   
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
@@ -393,7 +393,7 @@ fontsize = 16;
     xlabel('y (km)');ylabel('Depth (km)');
     title('Eastern boundary restoring velocity (m/s)');
     set(gca,'fontsize',fontsize);
-    caxis([-0.08 0.08]);
+    caxis([-0.03 0.03]);
 
 
 
@@ -604,6 +604,7 @@ fontsize = 16;
         end
     
 
+        Umax = max(max(abs(uEast)))
 
 
 

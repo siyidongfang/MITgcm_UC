@@ -46,7 +46,7 @@
     %%% Plot
     fontsize = 16;
 
-    figure(1)
+    figure()
     clf;
     set(gcf,'Position',[226 1542 1397 843])
     subplot(3,2,1)

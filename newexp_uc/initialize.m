@@ -1,10 +1,10 @@
 clear;close all;
-expdir = ['/Users/csi/MITgcm_UC/exps_uc/'];
-expname_old = 'noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_prod';
-expname_new = 'noice_ssurf33_0dS_lores_Ua-2Va2_Atide0_Hi0Ai0_Ws25_orlanski4';
+expdir = ['/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW_surfaceT/'];
+expname_old = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_ardbeg';
+expname_new = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_ardbeg_prod';
 
 
-expiter = 1126286;
+expiter = 1704649;
 
 useSEAICE = false;
 
