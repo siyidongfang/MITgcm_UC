@@ -152,22 +152,23 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useSHELFICE = true; 
   
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useLAYERS = true;
-  useRBCS = true; 
+  useLAYERS = false;
   useEXFwindstress = false; %%% apply wind speed in EXF package
   if(useSEAICE)
+      useRBCS = false; 
       useEXF = true;
       EXFoption = 3; %%% Read-in atemp, aqh, swdown, lwdown,precip, and runoff. Compute hflux, swflux and sflux.
       useDATAzonalwindstress = false;
       useDATAoffshorewindstress = false;
   else
+      useRBCS = true; 
       useEXF = false;
       EXFoption = 1; %%% Read-in hflux, swflux and sflux.
       useDATAzonalwindstress = true;
       useDATAoffshorewindstress = true;
   end
 
-  useSURFACE_SALT = false;
+  useSURFACE_SALT = true;
   useEmPmRFile = false;
 
   
@@ -204,8 +205,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% Topographic parameters 
   Wslope = Ws; %%% Continental slope half-width
   Hshelf = 500; %%% Continental shelf depth
-  Wshelf = 120*m1km; %%% Width of continental shelf
-  Ycoast = 130*m1km; %%% Latitude of coastline
+  Wshelf = 100*m1km; %%% Width of continental shelf
+  Ycoast = 120*m1km; %%% Latitude of coastline
   Wcoast = 20*m1km; %%% Width of coastal wall slope
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
@@ -213,15 +214,15 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Xeast = 400*m1km; %%% Longitude of eastern trough wall
   Xwest = 200*m1km; %%% Longitude of western trough wall
   if(useSHELFICE)
-      Yicefront = 110*m1km; %%% Latitude of ice shelf face
+      Yicefront = 100*m1km; %%% Latitude of ice shelf face
       Hicefront = 200; %%% Depth of ice shelf frace
   else
       Yicefront = 0;
       Hicefront = 0;
   end
-  Hbed = -200; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -180; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 200; %%% Trough depth
+  Htrough = 180; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
@@ -319,11 +320,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       % seaice work only with this).
   parm03.addParm('nIter0',nIter0,PARM_INT);
   parm03.addParm('abEps',0.1,PARM_REAL);
-  parm03.addParm('chkptFreq',t1year,PARM_REAL); % rolling 
-  parm03.addParm('pChkptFreq',t1year,PARM_REAL); % permanent
+  parm03.addParm('chkptFreq',t1year/2,PARM_REAL); % rolling 
+  parm03.addParm('pChkptFreq',t1year/2,PARM_REAL); % permanent
   parm03.addParm('taveFreq',0,PARM_REAL); % it only works properly, if taveFreq is a multiple of the time step deltaT (or deltaTclock).
-  parm03.addParm('dumpFreq',t1year,PARM_REAL); % interval to write model state/snapshot data (s)
-  parm03.addParm('monitorFreq',t1year,PARM_REAL); % interval to write monitor output (s)
+  parm03.addParm('dumpFreq',t1year/2,PARM_REAL); % interval to write model state/snapshot data (s)
+  parm03.addParm('monitorFreq',t1year/2,PARM_REAL); % interval to write monitor output (s)
   parm03.addParm('dumpInitAndLast',true,PARM_BOOL);
   parm03.addParm('pickupStrictlyMatch',false,PARM_BOOL); 
 
@@ -627,12 +628,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
 %   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
 
-  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_North = -380; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
   Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
   
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
@@ -741,7 +742,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     %%% in the Ekman layer and thermal-wind velocity
     %     uEast = uEast_TWV + uEast_EK; 
     uEast = uEast_TWV;
-
+    uEast_max = max(max(abs(uEast)))
       
   if (showplots)
   figure(fignum);
@@ -755,7 +756,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   xlabel('y (km)');ylabel('Depth (km)');
   title('Eastern boundary restoring velocity (m/s)');
   set(gca,'fontsize',fontsize);
-  caxis([-0.08 0.08]);
+  caxis([-0.03 0.03]);
   savefig([imgpath '/Eastern_u.fig']);
   saveas(gcf,[imgpath '/Eastern_u.png']);
 
@@ -844,13 +845,12 @@ if(useOBCSwest)
 %   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
 %   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
 
-
-  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_North = -380; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -500; %%% CDW depth over the shelf
+  Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
   Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
   
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep-30*m1km Ly];
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
@@ -915,6 +915,7 @@ if(useOBCSwest)
     uWest_mid = g/rho0./f_mid.*cumsum(drhody.*dz,2,'reverse');
     uWest_TWV(2:end-1,:) = (uWest_mid(1:end-1,:)+uWest_mid(2:end,:))/2; %%% Thermal-wind velocity
     uWest = uWest_TWV;
+    uWest_max = max(max(abs(uWest)))
 
       
   if (showplots)
@@ -929,7 +930,7 @@ if(useOBCSwest)
   xlabel('y (km)');ylabel('Depth (km)');
   title('Western boundary restoring velocity (m/s)');
   set(gca,'fontsize',fontsize);
-  caxis([-0.08 0.08]);
+  caxis([-0.03 0.03]);
   savefig([imgpath '/Western_u.fig']);
   saveas(gcf,[imgpath '/Western_u.png']);
 
@@ -1367,7 +1368,8 @@ end
     %   tau_0 = -0.0375; %%% westward wind velocity ~ -4 m/s
     %    tau_0 = 0; % no wind
     
-      tau_max = -0.05; 
+    tau_max = 1e-3*1.3*sqrt(Ua^2+Va^2)*Ua
+    %       tau_max = -0.05; 
         
       %%% Amplitude of slope wind variations - only used if
       %%% periodicExternalForcing == true
@@ -1440,7 +1442,8 @@ end
       %%%%%%%%%%%%%%%%%%%%%%
         
       %%% Wind stress scale
-      tau_max = 0.05; 
+    tau_max = 1e-3*1.3*sqrt(Ua^2+Va^2)*Va
+    %       tau_max = 0.05; 
       %%% Amplitude of slope wind variations - only used if
       %%% periodicExternalForcing == true
       tau_amp = 0.025;
@@ -2379,41 +2382,41 @@ diag_fields_avg = {...
 % % %     ... %%%%%%%%% for spin-up
     'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-...%     'ETAN',...
-...%     'UVELSQ','VVELSQ','WVELSQ'...
-...%     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
+    'ETAN',...
+    'UVELSQ','VVELSQ','WVELSQ'...
+    'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
     'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
-      ... %%%%%%%%% for analysis
-      ... %%% Heat budget
-         'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
-         'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
-         ...
-         'VVELTH', ...
-         'oceQnet','UVELTH','WVELTH',...
-      ... %%% Energy budget
-         'UVELSQ','VVELSQ','WVELSQ',...
-         'UV_VEL_Z','WU_VEL','WV_VEL',...
-         ...
-      ... %%% Salt budget
-         'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
-         'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
-         ...
-         'VVELSLT',...
-         'oceSflux','UVELSLT','WVELSLT',...
-      ... %%% Momentum budget
-         'ETAN',...
-         'oceTAUX','oceTAUY',...
-     ... %%% Overturning streamfunction
-         'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
-                    'LaUH2TH','LaHw2TH',... 
-     ...
-         'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
-         'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
-         'VISrI_Um','VISrI_Vm',...
+%       ... %%%%%%%%% for analysis
+%       ... %%% Heat budget
+%          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
+%          'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
+%          ...
+%          'VVELTH', ...
+%          'oceQnet','UVELTH','WVELTH',...
+%       ... %%% Energy budget
+%          'UVELSQ','VVELSQ','WVELSQ',...
+%          'UV_VEL_Z','WU_VEL','WV_VEL',...
+%          ...
+%       ... %%% Salt budget
+%          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
+%          'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
+%          ...
+%          'VVELSLT',...
+%          'oceSflux','UVELSLT','WVELSLT',...
+%       ... %%% Momentum budget
+%          'ETAN',...
+%          'oceTAUX','oceTAUY',...
+%      ... %%% Overturning streamfunction
+%          'RHOAnoma','LaUH1RHO','LaHw1RHO','LaTr1RHO',... 
+%                     'LaUH2TH','LaHw2TH',... 
+%      ...
+%          'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext',...
+%          'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
+%          'VISrI_Um','VISrI_Vm',...
      };
       
   numdiags_avg = length(diag_fields_avg);  
-  diag_freq_avg = 1*t1year;
+  diag_freq_avg = 1*t1year/2;
 %   diag_freq_avg = 30*t1day;
 
 
@@ -2832,33 +2835,38 @@ diag_fields_inst = {...
     obcs_parm01.addParm('OBSuiceFile','OBSuiceFile.bin',PARM_STR);
     obcs_parm01.addParm('OBSviceFile','OBSviceFile.bin',PARM_STR);
    
-    
-    OBNa = Ai0.*ones(Nx,1);
-    OBNh = Hi0.*ones(Nx,1);
-    OBNsn = Hs0.*ones(Nx,1); %%% snow thickness
-    OBNsl = Si0.*ones(Nx,1); %%% sea ice salinity
-    OBNuice = obsuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
-    OBNvice = obsvice.*ones(Nx,1);
-    
-    writeDataset(OBNa,fullfile(inputpath,'OBNaFile.bin'),ieee,prec);
-    writeDataset(OBNh,fullfile(inputpath,'OBNhFile.bin'),ieee,prec);
-    writeDataset(OBNsn,fullfile(inputpath,'OBNsnFile.bin'),ieee,prec);
-    writeDataset(OBNsl,fullfile(inputpath,'OBNslFile.bin'),ieee,prec);
-    writeDataset(OBNuice,fullfile(inputpath,'OBNuiceFile.bin'),ieee,prec);
-    writeDataset(OBNvice,fullfile(inputpath,'OBNviceFile.bin'),ieee,prec);
-    obcs_parm01.addParm('OBNaFile','OBNaFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBNhFile','OBNhFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBNsnFile','OBNsnFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBNslFile','OBNslFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBNuiceFile','OBNuiceFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBNviceFile','OBNviceFile.bin',PARM_STR);
-    
-    
+   
     end
   else
         obsuice = 0
         obsvice = 0
-end
+  end
+
+  if(useSEAICE)
+      if(useobcsNorth)
+
+        OBNa = Ai0.*ones(Nx,1);
+        OBNh = Hi0.*ones(Nx,1);
+        OBNsn = Hs0.*ones(Nx,1); %%% snow thickness
+        OBNsl = Si0.*ones(Nx,1); %%% sea ice salinity
+        OBNuice = obsuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+        OBNvice = obsvice.*ones(Nx,1);
+        
+        writeDataset(OBNa,fullfile(inputpath,'OBNaFile.bin'),ieee,prec);
+        writeDataset(OBNh,fullfile(inputpath,'OBNhFile.bin'),ieee,prec);
+        writeDataset(OBNsn,fullfile(inputpath,'OBNsnFile.bin'),ieee,prec);
+        writeDataset(OBNsl,fullfile(inputpath,'OBNslFile.bin'),ieee,prec);
+        writeDataset(OBNuice,fullfile(inputpath,'OBNuiceFile.bin'),ieee,prec);
+        writeDataset(OBNvice,fullfile(inputpath,'OBNviceFile.bin'),ieee,prec);
+        obcs_parm01.addParm('OBNaFile','OBNaFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBNhFile','OBNhFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBNsnFile','OBNsnFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBNslFile','OBNslFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBNuiceFile','OBNuiceFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBNviceFile','OBNviceFile.bin',PARM_STR);
+        
+      end
+  end
 
     if(~useSEAICE)
         obsuice=NaN;

@@ -142,8 +142,8 @@
   use_mpi = true; %%% set true for parallel processing
   use_pbs = true; %%% set true for execution via PBS
   cluster = 'stampede';   
-%   queue = 'normal';  
-  queue = 'flat-quadrant';
+  queue = 'normal';  
+%   queue = 'flat-quadrant';
 
  if (is_hires) 
   %%% 1 node,400*448
@@ -153,48 +153,13 @@
   nPy = 8; %%% no. of processors in y-direction
   Nr = 70; %%% no. of z-gridpoint 
 
-%   sNx = 50; %%% no. of x-gridpoints per tile
-%   sNy = 28; %%% no. of y-gridpoints per tile
-%   nPx = 8; %%% no. of processors in x-direction
-%   nPy = 16; %%% no. of processors in y-direction
-%   Nr = 70; %%% no. of z-gridpoint 
-  
-%   sNx = 25; %%% no. of x-gridpoints per tile
-%   sNy = 28; %%% no. of y-gridpoints per tile
-%   nPx = 16; %%% no. of processors in x-direction
-%   nPy = 16; %%% no. of processors in y-direction
-%   Nr = 70; %%% no. of z-gridpoint 
-
-%   sNx = 36; %%% no. of x-gridpoints per tile
-%   sNy = 37; %%% no. of y-gridpoints per tile
-%   nPx = 11; %%% no. of processors in x-direction
-%   nPy = 12; %%% no. of processors in y-direction
-
  else   
 %%%% ~ 2km grid spacing
-%   sNx = 27; %%% no. of x-gridpoints per tile
-%   sNy = 30; %%% no. of y-gridpoints per tile
-%   nPx = 11; %%% no. of processors in x-direction
-%   nPy = 6; %%% no. of processors in y-direction
-%   Nr = 70; %%% no. of z-gridpoints
   sNx = 20; %%% no. of x-gridpoints per tile
   sNy = 20; %%% no. of y-gridpoints per tile
   nPx = 15; %%% no. of processors in x-direction
   nPy = 9; %%% no. of processors in y-direction
   Nr = 70; %%% no. of z-gridpoints
-%   sNx = 17; %%% no. of x-gridpoints per tile
-%   sNy = 23; %%% no. of y-gridpoints per tile
-%   nPx = 17; %%% no. of processors in x-direction
-%   nPy = 8; %%% no. of processors in y-direction
-%   Nr = 70; %%% no. of z-gridpoints
-
-% %%% ~5km grid spacing
-%     sNx = 20; %%% no. of x-gridpoints per tile
-%     sNy = 15; %%% no. of y-gridpoints per tile
-%     nPx = 4; %%% no. of processors in x-direction
-%     nPy = 6; %%% no. of processors in y-direction
-%     Nr = 60; %%% no. of z-gridpoints  
-
  end
  
   acct = 'tg854737';
@@ -225,6 +190,7 @@
 %   nPx = 16; %%% no. of processors in x-direction
 %   nPy = 10; %%% no. of processors in y-direction
 %   Nr = 70; %%% no. of z-gridpoints 
+
 
   %%% Set-up for Gordon
 %    opt_file = 'xsede_gordon'; %%% options file name
