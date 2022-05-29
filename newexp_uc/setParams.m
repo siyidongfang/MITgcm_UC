@@ -168,7 +168,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       useDATAoffshorewindstress = true;
   end
 
-  useSURFACE_SALT = true;
+  useSURFACE_SALT = false;
   useEmPmRFile = false;
 
   
@@ -181,8 +181,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = true; %%% OBCS to the east, and Orlanski to the west
+  useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
   useEobcsWobcs = false;      %%% OBCS to the east and west
+  usePeriodic = true;
   if(use2Orlanski)
       useOBCSeast = false;
       useOBCSwest = false;
@@ -200,6 +201,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       useOBCSwest = true;
       useOrlanskiEast = false;  
       useOrlanskiWest = false;
+  end
+  if(usePeriodic)
+      useOBCSeast = false;
+      useOBCSwest = false;
+      useOrlanskiEast = false;  
+      useOrlanskiWest = false;   
   end
   
   %%% Topographic parameters 
@@ -636,6 +643,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
+  flatIsopyc = false;
+  if(flatIsopyc)
+      Zcdw_pt_shelfbreak = -550;
+      Zcdw_pt_2 = [Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak]
+  end
+
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
                           %%% be deeper or else you end up with very weak 
@@ -756,7 +769,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   xlabel('y (km)');ylabel('Depth (km)');
   title('Eastern boundary restoring velocity (m/s)');
   set(gca,'fontsize',fontsize);
-  caxis([-0.03 0.03]);
+  caxis([-0.01 0.01]);
   savefig([imgpath '/Eastern_u.fig']);
   saveas(gcf,[imgpath '/Eastern_u.png']);
 
@@ -852,6 +865,12 @@ if(useOBCSwest)
   
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
+
+  flatIsopyc = false;
+  if(flatIsopyc)
+      Zcdw_pt_shelfbreak = -550;
+      Zcdw_pt_2 = [Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak]
+  end
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
   Zcdw_s = Zcdw_pt - 100; %%% This is important - salinity maximum needs to 
@@ -2451,7 +2470,7 @@ diag_fields_avg = {...
          'SItaux','SItauy','SIatmTx','SIatmTy',...   
              };
       numdiags_avg3 = length(diag_fields_avg3);  
-      diag_freq_avg3 = 1*t1year;
+      diag_freq_avg3 = 1*t1year/2;
       diag_phase_avg3 = 0;  
 
 
@@ -2788,69 +2807,89 @@ diag_fields_inst = {...
   end
 
 
-  if(useobcsSouth)
+
+    rho_o = 1027;         %%% Water density, kg/m^3
+
     if(useSEAICE)
 
-%%% Calculate free-drift ice velocities at the southern boundary, ignoring
-%%% ice internal stress, pressure caused by sea surface hight variation.
-%%% Assume zonal ocean velocity at the coast = 0, 
-%%% meridional ocean at the coast averaged over tidal cycles = 0,            
-%%% fractional ice cover Ai0 = 1.
-    rho_o = 1027;         %%% Water density, kg/m^3
-    tao_aix = rho_a*SEAICE_drag*sqrt(Ua^2+Va^2)*Ua;       %%% Air-ice stress in x direction, N/m2
-    tao_aiy = rho_a*SEAICE_drag*sqrt(Ua^2+Va^2)*Va;       %%% Air-ice stress in y direction, N/m2
-    syms ui vi
-    eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
-    eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
-    eqns = [eq1, eq2];
-    [solui solvi] = solve(eqns,[ui vi]);
-    Sui = double(real(solui));
-    Svi = double(real(solvi));
-    ui_idx = (Sui<0);
-    obsuice = Sui(ui_idx)
-    obsvice = Svi(ui_idx)
+     if(useobcsSouth && useobcsNorth)
+            %%% Calculate free-drift ice velocities at the southern boundary, ignoring
+            %%% ice internal stress, pressure caused by sea surface hight variation.
+            %%% Assume zonal ocean velocity at the coast = 0, 
+            %%% meridional ocean at the coast averaged over tidal cycles = 0,            
+            %%% fractional ice cover Ai0 = 1.
+            tao_aix = rho_a*SEAICE_drag*sqrt(Ua^2+Va^2)*Ua;       %%% Air-ice stress in x direction, N/m2
+            tao_aiy = rho_a*SEAICE_drag*sqrt(Ua^2+Va^2)*Va;       %%% Air-ice stress in y direction, N/m2
+            syms ui vi
+            eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
+            eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
+            eqns = [eq1, eq2];
+            [solui solvi] = solve(eqns,[ui vi]);
+            Sui = double(real(solui));
+            Svi = double(real(solvi));
+            ui_idx = (Sui<0);
+            obsuice = Sui(ui_idx)
+            obsvice = Svi(ui_idx)
     
+            if(Ua == 0 && Va == 0)
+                obsuice = 0
+                obsvice = 0
+            end
+        
+            OBSa = Ai0.*ones(Nx,1);
+            OBSh = Hi0.*ones(Nx,1);
+            OBSsn = Hs0.*ones(Nx,1); %%% snow thickness
+            OBSsl = Si0.*ones(Nx,1); %%% sea ice salinity
+            OBSuice = obsuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+            OBSvice = obsvice.*ones(Nx,1);
+            writeDataset(OBSa,fullfile(inputpath,'OBSaFile.bin'),ieee,prec);
+            writeDataset(OBSh,fullfile(inputpath,'OBShFile.bin'),ieee,prec);
+            writeDataset(OBSsn,fullfile(inputpath,'OBSsnFile.bin'),ieee,prec);
+            writeDataset(OBSsl,fullfile(inputpath,'OBSslFile.bin'),ieee,prec);
+            writeDataset(OBSuice,fullfile(inputpath,'OBSuiceFile.bin'),ieee,prec);
+            writeDataset(OBSvice,fullfile(inputpath,'OBSviceFile.bin'),ieee,prec);
+            obcs_parm01.addParm('OBSaFile','OBSaFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBShFile','OBShFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBSsnFile','OBSsnFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBSslFile','OBSslFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBSuiceFile','OBSuiceFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBSviceFile','OBSviceFile.bin',PARM_STR);
+            %%% Northern boundary is the same as the southern boundary
+            obcs_parm01.addParm('OBNaFile','OBSaFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBNhFile','OBShFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBNsnFile','OBSsnFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBNslFile','OBSslFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBNuiceFile','OBSuiceFile.bin',PARM_STR);
+            obcs_parm01.addParm('OBNviceFile','OBSviceFile.bin',PARM_STR);
 
-    if(Ua == 0 && Va == 0)
-        obsuice = 0
-        obsvice = 0
-    end
+        else
+            obsuice = 0
+            obsvice = 0
+     end
 
-    OBSa = Ai0.*ones(Nx,1);
-    OBSh = Hi0.*ones(Nx,1);
-    OBSsn = Hs0.*ones(Nx,1); %%% snow thickness
-    OBSsl = Si0.*ones(Nx,1); %%% sea ice salinity
-    OBSuice = obsuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
-    OBSvice = obsvice.*ones(Nx,1);
-    writeDataset(OBSa,fullfile(inputpath,'OBSaFile.bin'),ieee,prec);
-    writeDataset(OBSh,fullfile(inputpath,'OBShFile.bin'),ieee,prec);
-    writeDataset(OBSsn,fullfile(inputpath,'OBSsnFile.bin'),ieee,prec);
-    writeDataset(OBSsl,fullfile(inputpath,'OBSslFile.bin'),ieee,prec);
-    writeDataset(OBSuice,fullfile(inputpath,'OBSuiceFile.bin'),ieee,prec);
-    writeDataset(OBSvice,fullfile(inputpath,'OBSviceFile.bin'),ieee,prec);
-    obcs_parm01.addParm('OBSaFile','OBSaFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBShFile','OBShFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBSsnFile','OBSsnFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBSslFile','OBSslFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBSuiceFile','OBSuiceFile.bin',PARM_STR);
-    obcs_parm01.addParm('OBSviceFile','OBSviceFile.bin',PARM_STR);
-   
-   
-    end
-  else
-        obsuice = 0
-        obsvice = 0
-  end
-
-  if(useSEAICE)
-      if(useobcsNorth)
+    if((~useobcsSouth) && useobcsNorth)
+        Ua_mean = mean(uwind(1,:))
+        Va_mean = mean(wind(1,:))
+        tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
+        tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
+        syms ui vi
+        eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
+        eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
+        eqns = [eq1, eq2];
+        [solui solvi] = solve(eqns,[ui vi]);
+        Nui = double(real(solui));
+        Nvi = double(real(solvi));
+        ui_idx = (Nui<0);
+        obnuice = Nui(ui_idx)
+        %         obsvice = Svi(ui_idx)
+        obnvice = 0
 
         OBNa = Ai0.*ones(Nx,1);
         OBNh = Hi0.*ones(Nx,1);
         OBNsn = Hs0.*ones(Nx,1); %%% snow thickness
         OBNsl = Si0.*ones(Nx,1); %%% sea ice salinity
-        OBNuice = obsuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
-        OBNvice = obsvice.*ones(Nx,1);
+        OBNuice = obnuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+        OBNvice = obnvice.*ones(Nx,1);
         
         writeDataset(OBNa,fullfile(inputpath,'OBNaFile.bin'),ieee,prec);
         writeDataset(OBNh,fullfile(inputpath,'OBNhFile.bin'),ieee,prec);
@@ -2864,8 +2903,27 @@ diag_fields_inst = {...
         obcs_parm01.addParm('OBNslFile','OBNslFile.bin',PARM_STR);
         obcs_parm01.addParm('OBNuiceFile','OBNuiceFile.bin',PARM_STR);
         obcs_parm01.addParm('OBNviceFile','OBNviceFile.bin',PARM_STR);
-        
+
+    end
+
+      if(useEobcsWobcs)
+        %%% Same boundary condition as the northern boundary
+        obcs_parm01.addParm('OBEaFile','OBNaFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEhFile','OBNhFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEsnFile','OBNsnFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEslFile','OBNslFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEuiceFile','OBNuiceFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEviceFile','OBNviceFile.bin',PARM_STR);
+
+        obcs_parm01.addParm('OBWaFile','OBNaFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWhFile','OBNhFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWsnFile','OBNsnFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWslFile','OBNslFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWuiceFile','OBNuiceFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWviceFile','OBNviceFile.bin',PARM_STR);
       end
+
+
   end
 
     if(~useSEAICE)

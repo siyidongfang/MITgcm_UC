@@ -1,5 +1,5 @@
 %% Calculate ice velocities at the southern boundary using momentum equation
-clear all;
+clear;
 rho_a = 1.3;          %%% Air density, kg/m^3  
 rho_o = 1027;         %%% Water density, kg/m^3
 rho_i = 920;          %%% Ice density, kg/m^3  
@@ -7,7 +7,7 @@ f0 = -1.3e-4;         %%% Coriolis parameter, rad/s
 SEAICE_drag = 2e-3;          %%% Air-ice drag coefficient, dimensionless
 SEAICE_waterDrag = 5.5399/1000;          %%% Ice-ocean drag coefficient, dimensionless
 Hi0 = 1;               %%% Sea ice thickness, m
-Ua = 0;             %%% Wind velocity in x direction, m/s
+Ua = -2;             %%% Wind velocity in x direction, m/s
 Va = 2;              %%% Wind velocity in y direction, m/s
 % tao_aix = -0.05;       %%% Air-ice stress in x direction, N/m2
 % tao_aiy = 0.05;       %%% Air-ice stress in y direction, N/m2

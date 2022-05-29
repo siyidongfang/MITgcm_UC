@@ -16,8 +16,8 @@ addpath ../analysis/;
 addpath ../analysis/jpo_analysis-hires/;
 addpath ../analysis/colormaps/cmocean/;
 
-expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
-expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi1Ai1_Ws30_seaice_ardbeg'
+expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
+expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
 loadexp;
 
 figdir = [exppath '/img/'];
