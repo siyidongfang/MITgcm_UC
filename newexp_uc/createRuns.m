@@ -30,7 +30,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_seaice_ZcdwN380_stempede2']
+exp_name = ['res2km_' exp_name '_seaice_flatIsopyc_stempede2']
 % exp_name = ['res2km_' exp_name '_ardbeg']
 
 

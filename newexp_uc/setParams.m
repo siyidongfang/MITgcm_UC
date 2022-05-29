@@ -182,8 +182,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   % Zonal boundary condition
   use2Orlanski = false;
   useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = false;      %%% OBCS to the east and west
-  usePeriodic = true;
+  useEobcsWobcs = true;      %%% OBCS to the east and west
+  usePeriodic = false;
   if(use2Orlanski)
       useOBCSeast = false;
       useOBCSwest = false;
@@ -643,7 +643,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
-  flatIsopyc = false;
+  flatIsopyc = true;
   if(flatIsopyc)
       Zcdw_pt_shelfbreak = -550;
       Zcdw_pt_2 = [Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak]
@@ -866,7 +866,7 @@ if(useOBCSwest)
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
-  flatIsopyc = false;
+  flatIsopyc = true;
   if(flatIsopyc)
       Zcdw_pt_shelfbreak = -550;
       Zcdw_pt_2 = [Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak]
@@ -2869,7 +2869,7 @@ diag_fields_inst = {...
 
     if((~useobcsSouth) && useobcsNorth)
         Ua_mean = mean(uwind(1,:))
-        Va_mean = mean(wind(1,:))
+        Va_mean = mean(vwind(1,:))
         tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
         tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
         syms ui vi
