@@ -1,6 +1,6 @@
 %%%
-%%% plot_Momentum.m
-%%% Plot the momentum budget of MITgcm_UC experiments
+%%% plot_momentum.m
+%%% Plot the zonal momentum budget for the ocean
 %%%
 
 
