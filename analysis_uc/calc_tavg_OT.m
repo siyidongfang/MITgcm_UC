@@ -6,7 +6,8 @@
 
     prodir = [expdir expname '/'];
 
-    tmin = 0;
-    tmax = 5;
+    %     tmin = 0;
+    %     tmax = 5;
 
-    avg_t
+    %     avg_t
+    calcOverturning_rho_Aocean (expdir,expname,prodir)

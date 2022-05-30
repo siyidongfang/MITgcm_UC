@@ -212,4 +212,4 @@ set(gca,'YTick',[0:1:4]);
 
 %%
 
-print('-djpeg','-r300',[figdir expname '_OT.jpeg']);
+print('-djpeg','-r150',[figdir expname '_OT.jpeg']);

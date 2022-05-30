@@ -62,6 +62,8 @@ end
 
 
 
+ 
+% %%%% For LAYERS diagnostics
 % dumpFreq = diag_frequency(57);
 % nDumps = floor(nTimeSteps*deltaT/dumpFreq);
 % dumpIters = round((1:nDumps)*dumpFreq/deltaT);

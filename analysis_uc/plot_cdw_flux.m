@@ -17,8 +17,8 @@
 
     figdir = [exppath '/img/'];
 
-    nIter = 1247186;
-    year = num2str(7);
+    nIter = 1425356;
+    year = num2str(8);
 
     %%% Load data
     
