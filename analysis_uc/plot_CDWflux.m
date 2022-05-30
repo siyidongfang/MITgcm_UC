@@ -11,14 +11,14 @@
     addpath ../analysis/jpo_analysis-hires/;
     addpath ../analysis/colormaps/cmocean/;
 
-expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
-    loadexp;
+%     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
+%     expname = 'res2km_Ua-4Va4_Atide0_Hi0Ai0_Ws40_flatIsopyc_stampede2'
+%     loadexp;
 
     figdir = [exppath '/img/'];
 
-    nIter = 1206295;
-    year = num2str(7);
+    nIter = 852324;
+    year = num2str(5);
 
     %%% Load data
     
@@ -167,12 +167,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     uu(uu==0)=NaN;
     aaa1 = squeeze(mean(uu,'omitnan'));
     pcolor(yy/1000,-zz/1000,aaa1');
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading interp;axis ij;colormap('redblue');colorbar
     caxis([-0.15 0.15])
     title('Zonal velocity (m/s)')
     ylabel('Depth (km)');xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -181,13 +181,13 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     vtheta_xavg(vtheta_xavg==0)=NaN;
     pcolor(yy/1000,-zz/1000,1000*vtheta_xavg');shading interp
     caxis([-80 80]/4);colorbar
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     set(gca,'FontSize',fontsize)
     title('Advective heat flux {\it F}_{total} (blue = shoreward)','FontSize', fontsize+2,'FontWeight','normal');
     ylabel('Depth (km)');xlabel('y (km)')
     ylim([0 4]) 
     set(gca,'YDir','reverse');
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
     print('-dpng','-r150',[figdir 'Year' year '_fig4_zonal_u_vt.png']);
@@ -202,12 +202,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     aaa1= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-2:0.3:2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('Zonal-average potential temperature (^oC)')
     ylabel('Depth (km)');xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -218,12 +218,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[32:0.1:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.66:0.01:35],'k--');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('Zonal-average salinity (psu)')
     ylabel('Depth (km)');xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -393,24 +393,24 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,s1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[34.66:0.03:35],'k--');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
-    title('S (psu), at x = 100 km')
+    title('S (psu), at x = -200 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
     subplot(5,3,2)
     pcolor(yy/1000,-zz/1000,t1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[-2:0.5:2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
-    title('T (^oC), at x = 100 km')
+    title('T (^oC), at x = -200 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -418,12 +418,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,u1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[0:0.02:0.2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
-    title('u (m/s), at x = 100 km')
+    title('u (m/s), at x = -200 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -431,24 +431,24 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,s2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[34.66:0.03:35],'k--');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
-    title('S (psu), at x = 250 km')
+    title('S (psu), at x = -50 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
     subplot(5,3,5)
     pcolor(yy/1000,-zz/1000,t2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t2,[-2:0.5:2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
-    title('T (^oC), at x = 250 km')
+    title('T (^oC), at x = -50 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -456,12 +456,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,u2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[0:0.02:0.2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
-    title('u (m/s), at x = 250 km')
+    title('u (m/s), at x = -50 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -469,24 +469,24 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,s3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[34.66:0.03:35],'k--');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
-    title('S (psu), at x = 300 km')
+    title('S (psu), at x = 0 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
     subplot(5,3,8)
     pcolor(yy/1000,-zz/1000,t3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t3,[-2:0.5:2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
-    title('T (^oC), at x = 300 km')
+    title('T (^oC), at x = 0 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -494,12 +494,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,u3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[0:0.02:0.2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
-    title('u (m/s), at x = 300 km')
+    title('u (m/s), at x = 0 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -508,24 +508,24 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,s4');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s4,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s4,[34.66:0.03:35],'k--');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
-    title('S (psu), at x = 350 km')
+    title('S (psu), at x = 50 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
     subplot(5,3,11)
     pcolor(yy/1000,-zz/1000,t4');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t4,[-2:0.5:2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
-    title('T (^oC), at x = 350 km')
+    title('T (^oC), at x = 50 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -533,12 +533,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,u4');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u4,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u4,[0:0.02:0.2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
-    title('u (m/s), at x = 350 km')
+    title('u (m/s), at x = 50 km')
     ylabel('Depth (km)');% xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -547,24 +547,24 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,s5');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s5,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s5,[34.66:0.03:35],'k--');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
-    title('S (psu), at x = 500 km')
+    title('S (psu), at x = 200 km')
     ylabel('Depth (km)'); xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
     subplot(5,3,14)
     pcolor(yy/1000,-zz/1000,t5');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t5,[-2:0.5:2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
-    title('T (^oC), at x = 500 km')
+    title('T (^oC), at x = 200 km')
     ylabel('Depth (km)'); xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
@@ -572,12 +572,12 @@ expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_ardbeg'
     pcolor(yy/1000,-zz/1000,u5');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u5,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u5,[0:0.02:0.2],'EdgeColor','k');hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k--','LineWidth',1.5);plot(yy/1000,-bathy(125,:)/1000,'k','LineWidth',2);plot(yy(1:70)/1000,-bathy(150,1:70)/1000,'k--','LineWidth',1.5);
+hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
-    title('u (m/s), at x = 500 km')
+    title('u (m/s), at x = 200 km')
     ylabel('Depth (km)'); xlabel('y (km)')
-    set(gca,'XTick',[0:100:400]);
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     set(gca,'FontSize',fontsize);
 
