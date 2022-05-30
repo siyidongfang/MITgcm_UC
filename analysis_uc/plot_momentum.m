@@ -7,10 +7,9 @@
     clear;close all;
 
     %%% Add path
-    addpath ../analysis/colormaps;
-    addpath ../analysis/jpo_analysis-hires/;
-    addpath ../analysis/colormaps/cmocean/;
-
+    addpath functions/
+    addpath colormaps;
+    
     expdir = '/Users/csi/MITgcm_UC/experiments/exps_strongwinds/shelfice_obcsE_orlanskiW_surfaceT/';
     expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_ardbeg_prod'
     loadexp;

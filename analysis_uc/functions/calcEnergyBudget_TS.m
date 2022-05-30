@@ -1,12 +1,50 @@
 %%%
-%%% calcEnergyBudget.m
+%%% calcEnergyBudget_TS.m
 %%%
 %%% Convenience function to calculate energy budget terms.
+%%% Use linear EOS instead of theta to calculate the buoyancy term.
 %%%
 
 %%% Load experiment data
 loadexp;
-load([exppath '/' expname '_tavg_5yrs.mat']);
+load([prodir '/' expname '_tavg_5yrs.mat'],'UVEL','VVEL','WVEL','UVELSQ','VVELSQ',...
+    'THETA','SALT','WVELTH','WVELSLT','UV_VEL_Z','WU_VEL','WV_VEL');
+%%
+vv=VVEL;
+uu=UVEL;
+ww=WVEL;
+usq=UVELSQ;
+vsq=VVELSQ;
+tt=THETA;
+ss=SALT;
+wt=WVELTH;
+ws=WVELSLT;
+uv = UV_VEL_Z; % Meridional Transport of Zonal Momentum (m^2/s^2)
+uw = WU_VEL;   % Vertical Transport of Zonal Momentum
+vw = WV_VEL;   % Vertical Transport of Meridional Momentum
+tAlpha = 2e-4; % linear EOS thermal expansion coefficient (1/degC)
+sBeta = 7.4e-4; % linear EOS haline contraction coefficient (1/psu)
+
+
+if(useSEAICE)
+    %%% Calculate wind stress from EXF wind speeds
+    rho_a = 1.3;               %%% Air density, kg/m^3
+    load ([exppath '/setParams'],'Ua','Va')
+    Ua(Ua==0)=1e-8;
+    uwind = [Ua:-Ua/(Ny-1):0].*ones(Nx,1); 
+    vwind = [Va:-Va/(Ny-1):0].*ones(Nx,1);
+    zonalWind = rho_a.*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*uwind; 
+    meridWindFile = rho_a.*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*vwind;
+else 
+    %%% Load surface wind stress 
+    fid = fopen(fullfile(exppath,'input','zonalWindFile.bin'),'r','b');
+    zonalWind = fread(fid,[Nx Ny],'real*8');
+    fclose(fid);
+    fid = fopen(fullfile(exppath,'input','meridWindFile.bin'),'r','b');
+    meridWind = fread(fid,[Nx Ny],'real*8');
+    fclose(fid);
+end
+
 
 %%% Need the Eulerian-mean MOC to perform the buoyancy flux calculation
 calcEulerianMOC;
@@ -47,15 +85,29 @@ wt_mean(:,:,2:Nr) = ww(:,:,2:Nr) .* (0.5*(tt(:,:,1:Nr-1)+tt(:,:,2:Nr))); %%% Mea
 wt_eddy(:,:,1:Nr) = wt - wt_mean(:,:,1:Nr); %%% Eddy vertical heat flux on vertical faces
 wt_mean = 0.5 * (wt_mean(:,:,1:Nr) + wt_mean(:,:,2:Nr+1)); %%% Mean vertical heat flux at cell centers
 wt_eddy = 0.5 * (wt_eddy(:,:,1:Nr) + wt_eddy(:,:,2:Nr+1)); %%% Eddy vertical heat flux at cell centers
-PE_MKE = tAlpha * gravity * wt_mean; %%% PE->MKE at cell centers
-PE_EKE = tAlpha * gravity * wt_eddy; %%% PE->EKE at cell centers
+
+ws_mean = zeros(Nx,Ny,Nr+1);
+ws_eddy = zeros(Nx,Ny,Nr+1);
+ws_mean(:,:,2:Nr) = ww(:,:,2:Nr) .* (0.5*(ss(:,:,1:Nr-1)+ss(:,:,2:Nr))); %%% Mean vertical heat flux on vertical faces
+ws_eddy(:,:,1:Nr) = ws - ws_mean(:,:,1:Nr); %%% Eddy vertical heat flux on vertical faces
+ws_mean = 0.5 * (ws_mean(:,:,1:Nr) + ws_mean(:,:,2:Nr+1)); %%% Mean vertical heat flux at cell centers
+ws_eddy = 0.5 * (ws_eddy(:,:,1:Nr) + ws_eddy(:,:,2:Nr+1)); %%% Eddy vertical heat flux at cell centers
+
+PE_MKE = tAlpha * gravity * wt_mean - sBeta * gravity * ws_mean; %%% PE->MKE at cell centers
+PE_EKE = tAlpha * gravity * wt_eddy - sBeta * gravity * wt_eddy; %%% PE->EKE at cell centers
+
+PE_MKE_xavg = PE_MKE;
+PE_MKE_xavg(PE_MKE_xavg==0) = NaN;
+PE_MKE_xavg = squeeze(nanmean(PE_MKE_xavg));
+
+
 PE_EKE_zint = sum(PE_EKE.*DZ.*hFacC,3); %%% Depth-integrated PE->EKE
 PE_EKE_zavg = PE_EKE_zint ./ sum(DZ.*hFacC,3); %%% Depth-averaged PE->EKE
 PE_EKE_xavg = PE_EKE;
 PE_EKE_xavg(PE_EKE_xavg==0) = NaN;
 PE_EKE_xavg = squeeze(nanmean(PE_EKE_xavg));
 
-%%% PE->MKE associated with zonal-mean velocity and temperature
+%%% PE->MKE associated with zonal-mean velocity, temperature and salinity
 w_xavg = ww;
 w_xavg(w_xavg==0) = NaN;
 w_xavg = squeeze(nanmean(w_xavg,1));
@@ -64,7 +116,11 @@ t_xavg = tt;
 t_xavg(t_xavg==0) = NaN;
 t_xavg = squeeze(nanmean(t_xavg,1));
 t_xavg(isnan(t_xavg)) = 0;
-PE_ZKE_xyint = calcPE_ZKE(hFacC,DX,DY,w_xavg,t_xavg,psiE,yy,gravity,tAlpha);
+s_xavg = ss;
+s_xavg(s_xavg==0) = NaN;
+s_xavg = squeeze(nanmean(s_xavg,1));
+s_xavg(isnan(s_xavg)) = 0;
+PE_ZKE_xyint = calcPE_ZKE_TS(hFacC,DX,DY,w_xavg,t_xavg,s_xavg,psiE,yy,gravity,tAlpha,sBeta);
 
 %%% Integrate horizontally, starting from the southern edge of the
 %%% Eulerian-mean streamfunction
@@ -117,9 +173,6 @@ uv_eddy = uv - uv_mean; %%% Eddy zonal/meridional momentum flux
 uw_eddy = uw - uw_mean; %%% Eddy vertical flux of zonal momentum
 vw_eddy = vw - vw_mean; %%% Eddy vertical flux of meridional momentum
 
-
-
-%%%%%%%%% TODO!!! du_dy is wrong
 %%% Mean derivatives
 du_dx = (uu([2:Nx 1],:,:) - uu(1:Nx,:,:)) ./ DX;
 du_dy = (uu(:,1:Ny,:) - uu(:,[Ny 1:Ny-1],:)) ./ DY;
@@ -155,3 +208,20 @@ MKE_EKE = -  (usq_du_dx + uv_du_dy + uw_du_dz + vu_dv_dx + vsq_dv_dy + vw_dv_dz)
 % MKE_EKE = -  (uw_du_dz + vw_dv_dz);
 MKE_EKE_zint = sum(MKE_EKE.*DZ.*hFacC,3); %%% Depth-integrated MKE->EKE
 MKE_EKE_zavg = MKE_EKE_zint ./ sum(DZ.*hFacC,3); %%% Depth-averaged MKE->EKE
+
+MKE_EKE_xavg = MKE_EKE;
+MKE_EKE_xavg(MKE_EKE_xavg==0) = NaN;
+MKE_EKE_xavg = squeeze(nanmean(MKE_EKE_xavg));
+
+
+
+%%% Store computed data for later
+save([prodir '/' expname,'_EnergyBudget_5yrs.mat'],'DX','DY','DZ','DZC','YY','XX',...
+    'EKE_zavg','EKE_xavg',...
+    'PE_MKE_xavg','PE_EKE_zint','PE_EKE_zavg','PE_EKE_xavg',...
+    'PE_ZKE_xyint','PE_MKE_xyint','PE_EKE_xyint',...
+    'dMKE_dt_wind','dEKE_dt_wind','dMKE_dt_bot','dEKE_dt_bot',...
+    'MKE_EKE_zint','MKE_EKE_zavg','MKE_EKE_xavg'); 
+
+
+

@@ -11,13 +11,12 @@
 clear; close all;
 
 %%% Add path
-addpath ../analysis/colormaps;
-addpath ../analysis/;
-addpath ../analysis/jpo_analysis-hires/;
-addpath ../analysis/colormaps/cmocean/;
+addpath functions/
+addpath colormaps;
+addpath colormaps/cmocean/;
 
-expdir = '/Users/csi/MITgcm_UC/experiments/exps_strongwinds/shelfice_obcsE_orlanskiW_surfaceT/';
-expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_ardbeg_prod'
+expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
+expname = 'res2km_Ua-4Va4_Atide0_Hi0Ai0_Ws40_flatIsopyc_ardbeg'
 loadexp;
 
 figdir = [exppath '/img/'];

@@ -66,6 +66,7 @@ Um_Ext_xzint = rho0.*sum(sum(Um_Ext(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz
 totalchange_tendency = Um_dPhiX_xzint+Um_Advec_xzint+Um_Diss_xzint+Um_Ext_xzint;
 
 
+
 if(useSEAICE)
     %%% Calculate wind stress from EXF wind speeds
     rho_a = 1.3;               %%% Air density, kg/m^3
@@ -74,10 +75,14 @@ if(useSEAICE)
     uwind = [Ua:-Ua/(Ny-1):0].*ones(Nx,1); 
     vwind = [Va:-Va/(Ny-1):0].*ones(Nx,1);
     zonalWind = rho_a.*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*uwind; 
+    meridWindFile = rho_a.*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*vwind;
 else 
     %%% Load surface wind stress 
     fid = fopen(fullfile(exppath,'input','zonalWindFile.bin'),'r','b');
     zonalWind = fread(fid,[Nx Ny],'real*8');
+    fclose(fid);
+    fid = fopen(fullfile(exppath,'input','meridWindFile.bin'),'r','b');
+    meridWind = fread(fid,[Nx Ny],'real*8');
     fclose(fid);
 end
 

@@ -7,9 +7,9 @@
 %     clear;
     
     %%% Add path
-    addpath ../analysis/colormaps;
-    addpath ../analysis/jpo_analysis-hires/;
-    addpath ../analysis/colormaps/cmocean/;
+    addpath functions/
+    addpath colormaps;
+    addpath colormaps/cmocean/;
 
 %     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
 %     expname = 'res2km_Ua-4Va4_Atide0_Hi0Ai0_Ws40_flatIsopyc_stampede2'
@@ -17,8 +17,8 @@
 
     figdir = [exppath '/img/'];
 
-    nIter = 852324;
-    year = num2str(5);
+    nIter = 1247186;
+    year = num2str(7);
 
     %%% Load data
     

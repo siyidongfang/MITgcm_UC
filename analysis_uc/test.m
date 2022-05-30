@@ -1,8 +1,7 @@
 clear;
-addpath ../.
-addpath ../utils/matlab; 
-addpath ../analysis/colormaps;
-addpath ../analysis/jpo_analysis-hires/;
+addpath functions/
+addpath colormaps/
+
 expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW_surfaceT/';
 expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi1Ai1_Ws40_stampede2_test';
 loadexp;
