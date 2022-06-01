@@ -17,8 +17,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   addpath ../utils/;
   addpath ../newexp_utils/;
   addpath ../analysis_uc/;
-  addpath ../analysis/colormaps/;
-  addpath ../analysis;
+  addpath ../analysis_uc/colormaps/;
 
 
   %%%%%%%%%%%%%%%%%%
@@ -70,7 +69,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   Lx = 400*m1km; %%% Domain size in x 
 %   Ly = 450*m1km; %%% Domain size in y   
   Lx = 600*m1km; %%% Domain size in x 
-  Ly = 370*m1km; %%% Domain size in y   
+  Ly = 400*m1km; %%% Domain size in y   
 %   Ls = 50*m1km; %%% Width of southern boundary region
   Ln = 20*m1km; %%% Width of northern boundary region
   H = 4000; %%% Domain size in z 
@@ -152,7 +151,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useSHELFICE = true; 
   
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useLAYERS = true;
+  useLAYERS = false;
   useEXFwindstress = false; %%% apply wind speed in EXF package
   if(useSEAICE)
       useRBCS = false; 
@@ -182,8 +181,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   % Zonal boundary condition
   use2Orlanski = false;
   useEobcsWorlanski = true; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = false;      %%% OBCS to the east and west
+  useEobcsWobcs = false;     %%% OBCS to the east and west
   usePeriodic = false;
+  useEobcsWnoob = false; %%% Restore T/S/u to the east, no open boundary for the western boundary (with sea ice)
+
   if(use2Orlanski)
       useOBCSeast = false;
       useOBCSwest = false;
@@ -208,6 +209,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       useOrlanskiEast = false;  
       useOrlanskiWest = false;   
   end
+  if(useEobcsWnoob)
+      useOBCSeast = true;
+      useOBCSwest = false;
+      useOrlanskiEast = false;  
+      useOrlanskiWest = false;   
+  end
+
   
   %%% Topographic parameters 
   Wslope = Ws; %%% Continental slope half-width
@@ -400,6 +408,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   N2 = 50;
 %   N3 = 15;
 %   N4 = 14;  
+
   dz0 = 2*10/6;
   dz1 = 15*10/6; 
   dz2 = 20*10/6;
@@ -409,7 +418,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   N1 = 14; 
   N2 = 34;
   N3 = 11;
-  N4 = 10;
+  N4 = 8;
   nn_c = cumsum([N0 N1 N2 N3 N4]);
   dz_c = [dz0 dz1 dz2 dz3 dz4];
   nn = 1:(N1+N2+N3+N4+1);
@@ -617,7 +626,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   pt_bot = -0.3;
   s_mid = 34.75;
   pt_mid = 2; 
-  s_surf = 33.95;
+  s_surf = 33.95-0.25;
   pt_surf = -1.86; 
   Zsml = -50;  %%% Depth of the surface mixed layer
 
@@ -626,8 +635,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   uEast = zeros(Ny,Nr);
   N2_east = zeros(Ny,Nr-1);
   gamma_n_east = zeros(Ny,Nr);
-  depth_East_pt = zeros(Ny,5);
-  depth_East_s  = zeros(Ny,5);
+  depth_East_pt = zeros(Ny,6);
+  depth_East_s  = zeros(Ny,6);
 
 %   Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
 %   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
@@ -644,14 +653,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
 
-  Zcdw_pt_North = -450; %%% CDW depth at the southern boundary
-  Zcdw_pt_deep = Zcdw_pt_North-10;
-  Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak - 70;
-  
-  lat_Zcdw_pt = [0 Yshelfbreak+Wslope Ydeep Ly];
-  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
+  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_deep = Zcdw_pt_North-20;
+  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
+  Zcdw_pt_South = Zcdw_pt_shelfbreak -100;
 
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   flatIsopyc = false;
   if(flatIsopyc)
@@ -665,15 +673,22 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
                           %%% buoyancy frequency just below the pycnocline
 
 
-  %%% Artificially construct a hydrographic profile
-  ptemp_East = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-  salt_East = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+  dz_flat =250;
+  yidx_sb = round(Yshelfbreak/dy(1));
+
+  ds_flat = (s_mid - (s_bot+s_mid)/2)* dz_flat /(abs((-H+3*mean(Zcdw_s))/4)-abs(Zcdw_s(yidx_sb)));
+  dpt_flat = (pt_mid - (pt_bot+pt_mid)/2)* dz_flat /(abs((-H+3*mean(Zcdw_pt))/4)-abs(Zcdw_pt(yidx_sb)));
  
-  
+  ptemp_East = [pt_bot (pt_bot+pt_mid)/2  pt_mid-dpt_flat  pt_mid pt_surf pt_surf];
+  salt_East  = [s_bot  (s_bot+s_mid)/2    s_mid-ds_flat   s_mid   s_surf  s_surf];
+
+
   %%% Interpolate to model grid
   for jj = 1:Ny
-      depth_East_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
-      depth_East_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      %       depth_East_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
+      %       depth_East_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      depth_East_pt(jj,:) = [-H  (-H+3*mean(Zcdw_pt))/4  Zcdw_pt(yidx_sb)-dz_flat  Zcdw_pt(jj)  Zsml 0];
+      depth_East_s(jj,:)  = [-H  (-H+3*mean(Zcdw_s))/4   Zcdw_s(yidx_sb)-dz_flat   Zcdw_s(jj)   Zsml 0];
       tEast(jj,:) = interp1(depth_East_pt(jj,:),ptemp_East,zz,'PCHIP'); %%% reference pressure level: sea surface
       sEast(jj,:) = interp1(depth_East_s(jj,:),salt_East,zz,'PCHIP');  %%% reference pressure level: sea surface 
   end
@@ -779,7 +794,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   xlabel('y (km)');ylabel('Depth (km)');
   title('Eastern boundary restoring velocity (m/s)');
   set(gca,'fontsize',fontsize);
-  caxis([-0.03 0.03]);
+  caxis([-0.08 0.08]);
   savefig([imgpath '/Eastern_u.fig']);
   saveas(gcf,[imgpath '/Eastern_u.png']);
 
@@ -2411,38 +2426,38 @@ diag_fields_avg = {...
 % % %     ... %%%%%%%%% for spin-up
     'UVEL','VVEL', 'WVEL',...
     'SALT','THETA',...
-...%     'ETAN',...
-...%     'UVELSQ','VVELSQ','WVELSQ'...
-...%     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
+    'ETAN',...
+    'UVELSQ','VVELSQ','WVELSQ'...
+    'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
     'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
-      ... %%%%%%%%% for analysis
-      ... %%% Heat budget
-         'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
-         'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
-         ...
-         'VVELTH', ...
-         'oceQnet','UVELTH','WVELTH',...
-      ... %%% Energy budget
-         'UVELSQ','VVELSQ','WVELSQ',...
-         'UV_VEL_Z','WU_VEL','WV_VEL',...
-         ...
-      ... %%% Salt budget
-         'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
-         'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
-         ...
-         'VVELSLT',...
-         'oceSflux','UVELSLT','WVELSLT',...
-      ... %%% Momentum budget
-         'ETAN',...
-         'oceTAUX','oceTAUY',...
-     ... %%% Overturning streamfunction
-         'RHOAnoma','PHIHYD','LaTr1RHO',...
-         'LaUH1RHO','LaHw1RHO','LaUH2TH','LaHw2TH',... 
-         'LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH',...
-     ...
-         'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext','Um_AdvZ3','Um_AdvRe','Um_Cori',...
-         'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
-         'VISrI_Um','VISrI_Vm',...
+%       ... %%%%%%%%% for analysis
+%       ... %%% Heat budget
+%          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
+%          'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
+%          ...
+%          'VVELTH', ...
+%          'oceQnet','UVELTH','WVELTH',...
+%       ... %%% Energy budget
+%          'UVELSQ','VVELSQ','WVELSQ',...
+%          'UV_VEL_Z','WU_VEL','WV_VEL',...
+%          ...
+%       ... %%% Salt budget
+%          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
+%          'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
+%          ...
+%          'VVELSLT',...
+%          'oceSflux','UVELSLT','WVELSLT',...
+%       ... %%% Momentum budget
+%          'ETAN',...
+%          'oceTAUX','oceTAUY',...
+%      ... %%% Overturning streamfunction
+%          'RHOAnoma','PHIHYD','LaTr1RHO',...
+%          'LaUH1RHO','LaHw1RHO','LaUH2TH','LaHw2TH',... 
+%          'LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH',...
+%      ...
+%          'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext','Um_AdvZ3','Um_AdvRe','Um_Cori',...
+%          'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
+%          'VISrI_Um','VISrI_Vm',...
      };
       
   numdiags_avg = length(diag_fields_avg);  
@@ -2683,7 +2698,7 @@ diag_fields_inst = {...
     obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
   end
   if(useobcsNorth && (~useobcsSouth)) 
-    OBCS_balanceFacN = 1; %%% A value -1 balances an individual boundary
+    OBCS_balanceFacN = -1; %%% A value -1 balances an individual boundary
     obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL);  
   end
 

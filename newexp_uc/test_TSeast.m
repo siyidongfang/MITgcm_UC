@@ -4,7 +4,8 @@ addpath /Users/csi/Software/eos80_legacy_gamma_n/;
 addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
 addpath /Users/csi/Software/gsw_matlab_v3_06_11;
 addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-addpath /Users/csi/MITgcm_UC/analysis/colormaps/
+addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/
+%% 
 
 fontsize = 14;
 
@@ -15,7 +16,7 @@ fontsize = 14;
   m1km = 1000;
   H = 4000; %%% Domain size in z 
   Lx = 600*m1km; %%% Domain size in x 
-  Ly = 370*m1km; %%% Domain size in y   
+  Ly = 400*m1km; %%% Domain size in y   
 
   %%% Topographic parameters 
 
@@ -38,7 +39,7 @@ fontsize = 14;
 %   Xtrough = Lx/2; %%% Longitude of trough
   
 
-  Wslope = 40*m1km; %%% Continental slope half-width
+  Wslope = 30*m1km; %%% Continental slope half-width
   Hshelf = 500; %%% Continental shelf depth
   Wshelf = 100*m1km; %%% Width of continental shelf
   Ycoast = 120*m1km; %%% Latitude of coastline
@@ -88,6 +89,23 @@ fontsize = 14;
   dz_c = [dz0 dz1 dz2 dz3 dz4];
   nn = 1:(N1+N2+N3+N4+1);
   dz = interp1(nn_c,dz_c,nn,'pchip');
+%   dz0 = 2*10/6;
+%   dz1 = 15*10/6; 
+%   dz2 = 20*10/6;
+%   dz3 = 100*10/6;
+%   dz4 = 200*10/6;  
+%   N0 = 1;
+%   N1 = 14; 
+%   N2 = 34;
+%   N3 = 11;
+%   N4 = 8;
+%   nn_c = cumsum([N0 N1 N2 N3 N4]);
+%   dz_c = [dz0 dz1 dz2 dz3 dz4];
+%   nn = 1:(N1+N2+N3+N4+1);
+%   dz = interp1(nn_c,dz_c,nn,'pchip');
+
+
+
 
   zz = -cumsum((dz+[0 dz(1:end-1)])/2);
   if (length(zz) ~= Nr)
@@ -254,7 +272,7 @@ fontsize = 16;
   pt_bot = -0.3;
   s_mid = 34.75;
   pt_mid = 2; 
-  s_surf = 33.95;
+  s_surf = 33.95-0.25;
   pt_surf = -1.86; 
   Zsml = -50;  %%% Depth of the surface mixed layer
 
@@ -263,16 +281,16 @@ fontsize = 16;
   uEast = zeros(Ny,Nr);
   N2_east = zeros(Ny,Nr-1);
   gamma_n_east = zeros(Ny,Nr);
-  depth_East_pt = zeros(Ny,5);
-  depth_East_s  = zeros(Ny,5);
+  depth_East_pt = zeros(Ny,6);
+  depth_East_s  = zeros(Ny,6);
 
 
-  Zcdw_pt_North = -450; %%% CDW depth at the southern boundary
-  Zcdw_pt_deep = Zcdw_pt_North-10;
-  Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak - 70;
+  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
+  Zcdw_pt_deep = Zcdw_pt_North-20;
+  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
+  Zcdw_pt_South = Zcdw_pt_shelfbreak -100;
   
-  lat_Zcdw_pt = [0 Yshelfbreak+Wslope Ydeep Ly];
+  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
@@ -280,14 +298,25 @@ fontsize = 16;
 
 
   %%% Artificially construct a hydrographic profile
-  ptemp_East = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-  salt_East = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+  %   ptemp_East = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
+  %   salt_East  = [s_bot  (s_bot+s_mid)/2   s_mid   s_surf  s_surf];
+
+  dz_flat =250;
+  yidx_sb = round(Yshelfbreak/dy(1));
+
+  ds_flat = (s_mid - (s_bot+s_mid)/2)* dz_flat /(abs((-H+3*mean(Zcdw_s))/4)-abs(Zcdw_s(yidx_sb)));
+  dpt_flat = (pt_mid - (pt_bot+pt_mid)/2)* dz_flat /(abs((-H+3*mean(Zcdw_pt))/4)-abs(Zcdw_pt(yidx_sb)));
  
-  
+  ptemp_East = [pt_bot (pt_bot+pt_mid)/2  pt_mid-dpt_flat  pt_mid pt_surf pt_surf];
+  salt_East  = [s_bot  (s_bot+s_mid)/2    s_mid-ds_flat   s_mid   s_surf  s_surf];
+
+
   %%% Interpolate to model grid
   for jj = 1:Ny
-      depth_East_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
-      depth_East_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      %       depth_East_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
+      %       depth_East_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      depth_East_pt(jj,:) = [-H  (-H+3*mean(Zcdw_pt))/4  Zcdw_pt(yidx_sb)-dz_flat  Zcdw_pt(jj)  Zsml 0];
+      depth_East_s(jj,:)  = [-H  (-H+3*mean(Zcdw_s))/4   Zcdw_s(yidx_sb)-dz_flat   Zcdw_s(jj)   Zsml 0];
       tEast(jj,:) = interp1(depth_East_pt(jj,:),ptemp_East,zz,'PCHIP'); %%% reference pressure level: sea surface
       sEast(jj,:) = interp1(depth_East_s(jj,:),salt_East,zz,'PCHIP');  %%% reference pressure level: sea surface 
   end
@@ -421,7 +450,7 @@ fontsize = 16;
   xlabel('y (km)');ylabel('Depth (km)');
   title('Eastern boundary restoring salinity (psu)');
   set(gca,'fontsize',fontsize);
-  caxis([33.3 34.7])
+  caxis([33.6 34.8])
   set(gcf,'Position',[-54 249 1285 459]);
 
 

@@ -17,8 +17,8 @@
     figdir = [exppath '/img/'];
 
     %%% Load data
-%     nIter = 167745;
-%     year = num2str(1);
+    nIter = 733395;
+    year = num2str(4);
 
     SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
     SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
