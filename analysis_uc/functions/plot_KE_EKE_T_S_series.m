@@ -1,5 +1,5 @@
 %%%
-%%% plotTKE.m
+%%% plot_KE_EKE_T_S_series.m
 %%%
 %%% Plots the total kinetic energy output from MITgcm simulations.
 %%%
@@ -8,16 +8,16 @@
 %%%
 
     
-clear; close all;
+% clear; close all;
 
 %%% Add path
 addpath functions/
 addpath colormaps;
 addpath colormaps/cmocean/;
 
-expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
-expname = 'res2km_Ua-4Va4_Atide0_Hi1Ai1_Ws40_seaice_flatIsopyc_stempede2'
-loadexp;
+% expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
+% expname = 'res2km_Ua-4Va4_Atide0_Hi0Ai0_Ws40_flatIsopyc_ardbeg'
+% loadexp;
 
 figdir = [exppath '/img/'];
 
@@ -93,7 +93,7 @@ end
 %%% Make plots!
 fontsize = 16;
 
-figure(1);
+figure();
 clf;
 subplot(2,2,1)
 plot(ntime(1:KElen)/365,KEtot(1:KElen),'LineWidth',2);

@@ -1,5 +1,5 @@
     %%%
-    %%% Plot volume flux and heat flux of CDW (pt>0.5 degC) as a function of 
+    %%% Plot volume flux and heat flux of CDW (pt>0 degC) as a function of 
     %%% latitude and longitude
     %%%
     
@@ -17,10 +17,12 @@
 
     figdir = [exppath '/img/'];
 
-    nIter = 1191767;
-    year = num2str(6.5);
+%     nIter = 1191767;
+%     year = num2str(6.5);
 
     %%% Load data
+
+    useSHELFICE = true;
     
     tt = rdmds([exppath,'/results/THETA'],nIter);
     ss = rdmds([exppath,'/results/SALT'],nIter);
@@ -71,7 +73,7 @@
     %%% Make plots!
     fontsize = 16;
     
-    figure(1)
+    figure()
     %     set(gcf,'Position',[-104 254 1712 396])
     set(gcf,'Position',[-42 576 1684 278])
     subplot(1,3,1)
@@ -109,7 +111,7 @@
     print('-dpng','-r150',[figdir 'Year' year '_fig1_CDW.png']);
 
     
-    figure(2)
+    figure()
     %     set(gcf,'Position',[284 349 580 511])
     set(gcf,'Position',[25 367 805 426])
     pcolor(xx/1000,yy/1000,-Fheat'/1e9);
@@ -132,7 +134,7 @@
     print('-dpng','-r150',[figdir 'Year' year '_fig2_heat_flux.png']);
 
     
-    figure(3)
+    figure()
     %     set(gcf,'Position',[284 349 636*2 511])
     set(gcf,'Position',[1 203 1446 346])
     subplot(1,2,1)
@@ -159,7 +161,7 @@
     print('-dpng','-r150',[figdir 'Year' year '_fig3_volume_flux.png']);
 
     
-    figure(4)
+    figure()
     set(gcf,'Position',[284 349 636*2 400])
     clf;
     subplot(1,2,1)
@@ -192,7 +194,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     print('-dpng','-r150',[figdir 'Year' year '_fig4_zonal_u_vt.png']);
     
 
-    figure(5)
+    figure()
     [ZZ,YY] = meshgrid(zz,yy);
     set(gcf,'Position',[284 349 636*2 400])
     clf;
@@ -231,7 +233,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
 
 
-    figure(6)
+    figure()
     [YY,XX] = meshgrid(yy,xx);
     set(gcf,'Position',[1 203 1446 346])
     u_surf = uu(:,:,1);
@@ -282,7 +284,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
 
 
-    figure(7)
+    figure()
     clf
     %     set(gcf,'Position',[284 349 580 511])
     set(gcf,'Position',[25 367 805 426])
@@ -303,7 +305,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
 
 
-    figure(8)
+    figure()
 
     tt_depthavg = sum(tt.*DZ.*hFacC,3,'omitnan')./sum(DZ.*hFacC,3,'omitnan');
     ss_depthavg = sum(ss.*DZ.*hFacC,3,'omitnan')./sum(DZ.*hFacC,3,'omitnan');
@@ -385,14 +387,14 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
     [ZZ,YY] = meshgrid(zz,yy);
 
-    figure(9)
+    figure()
     clf;
     set(gcf,'Position',[1 62 1643 1275])
     subplot(5,3,1)
     pcolor(yy/1000,-zz/1000,s1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[34.66:0.03:35],'k--');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('S (psu), at x = -200 km')
@@ -404,7 +406,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     subplot(5,3,2)
     pcolor(yy/1000,-zz/1000,t1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[-2:0.5:2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('T (^oC), at x = -200 km')
@@ -417,7 +419,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,u1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[0:0.02:0.2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
     title('u (m/s), at x = -200 km')
@@ -430,7 +432,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,s2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[34.66:0.03:35],'k--');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('S (psu), at x = -50 km')
@@ -442,7 +444,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     subplot(5,3,5)
     pcolor(yy/1000,-zz/1000,t2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t2,[-2:0.5:2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('T (^oC), at x = -50 km')
@@ -455,7 +457,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,u2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[0:0.02:0.2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
     title('u (m/s), at x = -50 km')
@@ -468,7 +470,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,s3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[34.66:0.03:35],'k--');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('S (psu), at x = 0 km')
@@ -480,7 +482,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     subplot(5,3,8)
     pcolor(yy/1000,-zz/1000,t3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t3,[-2:0.5:2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('T (^oC), at x = 0 km')
@@ -493,7 +495,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,u3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[0:0.02:0.2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
     title('u (m/s), at x = 0 km')
@@ -507,7 +509,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,s4');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s4,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s4,[34.66:0.03:35],'k--');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('S (psu), at x = 50 km')
@@ -519,7 +521,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     subplot(5,3,11)
     pcolor(yy/1000,-zz/1000,t4');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t4,[-2:0.5:2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('T (^oC), at x = 50 km')
@@ -532,7 +534,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,u4');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u4,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u4,[0:0.02:0.2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
     title('u (m/s), at x = 50 km')
@@ -546,7 +548,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,s5');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s5,[32:0.3:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s5,[34.66:0.03:35],'k--');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([33.5 34.9]);
     title('S (psu), at x = 200 km')
@@ -558,7 +560,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     subplot(5,3,14)
     pcolor(yy/1000,-zz/1000,t5');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t5,[-2:0.5:2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('T (^oC), at x = 200 km')
@@ -571,7 +573,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,u5');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u5,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u5,[0:0.02:0.2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-0.2 0.2])
     title('u (m/s), at x = 200 km')
@@ -584,4 +586,3 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
 
 
-    plot_shelfIce

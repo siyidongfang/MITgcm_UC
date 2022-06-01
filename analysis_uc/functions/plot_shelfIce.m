@@ -10,15 +10,15 @@
     addpath colormaps;
     addpath colormaps/cmocean/;
 
-%     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_orlanski/';
-%     expname = 'res2km_Ua-4.4Va4.4_Atide0_Hi0Ai0_Ws30_tau_max-0.05_hoffman2';
+%     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
+%     expname = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_CDWflatBot-tiltSurf_OBbalanceFacN-1_ardbeg';
 %     loadexp;
 
     figdir = [exppath '/img/'];
 
-    %%% Load data
-    nIter = 733395;
-    year = num2str(4);
+%     %%% Load data
+%     nIter = 556518;
+%     year = num2str(3);
 
     SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
     SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
@@ -59,6 +59,7 @@
     caxis([-limc limc])
     ylim([0 150]);xlim([-150 150])
     title('Ice shelf fresh water flux (kg/m^2/s), positive upward')
+    text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
     subplot(3,2,2)
@@ -71,6 +72,7 @@
     caxis([-limc limc])
     ylim([0 150]);xlim([-150 150])
     title('Ice shelf heat flux (W/m^2), positive upward')
+    text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
     subplot(3,2,3)
@@ -83,6 +85,7 @@
     caxis([-limc limc])
     ylim([0 150]);xlim([-150 150])
     title('Ice shelf forcing for theta (W/m^2), >0 increases theta')
+    text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
     subplot(3,2,4)
@@ -95,6 +98,7 @@
     caxis([-limc limc])
     ylim([0 150]);xlim([-150 150])
     title('Ice shelf forcing for salt (g/m^2/s), >0 increases salt')
+    text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
     subplot(3,2,5)
@@ -107,6 +111,7 @@
     caxis([-limc limc]/10)
     ylim([0 150]);xlim([-150 150])
     title('Ice shelf bottom stress, >0 increases uVel')
+    text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
     subplot(3,2,6)
@@ -119,6 +124,7 @@
     caxis([-limc limc]/10)
     ylim([0 150]);xlim([-150 150])
     title('Ice shelf bottom stress, >0 increases vVel')
+    text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
     print('-dpng','-r150',[figdir 'Year' year '_ShelfIce.png']);
