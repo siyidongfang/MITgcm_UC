@@ -267,12 +267,12 @@ fontsize = 16;
   depth_East_s  = zeros(Ny,5);
 
 
-  Zcdw_pt_North = -380; %%% CDW depth at the southern boundary
-  Zcdw_pt_deep = Zcdw_pt_North-20;
+  Zcdw_pt_North = -450; %%% CDW depth at the southern boundary
+  Zcdw_pt_deep = Zcdw_pt_North-10;
   Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
+  Zcdw_pt_South = Zcdw_pt_shelfbreak - 70;
   
-  lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
+  lat_Zcdw_pt = [0 Yshelfbreak+Wslope Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 

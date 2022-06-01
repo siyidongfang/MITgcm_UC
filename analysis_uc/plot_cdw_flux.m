@@ -17,8 +17,8 @@
 
     figdir = [exppath '/img/'];
 
-    nIter = 1425356;
-    year = num2str(8);
+    nIter = 1752000;
+    year = num2str(10);
 
     %%% Load data
     
@@ -26,7 +26,6 @@
     ss = rdmds([exppath,'/results/SALT'],nIter);
     uu = rdmds([exppath,'/results/UVEL'],nIter);
     vv = rdmds([exppath,'/results/VVEL'],nIter);
-    %     ut = 
     vt = rdmds([exppath,'/results/VVELTH'],nIter);
     eta = rdmds([exppath,'/results/ETAN'],nIter);
 
@@ -357,7 +356,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
     %%
 
-    m1km = 1000
+    m1km = 1000;
     L1 = 100*m1km;
     L2 = 250*m1km;
     L3 = 300*m1km;
@@ -585,3 +584,4 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
 
 
+    plot_shelfIce

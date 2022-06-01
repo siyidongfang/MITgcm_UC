@@ -16,7 +16,7 @@ addpath colormaps;
 addpath colormaps/cmocean/;
 
 expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-expname = 'res2km_Ua-4Va4_Atide0_Hi0Ai0_Ws40_flatIsopyc_ardbeg'
+expname = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws40_isop_ardbeg'
 loadexp;
 
 figdir = [exppath '/img/'];
