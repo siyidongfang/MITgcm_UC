@@ -180,8 +180,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useEobcsWorlanski = true; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = false;     %%% OBCS to the east and west
+  useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
+  useEobcsWobcs = true;     %%% OBCS to the east and west
   usePeriodic = false;
   useEobcsWnoob = false; %%% Restore T/S/u to the east, no open boundary for the western boundary (with sea ice)
 
@@ -335,11 +335,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       % seaice work only with this).
   parm03.addParm('nIter0',nIter0,PARM_INT);
   parm03.addParm('abEps',0.1,PARM_REAL);
-  parm03.addParm('chkptFreq',t1year,PARM_REAL); % rolling 
-  parm03.addParm('pChkptFreq',t1year,PARM_REAL); % permanent
+  parm03.addParm('chkptFreq',t1year/2,PARM_REAL); % rolling 
+  parm03.addParm('pChkptFreq',t1year/2,PARM_REAL); % permanent
   parm03.addParm('taveFreq',0,PARM_REAL); % it only works properly, if taveFreq is a multiple of the time step deltaT (or deltaTclock).
-  parm03.addParm('dumpFreq',t1year,PARM_REAL); % interval to write model state/snapshot data (s)
-  parm03.addParm('monitorFreq',t1year,PARM_REAL); % interval to write monitor output (s)
+  parm03.addParm('dumpFreq',t1year/2,PARM_REAL); % interval to write model state/snapshot data (s)
+  parm03.addParm('monitorFreq',t1year/2,PARM_REAL); % interval to write monitor output (s)
   parm03.addParm('dumpInitAndLast',true,PARM_BOOL);
   parm03.addParm('pickupStrictlyMatch',false,PARM_BOOL); 
 
@@ -874,20 +874,14 @@ if(useOBCSwest)
   uWest = zeros(Ny,Nr);
   N2_west = zeros(Ny,Nr-1);
   gamma_n_west = zeros(Ny,Nr);
-  depth_West_pt = zeros(Ny,5);
-  depth_West_s  = zeros(Ny,5);
+  depth_West_pt = zeros(Ny,6);
+  depth_West_s  = zeros(Ny,6);
 
-%   Zcdw_pt_shelf = -400+200; %%% CDW depth over the shelf
-%   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
-% 
-%   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-%   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
-
-  Zcdw_pt_North = -380; %%% CDW depth at the southern boundary
+  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
-  
+  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
+  Zcdw_pt_South = Zcdw_pt_shelfbreak -150;
+
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
 
@@ -902,18 +896,28 @@ if(useOBCSwest)
                           %%% be deeper or else you end up with very weak 
                           %%% buoyancy frequency just below the pycnocline
 
-  %%% Artificially construct a hydrographic profile
-  ptemp_West = [pt_bot (pt_bot+pt_mid)/2 pt_mid pt_surf pt_surf];
-  salt_West = [s_bot (s_bot+s_mid)/2 s_mid s_surf s_surf];
+
+  dz_flat =250;
+  yidx_sb = round(Yshelfbreak/dy(1));
+
+  ds_flat = (s_mid - (s_bot+s_mid)/2)* dz_flat /(abs((-H+3*mean(Zcdw_s))/4)-abs(Zcdw_s(yidx_sb)));
+  dpt_flat = (pt_mid - (pt_bot+pt_mid)/2)* dz_flat /(abs((-H+3*mean(Zcdw_pt))/4)-abs(Zcdw_pt(yidx_sb)));
  
-  
+  ptemp_West = [pt_bot (pt_bot+pt_mid)/2  pt_mid-dpt_flat  pt_mid pt_surf pt_surf];
+  salt_West  = [s_bot  (s_bot+s_mid)/2    s_mid-ds_flat   s_mid   s_surf  s_surf];
+
+
   %%% Interpolate to model grid
   for jj = 1:Ny
-      depth_West_pt(jj,:) = [-H (-H+3*Zcdw_pt(jj))/4 Zcdw_pt(jj) Zsml 0];
-      depth_West_s(jj,:) = [-H (-H+3*Zcdw_s(jj))/4 Zcdw_s(jj) Zsml 0];
+      depth_West_pt(jj,:) = [-H  (-H+3*mean(Zcdw_pt))/4  Zcdw_pt(yidx_sb)-dz_flat  Zcdw_pt(jj)  Zsml 0];
+      depth_West_s(jj,:)  = [-H  (-H+3*mean(Zcdw_s))/4   Zcdw_s(yidx_sb)-dz_flat   Zcdw_s(jj)   Zsml 0];
       tWest(jj,:) = interp1(depth_West_pt(jj,:),ptemp_West,zz,'PCHIP'); %%% reference pressure level: sea surface
       sWest(jj,:) = interp1(depth_West_s(jj,:),salt_West,zz,'PCHIP');  %%% reference pressure level: sea surface 
   end
+
+
+
+
 
   lon_sec = -115-20;
   lat_sec = -71;
@@ -959,7 +963,8 @@ if(useOBCSwest)
     uWest_mid = g/rho0./f_mid.*cumsum(drhody.*dz,2,'reverse');
     uWest_TWV(2:end-1,:) = (uWest_mid(1:end-1,:)+uWest_mid(2:end,:))/2; %%% Thermal-wind velocity
     uWest = uWest_TWV;
-    uWest_max = max(max(abs(uWest)))
+    uWest_min = min(min(uWest))
+    uWest_max = max(max(uWest))
 
       
   if (showplots)
@@ -974,7 +979,7 @@ if(useOBCSwest)
   xlabel('y (km)');ylabel('Depth (km)');
   title('Western boundary restoring velocity (m/s)');
   set(gca,'fontsize',fontsize);
-  caxis([-0.03 0.03]);
+  caxis([-0.08 0.08]);
   savefig([imgpath '/Western_u.fig']);
   saveas(gcf,[imgpath '/Western_u.png']);
 
@@ -1894,148 +1899,15 @@ end
 
 
 
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%%%%%% SEA ICE   %%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
- if (useSEAICE)
-  % to store parameter names and values
-  seaice_parm01 = parmlist;
-  SEAICE_PARM = {seaice_parm01};
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%% SEA ICE  %%%%%%%%%%%%
-    %%%%%%%% PARAMETERS %%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-  SEAICEscaleSurfStress= true; % In the updated code (updated in Aug,2019),this issue has been solved. 20200121
-                               % By default, the sea ice stresses are not 
-                               % multiplied by the sea ice concentration. 
-                               % http://mailman.mitgcm.org/pipermail/mitgcm-support/2017-August/011248.html
-  SEAICEwriteState   = true;
-  SEAICEuseDYNAMICS  = true;
-  SEAICE_multDim     = 7;
-  SEAICE_dryIceAlb   = 0.8783;
-%   SEAICE_dryIceAlb   = 0.8509;
-  SEAICE_wetIceAlb   = 0.7869;
-%   SEAICE_wetIceAlb   = 0.7284;
-  SEAICE_drySnowAlb  = 0.9482;
-%   SEAICE_drySnowAlb  = 0.7754;
-  SEAICE_wetSnowAlb  = 0.8216;
-%   SEAICE_wetSnowAlb  = 0.7753;
-  SEAICE_waterDrag   = 5.5399/1000; % water-ice drag coefficient (non-dim.)
-  SEAICE_drag        = 0.002;   % air-ice drag coefficient (non-dim.)
-  HO                 = 0.1; 
-%   HO                 = .05;
-
-  SEAICE_no_slip          = false;
-%   SEAICE_no_slip          = true;
-
-%   SEAICEadvScheme         = 7;
-  SEAICEadvScheme         = 33;
-  SEAICEmomAdvection      = false; % Default: false
-  %%%SOSEdoesn't have a seaice dataset for salinity, they used this value
-  %%%in their estimate
-  
-  LSR_ERROR               = 1.0e-5;  
-  SEAICEnonLinIterMax     = 10;
-  
-  MIN_ATEMP               = -50;
-  MIN_TICE                = -50;
-  SEAICE_area_reg         = 0.15;
-  SEAICE_hice_reg         = 0.1;
-  IMAX_TICE               = 6;
-  SEAICE_EPS		      = 1.0e-8;
-%   SEAICE_EPS              = 2.0e-9;
-  SEAICE_doOpenWaterMelt  = true;
-  SEAICE_areaLossFormula  = 1;
-  SEAICE_wetAlbTemp       = 0.0;
-  SEAICE_saltFrac         = 0.3;
-%   SEAICE_frazilFrac       = 0.003;
- SEAICE_frazilFrac       = 0.01;
-%   SEAICE_frazilFrac       = 1.0; % frazil to sea ice conversion rate, as fraction (relative to the local freezing point of sea ice water)
-  
- 
-  Hs0 = 0; % Initial snow thickness = 0.1 m
-  Si0 = 6; % The salinity for 1m sea ice is about 6 g/kg. Cox et al., (1974). Salinity variations in sea ice. 
-  rho_i = 920; % Density of sea ice
-
-  
-  % Initial fractional sea ice cover, range[0,1]; initializes variable AREA;
-  Area = Ai0.*ones(Nx,Ny);
-%   Area(:,Ny-seaiceSpongeThickness:Ny) = 0;
-  % Initial sea ice thickness averaged over grid cell in meters; initializes variable HEFF;
-  Heff = Hi0.*ones(Nx,Ny); 
-%   Heff(:,Ny-seaiceSpongeThickness:Ny) = 0;
-  % Initial snow thickness on sea ice averaged over grid cell in meters; initializes variable HSNOW;
-  Hsnow = Hs0.*ones(Nx,Ny);
-  % Initial salinity of sea ice averaged over grid cell in g/m^2; initializes variable HSALT;
-  Hsalt = (Si0*rho_i*Hi0).*ones(Nx,Ny); 
-  
-  uIce = zeros(Nx,Ny); %%% Initial sea ice velosity
-  vIce = zeros(Nx,Ny);
-  
-  AreaFile = 'AreaFile.bin';
-  HeffFile = 'HeffFile.bin';
-  HsnowFile = 'HsnowFile.bin';
-  HsaltFile = 'HsaltFile.bin';
-  uIceFile = 'uIceFile.bin';
-  vIceFile = 'vIceFile.bin';  
-  
-  writeDataset(Area,fullfile(inputpath,AreaFile),ieee,prec);
-  writeDataset(Heff,fullfile(inputpath,HeffFile),ieee,prec);
-  writeDataset(Hsnow,fullfile(inputpath,HsnowFile),ieee,prec);
-  writeDataset(Hsalt,fullfile(inputpath,HsaltFile),ieee,prec);  
-  writeDataset(uIce,fullfile(inputpath,uIceFile),ieee,prec);
-  writeDataset(vIce,fullfile(inputpath,vIceFile),ieee,prec); 
-  
-  seaice_parm01.addParm('SEAICEscaleSurfStress',SEAICEscaleSurfStress,PARM_BOOL);
-  seaice_parm01.addParm('LSR_ERROR',LSR_ERROR,PARM_REAL);
-  seaice_parm01.addParm('SEAICEnonLinIterMax',SEAICEnonLinIterMax,PARM_INT);
-  seaice_parm01.addParm('SEAICEwriteState',SEAICEwriteState,PARM_BOOL);
-  seaice_parm01.addParm('SEAICEuseDYNAMICS',SEAICEuseDYNAMICS,PARM_BOOL);
-  seaice_parm01.addParm('SEAICE_multDim',SEAICE_multDim,PARM_INT);
-  seaice_parm01.addParm('SEAICE_dryIceAlb',SEAICE_dryIceAlb,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_wetIceAlb',SEAICE_wetIceAlb,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_drySnowAlb',SEAICE_drySnowAlb,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_wetSnowAlb',SEAICE_wetSnowAlb,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_waterDrag',SEAICE_waterDrag,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_drag',SEAICE_drag,PARM_REAL);
-  seaice_parm01.addParm('HO',HO,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_no_slip',SEAICE_no_slip,PARM_BOOL);
-  seaice_parm01.addParm('SEAICEadvScheme',SEAICEadvScheme,PARM_INT);
-  seaice_parm01.addParm('SEAICEmomAdvection',SEAICEmomAdvection,PARM_BOOL);
-  seaice_parm01.addParm('MIN_ATEMP',MIN_ATEMP,PARM_REAL);
-  seaice_parm01.addParm('MIN_TICE',MIN_TICE,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_area_reg',SEAICE_area_reg,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_hice_reg',SEAICE_hice_reg,PARM_REAL);
-  seaice_parm01.addParm('IMAX_TICE',IMAX_TICE,PARM_INT);
-  seaice_parm01.addParm('SEAICE_EPS',SEAICE_EPS,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_doOpenWaterMelt',SEAICE_doOpenWaterMelt,PARM_BOOL);
-  seaice_parm01.addParm('SEAICE_areaLossFormula',SEAICE_areaLossFormula,PARM_INT);
-  seaice_parm01.addParm('SEAICE_wetAlbTemp',SEAICE_wetAlbTemp,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_saltFrac',SEAICE_saltFrac,PARM_REAL);
-  seaice_parm01.addParm('SEAICE_frazilFrac',SEAICE_frazilFrac,PARM_REAL);
-
-  seaice_parm01.addParm('HeffFile',HeffFile,PARM_STR);
-  seaice_parm01.addParm('AreaFile',AreaFile,PARM_STR);
-  seaice_parm01.addParm('HsnowFile',HsnowFile,PARM_STR);
-  seaice_parm01.addParm('HsaltFile',HsaltFile,PARM_STR);
-  seaice_parm01.addParm('uIceFile',uIceFile,PARM_STR);
-  seaice_parm01.addParm('vIceFile',vIceFile,PARM_STR);
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%% WRITE THE 'data.seaice' FILE %%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  write_data_seaice(inputpath,SEAICE_PARM,listterm,realfmt);  
- end
-  
 
 
 
 
-if(useEXF)
+
+
+
+
+ if(useEXF)
 
   %%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%
@@ -2136,6 +2008,7 @@ if(useEXF)
     
     
 if(useEXFwindstress)
+    SEAICE_drag        = 0.002;   % air-ice drag coefficient (non-dim.)
     ustress = rho_a*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*uwind;    
     vstress = rho_a*SEAICE_drag.*sqrt(uwind.^2+vwind.^2).*vwind;     
     ustressfile = 'ustressfile.bin';
@@ -2192,6 +2065,7 @@ end
 
 if(useSEAICE)
     exf_albedo = 0.15; 
+    SEAICE_dryIceAlb   = 0.8783;
     
 %     exf_offset_atemp =  273.16;
     %%%runoff from ERA is in hours, need to convert to seconds
@@ -2306,7 +2180,13 @@ end
 
 
 
- 
+
+
+
+
+
+
+
   %%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% LAYERS SET-UP %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2386,6 +2266,13 @@ end
   
  end
   
+
+
+
+
+
+
+
   
 
   %%%%%%%%%%%%%%%%%%%%%%%
@@ -2461,7 +2348,7 @@ diag_fields_avg = {...
      };
       
   numdiags_avg = length(diag_fields_avg);  
-  diag_freq_avg = 1*t1year;
+  diag_freq_avg = 1*t1year/2;
 %   diag_freq_avg = 30*t1day;
 
 
@@ -2489,7 +2376,7 @@ diag_fields_avg = {...
          'SItaux','SItauy','SIatmTx','SIatmTy',...   
              };
       numdiags_avg3 = length(diag_fields_avg3);  
-      diag_freq_avg3 = 1*t1year;
+      diag_freq_avg3 = 1*t1year/2;
       diag_phase_avg3 = 0;  
 
 
@@ -2546,6 +2433,14 @@ diag_fields_inst = {...
     createDIAGSIZEh(codepath,ndiags,Nr);
   end
   
+
+
+
+
+
+
+
+
 
 
 
@@ -2820,6 +2715,13 @@ diag_fields_inst = {...
 
     if(useSEAICE)
 
+        rho_i = 920; % Density of sea ice
+        SEAICE_drag        = 0.002;   % air-ice drag coefficient (non-dim.)
+        SEAICE_waterDrag   = 5.5399/1000; % water-ice drag coefficient (non-dim.)
+        Hs0 = 0; % Initial snow thickness = 0.1 m
+        Si0 = 6; % The salinity for 1m sea ice is about 6 g/kg. Cox et al., (1974). Salinity variations in sea ice. 
+        rho_i = 920; % Density of sea ice
+
      if(useobcsSouth && useobcsNorth)
             %%% Calculate free-drift ice velocities at the southern boundary, ignoring
             %%% ice internal stress, pressure caused by sea surface hight variation.
@@ -2876,8 +2778,10 @@ diag_fields_inst = {...
      end
 
     if((~useobcsSouth) && useobcsNorth)
-        Ua_mean = mean(uwind(1,:))
-        Va_mean = mean(vwind(1,:))
+
+        yidx_icefront = round(Yicefront/(Ly/Ny));%%% Find the ice shelf front
+        Ua_mean = mean(uwind(1,yidx_icefront:end))
+        Va_mean = mean(vwind(1,yidx_icefront:end))
         tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
         tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
         syms ui vi
@@ -2888,16 +2792,25 @@ diag_fields_inst = {...
         Nui = double(real(solui));
         Nvi = double(real(solvi));
         ui_idx = (Nui<0);
-        obnuice = Nui(ui_idx)
         %         obsvice = Svi(ui_idx)
-        obnvice = 0
+        obvice = 0
+        obuice = Nui(ui_idx)
+        Uo_surf_min = min(uEast(:,1));
+        if(abs(obuice)<abs(Uo_surf_min))
+            obuice = Uo_surf_min
+        end
+
+
+
+
+
 
         OBNa = Ai0.*ones(Nx,1);
         OBNh = Hi0.*ones(Nx,1);
         OBNsn = Hs0.*ones(Nx,1); %%% snow thickness
         OBNsl = Si0.*ones(Nx,1); %%% sea ice salinity
-        OBNuice = obnuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
-        OBNvice = obnvice.*ones(Nx,1);
+        OBNuice = obuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+        OBNvice = obvice.*ones(Nx,1);
         
         writeDataset(OBNa,fullfile(inputpath,'OBNaFile.bin'),ieee,prec);
         writeDataset(OBNh,fullfile(inputpath,'OBNhFile.bin'),ieee,prec);
@@ -2915,20 +2828,35 @@ diag_fields_inst = {...
     end
 
       if(useEobcsWobcs)
-        %%% Same boundary condition as the northern boundary
-        obcs_parm01.addParm('OBEaFile','OBNaFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBEhFile','OBNhFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBEsnFile','OBNsnFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBEslFile','OBNslFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBEuiceFile','OBNuiceFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBEviceFile','OBNviceFile.bin',PARM_STR);
 
-        obcs_parm01.addParm('OBWaFile','OBNaFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBWhFile','OBNhFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBWsnFile','OBNsnFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBWslFile','OBNslFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBWuiceFile','OBNuiceFile.bin',PARM_STR);
-        obcs_parm01.addParm('OBWviceFile','OBNviceFile.bin',PARM_STR);
+        OBEa = Ai0.*ones(1,Ny);
+        OBEh = Hi0.*ones(1,Ny);
+        OBEsn = Hs0.*ones(1,Ny); %%% snow thickness
+        OBEsl = Si0.*ones(1,Ny); %%% sea ice salinity
+        OBEuice = obuice.*ones(1,Ny); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+        OBEvice = obvice.*ones(1,Ny);
+        writeDataset(OBEa,fullfile(inputpath,'OBEaFile.bin'),ieee,prec);
+        writeDataset(OBEh,fullfile(inputpath,'OBEhFile.bin'),ieee,prec);
+        writeDataset(OBEsn,fullfile(inputpath,'OBEsnFile.bin'),ieee,prec);
+        writeDataset(OBEsl,fullfile(inputpath,'OBEslFile.bin'),ieee,prec);
+        writeDataset(OBEuice,fullfile(inputpath,'OBEuiceFile.bin'),ieee,prec);
+        writeDataset(OBEvice,fullfile(inputpath,'OBEviceFile.bin'),ieee,prec);
+
+        %%% Same boundary condition for the eastern and western boundaries
+        obcs_parm01.addParm('OBEaFile','OBEaFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEhFile','OBEhFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEsnFile','OBEsnFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEslFile','OBEslFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEuiceFile','OBEuiceFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBEviceFile','OBEviceFile.bin',PARM_STR);
+
+        obcs_parm01.addParm('OBWaFile','OBEaFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWhFile','OBEhFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWsnFile','OBEsnFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWslFile','OBEslFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWuiceFile','OBEuiceFile.bin',PARM_STR);
+        obcs_parm01.addParm('OBWviceFile','OBEviceFile.bin',PARM_STR);
+
       end
 
 
@@ -3025,7 +2953,163 @@ diag_fields_inst = {...
 
   
   
+
+
+
  
+
+
+
+
+
+
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%% SEA ICE   %%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+ if (useSEAICE)
+  % to store parameter names and values
+  seaice_parm01 = parmlist;
+  SEAICE_PARM = {seaice_parm01};
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%% SEA ICE  %%%%%%%%%%%%
+    %%%%%%%% PARAMETERS %%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  SEAICEscaleSurfStress= true; % In the updated code (updated in Aug,2019),this issue has been solved. 20200121
+                               % By default, the sea ice stresses are not 
+                               % multiplied by the sea ice concentration. 
+                               % http://mailman.mitgcm.org/pipermail/mitgcm-support/2017-August/011248.html
+  SEAICEwriteState   = true;
+  SEAICEuseDYNAMICS  = true;
+  SEAICE_multDim     = 7;
+  SEAICE_dryIceAlb   = 0.8783;
+%   SEAICE_dryIceAlb   = 0.8509;
+  SEAICE_wetIceAlb   = 0.7869;
+%   SEAICE_wetIceAlb   = 0.7284;
+  SEAICE_drySnowAlb  = 0.9482;
+%   SEAICE_drySnowAlb  = 0.7754;
+  SEAICE_wetSnowAlb  = 0.8216;
+%   SEAICE_wetSnowAlb  = 0.7753;
+  SEAICE_waterDrag   = 5.5399/1000; % water-ice drag coefficient (non-dim.)
+  SEAICE_drag        = 0.002;   % air-ice drag coefficient (non-dim.)
+  HO                 = 0.1; 
+%   HO                 = .05;
+
+  SEAICE_no_slip          = false;
+%   SEAICE_no_slip          = true;
+
+%   SEAICEadvScheme         = 7;
+  SEAICEadvScheme         = 33;
+  SEAICEmomAdvection      = false; % Default: false
+  %%%SOSEdoesn't have a seaice dataset for salinity, they used this value
+  %%%in their estimate
+  
+  LSR_ERROR               = 1.0e-5;  
+  SEAICEnonLinIterMax     = 10;
+  
+  MIN_ATEMP               = -50;
+  MIN_TICE                = -50;
+  SEAICE_area_reg         = 0.15;
+  SEAICE_hice_reg         = 0.1;
+  IMAX_TICE               = 6;
+  SEAICE_EPS		      = 1.0e-8;
+%   SEAICE_EPS              = 2.0e-9;
+  SEAICE_doOpenWaterMelt  = true;
+  SEAICE_areaLossFormula  = 1;
+  SEAICE_wetAlbTemp       = 0.0;
+  SEAICE_saltFrac         = 0.3;
+%   SEAICE_frazilFrac       = 0.003;
+ SEAICE_frazilFrac       = 0.01;
+%   SEAICE_frazilFrac       = 1.0; % frazil to sea ice conversion rate, as fraction (relative to the local freezing point of sea ice water)
+  
+ 
+  Hs0 = 0; % Initial snow thickness = 0.1 m
+  Si0 = 6; % The salinity for 1m sea ice is about 6 g/kg. Cox et al., (1974). Salinity variations in sea ice. 
+  rho_i = 920; % Density of sea ice
+
+  
+  % Initial fractional sea ice cover, range[0,1]; initializes variable AREA;
+  Area = Ai0.*ones(Nx,Ny);
+%   Area(:,Ny-seaiceSpongeThickness:Ny) = 0;
+  % Initial sea ice thickness averaged over grid cell in meters; initializes variable HEFF;
+  Heff = Hi0.*ones(Nx,Ny); 
+%   Heff(:,Ny-seaiceSpongeThickness:Ny) = 0;
+  % Initial snow thickness on sea ice averaged over grid cell in meters; initializes variable HSNOW;
+  Hsnow = Hs0.*ones(Nx,Ny);
+  % Initial salinity of sea ice averaged over grid cell in g/m^2; initializes variable HSALT;
+  Hsalt = (Si0*rho_i*Hi0).*ones(Nx,Ny); 
+  
+  uIce = zeros(Nx,Ny); %%% Initial sea ice velosity
+  vIce = zeros(Nx,Ny);
+  if(useEobcsWobcs)
+      uIce = OBEuice.*ones(Nx,Ny);
+      vIce = OBEvice.*ones(Nx,Ny);
+  end
+  
+  AreaFile = 'AreaFile.bin';
+  HeffFile = 'HeffFile.bin';
+  HsnowFile = 'HsnowFile.bin';
+  HsaltFile = 'HsaltFile.bin';
+  uIceFile = 'uIceFile.bin';
+  vIceFile = 'vIceFile.bin';  
+  
+  writeDataset(Area,fullfile(inputpath,AreaFile),ieee,prec);
+  writeDataset(Heff,fullfile(inputpath,HeffFile),ieee,prec);
+  writeDataset(Hsnow,fullfile(inputpath,HsnowFile),ieee,prec);
+  writeDataset(Hsalt,fullfile(inputpath,HsaltFile),ieee,prec);  
+  writeDataset(uIce,fullfile(inputpath,uIceFile),ieee,prec);
+  writeDataset(vIce,fullfile(inputpath,vIceFile),ieee,prec); 
+  
+  seaice_parm01.addParm('SEAICEscaleSurfStress',SEAICEscaleSurfStress,PARM_BOOL);
+  seaice_parm01.addParm('LSR_ERROR',LSR_ERROR,PARM_REAL);
+  seaice_parm01.addParm('SEAICEnonLinIterMax',SEAICEnonLinIterMax,PARM_INT);
+  seaice_parm01.addParm('SEAICEwriteState',SEAICEwriteState,PARM_BOOL);
+  seaice_parm01.addParm('SEAICEuseDYNAMICS',SEAICEuseDYNAMICS,PARM_BOOL);
+  seaice_parm01.addParm('SEAICE_multDim',SEAICE_multDim,PARM_INT);
+  seaice_parm01.addParm('SEAICE_dryIceAlb',SEAICE_dryIceAlb,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_wetIceAlb',SEAICE_wetIceAlb,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_drySnowAlb',SEAICE_drySnowAlb,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_wetSnowAlb',SEAICE_wetSnowAlb,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_waterDrag',SEAICE_waterDrag,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_drag',SEAICE_drag,PARM_REAL);
+  seaice_parm01.addParm('HO',HO,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_no_slip',SEAICE_no_slip,PARM_BOOL);
+  seaice_parm01.addParm('SEAICEadvScheme',SEAICEadvScheme,PARM_INT);
+  seaice_parm01.addParm('SEAICEmomAdvection',SEAICEmomAdvection,PARM_BOOL);
+  seaice_parm01.addParm('MIN_ATEMP',MIN_ATEMP,PARM_REAL);
+  seaice_parm01.addParm('MIN_TICE',MIN_TICE,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_area_reg',SEAICE_area_reg,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_hice_reg',SEAICE_hice_reg,PARM_REAL);
+  seaice_parm01.addParm('IMAX_TICE',IMAX_TICE,PARM_INT);
+  seaice_parm01.addParm('SEAICE_EPS',SEAICE_EPS,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_doOpenWaterMelt',SEAICE_doOpenWaterMelt,PARM_BOOL);
+  seaice_parm01.addParm('SEAICE_areaLossFormula',SEAICE_areaLossFormula,PARM_INT);
+  seaice_parm01.addParm('SEAICE_wetAlbTemp',SEAICE_wetAlbTemp,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_saltFrac',SEAICE_saltFrac,PARM_REAL);
+  seaice_parm01.addParm('SEAICE_frazilFrac',SEAICE_frazilFrac,PARM_REAL);
+
+  seaice_parm01.addParm('HeffFile',HeffFile,PARM_STR);
+  seaice_parm01.addParm('AreaFile',AreaFile,PARM_STR);
+  seaice_parm01.addParm('HsnowFile',HsnowFile,PARM_STR);
+  seaice_parm01.addParm('HsaltFile',HsaltFile,PARM_STR);
+  seaice_parm01.addParm('uIceFile',uIceFile,PARM_STR);
+  seaice_parm01.addParm('vIceFile',vIceFile,PARM_STR);
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% WRITE THE 'data.seaice' FILE %%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  write_data_seaice(inputpath,SEAICE_PARM,listterm,realfmt);  
+ end
+
+
+
+
+
+
+
 
 
 
@@ -3055,6 +3139,10 @@ diag_fields_inst = {...
   
  
     
+
+
+
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% WRITE PARAMETERS TO A MATLAB FILE %%%%%

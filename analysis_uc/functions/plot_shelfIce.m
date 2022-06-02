@@ -1,5 +1,5 @@
     %%% 
-    %%% plotShelIce
+    %%% plot_shelIce.m
     %%%
     %%% Plot melt rate and heat flux of the ice shelf, and momentum tendency from ice-shelf drag
 
