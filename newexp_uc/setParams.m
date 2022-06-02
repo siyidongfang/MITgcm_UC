@@ -656,7 +656,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
   Zcdw_pt_deep = Zcdw_pt_North-20;
   Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak -100;
+  Zcdw_pt_South = Zcdw_pt_shelfbreak -150;
 
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
@@ -2688,25 +2688,27 @@ diag_fields_inst = {...
   
   %%% Enforces mass conservation across the northern boundary by adding a
   %%% barotropic inflow/outflow  
-  useOBCSbalance = true;  
+  useOBCSbalance = false;  
   obcs_parm01.addParm('useOBCSbalance',useOBCSbalance,PARM_BOOL);
 
-  if (useobcsNorth && useobcsSouth)
-    OBCS_balanceFacN = 1; 
-    OBCS_balanceFacS = 1;
-    obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL); 
-    obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
-  end
-  if(useobcsNorth && (~useobcsSouth)) 
-    OBCS_balanceFacN = -1; %%% A value -1 balances an individual boundary
-    obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL);  
-  end
-
-  if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
-      OBCS_balanceFacE = 1; %%% A value -1 balances an individual boundary
-      OBCS_balanceFacW = 1;
-      obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
-      obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+  if(useOBCSbalance)
+      if (useobcsNorth && useobcsSouth)
+        OBCS_balanceFacN = 1; 
+        OBCS_balanceFacS = 1;
+        obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL); 
+        obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
+      end
+      if(useobcsNorth && (~useobcsSouth)) 
+        OBCS_balanceFacN = 0; %%% A value -1 balances an individual boundary
+        obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL);  
+      end
+    
+      if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
+          OBCS_balanceFacE = 0; %%% A value -1 balances an individual boundary
+          OBCS_balanceFacW = 0;
+          obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
+          obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+      end
   end
 
   

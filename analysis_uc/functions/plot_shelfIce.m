@@ -20,14 +20,6 @@
 %     nIter = 556518;
 %     year = num2str(3);
 
-    SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
-    SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
-    SHI_TauX = rdmds([exppath,'/results/SHI_TauX'],nIter);
-    SHI_TauY = rdmds([exppath,'/results/SHI_TauY'],nIter);
-    SHIForcT = rdmds([exppath,'/results/SHIForcT'],nIter);
-    SHIForcS = rdmds([exppath,'/results/SHIForcS'],nIter);
-    RAC = rdmds([exppath,'/results/RAC']);
-
     %%% Grid spacing matrices
     DX = repmat(delX',[1 Ny Nr]);
     DY = repmat(delY,[Nx 1 Nr]);
@@ -35,17 +27,72 @@
     [YY,XX] = meshgrid(yy,xx);
     t1day = 86400;
     t1year = 365*t1day;
-
-    %%% Calculate ice shelf melt rate
-    totalMelt = -sum(sum(SHIfwFlx.*RAC))*t1year/1e12 %%% Gt/yr
     rho_i = 920;
+    RAC = rdmds([exppath,'/results/RAC']);
+
+    %%% Frequency of diagnostic output
+    dumpFreq = abs(diag_frequency(1));
+    nDumps = round(nTimeSteps*deltaT/dumpFreq);
+    dumpIters = round((1:nDumps)*dumpFreq/deltaT);
+    dumpIters = dumpIters(dumpIters > nIter0);
+    nDumps = length(dumpIters);
+
+    %%% Calculate timeseries of ice shelf melt rate
+    ntime = zeros(1,nDumps);
+    totalMelt_series = zeros(1,nDumps);
+    MeltRate_series = zeros(1,nDumps);
+    nT = 0;
+
+
+    for n=1:nDumps
+     
+      ntime(n) =  dumpIters(n)*deltaT/86400; 
+      fwflx = rdmds([exppath,'/results/SHIfwFlx'],dumpIters(n));
+      if (isempty(fwflx))
+        break;
+      end
+
+      RAC (fwflx==0)=NaN;
+      fwflx (fwflx==0)=NaN;
+      totalMelt_series(n) = -sum(fwflx.*RAC,'all','omitnan')*t1year/1e12;  %%% Gt/yr
+      MeltRate_series(n)  = -sum(fwflx.*RAC,'all','omitnan')*t1year/rho_i/sum(RAC,'all','omitnan'); %%% m/yr
+      nT = nT +1;
+    end
+
+
+
+
+    %%% Calculate ice shelf melt rate of one output file
+
+    SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
+    SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
+    SHI_TauX = rdmds([exppath,'/results/SHI_TauX'],nIter);
+    SHI_TauY = rdmds([exppath,'/results/SHI_TauY'],nIter);
+    SHIForcT = rdmds([exppath,'/results/SHIForcT'],nIter);
+    SHIForcS = rdmds([exppath,'/results/SHIForcS'],nIter);
+    
+
     SHIfwFlx (SHIfwFlx==0)=NaN;
-    MeltRate = -mean(SHIfwFlx/rho_i,'all','omitnan')*t1year %%% m/yr
+    totalMelt = -sum(SHIfwFlx.*RAC,'all','omitnan')*t1year/1e12; %%% Gt/yr
+    MeltRate = -sum(SHIfwFlx.*RAC,'all','omitnan')*t1year/rho_i/sum(RAC,'all','omitnan'); %%% m/yr
 
 
     %%% Plot
     fontsize = 16;
 
+
+    %%% plot timeseries of ice shelf melt rates
+    figure()
+    plot(ntime(1:nT)/365,MeltRate_series(1:nT),'LineWidth',2)
+    axis tight;
+    xlabel('t (years)');
+    ylabel('Melt rate (m/yr)');
+    set(gca,'FontSize',fontsize);
+
+    print('-dpng','-r150',[figdir 'series_MeltRate.png']);
+
+
+    %%% plot spatial pattern of ice shelf fluxes
     figure()
     clf;
     set(gcf,'Position',[226 1542 1397 843])
@@ -128,5 +175,9 @@
     set(gca,'FontSize',fontsize);
 
     print('-dpng','-r150',[figdir 'Year' year '_ShelfIce.png']);
+
+
+
+
 
     
