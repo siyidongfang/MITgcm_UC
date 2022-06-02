@@ -181,37 +181,47 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   % Zonal boundary condition
   use2Orlanski = false;
   useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = true;     %%% OBCS to the east and west
+  useEobcsWobcs = false;     %%% OBCS to the east and west
   usePeriodic = false;
-  useEobcsWnoob = false; %%% Restore T/S/u to the east, no open boundary for the western boundary (with sea ice)
+  useEobcsWnoob = true; %%% Restore T/S/u to the east, no open boundary for the western boundary (with sea ice)
 
   if(use2Orlanski)
-      useOBCSeast = false;
-      useOBCSwest = false;
+      useobcsEast = true;
+      useobcsWest = true;
+      useRESTOReast = false;
+      useRESTORwest = false;
       useOrlanskiEast = true;
       useOrlanskiWest = true;
   end
-  if(useEobcsWorlanski)      %%% OBCS to the east, and Orlanski to the west
-      useOBCSeast = true;
-      useOBCSwest = false;
+  if(useEobcsWorlanski)      %%% Restoring to the east, and Orlanski to the west
+      useobcsEast = true;
+      useobcsWest = true;
+      useRESTOReast = true;
+      useRESTORwest = false;
       useOrlanskiEast = false;  
       useOrlanskiWest = true;
   end
-  if(useEobcsWobcs)           %%% OBCS to the east and west
-      useOBCSeast = true;
-      useOBCSwest = true;
+  if(useEobcsWobcs)           %%% Restoring to the east and west
+      useobcsEast = true;
+      useobcsWest = true;
+      useRESTOReast = true;
+      useRESTORwest = true;
       useOrlanskiEast = false;  
       useOrlanskiWest = false;
   end
   if(usePeriodic)
-      useOBCSeast = false;
-      useOBCSwest = false;
+      useobcsEast = false;
+      useobcsWest = false;
+      useRESTOReast = false;
+      useRESTORwest = false;
       useOrlanskiEast = false;  
       useOrlanskiWest = false;   
   end
   if(useEobcsWnoob)
-      useOBCSeast = true;
-      useOBCSwest = false;
+      useobcsEast = true;
+      useobcsWest = false;
+      useRESTOReast = true;
+      useRESTORwest = false;
       useOrlanskiEast = false;  
       useOrlanskiWest = false;   
   end
@@ -694,7 +704,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
 
-  if(useOBCSeast)
+  if(useRESTOReast)
 
   lon_sec = -115;
   lat_sec = -71;
@@ -868,7 +878,7 @@ end
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% WESTERN BOUNDARY %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if(useOBCSwest)
+if(useRESTORwest)
   tWest = zeros(Ny,Nr);
   sWest = zeros(Ny,Nr);
   uWest = zeros(Ny,Nr);
@@ -2478,18 +2488,15 @@ diag_fields_inst = {...
       OB_Jnorth= Ny*ones(1,Nx);
       obcs_parm01.addParm('OB_Jnorth',OB_Jnorth,PARM_INTS); 
   end
-
-  if(useobcsSouth && useobcsNorth)
+  if(useobcsSouth)
       OB_Jsouth = ones(1,Nx);
       obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
-  elseif (useobcsSouth)
-      OB_Jsouth = Nx*0;   %%% Need to modify data.obcs (eg, OB_Jsouth=200*0,)
-      obcs_parm01.addParm('OB_Jsouth',OB_Jsouth,PARM_INTS); 
   end
-
-  if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
+  if(useobcsEast)
       OB_Ieast= Nx*ones(1,Ny);
       obcs_parm01.addParm('OB_Ieast',OB_Ieast,PARM_INTS); 
+  end
+  if(useobcsWest)
       OB_Iwest= ones(1,Ny);
       obcs_parm01.addParm('OB_Iwest',OB_Iwest,PARM_INTS); 
   end
@@ -2634,38 +2641,31 @@ diag_fields_inst = {...
       OBSs = repmat(OBSs,[1 1 nForcingPeriods]);
   end
   
-%   %%% Write boundary variables to files  
-  if (useobcsNorth)
-      writeDataset(OBNt,fullfile(inputpath,'OBNtFile.bin'),ieee,prec);
-      writeDataset(OBNs,fullfile(inputpath,'OBNsFile.bin'),ieee,prec);
-  end
-  if(useobcsSouth)
-      writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
-      writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
-  end
-
+  %%% Write boundary variables to files  
   %%% Set OBCS prescription parameters
   obcs_parm01.addParm('useOBCSprescribe',useOBCSprescribe,PARM_BOOL);
   if (useobcsNorth)
+      writeDataset(OBNt,fullfile(inputpath,'OBNtFile.bin'),ieee,prec);
+      writeDataset(OBNs,fullfile(inputpath,'OBNsFile.bin'),ieee,prec);
       obcs_parm01.addParm('OBNtFile','OBNtFile.bin',PARM_STR);
       obcs_parm01.addParm('OBNsFile','OBNsFile.bin',PARM_STR);
   end
   if(useobcsSouth)
+      writeDataset(OBSt,fullfile(inputpath,'OBStFile.bin'),ieee,prec);
+      writeDataset(OBSs,fullfile(inputpath,'OBSsFile.bin'),ieee,prec);
       obcs_parm01.addParm('OBStFile','OBStFile.bin',PARM_STR);
       obcs_parm01.addParm('OBSsFile','OBSsFile.bin',PARM_STR);
   end
 
-  if(useEobcsWorlanski) %%% OBCS to the east, and Orlanski to the west
+  if(useRESTOReast) %%% Restoring to the east
       OBEt = tEast;
       OBEs = sEast;
       OBEu = uEast;
-
       if(periodicExternalForcing)
       OBEt = repmat(OBEt,[1 1 nForcingPeriods]);
       OBEs = repmat(OBEs,[1 1 nForcingPeriods]);
       OBEu = repmat(OBEu,[1 1 nForcingPeriods]);
       end
-
       %%%%%% Define OBCS Eastern boundary
       writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
       writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
@@ -2675,31 +2675,15 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OBEuFile','OBEuFile.bin',PARM_STR);
   end
 
-  if(useEobcsWobcs) %%% OBCS to the east and west
-      OBEt = tEast;
-      OBEs = sEast;
-      OBEu = uEast;
-
+  if(useRESTORwest) %%% Restoring to the east and west
       OBWt = tWest;
       OBWs = sWest;
       OBWu = uWest;
-
       if(periodicExternalForcing)
-      OBEt = repmat(OBEt,[1 1 nForcingPeriods]);
-      OBEs = repmat(OBEs,[1 1 nForcingPeriods]);
-      OBEu = repmat(OBEu,[1 1 nForcingPeriods]);
       OBWt = repmat(OBWt,[1 1 nForcingPeriods]);
       OBWs = repmat(OBWs,[1 1 nForcingPeriods]);
       OBWu = repmat(OBWu,[1 1 nForcingPeriods]);
       end
-
-      %%%%%% Define OBCS Eastern boundary
-      writeDataset(OBEt,fullfile(inputpath,'OBEtFile.bin'),ieee,prec);
-      writeDataset(OBEs,fullfile(inputpath,'OBEsFile.bin'),ieee,prec);
-      writeDataset(OBEu,fullfile(inputpath,'OBEuFile.bin'),ieee,prec);
-      obcs_parm01.addParm('OBEtFile','OBEtFile.bin',PARM_STR);
-      obcs_parm01.addParm('OBEsFile','OBEsFile.bin',PARM_STR);
-      obcs_parm01.addParm('OBEuFile','OBEuFile.bin',PARM_STR);
       %%%%%% Define OBCS Western boundary
       writeDataset(OBWt,fullfile(inputpath,'OBWtFile.bin'),ieee,prec);
       writeDataset(OBWs,fullfile(inputpath,'OBWsFile.bin'),ieee,prec);
@@ -2708,7 +2692,6 @@ diag_fields_inst = {...
       obcs_parm01.addParm('OBWsFile','OBWsFile.bin',PARM_STR);
       obcs_parm01.addParm('OBWuFile','OBWuFile.bin',PARM_STR);
   end
-
 
 
     rho_o = 1027;         %%% Water density, kg/m^3
@@ -2827,8 +2810,7 @@ diag_fields_inst = {...
 
     end
 
-      if(useEobcsWobcs)
-
+      if(useRESTOReast)
         OBEa = Ai0.*ones(1,Ny);
         OBEh = Hi0.*ones(1,Ny);
         OBEsn = Hs0.*ones(1,Ny); %%% snow thickness
@@ -2841,22 +2823,22 @@ diag_fields_inst = {...
         writeDataset(OBEsl,fullfile(inputpath,'OBEslFile.bin'),ieee,prec);
         writeDataset(OBEuice,fullfile(inputpath,'OBEuiceFile.bin'),ieee,prec);
         writeDataset(OBEvice,fullfile(inputpath,'OBEviceFile.bin'),ieee,prec);
-
-        %%% Same boundary condition for the eastern and western boundaries
         obcs_parm01.addParm('OBEaFile','OBEaFile.bin',PARM_STR);
         obcs_parm01.addParm('OBEhFile','OBEhFile.bin',PARM_STR);
         obcs_parm01.addParm('OBEsnFile','OBEsnFile.bin',PARM_STR);
         obcs_parm01.addParm('OBEslFile','OBEslFile.bin',PARM_STR);
         obcs_parm01.addParm('OBEuiceFile','OBEuiceFile.bin',PARM_STR);
         obcs_parm01.addParm('OBEviceFile','OBEviceFile.bin',PARM_STR);
+      end
 
+      if(useRESTORwest)
+        %%% Same boundary condition for the eastern and western boundaries
         obcs_parm01.addParm('OBWaFile','OBEaFile.bin',PARM_STR);
         obcs_parm01.addParm('OBWhFile','OBEhFile.bin',PARM_STR);
         obcs_parm01.addParm('OBWsnFile','OBEsnFile.bin',PARM_STR);
         obcs_parm01.addParm('OBWslFile','OBEslFile.bin',PARM_STR);
         obcs_parm01.addParm('OBWuiceFile','OBEuiceFile.bin',PARM_STR);
         obcs_parm01.addParm('OBWviceFile','OBEviceFile.bin',PARM_STR);
-
       end
 
 
@@ -2880,22 +2862,19 @@ diag_fields_inst = {...
   %%% reflection  
   obcs_parm01.addParm('useOrlanskiNorth',useOrlanskiNorth,PARM_BOOL);
   obcs_parm01.addParm('useOrlanskiSouth',useOrlanskiSouth,PARM_BOOL);
-
-  if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
-      obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
-      obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
-      %%% Velocity averaging time scale - must be larger than deltaT.
-      %%% The Orlanski radiation condition computes the characteristic velocity
-      %%% at the boundary by averaging the spatial derivative normal to the 
-      %%% boundary divided by the time step over this period.
-      %%% At the moment we're using the magic engineering factor of 3.
-      cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
-      %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
-      CMAX = 0.45; 
-      
-      obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
-      obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
-  end
+  obcs_parm01.addParm('useOrlanskiEast',useOrlanskiEast,PARM_BOOL);
+  obcs_parm01.addParm('useOrlanskiWest',useOrlanskiWest,PARM_BOOL);
+  %%% Velocity averaging time scale - must be larger than deltaT.
+  %%% The Orlanski radiation condition computes the characteristic velocity
+  %%% at the boundary by averaging the spatial derivative normal to the 
+  %%% boundary divided by the time step over this period.
+  %%% At the moment we're using the magic engineering factor of 3.
+  cvelTimeScale = 3*deltaT; % Averaging period for phase speed (s)
+  %%% Max dimensionless CFL for Adams-Basthforth 2nd-order method
+  CMAX = 0.45; 
+  
+  obcs_parm02.addParm('cvelTimeScale',cvelTimeScale,PARM_REAL);
+  obcs_parm02.addParm('CMAX',CMAX,PARM_REAL);
 
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2913,7 +2892,7 @@ diag_fields_inst = {...
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
 
-  if(useEobcsWorlanski|useEobcsWobcs)
+  if(useobcsEast||useobcsWast)
         Urelaxobcsinner = 864000;
         Urelaxobcsbound = 43200;
         obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
@@ -2921,7 +2900,7 @@ diag_fields_inst = {...
   end
 
   
-    
+
   if (useSeaiceSponge)
        T_relaxinner = 864000/10;
        T_relaxbound = 43200/6;
@@ -3044,7 +3023,7 @@ diag_fields_inst = {...
   
   uIce = zeros(Nx,Ny); %%% Initial sea ice velosity
   vIce = zeros(Nx,Ny);
-  if(useEobcsWobcs)
+  if(useRESTOReast || useRESTORwest)
       uIce = OBEuice.*ones(Nx,Ny);
       vIce = OBEvice.*ones(Nx,Ny);
   end
