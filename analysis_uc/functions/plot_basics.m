@@ -94,7 +94,8 @@
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Depth-averaged salinity of the CDW layer (psu)')
     set(gca,'FontSize',fontsize);
-    caxis([34.3 34.9])
+    caxis([min(min(SS_cdw)) max(max(SS_cdw))])
+%     caxis([34.3 34.9])
     
     subplot(1,3,3)
     pcolor(xx/1000,yy/1000,HH_cdw');
@@ -203,7 +204,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     aaa1= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-2:0.3:2],'EdgeColor','k');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
     title('Zonal-average potential temperature (^oC)')
@@ -219,8 +220,9 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     pcolor(yy/1000,-zz/1000,aaa1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[32:0.1:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.66:0.01:35],'k--');hold off;
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
+    %     caxis([min(min(aaa1)) max(max(aaa1))])
     caxis([33.5 34.9]);
     title('Zonal-average salinity (psu)')
     ylabel('Depth (km)');xlabel('y (km)')
@@ -319,7 +321,8 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Depth-averaged PT (^oC)')
     set(gca,'FontSize',fontsize);
-    caxis([-1 2])
+    %     caxis([-1 2])
+    caxis([min(min(tt_depthavg)) max(max(tt_depthavg))])
     
     subplot(2,2,2)
     pcolor(xx/1000,yy/1000,ss_depthavg');
@@ -329,7 +332,8 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Depth-averaged salinity (psu)')
     set(gca,'FontSize',fontsize);
-    caxis([34.15 34.8])
+    %     caxis([34.15 34.8])
+    caxis([min(min(ss_depthavg)) max(max(ss_depthavg))])
 
     subplot(2,2,3)
     pcolor(xx/1000,yy/1000,tt(:,:,1)');
@@ -339,7 +343,8 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Surface PT (^oC)')
     set(gca,'FontSize',fontsize);
-    caxis([-1.87 -1.85])
+    %     caxis([-1.87 -1.85])
+    caxis([min(min(tt(:,:,1))) max(max(tt(:,:,1)))])
     
     subplot(2,2,4)
     pcolor(xx/1000,yy/1000,ss(:,:,1)');
@@ -349,7 +354,8 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Surface salinity (psu)')
     set(gca,'FontSize',fontsize);
-    caxis([33.9 34])
+    %     caxis([33.9 34])
+    caxis([min(min(ss(:,:,1))) max(max(ss(:,:,1)))])
     
     print('-dpng','-r150',[figdir 'Year' year '_fig8_depthAvg_surface.png']);
 

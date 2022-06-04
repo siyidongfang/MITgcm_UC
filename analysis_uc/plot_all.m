@@ -15,16 +15,20 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
 
     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_obcsE_orlanskiW/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_CDWflatBot-tiltSurf_OBbalanceFacN-1_ardbeg'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_noOBbalance_ardbeg'
+% 
+%     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
+%     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_seaice_new_stampede2'
 
-    nIter = 927529;
-    year = num2str(5);
+    nIter = 630720;
+    year = num2str(3);
     loadexp;
 
     plot_KE_EKE_T_S_series
     plot_basics
 
     plot_shelfIce
+    plot_seaice
 
 
 

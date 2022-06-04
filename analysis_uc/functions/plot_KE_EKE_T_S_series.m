@@ -30,7 +30,7 @@ dumpIters = dumpIters(dumpIters > nIter0);
 nDumps = length(dumpIters);
 
 % clear nDumps dumpIters
-% dumpIters = [167745 225257 335489 450514 675771 901029 1126286 1351543]
+% dumpIters = [185506 371012 394200]
 % nDumps = length(dumpIters);
 
 ntime = zeros(1,nDumps);

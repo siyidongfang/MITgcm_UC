@@ -6,7 +6,7 @@
 close all;clear;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
-batch_name = 'experiments/shelfice_obcsE_noOBw';
+batch_name = 'experiments/shelfice_double_obcs';
 
 
 %%% Input parameters
@@ -31,7 +31,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_seaice_stampede2']
+exp_name = ['res2km_' exp_name '_seaice_balance_ardbeg']
 % exp_name = ['test']
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids

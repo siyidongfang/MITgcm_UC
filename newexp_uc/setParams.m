@@ -181,9 +181,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   % Zonal boundary condition
   use2Orlanski = false;
   useEobcsWorlanski = false; %%% OBCS to the east, and Orlanski to the west
-  useEobcsWobcs = false;     %%% OBCS to the east and west
+  useEobcsWobcs = true;     %%% OBCS to the east and west
   usePeriodic = false;
-  useEobcsWnoob = true; %%% Restore T/S/u to the east, no open boundary for the western boundary (with sea ice)
 
   if(use2Orlanski)
       useobcsEast = true;
@@ -213,14 +212,6 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       useobcsEast = false;
       useobcsWest = false;
       useRESTOReast = false;
-      useRESTORwest = false;
-      useOrlanskiEast = false;  
-      useOrlanskiWest = false;   
-  end
-  if(useEobcsWnoob)
-      useobcsEast = true;
-      useobcsWest = false;
-      useRESTOReast = true;
       useRESTORwest = false;
       useOrlanskiEast = false;  
       useOrlanskiWest = false;   
@@ -345,11 +336,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       % seaice work only with this).
   parm03.addParm('nIter0',nIter0,PARM_INT);
   parm03.addParm('abEps',0.1,PARM_REAL);
-  parm03.addParm('chkptFreq',t1year/2,PARM_REAL); % rolling 
-  parm03.addParm('pChkptFreq',t1year/2,PARM_REAL); % permanent
+  parm03.addParm('chkptFreq',t1year,PARM_REAL); % rolling 
+  parm03.addParm('pChkptFreq',t1year,PARM_REAL); % permanent
   parm03.addParm('taveFreq',0,PARM_REAL); % it only works properly, if taveFreq is a multiple of the time step deltaT (or deltaTclock).
-  parm03.addParm('dumpFreq',t1year/2,PARM_REAL); % interval to write model state/snapshot data (s)
-  parm03.addParm('monitorFreq',t1year/2,PARM_REAL); % interval to write monitor output (s)
+  parm03.addParm('dumpFreq',t1year,PARM_REAL); % interval to write model state/snapshot data (s)
+  parm03.addParm('monitorFreq',t1year,PARM_REAL); % interval to write monitor output (s)
   parm03.addParm('dumpInitAndLast',true,PARM_BOOL);
   parm03.addParm('pickupStrictlyMatch',false,PARM_BOOL); 
 
@@ -2358,7 +2349,7 @@ diag_fields_avg = {...
      };
       
   numdiags_avg = length(diag_fields_avg);  
-  diag_freq_avg = 1*t1year/2;
+  diag_freq_avg = 1*t1year;
 %   diag_freq_avg = 30*t1day;
 
 
@@ -2386,7 +2377,7 @@ diag_fields_avg = {...
          'SItaux','SItauy','SIatmTx','SIatmTy',...   
              };
       numdiags_avg3 = length(diag_fields_avg3);  
-      diag_freq_avg3 = 1*t1year/2;
+      diag_freq_avg3 = 1*t1year;
       diag_phase_avg3 = 0;  
 
 
@@ -2590,7 +2581,7 @@ diag_fields_inst = {...
   
   %%% Enforces mass conservation across the northern boundary by adding a
   %%% barotropic inflow/outflow  
-  useOBCSbalance = false;  
+  useOBCSbalance = true;  
   obcs_parm01.addParm('useOBCSbalance',useOBCSbalance,PARM_BOOL);
 
   if(useOBCSbalance)
@@ -2601,15 +2592,17 @@ diag_fields_inst = {...
         obcs_parm01.addParm('OBCS_balanceFacS',OBCS_balanceFacS,PARM_REAL);  
       end
       if(useobcsNorth && (~useobcsSouth)) 
-        OBCS_balanceFacN = 0; %%% A value -1 balances an individual boundary
+        OBCS_balanceFacN = -1; %%% A value -1 balances an individual boundary
         obcs_parm01.addParm('OBCS_balanceFacN',OBCS_balanceFacN,PARM_REAL);  
       end
-    
-      if(use2Orlanski|useEobcsWorlanski|useEobcsWobcs)
-          OBCS_balanceFacE = 0; %%% A value -1 balances an individual boundary
-          OBCS_balanceFacW = 0;
-          obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
-          obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL);  
+
+      if(useobcsEast)
+        OBCS_balanceFacE = 1;
+        obcs_parm01.addParm('OBCS_balanceFacE',OBCS_balanceFacE,PARM_REAL); 
+      end
+      if(useobcsWest)
+        OBCS_balanceFacW = 1;
+        obcs_parm01.addParm('OBCS_balanceFacW',OBCS_balanceFacW,PARM_REAL); 
       end
   end
 

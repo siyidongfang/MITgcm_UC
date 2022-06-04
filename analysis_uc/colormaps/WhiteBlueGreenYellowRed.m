@@ -315,6 +315,9 @@ elseif(n==2)
       c = [c;cq];
 elseif(n==3)
     c=[[225 225 225]/250;cMap(1:end-36,:)];
+elseif(n==4)
+    ll=length(cMap);
+    c=cMap(20:round((ll-40)/20):ll-20,:);
     
 end
 

@@ -137,59 +137,59 @@
 %   end
 
   
-%%% Set-up for Stampede2
-  opt_file = 'xsede_stampede'; %%% options file name
-  use_mpi = true; %%% set true for parallel processing
-  use_pbs = true; %%% set true for execution via PBS
-  cluster = 'stampede';   
-  queue = 'normal';  
-%   queue = 'flat-quadrant';
-
- if (is_hires) 
-  %%% 1 node,400*448
-  sNx = 50; %%% no. of x-gridpoints per tile
-  sNy = 56; %%% no. of y-gridpoints per tile
-  nPx = 8; %%% no. of processors in x-direction
-  nPy = 8; %%% no. of processors in y-direction
-  Nr = 70; %%% no. of z-gridpoint 
-
- else   
-%%%% ~ 2km grid spacing
-  sNx = 16; %%% no. of x-gridpoints per tile
-  sNy = 13; %%% no. of y-gridpoints per tile
-  nPx = 18; %%% no. of processors in x-direction
-  nPy = 15; %%% no. of processors in y-direction
-  Nr = 68; %%% no. of z-gridpoints
- end
- 
-  acct = 'tg854737';
-
- 
-
-
-%   %%% Set-up for Ardbeg
-%   %%% Number of processor: 40 (nPx*nPy<=40)
-%   opt_file = 'ardbeg_ucla'; %%% options file name
+% %%% Set-up for Stampede2
+%   opt_file = 'xsede_stampede'; %%% options file name
 %   use_mpi = true; %%% set true for parallel processing
 %   use_pbs = true; %%% set true for execution via PBS
-%   cluster = 'ardbeg';
-%   queue = 'all.q'; 
-%   %%%% ~ 2km grid spacing
+%   cluster = 'stampede';   
+%   queue = 'normal';  
+% %   queue = 'flat-quadrant';
+% 
+%  if (is_hires) 
+%   %%% 1 node,400*448
+%   sNx = 50; %%% no. of x-gridpoints per tile
+%   sNy = 56; %%% no. of y-gridpoints per tile
+%   nPx = 8; %%% no. of processors in x-direction
+%   nPy = 8; %%% no. of processors in y-direction
+%   Nr = 70; %%% no. of z-gridpoint 
+% 
+%  else   
+% %%%% ~ 2km grid spacing
+%   sNx = 16; %%% no. of x-gridpoints per tile
+%   sNy = 13; %%% no. of y-gridpoints per tile
+%   nPx = 18; %%% no. of processors in x-direction
+%   nPy = 15; %%% no. of processors in y-direction
+%   Nr = 68; %%% no. of z-gridpoints
+%  end
+%  
+%   acct = 'tg854737';
+
+ 
+
+
+  %%% Set-up for Ardbeg
+  %%% Number of processor: 40 (nPx*nPy<=40)
+  opt_file = 'ardbeg_ucla'; %%% options file name
+  use_mpi = true; %%% set true for parallel processing
+  use_pbs = true; %%% set true for execution via PBS
+  cluster = 'ardbeg';
+  queue = 'all.q'; 
+  %%%% ~ 2km grid spacing
+%   sNx = 25; %%% no. of x-gridpoints per tile
+%   sNy = 28; %%% no. of y-gridpoints per tile
+%   nPx = 8; %%% no. of processors in x-direction
+%   nPy = 8; %%% no. of processors in y-direction
+%   Nr = 70; %%% no. of z-gridpoints
 % %   sNx = 25; %%% no. of x-gridpoints per tile
-% %   sNy = 28; %%% no. of y-gridpoints per tile
-% %   nPx = 8; %%% no. of processors in x-direction
-% %   nPy = 8; %%% no. of processors in y-direction
+% %   sNy = 30; %%% no. of y-gridpoints per tile
+% %   nPx = 12; %%% no. of processors in x-direction
+% %   nPy = 6; %%% no. of processors in y-direction
 % %   Nr = 70; %%% no. of z-gridpoints
-% % %   sNx = 25; %%% no. of x-gridpoints per tile
-% % %   sNy = 30; %%% no. of y-gridpoints per tile
-% % %   nPx = 12; %%% no. of processors in x-direction
-% % %   nPy = 6; %%% no. of processors in y-direction
-% % %   Nr = 70; %%% no. of z-gridpoints
-%   sNx = 18; %%% no. of x-gridpoints per tile
-%   sNy = 20; %%% no. of y-gridpoints per tile
-%   nPx = 16; %%% no. of processors in x-direction
-%   nPy = 10; %%% no. of processors in y-direction
-%   Nr = 68; %%% no. of z-gridpoints 
+  sNx = 18; %%% no. of x-gridpoints per tile
+  sNy = 20; %%% no. of y-gridpoints per tile
+  nPx = 16; %%% no. of processors in x-direction
+  nPy = 10; %%% no. of processors in y-direction
+  Nr = 68; %%% no. of z-gridpoints 
 
 
   %%% Set-up for Gordon
