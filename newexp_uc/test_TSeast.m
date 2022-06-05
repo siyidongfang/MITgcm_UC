@@ -51,9 +51,9 @@ fontsize = 14;
   Xwest = 200*m1km; %%% Longitude of western trough wall
   Yicefront = 100*m1km; %%% Latitude of ice shelf face
   Hicefront = 200; %%% Depth of ice shelf frace
-  Hbed = -180; %%% Change in bed elevation from shelf break to southern domain edge
+  Hbed = -300; %%% Change in bed elevation from shelf break to southern domain edge
   Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 180; %%% Trough depth
+  Htrough = 200; %%% Trough depth
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 

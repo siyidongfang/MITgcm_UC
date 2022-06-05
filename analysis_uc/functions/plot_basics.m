@@ -65,13 +65,21 @@
     %%% Vertically integrate uu_cdw and vv_cdw to get the volume flux
     UU_cdw = sum(uu_cdw.*DZ.*hFacC,3,'omitnan');
     VV_cdw = sum(vv_cdw.*DZ.*hFacC,3,'omitnan');
+
+    UU = sum(uu.*DZ.*hFacW,3); %%% Depth-integrated volume flux
+    VV = sum(vv.*DZ.*hFacS,3);
     
-    %%% Calculate vertically integrated heat flux of the CDW layer
-    Fheat = rho_o*cp_o*sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); % in W/m
+    %%% Calculate the heat fluxes
+    Fheat_xy = rho_o*cp_o*sum(vt.*DZ.*hFacS,3); % Depth-integrated heat flux, in W/m
+    Fheat_cdw = rho_o*cp_o*sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); % heat flux of the CDW layer, in W/m
     Fheat_xz = rho_o*cp_o*squeeze(sum(sum(vt.*delX(1).*DZ.*hFacS,3)))/1e12;%%% Zonally and depth-integrated, in TW
     
     %%% Make plots!
     fontsize = 16;
+
+
+
+    %%
     
     figure()
     %     set(gcf,'Position',[-104 254 1712 396])
@@ -111,11 +119,13 @@
     
     print('-dpng','-r150',[figdir 'Year' year '_fig1_CDW.png']);
 
+    %%
     
     figure()
-    %     set(gcf,'Position',[284 349 580 511])
-    set(gcf,'Position',[25 367 805 426])
-    pcolor(xx/1000,yy/1000,-Fheat'/1e9);
+    set(gcf,'Position',[-35   211  1638  901]);
+
+    subplot(2,2,1)
+    pcolor(xx/1000,yy/1000,-Fheat_cdw'/1e9);
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
     hold on;
@@ -129,12 +139,77 @@
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title({'Shoreward CDW heat flux (color, GW/m)', 'and CDW volume flux (vector)'})
     set(gca,'FontSize',fontsize);
-     caxis([-1 1]/5)
-    %     caxis([-max(max(abs(Fheat/1e9))) max(max(abs(Fheat/1e9)))])
+    %     caxis([-1 1]/5)
+    caxis([-max(max(abs(Fheat_cdw/1e9))) max(max(abs(Fheat_cdw/1e9)))])
+
+    
+    subplot(2,2,2) %%% zoom-in
+    pcolor(xx/1000,yy/1000,-Fheat_cdw'/1e9);
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;
+    svx = 4; svy = 4;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
+    UU_cdw(1:svx:end,1:svy:end)',VV_cdw(1:svx:end,1:svy:end)',4);
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    hold off;
+    shading flat;colorbar;colormap('redblue');
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title({'Zoom in: Shoreward CDW heat flux (color, GW/m)', 'and CDW volume flux (vector)'})
+    set(gca,'FontSize',fontsize);
+    %     caxis([-1 1]/5)
+    caxis([-max(max(abs(Fheat_cdw/1e9))) max(max(abs(Fheat_cdw/1e9)))]/4)
+    xlim([-105 105])
+    ylim([0 250])
+
+
+
+
+    subplot(2,2,3)
+    pcolor(xx/1000,yy/1000,-Fheat_xy'/1e9);
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;
+    svx = 8; svy = 8;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
+    UU(1:svx:end,1:svy:end)',VV(1:svx:end,1:svy:end)');
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    hold off;
+    shading flat;colorbar;colormap('redblue');
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title({'Total shoreward heat flux (color, GW/m)', 'and volume flux (vector)'})
+    set(gca,'FontSize',fontsize);
+    %     caxis([-1 1]/5)
+    caxis([-max(max(abs(Fheat_xy/1e9))) max(max(abs(Fheat_xy/1e9)))])
+
+
+    subplot(2,2,4) %%% zoom-in
+    pcolor(xx/1000,yy/1000,-Fheat_xy'/1e9);
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;
+    svx = 4; svy = 4;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
+    UU(1:svx:end,1:svy:end)',VV(1:svx:end,1:svy:end)',4);
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    hold off;
+    shading flat;colorbar;colormap('redblue');
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title({'Zoom in: Total shoreward heat flux (color, GW/m)', 'and volume flux (vector)'})
+    set(gca,'FontSize',fontsize);
+    %     caxis([-1 1]/5)
+    caxis([-max(max(abs(Fheat_xy/1e9))) max(max(abs(Fheat_xy/1e9)))]/4)
+    xlim([-105 105])
+    ylim([0 250])
 
     print('-dpng','-r150',[figdir 'Year' year '_fig2_heat_flux.png']);
 
     
+
+    %%
     figure()
     %     set(gcf,'Position',[284 349 636*2 511])
     set(gcf,'Position',[1 203 1446 346])

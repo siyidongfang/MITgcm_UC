@@ -7,7 +7,8 @@
 function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
-    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,useSEAICE)  
+    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,...
+    Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_ContinuedRun,useSEAICE)  
 
   addpath ../../Software/gsw_matlab_v3_06_11/thermodynamics_from_t/;
   addpath ../../Software/gsw_matlab_v3_06_11/library/;
@@ -63,7 +64,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  simTime = 10*t1year; %%% Simulation time   
+  simTime = 7*t1year; %%% Simulation time   
 %   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
 %   Lx = 400*m1km; %%% Domain size in x 
@@ -150,6 +151,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   useSHELFICE = true; 
   
+  useGMRedi=false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
   useEXFwindstress = false; %%% apply wind speed in EXF package
@@ -236,9 +238,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       Yicefront = 0;
       Hicefront = 0;
   end
-  Hbed = -180; %%% Change in bed elevation from shelf break to southern domain edge
-  Hice = Hicefront-(Hshelf-Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
-  Htrough = 180; %%% Trough depth
+  
+  Hice = Hicefront-(Hshelf+Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+  
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
@@ -493,14 +495,14 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% Construct shelf/slope/deep ocean bathymetry profile via cubic
   %%% interpolation
   y_interp = [0 (Yslope-Ws)/2 Yslope-Ws Yslope Ydeep Ly];
-  h_interp = [-Hshelf+Hbed -Hshelf+Hbed/2 -Hshelf -(Hshelf+H)/2 -H -H];
+  h_interp = [-Hshelf-Hbed -Hshelf-Hbed/2 -Hshelf -(Hshelf+H)/2 -H -H];
   h_profile = interp1(y_interp,h_interp,yy,'pchip');
   h = repmat(h_profile,[Nx 1]);
   
   
   %%% Add trough
   y_interp = [0 Yshelfbreak Yslope Ly];
-  h_interp = [0 -Htrough 0 0];
+  h_interp = [0 -Htr 0 0];
   h_trough_profile = interp1(y_interp,h_interp,yy,'pchip');
   h_trough = repmat(h_trough_profile,[Nx 1]);
   h_trough = h_trough .* 1./(cosh((X-Xtrough)/Wtrough)).^2;
@@ -639,33 +641,16 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   depth_East_pt = zeros(Ny,6);
   depth_East_s  = zeros(Ny,6);
 
-%   Zcdw_pt_shelf = -400; %%% CDW depth over the shelf
-%   Zcdw_pt_South = -200; %%% CDW depth at the southern boundary
-% 
-%   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-%   Zcdw_pt_2 = [Zcdw_pt_shelf Zcdw_pt_shelf Zcdw_pt_South Zcdw_pt_South]; %%% Piecewise function
-
-%   Zcdw_pt_North = -380; %%% CDW depth at the southern boundary
-%   Zcdw_pt_deep = Zcdw_pt_North-20;
-%   Zcdw_pt_shelfbreak = -530; %%% CDW depth over the shelf
-%   Zcdw_pt_South = Zcdw_pt_shelfbreak - 150;
-
-%   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-%   Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
-
-
-  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
-  Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak -150;
+  
+  Zcdw_pt_deep = -Zn-20;
+  Zcdw_pt_South = -Zsb - dZs;
 
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
+  Zcdw_pt_2 = [Zcdw_pt_South -Zsb Zcdw_pt_deep -Zn]; %%% Piecewise function
 
   flatIsopyc = false;
   if(flatIsopyc)
-      Zcdw_pt_shelfbreak = -550;
-      Zcdw_pt_2 = [Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak]
+      Zcdw_pt_2 = [-Zsb -Zsb -Zsb -Zsb]
   end
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
@@ -715,7 +700,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   bathy_east = ones(Ny,Nr);
   for jj = 1:Ny
       for kk = 1:Nr
-          if(zz(kk)<h(kk,jj))
+          if(zz(kk)<h(end,jj))
               bathy_east(jj,kk)=NaN;
           end
       end
@@ -878,18 +863,15 @@ if(useRESTORwest)
   depth_West_pt = zeros(Ny,6);
   depth_West_s  = zeros(Ny,6);
 
-  Zcdw_pt_North = -350; %%% CDW depth at the southern boundary
-  Zcdw_pt_deep = Zcdw_pt_North-20;
-  Zcdw_pt_shelfbreak = -550; %%% CDW depth over the shelf
-  Zcdw_pt_South = Zcdw_pt_shelfbreak -150;
+  Zcdw_pt_deep = -Zn-20;
+  Zcdw_pt_South = -Zsb - dZs;
 
   lat_Zcdw_pt = [0 Yshelfbreak Ydeep Ly];
-  Zcdw_pt_2 = [Zcdw_pt_South Zcdw_pt_shelfbreak Zcdw_pt_deep Zcdw_pt_North]; %%% Piecewise function
+  Zcdw_pt_2 = [Zcdw_pt_South -Zsb Zcdw_pt_deep -Zn]; %%% Piecewise function
 
   flatIsopyc = false;
   if(flatIsopyc)
-      Zcdw_pt_shelfbreak = -550;
-      Zcdw_pt_2 = [Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak Zcdw_pt_shelfbreak]
+      Zcdw_pt_2 = [-Zsb -Zsb -Zsb -Zsb]
   end
 
   Zcdw_pt = interp1(lat_Zcdw_pt,Zcdw_pt_2,yy,'PCHIP'); 
@@ -938,7 +920,7 @@ if(useRESTORwest)
   bathy_west = ones(Ny,Nr);
   for jj = 1:Ny
       for kk = 1:Nr
-          if(zz(kk)<h(kk,jj))
+          if(zz(kk)<h(1,jj))
               bathy_west(jj,kk)=NaN;
           end
       end
@@ -1725,8 +1707,8 @@ end
       %%% Save as parameters  
       %%% Check the version of the code. In older MITgcm versions (before
       %%% Jan 2022), this variable is named balanceEmPmR
-      selectBalanceEmPmR = 0; %%% option to balance net surface freshwater flux every time step, default = 0 (off)
-      parm01.addParm('selectBalanceEmPmR',selectBalanceEmPmR,PARM_INT);
+    %       selectBalanceEmPmR = 0; %%% option to balance net surface freshwater flux every time step, default = 0 (off)
+    %       parm01.addParm('selectBalanceEmPmR',selectBalanceEmPmR,PARM_INT);
 
       writeDataset(EmPmR,fullfile(inputpath,'EmPmRFile.bin'),ieee,prec);
       parm05.addParm('EmPmRFile','EmPmRFile.bin',PARM_STR);
@@ -2554,7 +2536,7 @@ diag_fields_inst = {...
                 if strcmp(ob,'S')
                     if strcmp(fld,'am')
 %                         tmp(:,1) = tmp(:,1) + Atide*H/Hshelf;
-                        Atide_south =  Atide*H/(Hshelf-Hbed)*Lx/(Xeast-Xwest)
+                        Atide_south =  Atide*H/(Hshelf+Hbed)*Lx/(Xeast-Xwest)
                         tmp(:,1) = tmp(:,1) + Atide_south;
                     else
                         if(varyingtidalphase)
@@ -2756,6 +2738,9 @@ diag_fields_inst = {...
     if((~useobcsSouth) && useobcsNorth)
 
         yidx_icefront = round(Yicefront/(Ly/Ny));%%% Find the ice shelf front
+        if(yidx_icefront==0)
+            yidx_icefront=1;
+        end
         Ua_mean = mean(uwind(1,yidx_icefront:end))
         Va_mean = mean(vwind(1,yidx_icefront:end))
         tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
@@ -3081,7 +3066,47 @@ diag_fields_inst = {...
 
 
 
+  
+  
+if(useGMRedi)
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% GMREDI PARAMETERS %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  gmredi_parm01 = parmlist;
+  GMREDI_PARM = {gmredi_parm01};  
+  
+  %%% Define parameters for gmredi package %%
+  %%% Isopycnal diffusivity
+  GM_isopycK          = 100;
+  %%% Thickness diffusivity
+  GM_background_K     = 100;
+  %%% Maximum isopycnal slope (I think this is only used by certain
+  %%% tapering schemes)
+  GM_maxSlope         = 0.025;
+  %%% Tapering scheme
+  GM_taper_scheme     = 'dm95';
+  %%% DM95 critical slope
+  GM_Scrit            = 0.025;
+  %%% DM95 tapering width
+  GM_Sd               = 0.0025;
 
+  %%% Add parameters
+  gmredi_parm01.addParm('GM_isopycK',GM_isopycK,PARM_REAL);
+  gmredi_parm01.addParm('GM_background_K',GM_background_K,PARM_REAL);
+  gmredi_parm01.addParm('GM_maxSlope',GM_maxSlope,PARM_REAL);
+  gmredi_parm01.addParm('GM_taper_scheme',GM_taper_scheme,PARM_STR)
+  gmredi_parm01.addParm('GM_Scrit',GM_Scrit,PARM_REAL);
+  gmredi_parm01.addParm('GM_Sd',GM_Sd,PARM_REAL);
+  
+  %%z% Create the data.gmredi file
+  write_data_gmredi(inputpath,GMREDI_PARM,listterm,realfmt);
+  
+end
+  
+  
+  
+  
 
 
 
@@ -3104,6 +3129,7 @@ diag_fields_inst = {...
   packages.addParm('useSEAICE',useSEAICE,PARM_BOOL);
   packages.addParm('useOBCS',useOBCS,PARM_BOOL);  
   packages.addParm('useLAYERS',useLAYERS,PARM_BOOL);  
+  packages.addParm('useGMRedi',useGMRedi,PARM_BOOL);  
 
   %%% Create the data.pkg file
   write_data_pkg(inputpath,PACKAGE_PARM,listterm,realfmt);
@@ -3138,6 +3164,9 @@ diag_fields_inst = {...
   if (useLAYERS)
     ALL_PARMS = [ALL_PARMS LAYERS_PARM];
   end  
+  if(useGMRedi)
+    ALL_PARMS = [ALL_PARMS GMREDI_PARM];  
+  end
   %%% Creates a matlab file defining all input parameters
   write_matlab_params(inputpath,ALL_PARMS,realfmt);
   

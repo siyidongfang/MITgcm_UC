@@ -6,19 +6,26 @@
 close all;clear;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
-batch_name = 'experiments/shelfice_double_obcs';
+% batch_name = 'exps_aofd/Bflux_seaice';
+batch_name = 'exps_aofd/shelfice_seaice';
 
 
 %%% Input parameters
-Ua = -5;      %%% Reference value -2
-Va = 5;       %%% Reference value 1
-Atide = 0; %%% Reference value 0.02 (based on Jourdain et al. 2019)
+Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
+Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
+Atide = 0;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
 Hi0 =1;       %%% Reference value 1
 Ai0 =1;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
                    %%% Note that in the manuscript Ws represents slope width. Slope width = [50 100 150 200 250]*m1km; 
                    %%% The corresponding Meridional slope position Ys = [150 175 200 225 250]*m1km;
+Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
+Htr = 200;    %%% Trough depth, ref 200
+Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
+Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550
+dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150
+
 is_ContinuedRun = false;
 
 %%% Select resolution
@@ -28,14 +35,14 @@ is_hires = false;
 useSEAICE = true;
 
 %%% Name pf the simulation
-exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,is_hires);
+exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_seaice_balance_ardbeg']
+exp_name = ['res5km_' exp_name '_stampede2']
 % exp_name = ['test']
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
 
 
-newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,is_ContinuedRun,is_hires,useSEAICE);
+newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_ContinuedRun,is_hires,useSEAICE);
 
