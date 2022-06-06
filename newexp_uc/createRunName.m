@@ -16,7 +16,7 @@ run_name=['Ua',num2str(Ua),'Va',num2str(Va),'_Atide',num2str(atide),...
   '_Hi',num2str(Hi),'Ai',num2str(Ai),'_Ws',num2str(Ws/1000) ...
   '_Hbed',num2str(Hbed) 'Htr',num2str(Htr) '_Zn',num2str(Zn) 'Zsb',num2str(Zsb) 'dZs',num2str(dZs) ];
 
-  if (is_ContinuedRun)
-    run_name = [run_name,'_prod'];
-  end
+%   if (is_ContinuedRun)
+%     run_name = [run_name,'_prod'];
+%   end
 end

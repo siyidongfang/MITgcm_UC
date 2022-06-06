@@ -14,19 +14,18 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
 
-%     expdir = '/Users/csi/MITgcm_UC/exps_aofd/shelfice_seaice/'
-%     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_ardbeg'
 
-    expdir = '/Users/csi/MITgcm_UC/exps_aofd/shelfice_seaice/'
-    expname = 'res5km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_stampede2_noGMRedi'
+    expdir = '/Users/csi/MITgcm_UC/exps_aofd/shelfice_seaice/';
+%     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_ardbeg'
+    expname = 'res5km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_stampede2_noGMRedi'
 
 
     loadexp;
     plot_KE_EKE_T_S_series
 
 
-    nIter = 296809;
-    year = num2str(4);
+    nIter = 519416;
+    year = num2str(7);
     
     plot_basics
     plot_shelfIce

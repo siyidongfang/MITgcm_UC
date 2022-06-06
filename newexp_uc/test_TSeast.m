@@ -9,9 +9,9 @@ addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/
 
 fontsize = 14;
 
-  Nx = 200;
-  Ny = 225;
-  Nr = 60;
+  Nx = 300;
+  Ny = 200;
+  Nr = 68;
 
   m1km = 1000;
   H = 4000; %%% Domain size in z 
@@ -75,34 +75,21 @@ fontsize = 14;
 
 
   %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
+
   dz0 = 2*10/6;
   dz1 = 15*10/6; 
   dz2 = 20*10/6;
   dz3 = 100*10/6;
   dz4 = 200*10/6;  
   N0 = 1;
-  N1 = 12; 
-  N2 = 30;
-  N3 = 9;
+  N1 = 14; 
+  N2 = 34;
+  N3 = 11;
   N4 = 8;
   nn_c = cumsum([N0 N1 N2 N3 N4]);
   dz_c = [dz0 dz1 dz2 dz3 dz4];
   nn = 1:(N1+N2+N3+N4+1);
   dz = interp1(nn_c,dz_c,nn,'pchip');
-%   dz0 = 2*10/6;
-%   dz1 = 15*10/6; 
-%   dz2 = 20*10/6;
-%   dz3 = 100*10/6;
-%   dz4 = 200*10/6;  
-%   N0 = 1;
-%   N1 = 14; 
-%   N2 = 34;
-%   N3 = 11;
-%   N4 = 8;
-%   nn_c = cumsum([N0 N1 N2 N3 N4]);
-%   dz_c = [dz0 dz1 dz2 dz3 dz4];
-%   nn = 1:(N1+N2+N3+N4+1);
-%   dz = interp1(nn_c,dz_c,nn,'pchip');
 
 
 
