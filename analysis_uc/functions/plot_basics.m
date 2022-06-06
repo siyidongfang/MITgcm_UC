@@ -419,7 +419,12 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     title('Surface PT (^oC)')
     set(gca,'FontSize',fontsize);
     %     caxis([-1.87 -1.85])
-    caxis([min(min(tt(:,:,1))) max(max(tt(:,:,1)))])
+    min_surface_pt = min(min(tt(:,:,1)));
+    if (min_surface_pt<-1.9)
+        caxis([-1.9 max(max(tt(:,:,1)))])
+    else
+        caxis([min(min(tt(:,:,1))) max(max(tt(:,:,1)))])
+    end
     
     subplot(2,2,4)
     pcolor(xx/1000,yy/1000,ss(:,:,1)');
