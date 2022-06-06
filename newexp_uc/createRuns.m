@@ -6,8 +6,8 @@
 close all;clear;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
-% batch_name = 'exps_aofd/Bflux_seaice';
-batch_name = 'exps_aofd/shelfice_seaice';
+batch_name = 'exps_aofd/Bflux_seaice_new';
+% batch_name = 'exps_aofd/shelfice_seaice';
 
 
 %%% Input parameters
@@ -38,8 +38,9 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res5km_' exp_name '_stampede2']
-% exp_name = ['test']
+% exp_name = ['res10km_melt4.15m76Gt_' exp_name '_stampede2']
+exp_name = ['res5km_melt12.45m229Gt_' exp_name '_stampede2']
+% exp_name = ['res5km_melt20.75m381Gt_' exp_name '_stampede2']
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
 

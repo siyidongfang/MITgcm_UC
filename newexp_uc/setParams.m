@@ -149,9 +149,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
 
-  useSHELFICE = true; 
+  useSHELFICE = false; 
   
-  useGMRedi=false;
+  useGMRedi = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
   useLAYERS = false;
   useEXFwindstress = false; %%% apply wind speed in EXF package
@@ -170,7 +170,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
   useSURFACE_SALT = false;
-  useEmPmRFile = false;
+  useEmPmRFile = true;
 
   
   %%% OBCS package options
@@ -244,9 +244,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Wtrough = 30*m1km; %%% Trough width
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
-  Wpoly = 20*m1km; %%% Latitudinal width of polynya
+  Wpoly = 20*m1km;   %%% Latitudinal width of polynya
   Ypoly = Yicefront; %%% Latitudinal location of polynya
-
+  Wbflux = 100*m1km; %%% Latitudinal width of prescribed surface buoyancy flux (equivalent to the latitudinal width of the ice shelf)
 
   
   %%% Flag for barotropic mode
@@ -1677,14 +1677,15 @@ end
 
      if(useEmPmRFile) %%% 2D specification of net freshwater flux (m/s)
         EmPmR = zeros(Nx,Ny,nForcingPeriods);    
-
-        Getz_melt_rate = -4.15; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+        rho_i = 920;
+        Getz_melt_rate = -4.15*3; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
         constEmPmR = Getz_melt_rate/t1year; %%% ~ 1.316e-07 m/s
         for n=1:nForcingPeriods   
-            empmr_idx_y = find(yy<=(Ypoly+Wpoly) & Ypoly<yy);
+            empmr_idx_y = find(yy<=(Ypoly+Wbflux) & Ypoly<yy);
             empmr_idx_x = find((xx<Xeast) & (xx>=Xwest));
             EmPmR(empmr_idx_x,empmr_idx_y,n) = constEmPmR;  %%% In the case of melting this will be negative (freshwater flux is positive upward) 
         end  
+        totalMelt = -Getz_melt_rate*(Xeast-Xwest)*Wbflux*rho_i/1e12 %%% Gt/yr
 
         if (showplots)
         figure(fignum);
@@ -2299,7 +2300,7 @@ diag_fields_avg = {...
     'ETAN',...
     'UVELSQ','VVELSQ','WVELSQ'...
     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
-    'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
+%     'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
 %       ... %%%%%%%%% for analysis
 %       ... %%% Heat budget
 %          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
@@ -2737,12 +2738,12 @@ diag_fields_inst = {...
 
     if((~useobcsSouth) && useobcsNorth)
 
-        yidx_icefront = round(Yicefront/(Ly/Ny));%%% Find the ice shelf front
-        if(yidx_icefront==0)
-            yidx_icefront=1;
+        yidx_100km = round(100*m1km/(Ly/Ny));%%% Find the ice shelf front
+        if(yidx_100km==0)
+            yidx_100km=1;
         end
-        Ua_mean = mean(uwind(1,yidx_icefront:end))
-        Va_mean = mean(vwind(1,yidx_icefront:end))
+        Ua_mean = mean(uwind(1,yidx_100km:end))
+        Va_mean = mean(vwind(1,yidx_100km:end))
         tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
         tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
         syms ui vi
