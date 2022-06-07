@@ -36,10 +36,11 @@
 
 
     %%% Calculate heat transport
-    for ne = 1:3
+    for nn = 1:nEXP
         clear  ADVy_TH TFLUX TOTTTEND VVELTH VVEL THETA
-        expname = EXPNAME{ne}
-        nIter = NITER(ne);
+        expdir = EXPDIR{nn};
+        expname = EXPNAME{nn}
+        nIter = NITER(nn);
         loadexp;
 
         dy = delY(1);    
@@ -64,74 +65,65 @@
 
         %%% Total advective heat 
         ADVy_int = cp_o*rho_o*sum(sum(ADVy_TH(xidx,:,:),3))/1e12; % Unit: 1e12 W, on v-grid
-        Fheat_adv(ne,1:Ny) = ADVy_int;
+        Fheat_adv(nn,1:Ny) = ADVy_int;
         
-        F_cavityS(ne) = ADVy_int(round(YcavityS/dy)+1); 
-        F_icefront(ne) = ADVy_int(round(Yicefront/dy)); 
-        F_shelfbreak(ne) = ADVy_int(round(Yshelfbreak/dy)); 
-        Fheat_cavity(ne) = mean(ADVy_int(yidx_cavity)); 
-        Fheat_shelf(ne) = mean(ADVy_int(yidx_shelf)); 
-        Fheat_slope(ne) = mean(ADVy_int(yidx_slope)); 
+        F_cavityS(nn) = ADVy_int(round(YcavityS/dy)+1); 
+        F_icefront(nn) = ADVy_int(round(Yicefront/dy)); 
+        F_shelfbreak(nn) = ADVy_int(round(Yshelfbreak/dy)); 
+        Fheat_cavity(nn) = mean(ADVy_int(yidx_cavity)); 
+        Fheat_shelf(nn) = mean(ADVy_int(yidx_shelf)); 
+        Fheat_slope(nn) = mean(ADVy_int(yidx_slope)); 
    
         %%% Eddy/mean decomposition
         Fmean_vgrid = zeros(Nx,Ny,Nr);
         Fmean_vgrid(:,2:Ny,:) = 0.5*(THETA(:,1:Ny-1,:)+THETA(:,2:Ny,:)).*VVEL(:,2:Ny,:);
-        Fmean_vgrid_xzint(ne,1:Ny) = cp_o*rho_o*sum(sum(Fmean_vgrid(xidx,:,:).*hFacS(xidx,:,:).*DZ_xyz(xidx,:,:).*DX_xyz(xidx,:,:),3),1)/1e12;
+        Fmean_vgrid_xzint(nn,1:Ny) = cp_o*rho_o*sum(sum(Fmean_vgrid(xidx,:,:).*hFacS(xidx,:,:).*DZ_xyz(xidx,:,:).*DX_xyz(xidx,:,:),3),1)/1e12;
         
-        Feddy_adv_xzint(ne,1:Ny) = Fheat_adv(ne,1:Ny)-Fmean_vgrid_xzint(ne,1:Ny);
+        Feddy_adv_xzint(nn,1:Ny) = Fheat_adv(nn,1:Ny)-Fmean_vgrid_xzint(nn,1:Ny);
         
-        Fheat_vvelth(ne,1:Ny) = cp_o*rho_o*squeeze(sum(sum(VVELTH(xidx,:,:).*delX(1).*DZ_xyz(xidx,:,:).*hFacS(xidx,:,:),3)))/1e12;%%% Zonally averaged, depth-integrated 
-        Feddy_vvelth_xzint(ne,1:Ny) = Fheat_vvelth(ne,1:Ny)-Fmean_vgrid_xzint(ne,1:Ny);
+        Fheat_vvelth(nn,1:Ny) = cp_o*rho_o*squeeze(sum(sum(VVELTH(xidx,:,:).*delX(1).*DZ_xyz(xidx,:,:).*hFacS(xidx,:,:),3)))/1e12;%%% Zonally averaged, depth-integrated 
+        Feddy_vvelth_xzint(nn,1:Ny) = Fheat_vvelth(nn,1:Ny)-Fmean_vgrid_xzint(nn,1:Ny);
         
-        F_cavityS_mean(ne) = Fmean_vgrid_xzint(round(YcavityS/dy)+1); 
-        F_icefront_mean(ne) = Fmean_vgrid_xzint(round(Yicefront/dy)); 
-        F_shelfbreak_mean(ne) = Fmean_vgrid_xzint(round(Yshelfbreak/dy)); 
-        Fheat_cavity_mean(ne) = mean(Fmean_vgrid_xzint(yidx_cavity)); 
-        Fheat_shelf_mean(ne) = mean(Fmean_vgrid_xzint(yidx_shelf)); 
-        Fheat_slope_mean(ne) = mean(Fmean_vgrid_xzint(yidx_slope)); 
+        F_cavityS_mean(nn) = Fmean_vgrid_xzint(round(YcavityS/dy)+1); 
+        F_icefront_mean(nn) = Fmean_vgrid_xzint(round(Yicefront/dy)); 
+        F_shelfbreak_mean(nn) = Fmean_vgrid_xzint(round(Yshelfbreak/dy)); 
+        Fheat_cavity_mean(nn) = mean(Fmean_vgrid_xzint(yidx_cavity)); 
+        Fheat_shelf_mean(nn) = mean(Fmean_vgrid_xzint(yidx_shelf)); 
+        Fheat_slope_mean(nn) = mean(Fmean_vgrid_xzint(yidx_slope)); 
        
-        F_cavityS_eddy(ne) = Feddy_adv_xzint(round(YcavityS/dy)+1); 
-        F_icefront_eddy(ne) = Feddy_adv_xzint(round(Yicefront/dy)); 
-        F_shelfbreak_eddy(ne) = Feddy_adv_xzint(round(Yshelfbreak/dy)); 
-        Fheat_cavity_eddy(ne) = mean(Feddy_adv_xzint(yidx_cavity)); 
-        Fheat_shelf_eddy(ne) = mean(Feddy_adv_xzint(yidx_shelf)); 
-        Fheat_slope_eddy(ne) = mean(Feddy_adv_xzint(yidx_slope)); 
+        F_cavityS_eddy(nn) = Feddy_adv_xzint(round(YcavityS/dy)+1); 
+        F_icefront_eddy(nn) = Feddy_adv_xzint(round(Yicefront/dy)); 
+        F_shelfbreak_eddy(nn) = Feddy_adv_xzint(round(Yshelfbreak/dy)); 
+        Fheat_cavity_eddy(nn) = mean(Feddy_adv_xzint(yidx_cavity)); 
+        Fheat_shelf_eddy(nn) = mean(Feddy_adv_xzint(yidx_shelf)); 
+        Fheat_slope_eddy(nn) = mean(Feddy_adv_xzint(yidx_slope)); 
 
         %%% Ice-ocean heat flux
-        Fio_cavity(ne) = sum(TFLUX(xidx,yidx_cavity)*delX(1)*delY(1),'all')/1e12;
-        Fio_shelf(ne) = sum(TFLUX(xidx,yidx_shelf)*delX(1)*delY(1),'all')/1e12;
-        Fio_slope(ne) = sum(TFLUX(xidx,yidx_slope)*delX(1)*delY(1),'all')/1e12;
+        Fio_cavity(nn) = sum(TFLUX(xidx,yidx_cavity)*delX(1)*delY(1),'all')/1e12;
+        Fio_shelf(nn) = sum(TFLUX(xidx,yidx_shelf)*delX(1)*delY(1),'all')/1e12;
+        Fio_slope(nn) = sum(TFLUX(xidx,yidx_slope)*delX(1)*delY(1),'all')/1e12;
 
         %%% Temperature tendency
         Ttend =  TOTTTEND/86400; 
         Ttend_int = cp_o*rho_o*sum(sum(Ttend(xidx,:,:).*DZ_xyz(xidx,:,:).*hFacC(xidx,:,:),3)*delX(1));     
-        Ttend_cavity(ne) = sum(Ttend_int(yidx_cavity)*delY(1))/1e12;
-        Ttend_shelf(ne) = sum(Ttend_int(yidx_shelf)*delY(1))/1e12;
-        Ttend_slope(ne) = sum(Ttend_int(yidx_slope)*delY(1))/1e12;
- 
-
-        figure()
-%             plot(Fheat_adv(ne,:))
-            plot(Fheat_vvelth(ne,:))
-            hold on;
-%             plot(Feddy_adv_xzint(ne,:))
-            plot(Fmean_vgrid_xzint(ne,:))
-            plot(Feddy_vvelth_xzint(ne,:))
+        Ttend_cavity(nn) = sum(Ttend_int(yidx_cavity)*delY(1))/1e12;
+        Ttend_shelf(nn) = sum(Ttend_int(yidx_shelf)*delY(1))/1e12;
+        Ttend_slope(nn) = sum(Ttend_int(yidx_slope)*delY(1))/1e12;
 
     end
     
 
-%     %%% Save the products
-%     save([prodir,'heatbudget_aofd.mat'],'EXPNAME','cp_o','rho_o',...
-%     'YcavityS','Yicefront','Yshelfbreak','YslopeN',...
-%     'Fheat_adv','Fmean_vgrid_xzint','Feddy_vgrid_xzint',...
-%     'F_cavityS',     'F_icefront',     'F_shelfbreak',...
-%     'F_cavityS_mean','F_icefront_mean','F_shelfbreak_mean',...
-%     'F_cavityS_eddy','F_icefront_eddy','F_shelfbreak_eddy',...
-%     'Fheat_cavity',     'Fheat_shelf',     'Fheat_slope',...
-%     'Fheat_cavity_mean','Fheat_shelf_mean','Fheat_slope_mean',...
-%     'Fheat_cavity_eddy','Fheat_shelf_eddy','Fheat_slope_eddy',...
-%     'Fio_cavity','Fio_shelf','Fio_slope',...
-%     'Ttend_cavity','Ttend_shelf','Ttend_slope',...
-%      );
+    %%% Save the products
+    save([prodir,'heatbudget_aofd.mat'],'EXPDIR','EXPNAME','cp_o','rho_o',...
+    'YcavityS','Yicefront','Yshelfbreak','YslopeN',...
+    'Fheat_adv','Fheat_vvelth','Fmean_vgrid_xzint','Feddy_adv_xzint','Feddy_vvelth_xzint',...
+    'F_cavityS',     'F_icefront',     'F_shelfbreak',...
+    'F_cavityS_mean','F_icefront_mean','F_shelfbreak_mean',...
+    'F_cavityS_eddy','F_icefront_eddy','F_shelfbreak_eddy',...
+    'Fheat_cavity',     'Fheat_shelf',     'Fheat_slope',...
+    'Fheat_cavity_mean','Fheat_shelf_mean','Fheat_slope_mean',...
+    'Fheat_cavity_eddy','Fheat_shelf_eddy','Fheat_slope_eddy',...
+    'Fio_cavity','Fio_shelf','Fio_slope',...
+    'Ttend_cavity','Ttend_shelf','Ttend_slope'...
+     );
 
