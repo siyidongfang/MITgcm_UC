@@ -11,8 +11,8 @@ batch_name = 'exps_aofd/shelfice_seaice';
 
 
 %%% Input parameters
-Ua = -2;      %%% Reference value -5 (-4 with no ice shelf)
-Va = 2;       %%% Reference value 5  ( 4 with no ice shelf)
+Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
+Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
 Atide = 0;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
 Hi0 =1;       %%% Reference value 1
 Ai0 =1;       %%% Reference value 1
@@ -38,8 +38,8 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-% exp_name = ['res2km_' exp_name '_ardbeg_prod']
-exp_name='test'
+exp_name = ['res2km_' exp_name '_ardbeg_prod']
+% exp_name='test'
 
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
