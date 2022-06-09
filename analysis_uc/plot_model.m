@@ -5,3 +5,242 @@
 %%%
 
 
+    clear;close all;
+
+    %%% Add path
+    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
+    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+
+    list_exps;
+    nn =1; % Load the reference experiment
+    expname = EXPNAME{nn}
+    expdir = EXPDIR{nn};
+    nIter = NITER(nn);
+    year = YEAR{nn};
+    loadexp;
+    fontsize = 25;
+    ncolor=250; % Number of color contours
+    m1km = 1000;
+
+
+    % bathycolor = hex2rgb('#958872');
+    bathycolor = hex2rgb('#bcb099');
+    icedraftcolor = hex2rgb('#7ba1d2');
+    icetopcolor = hex2rgb('#7ba1d2');
+    boxcolor = [0.85 0.85 0.85];
+    % isothermcolor = [87 151 246]/255;
+    isothermcolor = hex2rgb('#6756BE');
+    
+    %%% Read snapshot
+    theta_inst = rdmdsWrapper(fullfile(exppath,'/results/T'),nIter); 
+    salt_inst = rdmdsWrapper(fullfile(exppath,'/results/S'),nIter); 
+    uvel = rdmdsWrapper(fullfile(exppath,'/results/UVEL'),nIter);    
+    theta = rdmdsWrapper(fullfile(exppath,'/results/THETA'),nIter); 
+    salt = rdmdsWrapper(fullfile(exppath,'/results/SALT'),nIter); 
+    theta_inst(hFacC==0) = NaN; %%% Remove topography
+    salt_inst(hFacC==0) = NaN; 
+    UVEL(hFacW==0) = NaN; 
+
+    %%% Select potential temperature surface
+    theta_plot = 0.5;
+
+
+    %%% bathymetry and icedraft
+    Hicefront = 200; %%% Depth of ice shelf frace
+    h=bathy;
+    fid = fopen(fullfile(exppath,'input','SHELFICEtopoFile.bin'),'r','b');
+    icedraft = fread(fid,[Nx Ny],'real*8');
+    
+    %%% Calculate CDW layer properties
+    calcCDW;
+
+    %%% Grid
+    [Y,X] = meshgrid(yy/1000,xx/1000);
+    [YY,XX,ZZ]=meshgrid(yy/1000,xx/1000,zz/1000);
+    [ZZZ,YYY] = meshgrid(zz/1000,yy/1000);
+
+    %%% Extract zonal boundary values
+    idx_1 = 1;
+    BC_u = squeeze(uvel(idx_1,:,:));
+    BC_u(BC_u==0) = NaN;
+    BC_t = squeeze(theta(idx_1,:,:));
+    BC_s = squeeze(salt(idx_1,:,:));
+    %%% Calculate the restoring neutral density at the zonal boundaries
+    lon_sec = -115;
+    lat_sec = -71;
+    [SA_BC, in_ocean] = gsw_SA_from_SP(BC_s,-ZZZ,lon_sec,lat_sec);
+    T_insitu = gsw_t_from_pt0(SA_BC,BC_t,-ZZZ);
+    CT_east = gsw_CT_from_pt(SA_BC,BC_t); 
+    for jj = 1:Ny
+        [gamma_n_east(jj,:)] = eos80_legacy_gamma_n(BC_s(jj,:),T_insitu(jj,:),-zz,lon_sec,lat_sec);
+    end
+
+
+
+
+
+
+    %%
+
+
+
+
+    %%% Plot bathymetry and ice draft
+    figure(1)
+    set(gcf,'Position',[1  107 1475 1139])
+    clf;    
+    
+    %%% Bathymetry  
+    p = surface(X(:,2:end-1),Y(:,2:end-1),-h(:,2:end-1)/1000);
+    p.FaceColor = [11*16+9 9*16+12 6*16+11]/255;
+    p.FaceColor = bathycolor;
+    p.EdgeColor = 'none';
+    
+    %%% Modified ice draft to look good in the plot
+    icedraft_plot = icedraft;
+    icedraft_plot(icedraft==0) = NaN;
+    icetop_plot = 0*icedraft_plot;
+    for i=1:Nx
+    j = find(~isnan(icetop_plot(i,:)),1,'last');
+    if (isempty(j))
+    continue;
+    else
+    icetop_plot(i,j+1) = max(-Hicefront,h(i,j+1));
+    end
+    end
+    
+    %%% Plot ice
+    hold on;
+    p = surface(X(:,2:end-1),Y(:,2:end-1),-icedraft_plot(:,2:end-1)/1000);
+    p.FaceColor = icedraftcolor;
+    p.EdgeColor = 'none';
+    alpha(p,1);
+    p = surface(X(:,2:end-1),Y(:,2:end-1),-icetop_plot(:,2:end-1)/1000);
+    p.FaceColor = icetopcolor;
+    p.EdgeColor = 'none';
+    alpha(p,1);
+
+
+
+
+    %%% Plot zonal boundary conditions: temperature field + neutral density
+    %%% contours + thermal wind velocity
+
+    % Plot the restoring temperature
+    ZZZ(:,end)=-4;
+    p_bct = surface(xx(idx_1)/1000*ones(size(YYY)),YYY,-ZZZ,BC_t);
+    colormap(colormap(cmocean('balance',ncolor)))
+    caxis([-2.3 2.3]);
+    p_bct.FaceColor = 'texturemap';
+    p_bct.EdgeColor = 'none';         
+    alpha(p_bct,1);
+    freezeColors;
+%     p_bcu = contour3(XX_bc,YY_bc,BC_u,...
+%         [-0.08:0.01:0.01],'LineColor','k','LineWidth',1.5,'ShowText','on');
+% %     colormap(redblue)
+%     caxis([-0.08 0.08]);
+
+%     p_bcu = surface(xx(end)/1000*ones(size(YYY)),YYY,-ZZZ,BC_u);
+%     colormap(colormap(cmocean('balance',ncolor)))
+%     caxis([-0.08 0.08])
+%     p_bcu.FaceColor = 'texturemap';
+%     p_bcu.EdgeColor = 'none';         
+%     alpha(p_bcu,0.6);
+%     freezeColors;
+
+
+    % Add neutral density contours
+%     gamma_cntrs = [27:0.2:27.8 27.95:0.05:28.3];
+%     surfc(squeeze(YY(1,:,:)),-squeeze(ZZ(1,:,:)),gamma_n_east,gamma_cntrs,'LineColor','k','LineWidth',1.5);
+
+    % Add restoring zonal velocity
+
+
+
+
+
+
+
+
+%     %%% Plot 0 degC isotherms
+%     fv = isosurface(XX(:,2:end-1,:),YY(:,2:end-1,:),-ZZ(:,2:end-1,:),theta_inst(:,2:end-1,:),theta_plot);
+%     p = patch(fv);
+%     p.FaceColor = isothermcolor;
+%     p.EdgeColor = 'none';
+%     alpha(p,0.4);
+
+
+    %%% Plot a slice of zonal velocity near x = -80km
+    Lx_u2 = 220*m1km;
+    idx_u2 = round(Lx_u2/delX(1));
+    Ly_end = 300*m1km;
+    Ly_start = 200*m1km;
+    yidx_u2 = round(Ly_start/delY(1)):round(Ly_end/delY(1));
+    uvel_slice = squeeze(uvel(idx_u2,:,:));
+    % uvel_slice(uvel_slice==0) = NaN;
+    p = surface(xx(idx_u2)/1000*ones(length(yidx_u2),Nr),YYY(yidx_u2,:),-ZZZ(yidx_u2,:),uvel_slice(yidx_u2,:));
+    p.FaceColor = 'texturemap';
+%     colormap(redblue)
+    caxis([-0.08 0.08]);
+    p.EdgeColor = 'none';         
+    alpha(p,0.9);
+    freezeColors;
+
+    %%% Plot CDW heat flux
+    Ly_end = 280*m1km;
+    Ly_start = 2*m1km;
+    yidx_cdw = round(Ly_start/delY(1)):round(Ly_end/delY(1));
+    xidx_cdw = round(200*m1km/delX(1)):round(400*m1km/delX(1));
+    p = surface(X(xidx_cdw,yidx_cdw),Y(xidx_cdw,yidx_cdw),0.5*ones(size(X(xidx_cdw,yidx_cdw))),-Fheat_cdw(xidx_cdw,yidx_cdw)/1e9);
+    Fmax = max(max(abs(Fheat_cdw(xidx_cdw,yidx_cdw)/1e9)));
+    caxis([-Fmax/1.2 Fmax/1.2]);
+    
+    % colormap(colormap(cmocean('balance',ncolor)))
+    colormap(redblue);
+    set(p,'FaceColor','texturemap','EdgeColor','none')
+    alpha(p,1);
+
+
+    %%% Plot CDW volume flux
+    svx = 10; svy = 10;
+    yidx_cdw = round(Ly_start/delY(1)):svy:round(Ly_end/delY(1))-20;
+    xidx_cdw = round(200*m1km/delX(1)):svx:round(400*m1km/delX(1));
+    curr = quiver3(xx(xidx_cdw)'/1000,yy(yidx_cdw)'/1000,0.5*ones(size(UU_cdw(xidx_cdw,yidx_cdw)')), ...
+        UU_cdw(xidx_cdw,yidx_cdw)',VV_cdw(xidx_cdw,yidx_cdw)',0*ones(size(UU_cdw(xidx_cdw,yidx_cdw)')),4);
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    
+
+
+
+    %%% Decorations
+    hold off;
+    % view(-206,14);
+    view(-223,16);
+    xlabel('x (km)');
+    ylabel('y (km)');
+    zlabel('Depth (km)');
+    set(gca,'FontSize',fontsize);
+    set(gca,'ZTick',[0:1:4]);
+    set(gca, 'ZDir','reverse')
+    axis tight;
+    pbaspect([Lx/Ly 1 1]);
+    camlight('headlight');
+    lightangle(-226,-34); 
+    lighting flat;
+
+
+
+
+
+     figdir = '/Users/csi/MITgcm_UC/analysis_uc/figures/';
+     print('-dpng','-r150',[figdir 'model_ver1-5.png']);
+    
+    
+
+

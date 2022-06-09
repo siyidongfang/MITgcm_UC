@@ -45,21 +45,21 @@
 
     nEXP = length(EXPNAME);
 
-for nn = nEXP-1:nEXP
+for nn =1
 
         expname = EXPNAME{nn}
         expdir = EXPDIR{nn};
         nIter = NITER(nn);
         year = YEAR{nn};
-        useSEAICE = USESEAICE(nn);
-        useSHELFICE = USESHELFICE(nn);
-
+       
         loadexp;
 
         %%% Make plots!!
         plot_KE_EKE_T_S_series
         plot_basics
-  
+   
+        useSEAICE = USESEAICE(nn);
+        useSHELFICE = USESHELFICE(nn);
         if(useSHELFICE)
             plot_shelfIce
         end
