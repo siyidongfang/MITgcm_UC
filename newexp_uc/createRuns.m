@@ -18,8 +18,7 @@ Hi0 =1;       %%% Reference value 1
 Ai0 =1;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
-                   %%% Note that in the manuscript Ws represents slope width. Slope width = [50 100 150 200 250]*m1km; 
-                   %%% The corresponding Meridional slope position Ys = [150 175 200 225 250]*m1km;
+
 Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
 Htr = 200;    %%% Trough depth, ref 200
 Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350

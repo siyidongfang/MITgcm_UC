@@ -3,83 +3,21 @@
     %%% latitude and longitude
     %%%
     
-    
-%     clear;
-    
+        
     %%% Add path
     addpath functions/
     addpath colormaps;
     addpath colormaps/cmocean/;
 
-%     expdir = '/Users/csi/MITgcm_UC/experiments/shelfice_double_obcs/';
-%     expname = 'res2km_Ua-4Va4_Atide0_Hi0Ai0_Ws40_flatIsopyc_stampede2'
-%     loadexp;
 
     figdir = [exppath '/img/'];
-
-%     nIter = 1191767;
-%     year = num2str(6.5);
-
-    %%% Load data
-
-    useSHELFICE = true;
-    
-    tt = rdmds([exppath,'/results/THETA'],nIter);
-    ss = rdmds([exppath,'/results/SALT'],nIter);
-    uu = rdmds([exppath,'/results/UVEL'],nIter);
-    vv = rdmds([exppath,'/results/VVEL'],nIter);
-    vt = rdmds([exppath,'/results/VVELTH'],nIter);
-    eta = rdmds([exppath,'/results/ETAN'],nIter);
-
-    rho_o = 1000;
-    cp_o = 3994; % Unit: J/kg/degC
-
-    %%% Grid spacing matrices
-    DX = repmat(delX',[1 Ny Nr]);
-    DY = repmat(delY,[Nx 1 Nr]);
-    DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
-    [YY,XX] = meshgrid(yy,xx);
-    
-    %%% Find u,v,t of the CDW layer
-    uu_tgrid = (uu+uu([2:Nx 1],:,:))/2;                       % mass-grid
-    vv_tgrid = zeros(Nx,Ny,Nr);
-    vv_tgrid(:,1:Ny-1,:) = (vv(:,1:Ny-1,:)+vv(:,2:Ny,:))/2;   % mass-grid
-    vt_tgrid = zeros(Nx,Ny,Nr);
-    vt_tgrid(:,1:Ny-1,:) = (vt(:,1:Ny-1,:)+vt(:,2:Ny,:))/2;   % mass-grid
-
-    tt_cdw = tt;
-    tt_cdw(tt<0)=NaN; %%% Find the CDW layer: temperature above 0 degC
-    ss_cdw = ss;
-    ss_cdw(tt<0)=NaN;
-    
-    idx_cdw = tt_cdw./tt_cdw;
-    uu_cdw = uu_tgrid.*idx_cdw; %%% zonal velocity of the CDW layer
-    vv_cdw = vv_tgrid.*idx_cdw; %%% meridional velocity of the CDW layer
-    vt_cdw = vt_tgrid.*idx_cdw;
-
-    HH_cdw = sum(idx_cdw.*DZ.*hFacC,3,'omitnan'); %%% CDW thickness
-    HH_cdw(HH_cdw==0)=NaN;
-    TT_cdw = sum(tt_cdw.*DZ.*hFacC,3,'omitnan')./HH_cdw; %%% Depth-averaged temperature of the CDW layer
-    SS_cdw = sum(ss_cdw.*DZ.*hFacC,3,'omitnan')./HH_cdw; %%% Depth-averaged salinity of the CDW layer
-    
-    %%% Vertically integrate uu_cdw and vv_cdw to get the volume flux
-    UU_cdw = sum(uu_cdw.*DZ.*hFacC,3,'omitnan');
-    VV_cdw = sum(vv_cdw.*DZ.*hFacC,3,'omitnan');
-
-    UU = sum(uu.*DZ.*hFacW,3); %%% Depth-integrated volume flux
-    VV = sum(vv.*DZ.*hFacS,3);
-    
-    %%% Calculate the heat fluxes
-    Fheat_xy = rho_o*cp_o*sum(vt.*DZ.*hFacS,3); % Depth-integrated heat flux, in W/m
-    Fheat_cdw = rho_o*cp_o*sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); % heat flux of the CDW layer, in W/m
-    Fheat_xz = rho_o*cp_o*squeeze(sum(sum(vt.*delX(1).*DZ.*hFacS,3)))/1e12;%%% Zonally and depth-integrated, in TW
-    
-    %%% Make plots!
+    ncolor=40;
     fontsize = 16;
+    mycolormap = customcolormap(linspace(0,1,11), {'#68011d','#b5172f','#d75f4e','#f7a580','#fedbc9','#f5f9f3','#d5e2f0','#93c5dc','#4295c1','#2265ad','#062e61'},ncolor);
 
-
-
-    %%
+    calc_basics;
+  
+   %%
     
     figure()
     %     set(gcf,'Position',[-104 254 1712 396])
@@ -244,9 +182,9 @@
     uu(uu==0)=NaN;
     aaa1 = squeeze(mean(uu,'omitnan'));
     pcolor(yy/1000,-zz/1000,aaa1');
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
-    shading interp;axis ij;colormap('redblue');colorbar
-    caxis([-0.15 0.15])
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    shading interp;axis ij;colormap(mycolormap);colorbar
+    caxis([-0.08 0.08])
     title('Zonal velocity (m/s)')
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:100:300 round(Ly/1000)]);
@@ -258,7 +196,7 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     vtheta_xavg(vtheta_xavg==0)=NaN;
     pcolor(yy/1000,-zz/1000,1000*vtheta_xavg');shading interp
     caxis([-80 80]/4);colorbar
-hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     set(gca,'FontSize',fontsize)
     title('Advective heat flux {\it F}_{total} (blue = shoreward)','FontSize', fontsize+2,'FontWeight','normal');
     ylabel('Depth (km)');xlabel('y (km)')
@@ -270,15 +208,80 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     print('-dpng','-r150',[figdir 'Year' year '_fig4_zonal_u_vt.png']);
     
 
+
+    figure()
+    set(gcf,'Position',[284 349 636*2 400])
+    clf;
+    subplot(1,2,1)
+    pcolor(yy/1000,-zz/1000,uu_xmean');
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+    clabel(M,c,'LabelSpacing',200);hold off;
+    shading interp;axis ij;colormap(mycolormap);colorbar
+    caxis([-0.08 0.08])
+    title('Zonal velocity (m/s)')
+    ylabel('Depth (km)');xlabel('y (km)')
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
+    set(gca,'YTick',[0:1:4]);ylim([0 4])
+    set(gca,'FontSize',fontsize);
+
+    subplot(1,2,2) 
+    pcolor(yy/1000,-zz/1000,uu_xmean');
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+    clabel(M,c,'LabelSpacing',200);hold off;
+    shading interp;axis ij;colormap(mycolormap);colorbar
+    caxis([-0.08 0.08])
+    title('Zoom in')
+    ylabel('Depth (km)');xlabel('y (km)')
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
+    set(gca,'YTick',[0:1:4]);ylim([0.25 2])
+    xlim([190 270])
+    set(gca,'FontSize',fontsize);
+    print('-dpng','-r150',[figdir 'Year' year '_fig4_zonal_u.png']);
+
+
+
+    figure()
+    set(gcf,'Position',[284 349 636*2 400])
+    clf;
+    subplot(1,2,1)
+    pcolor(yy/1000,-zz/1000,uu_w');
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_w,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+    clabel(M,c,'LabelSpacing',200);hold off;
+    shading interp;axis ij;colormap(mycolormap);colorbar
+    caxis([-0.15 0.15])
+    title('Zonal velocity west of the trough (m/s)')
+    ylabel('Depth (km)');xlabel('y (km)')
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
+    set(gca,'YTick',[0:1:4]);ylim([0 4])
+    set(gca,'FontSize',fontsize);
+
+    subplot(1,2,2) 
+    pcolor(yy/1000,-zz/1000,uu_w');
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_w,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
+    clabel(M,c,'LabelSpacing',200);hold off;
+    shading interp;axis ij;colormap(mycolormap);colorbar
+    caxis([-0.15 0.15])
+    title('zonal velocity west of the trough (m/s)')
+    ylabel('Depth (km)');xlabel('y (km)')
+    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
+    set(gca,'YTick',[0:1:4]);ylim([0.25 2])
+    xlim([190 270])
+    set(gca,'FontSize',fontsize);
+    print('-dpng','-r150',[figdir 'Year' year '_fig4west_u.png']);
+
+
+
     figure()
     [ZZ,YY] = meshgrid(zz,yy);
     set(gcf,'Position',[284 349 636*2 400])
     clf;
     subplot(1,2,1)
-    tt(tt==0)=NaN;
-    aaa1= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
-    pcolor(yy/1000,-zz/1000,aaa1');
-    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[-2:0.3:2],'EdgeColor','k');hold off;
+    pcolor(yy/1000,-zz/1000,tt_xmean');
+    hold on;[C,h]=contour(YY/1000,-ZZ/1000,tt_xmean,[-2:0.3:2],'EdgeColor','k');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     caxis([-2.3 2.3])
@@ -289,12 +292,9 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
     set(gca,'FontSize',fontsize);
 
     subplot(1,2,2)
-    aaa1 = zeros(Ny,Nr);
-    ss(ss==0)=NaN;
-    aaa1= squeeze(mean(ss(2:end-1,:,:),'omitnan'));
-    pcolor(yy/1000,-zz/1000,aaa1');
-    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[32:0.1:35],'EdgeColor','k');hold off;
-    hold on;[C,h]=contour(YY/1000,-ZZ/1000,aaa1,[34.66:0.01:35],'k--');hold off;
+    pcolor(yy/1000,-zz/1000,ss_xmean');
+    hold on;[C,h]=contour(YY/1000,-ZZ/1000,ss_xmean,[32:0.1:35],'EdgeColor','k');hold off;
+    hold on;[C,h]=contour(YY/1000,-ZZ/1000,ss_xmean,[34.66:0.01:35],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));colorbar
     %     caxis([min(min(aaa1)) max(max(aaa1))])
@@ -363,19 +363,16 @@ hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(rou
 
     figure()
     clf
-    %     set(gcf,'Position',[284 349 580 511])
     set(gcf,'Position',[25 367 805 426])
+    eta(eta==0)=NaN;
     pcolor(xx/1000,yy/1000,eta');
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap('redblue');
+    shading flat;colorbar;colormap(mycolormap);
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Surface Height Anomaly (m)')
     set(gca,'FontSize',fontsize);
-%     caxis([-2.2 -1.8])
-%     colormap('jet')
-     caxis([-0.2 0.2])
-    %     caxis([-max(max(abs(Fheat/1e9))) max(max(abs(Fheat/1e9)))])
+     caxis([-0.08 0.08])
 
     print('-dpng','-r150',[figdir 'Year' year '_fig7_eta.png']);
 

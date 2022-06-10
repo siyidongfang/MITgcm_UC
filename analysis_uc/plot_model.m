@@ -39,7 +39,7 @@
     %%% Calculate CDW layer properties
     prodir = [expdir expname '/'];
     load([prodir '/' expname '_tavg_5yrs.mat'], 'THETA','SALT','UVEL','VVEL','VVELTH','ETAN')
-    calcCDW;
+    calc_basics;
 
     %%% Read snapshot data
     % uu = rdmdsWrapper(fullfile(exppath,'/results/UVEL'),nIter);    

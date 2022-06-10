@@ -2,15 +2,13 @@
 
 clear;close all;
 
-addpath /Users/csi/MITgcm_UC/analysis;
-addpath /Users/csi/MITgcm_UC/analysis/colormaps;
-addpath /Users/csi/MITgcm_UC/analysis/colormaps/customcolormap;
-addpath /Users/csi/MITgcm_UC/analysis/jpo_analysis-hires;
-addpath /Users/csi/MITgcm_UC/analysis/jpo_analysis;
+addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
+addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
+addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
 
-expdir = '/Volumes/si/MITgcm_UC/exps_uc/';
-prodir = '/Volumes/si/MITgcm_UC/products_uc/';
-figdir = '/Users/csi/MITgcm_UC/analysis_uc/figures_uc/';
+expdir = '/Users/csi/MITgcm_UC/exps_aofd/shelfice_seaice/';
+% prodir = '/Volumes/si/MITgcm_UC/products_uc/';
+figdir = '/Users/csi/MITgcm_UC/analysis_uc/figures/';
 
 ncolor=80;
 mycolormap = customcolormap(linspace(0,1,11), {'#68011d','#b5172f','#d75f4e','#f7a580','#fedbc9','#f5f9f3','#d5e2f0','#93c5dc','#4295c1','#2265ad','#062e61'},ncolor);
@@ -41,12 +39,12 @@ CLIM=[-0.4 0.4];
 ax4 = subplot('position',[0.065 0.7 subplotsize]);
 annotation('textbox',[0 0.95 0.05 0.05],'String','a','FontSize',fontsize+2,'LineStyle','None','fontweight', 'bold');
 
-expname= 'ssurf33_0dS_lores_Ua0Va0_Atide0_Hi1Ai1_Ws25_new';
+expname= 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_stampede2'
 loadexp;
 % % load([prodir expname '_tavg_5yrs.mat'],'UVEL')
 % % UVEL(UVEL==0) = NaN;
 % % aaa1=squeeze(nanmean(UVEL,1));
-aaaa1 = rdmds([exppath,'/results/U'],1326280);
+aaaa1 = rdmds([exppath,'/results/UVEL'],1326280);
 aaaa1(aaaa1==0)=NaN;
 aaa1 = squeeze(nanmean(aaaa1));
 pcolor(yy/1000,-zz/1000,aaa1');
@@ -151,4 +149,4 @@ annotation('textbox',[0.88 0.72 0.05 0.05],'String','(m/s)','FontSize',fontsize+
 
 
 %% Write to file
-print('-djpeg','-r300',[figdir 'zonal_circulation_with_ice.jpeg']);
+% print('-djpeg','-r300',[figdir 'zonal_circulation_with_ice.jpeg']);

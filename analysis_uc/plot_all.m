@@ -40,12 +40,14 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
+
     
     list_exps;
 
     nEXP = length(EXPNAME);
 
-for nn =1
+for nn =3
 
         expname = EXPNAME{nn}
         expdir = EXPDIR{nn};
@@ -56,16 +58,16 @@ for nn =1
 
         %%% Make plots!!
         plot_KE_EKE_T_S_series
-        plot_basics
-   
-        useSEAICE = USESEAICE(nn);
-        useSHELFICE = USESHELFICE(nn);
-        if(useSHELFICE)
-            plot_shelfIce
-        end
-        if(useSEAICE)
-            plot_seaice
-        end
+%         plot_basics
+%    
+%         useSEAICE = USESEAICE(nn);
+%         useSHELFICE = USESHELFICE(nn);
+%         if(useSHELFICE)
+%             plot_shelfIce
+%         end
+%         if(useSEAICE)
+%             plot_seaice
+%         end
 
     end
 
