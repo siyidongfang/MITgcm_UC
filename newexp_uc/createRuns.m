@@ -31,7 +31,7 @@ is_ContinuedRun = false;
 is_hires = false;
 
 %%% Use sea ice or not
-useSEAICE = false;
+useSEAICE = true;
 
 %%% Name pf the simulation
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
