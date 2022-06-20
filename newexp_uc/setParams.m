@@ -149,7 +149,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   end
 
 
-  useSHELFICE = true; 
+  
   
   useGMRedi = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
@@ -171,6 +171,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   useSURFACE_SALT = false;
   useEmPmRFile = false;
+
+  useSHELFICE = true; 
+  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  if(usePseudoSHELFICE)
+      useRBCS = true; 
+  end
 
   
   %%% OBCS package options
@@ -1731,72 +1737,7 @@ end
  
 
   
-  %%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%
-  %%%%% RBCS %%%%%
-  %%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%
-  
-  if(useRBCS)   
-  %%%%%%%%%%%%%%%%%%%%%%%
-  %%%%% RBCS SET-UP %%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%
-  
-  %%% To store parameter names and values
-  rbcs_parm01 = parmlist;
-  rbcs_parm02 = parmlist;
-  RBCS_PARM = {rbcs_parm01,rbcs_parm02};
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%% RELAXATION PARAMETERS %%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  useRBCtemp = true;
-  useRBCsalt = false;
-  useRBCuVel = false;
-  useRBCvVel = false;
-  tauRelaxT = 6*t1hour;
-  rbcs_parm01.addParm('useRBCtemp',useRBCtemp,PARM_BOOL);
-  rbcs_parm01.addParm('useRBCsalt',useRBCsalt,PARM_BOOL);
-  rbcs_parm01.addParm('useRBCuVel',useRBCuVel,PARM_BOOL);
-  rbcs_parm01.addParm('useRBCvVel',useRBCvVel,PARM_BOOL);
-  rbcs_parm01.addParm('tauRelaxT',tauRelaxT,PARM_REAL);
 
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%% RELAXATION TEMPERATURE/SALINITY %%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  %%% Set relaxation temp/salt to the freezing temperature
-  %%% of the northern boundary
-  temp_relax = zeros(Nx,Ny,Nr);
-  temp_relax(:,:,1) = tNorth(1); 
-  
-  %%% Save as parameters
-  writeDataset(temp_relax,fullfile(inputpath,'sponge_temp.bin'),ieee,prec); 
-  rbcs_parm01.addParm('relaxTFile','sponge_temp.bin',PARM_STR);
-  
-  %%%%%%%%%%%%%%%%%%%%%  
-  %%%%% RBCS MASK %%%%%
-  %%%%%%%%%%%%%%%%%%%%%  
-  
-  %%% Mask is zero everywhere by default, i.e. no relaxation
-  mskT=zeros(Nx,Ny,Nr);
-  mskT(:,:,1) = 1;  %%% only relax surface T
-  temp_mask = mskT;
-  
-  %%% Save as parameters
-  writeDataset(temp_mask,fullfile(inputpath,'rbcs_temp_mask.bin'),ieee,prec); 
-  rbcs_parm01.addParm('relaxMaskFile(1)','rbcs_temp_mask.bin',PARM_STR);
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%% WRITE THE 'data.rbcs' FILE %%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-  %%% Creates the 'data.rbcs' file
-  write_data_rbcs(inputpath,RBCS_PARM,listterm,realfmt);
-  end
-  
 
 
 
@@ -1817,10 +1758,15 @@ end
     rhoShelfIce = 917;              %%% Default value
     SHELFICEheatTransCoeff = 0;     %%% Turn off linear heat transfer
     SHELFICEthetaSurface = -20;     %%% Defauly value
-    SHELFICEuseGammaFrict = true;   %%% Turn on friction-dependent heat transfer
     SHELFICEboundaryLayer = false;  %%% Turn on to average velocities over top dz of water column when computing friction velocity
     SHELFICEconserve = false;       %%% Turns on conservative form of 3-equation IOBL parameterization
     
+    if(usePseudoSHELFICE)
+        SHELFICEuseGammaFrict = false;   
+    else
+        SHELFICEuseGammaFrict = true; %%% Turn on friction-dependent heat transfer
+    end
+ 
     %%% Save as a parameter   
     shelfice_parm01.addParm('SHELFICEHeatCapacity_Cp',SHELFICEHeatCapacity_Cp,PARM_REAL);
     shelfice_parm01.addParm('rhoShelfIce',rhoShelfIce,PARM_REAL);
@@ -1885,6 +1831,129 @@ end
 
 
 
+
+  %%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%
+  %%%%% RBCS %%%%%
+  %%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%
+  
+  if(useRBCS)   
+  %%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% RBCS SET-UP %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%
+  
+  %%% To store parameter names and values
+  rbcs_parm01 = parmlist;
+  rbcs_parm02 = parmlist;
+  RBCS_PARM = {rbcs_parm01,rbcs_parm02};
+  
+  useRBCuVel = false;
+  useRBCvVel = false;
+  rbcs_parm01.addParm('useRBCuVel',useRBCuVel,PARM_BOOL);
+  rbcs_parm01.addParm('useRBCvVel',useRBCvVel,PARM_BOOL);
+
+  if(usePseudoSHELFICE)
+      %%%%% RELAXATION PARAMETERS %%%%%
+      useRBCtemp = false;
+      useRBCsalt = true;
+      tauRelaxT = 6*t1hour;
+      tau_inf = 1e20;
+      tauRelaxS = tau_inf;
+      rbcs_parm01.addParm('useRBCtemp',useRBCtemp,PARM_BOOL);
+      rbcs_parm01.addParm('useRBCsalt',useRBCsalt,PARM_BOOL);
+      rbcs_parm01.addParm('tauRelaxT',tauRelaxT,PARM_REAL);
+      rbcs_parm01.addParm('tauRelaxS',tauRelaxS,PARM_REAL);
+
+      %%% Mask is zero everywhere by default, i.e. no relaxation
+      %%% Relax T/S to the tilted surface of the ice shelf
+      mskT = zeros(Nx,Ny,Nr);
+      zidx_shelfice = zeros(Nx,Ny);
+      for i=1:Nx      
+        for j=1:Ny
+            kk = find(zz < icedraft(i,j),1);    
+            if(icedraft(i,j)~=0)
+                mskT(i,j,kk)=1;
+                mskT(i,j,kk-1)=1;
+                zidx_shelfice(i,j)=kk;
+            end
+        end
+      end
+      temp_mask = mskT;
+      salt_mask = mskT;
+
+      %%% Set relaxation temp/salt
+      temp_relax = zeros(Nx,Ny,Nr);
+      salt_relax = zeros(Nx,Ny,Nr);
+
+      saturation_fraction = 0; % the saturation fraction of dissolved air in seawater, default = 0 (air free)
+      SA_freezing = 30;
+      
+      Getz_melt_rate = -4.15*1; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+      saltDifference = 30; %%% Ice shelf-ocean salinity difference (In the MITgcm code, the ice shelf salinity is always zero.)
+      equiv_saltflux = Getz_melt_rate*rhoShelfIce*saltDifference/t1year; % -0.0036 g/m^2/s 
+
+      for i=1:Nx
+          for j=1:Ny
+              if(icedraft(i,j)~=0)
+                  %%% Calculate local freezing temperature using the GSW toolbox
+                  temp_relax(i,j,zidx_shelfice(i,j)) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
+                  %%% Relaxation salinity
+                  salt_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_saltflux;
+              end
+          end
+      end
+
+      %%% Save as parameters
+      writeDataset(temp_relax,fullfile(inputpath,'sponge_temp.bin'),ieee,prec); 
+      rbcs_parm01.addParm('relaxTFile','sponge_temp.bin',PARM_STR);
+      writeDataset(salt_relax,fullfile(inputpath,'sponge_salt.bin'),ieee,prec); 
+      rbcs_parm01.addParm('relaxSFile','sponge_salt.bin',PARM_STR);
+
+      writeDataset(temp_mask,fullfile(inputpath,'rbcs_temp_mask.bin'),ieee,prec); 
+      rbcs_parm01.addParm('relaxMaskFile(1)','rbcs_temp_mask.bin',PARM_STR);
+      writeDataset(salt_mask,fullfile(inputpath,'rbcs_salt_mask.bin'),ieee,prec); 
+      rbcs_parm01.addParm('relaxMaskFile(2)','rbcs_salt_mask.bin',PARM_STR);
+      
+  else
+      %%%%% RELAXATION PARAMETERS %%%%%
+      useRBCtemp = true;
+      useRBCsalt = false;
+      tauRelaxT = 6*t1hour;
+      rbcs_parm01.addParm('useRBCtemp',useRBCtemp,PARM_BOOL);
+      rbcs_parm01.addParm('useRBCsalt',useRBCsalt,PARM_BOOL);
+      rbcs_parm01.addParm('tauRelaxT',tauRelaxT,PARM_REAL);
+    
+      %%% Set relaxation temp/salt to the freezing temperature
+      %%% of the northern boundary
+      temp_relax = zeros(Nx,Ny,Nr);
+      temp_relax(:,:,1) = tNorth(1); 
+      
+      %%% Mask is zero everywhere by default, i.e. no relaxation
+      mskT=zeros(Nx,Ny,Nr);
+      mskT(:,:,1) = 1;  %%% only relax surface T
+      temp_mask = mskT; 
+
+      %%% Save as parameters
+      writeDataset(temp_relax,fullfile(inputpath,'sponge_temp.bin'),ieee,prec); 
+      rbcs_parm01.addParm('relaxTFile','sponge_temp.bin',PARM_STR);
+
+      writeDataset(temp_mask,fullfile(inputpath,'rbcs_temp_mask.bin'),ieee,prec); 
+      rbcs_parm01.addParm('relaxMaskFile(1)','rbcs_temp_mask.bin',PARM_STR);
+  end
+
+  
+  
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% WRITE THE 'data.rbcs' FILE %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+  %%% Creates the 'data.rbcs' file
+  write_data_rbcs(inputpath,RBCS_PARM,listterm,realfmt);
+  end
+  
 
 
 

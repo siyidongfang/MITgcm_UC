@@ -47,7 +47,7 @@
 
     nEXP = length(EXPNAME);
 
-for nn =3
+for nn =4
 
         expname = EXPNAME{nn}
         expdir = EXPDIR{nn};

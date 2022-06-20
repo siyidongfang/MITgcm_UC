@@ -154,13 +154,18 @@
   use_pbs = true; %%% set true for execution via PBS
   cluster = 'ardbeg';
   queue = 'all.q'; 
+%   %%%% ~ 2km grid spacing
+%   sNx = 18; %%% no. of x-gridpoints per tile
+%   sNy = 20; %%% no. of y-gridpoints per tile
+%   nPx = 16; %%% no. of processors in x-direction
+%   nPy = 10; %%% no. of processors in y-direction
+%   Nr = 68; %%% no. of z-gridpoints 
   %%%% ~ 2km grid spacing
-  sNx = 18; %%% no. of x-gridpoints per tile
+  sNx = 21; %%% no. of x-gridpoints per tile
   sNy = 20; %%% no. of y-gridpoints per tile
-  nPx = 16; %%% no. of processors in x-direction
+  nPx = 14; %%% no. of processors in x-direction
   nPy = 10; %%% no. of processors in y-direction
   Nr = 68; %%% no. of z-gridpoints 
-
 
   %%% Set-up for Gordon
 %    opt_file = 'xsede_gordon'; %%% options file name
