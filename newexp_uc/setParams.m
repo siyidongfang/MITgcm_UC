@@ -1872,9 +1872,8 @@ end
       for i=1:Nx      
         for j=1:Ny
             kk = find(zz < icedraft(i,j),1);    
-            if(icedraft(i,j)~=0)
+            if(icedraft(i,j)~=0 && h(i,j)<icedraft(i,j))
                 mskT(i,j,kk)=1;
-                mskT(i,j,kk-1)=1;
                 zidx_shelfice(i,j)=kk;
             end
         end
@@ -1886,23 +1885,81 @@ end
       temp_relax = zeros(Nx,Ny,Nr);
       salt_relax = zeros(Nx,Ny,Nr);
 
+      temp_relax_2D = zeros(Nx,Ny);
+      equiv_saltflux = zeros(Nx,Ny);
+      dz_beneath = zeros(Nx,Ny);
+
       saturation_fraction = 0; % the saturation fraction of dissolved air in seawater, default = 0 (air free)
       SA_freezing = 30;
       
-      Getz_melt_rate = -4.15*1; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
-      saltDifference = 30; %%% Ice shelf-ocean salinity difference (In the MITgcm code, the ice shelf salinity is always zero.)
-      equiv_saltflux = Getz_melt_rate*rhoShelfIce*saltDifference/t1year; % -0.0036 g/m^2/s 
-
+      %%% Assume a horizontally uniform basal melt rate, Ffresh
+      Ffresh = -4.15*1; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+      Sref = 30; %%% Reference salinity of the wet grid right beneath the ice shelf
+      
+        % saltDifference = 30; %%% Ice shelf-ocean salinity difference (In the MITgcm code, the ice shelf salinity is always zero.)
+        % SHELFICEheatTransCoeff = 1.0E-04; %%% transfer coefficient (exchange velocity) for temperature (m/s)
+        % SHELFICEsaltToHeatRatio = 5.05E-03; %%% ratio of salinity to temperature transfer coefficients (non-dim.)
+        % SHELFICElatentHeat = 334.0E+03; %%% latent heat of fusion (J/kg)
+        % equiv_heatflux = -Getz_melt_rate/t1year*rhoShelfIce*SHELFICElatentHeat; %%% 40.3 W/m^2
+        % equiv_saltflux = SHELFICEsaltToHeatRatio*equiv_heatflux;
+      
       for i=1:Nx
           for j=1:Ny
-              if(icedraft(i,j)~=0)
+              if(icedraft(i,j)~=0 && h(i,j)<icedraft(i,j))
                   %%% Calculate local freezing temperature using the GSW toolbox
                   temp_relax(i,j,zidx_shelfice(i,j)) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
+                  temp_relax_2D(i,j) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
+                  %%% Calculate the salt flux equivalent to the basal melt rate Ffresh
+                  dz_beneath(i,j) = dz(zidx_shelfice(i,j)); %%% The depth of the grid cell right beneath the ice shelf
+                  equiv_saltflux(i,j) = Ffresh./t1year*Sref/(dz_beneath(i,j)+abs(Ffresh));
                   %%% Relaxation salinity
-                  salt_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_saltflux;
+                  salt_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_saltflux(i,j);
               end
           end
       end
+
+      %%% Plot relaxation T, and equivalent salt flux
+      dz_beneath(dz_beneath==0)=NaN;
+      temp_relax_2D(temp_relax_2D==0)=NaN;
+      equiv_saltflux(equiv_saltflux==0)=NaN;
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        subplot(1,3,1)
+        pcolor(X/1000,Y/1000,dz_beneath);
+        shading interp;
+        colorbar;colormap(jet)
+        xlabel('Longitude, x (km)')
+        ylabel('Latitude, y (km)')
+        title('Grid cell thickness right beneath the ice shelf (m)') 
+        set(gca,'fontsize',fontsize);
+        xlim([150 450]);ylim([0 120]);
+        subplot(1,3,2)
+        pcolor(X/1000,Y/1000,temp_relax_2D);
+        shading interp;
+        colorbar;colormap(jet) 
+        xlabel('Longitude, x (km)')
+        ylabel('Latitude, y (km)')
+        title('Relaxation temperature beneath the ice shelf (^oC)')
+        set(gca,'fontsize',fontsize);
+        xlim([150 450]);ylim([0 120]);
+        subplot(1,3,3)
+        pcolor(X/1000,Y/1000,equiv_saltflux*t1year);
+        shading interp;
+        colorbar;colormap(jet) 
+        xlabel('Longitude, x (km)')
+        ylabel('Latitude, y (km)')
+        title('Equivalent salt flux beneath the ice shelf (g/kg/year)')
+        set(gca,'fontsize',fontsize);
+        xlim([150 450]);ylim([0 120]);
+        PLOT = gcf;
+        PLOT.Position = [-151 496 1913 302];
+        %%% Save the figure
+        savefig([imgpath '/PseudoIceShelfRelaxation.fig']);
+        saveas(gcf,[imgpath '/PseudoIceShelfRelaxation.png']);
+      end
+  
 
       %%% Save as parameters
       writeDataset(temp_relax,fullfile(inputpath,'sponge_temp.bin'),ieee,prec); 
@@ -2036,11 +2093,12 @@ end
     title('Zonal wind velocity (m/s)');
     set(gca,'fontsize',fontsize-1);
     PLOT = gcf;
-    PLOT.Position = [263 149 567 336];  
-  end
+    PLOT.Position = [263 149 567 336]; 
     %%% Save the figure
     savefig([imgpath '/uwind.fig']);
     saveas(gcf,[imgpath '/uwind.png']);
+  end
+    
     
    %%% Plot the wind speed 
   if (showplots)
@@ -2053,11 +2111,12 @@ end
     title('Meridional wind velocity (m/s)');
     set(gca,'fontsize',fontsize-1);
     PLOT = gcf;
-    PLOT.Position = [263 149 567 336];  
-  end
+    PLOT.Position = [263 149 567 336];
     %%% Save the figure
     savefig([imgpath '/vwind.fig']);
     saveas(gcf,[imgpath '/vwind.png']);
+  end
+    
     
     
 if(useEXFwindstress)
@@ -2082,10 +2141,11 @@ if(useEXFwindstress)
                 set(gca,'fontsize',fontsize-1);
                 PLOT = gcf;
                 PLOT.Position = [263 149 567 336];  
-              end
                 %%% Save the figure
-                savefig([imgpath '/ustress.fig']);
-                saveas(gcf,[imgpath '/ustress.png']);
+                savefig([imgpath '/vstress.fig']);
+                saveas(gcf,[imgpath '/vstress.png']);
+              end
+                
 
                %%% Plot the wind stress 
               if (showplots)
@@ -2098,11 +2158,12 @@ if(useEXFwindstress)
                 title('Meridional wind stress (N/m^2)');
                 set(gca,'fontsize',fontsize-1);
                 PLOT = gcf;
-                PLOT.Position = [263 149 567 336];  
-              end
+                PLOT.Position = [263 149 567 336];
                 %%% Save the figure
                 savefig([imgpath '/vstress.fig']);
                 saveas(gcf,[imgpath '/vstress.png']);
+              end
+                
     
 else
 %     Ur = sqrt((abs(tau_zonal)+abs(tau_merid))./rho_a./SEAICE_drag).*ones(Nx,Ny);
