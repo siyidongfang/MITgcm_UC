@@ -1884,8 +1884,7 @@ end
       %%% Set relaxation temp/salt
       temp_relax = zeros(Nx,Ny,Nr);
       salt_relax = zeros(Nx,Ny,Nr);
-
-      temp_relax_2D = zeros(Nx,Ny);
+      temp_relax_2D = zeros(Nx,Ny); %%% For making plots
       equiv_saltflux = zeros(Nx,Ny);
       dz_beneath = zeros(Nx,Ny);
 
@@ -1893,16 +1892,11 @@ end
       SA_freezing = 30;
       
       %%% Assume a horizontally uniform basal melt rate, Ffresh
-      Ffresh = -4.15*1; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+      Ffresh = -4.15; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
       Sref = 30; %%% Reference salinity of the wet grid right beneath the ice shelf
-      
-        % saltDifference = 30; %%% Ice shelf-ocean salinity difference (In the MITgcm code, the ice shelf salinity is always zero.)
-        % SHELFICEheatTransCoeff = 1.0E-04; %%% transfer coefficient (exchange velocity) for temperature (m/s)
-        % SHELFICEsaltToHeatRatio = 5.05E-03; %%% ratio of salinity to temperature transfer coefficients (non-dim.)
-        % SHELFICElatentHeat = 334.0E+03; %%% latent heat of fusion (J/kg)
-        % equiv_heatflux = -Getz_melt_rate/t1year*rhoShelfIce*SHELFICElatentHeat; %%% 40.3 W/m^2
-        % equiv_saltflux = SHELFICEsaltToHeatRatio*equiv_heatflux;
-      
+      rho_o = 1027; %%% Reference density of the seawater
+      rho_fresh = 1005; %%% Reference density of the meltwater
+
       for i=1:Nx
           for j=1:Ny
               if(icedraft(i,j)~=0 && h(i,j)<icedraft(i,j))
@@ -1911,7 +1905,8 @@ end
                   temp_relax_2D(i,j) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
                   %%% Calculate the salt flux equivalent to the basal melt rate Ffresh
                   dz_beneath(i,j) = dz(zidx_shelfice(i,j)); %%% The depth of the grid cell right beneath the ice shelf
-                  equiv_saltflux(i,j) = Ffresh./t1year*Sref/(dz_beneath(i,j)+abs(Ffresh));
+                  % equiv_saltflux(i,j) = Ffresh./t1year*Sref/(dz_beneath(i,j)+abs(Ffresh));
+                  equiv_saltflux(i,j) = -Sref/(1+dz_beneath(i,j)*rho_o./abs(Ffresh)./rho_fresh)./t1year;
                   %%% Relaxation salinity
                   salt_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_saltflux(i,j);
               end
@@ -2900,10 +2895,6 @@ diag_fields_inst = {...
         end
 
 
-
-
-
-
         OBNa = Ai0.*ones(Nx,1);
         OBNh = Hi0.*ones(Nx,1);
         OBNsn = Hs0.*ones(Nx,1); %%% snow thickness
@@ -3009,8 +3000,8 @@ diag_fields_inst = {...
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
 
   if(useobcsEast||useobcsWast)
-        Urelaxobcsinner = 864000;
-        Urelaxobcsbound = 43200;
+        Urelaxobcsinner = 864000*3;
+        Urelaxobcsbound = 43200*20;
         obcs_parm03.addParm('Urelaxobcsinner',Urelaxobcsinner,PARM_REAL);
         obcs_parm03.addParm('Urelaxobcsbound',Urelaxobcsbound,PARM_REAL);  
   end
@@ -3018,8 +3009,10 @@ diag_fields_inst = {...
   
 
   if (useSeaiceSponge)
-       T_relaxinner = 864000/10;
-       T_relaxbound = 43200/6;
+%        T_relaxinner = 864000/10;
+%        T_relaxbound = 43200/6;
+    T_relaxinner = 864000;
+    T_relaxbound = 43200;
     Arelaxobcsinner = T_relaxinner;
     Arelaxobcsbound = T_relaxbound;
     Hrelaxobcsinner = T_relaxinner;
@@ -3048,14 +3041,6 @@ diag_fields_inst = {...
 
   
   
-
-
-
- 
-
-
-
-
 
 
   
