@@ -573,7 +573,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   figure(fignum);
   fignum = fignum + 1;
   clf;   
-  fontsize = 12;
+  fontsize = 15;
 
   %%% Bathymetry  
   p = surface(X(:,2:end-1)/1000,Y(:,2:end-1)/1000,h(:,2:end-1));
@@ -2895,9 +2895,11 @@ diag_fields_inst = {...
         if(yidx_icefront==0)
             yidx_icefront=1;
         end
+        % yidx_northernsponge = find(yy>(Ly-20*m1km));
 
         obuice = zeros(1,Ny);
         obvice = zeros(1,Ny);
+
 
         for jjj = yidx_icefront
             jjj
@@ -2913,15 +2915,34 @@ diag_fields_inst = {...
             [solui solvi] = solve(eqns,[ui vi]);
             Nui = double(real(solui));
             Nvi = double(real(solvi));
-            ui_idx = find(Nui==min(Nui));
+            if(jjj>yidx_icefront(1))
+                diff_ui = abs(Nui-obuice(jjj-1));
+                ui_idx = find(diff_ui==min(diff_ui));
+            else
+                ui_idx = find(Nui==min(Nui));
+            end
             obvice(jjj) = 0;
-            obuice(jjj) = Nui(ui_idx);
+            obuice(jjj) = unique(Nui(ui_idx));
         end
+
+        % Nsponge = length(yidx_northernsponge);
+        % obuice(Ny-Nsponge:Ny)=flip([0:(obuice(Ny-Nsponge)/Nsponge):obuice(Ny-Nsponge)]);
+
 
         %%%%%% Plot obuice, obvice
         figure()
-        plot(yy/1000,obuice)
-        title('obuice')
+        plot(yy/1000,obuice,'LineWidth',2)
+        hold on;
+        plot(yy/1000,uEast(:,1),'LineWidth',2)
+        plot(yy/1000,obuice-(uEast(:,1))','LineWidth',2)
+        plot(yy/1000,0*uEast(:,1),'--','LineWidth',1)
+        xlim([Yicefront/1000 Ly/1000])
+        set(gca,'fontsize',fontsize);
+        xlabel('Latitude, y (km)','Fontsize',fontsize)
+        ylabel('(m/s)','Fontsize',fontsize)
+        title('Zonal boundary condition','Fontsize',fontsize+2)
+        leg1 = legend('Sea ice zonal velocity','Ocean surface zonal velocity','Ice-ocean velocity shear','Fontsize',fontsize);
+        set(leg1,'Position',[0.1500 0.7595 0.4179 0.1476]);
         savefig([imgpath '/obuice.fig']);
         saveas(gcf,[imgpath '/obuice.png']);
 
@@ -3049,8 +3070,8 @@ diag_fields_inst = {...
   if (useSeaiceSponge)
 %     T_relaxinner = 864000;
 %     T_relaxbound = 43200;
-       T_relaxinner = 864000/10;
-       T_relaxbound = 43200/6;
+       T_relaxinner = 864000;
+       T_relaxbound = 43200;
     Arelaxobcsinner = T_relaxinner;
     Arelaxobcsbound = T_relaxbound;
     Hrelaxobcsinner = T_relaxinner;
