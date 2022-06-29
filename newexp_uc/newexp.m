@@ -160,12 +160,12 @@
 %   nPx = 6; %%% no. of processors in x-direction
 %   nPy = 4; %%% no. of processors in y-direction
 %   Nr = 68; %%% no. of z-gridpoints 
-  %%%% ~ 10km grid spacing
-  sNx = 20; %%% no. of x-gridpoints per tile
-  sNy = 20; %%% no. of y-gridpoints per tile
-  nPx = 3; %%% no. of processors in x-direction
-  nPy = 2; %%% no. of processors in y-direction
-  Nr = 68; %%% no. of z-gridpoints 
+%   %%%% ~ 10km grid spacing
+%   sNx = 20; %%% no. of x-gridpoints per tile
+%   sNy = 20; %%% no. of y-gridpoints per tile
+%   nPx = 3; %%% no. of processors in x-direction
+%   nPy = 2; %%% no. of processors in y-direction
+%   Nr = 68; %%% no. of z-gridpoints 
 %   %%%% ~ 15km grid spacing
 %   sNx = 20; %%% no. of x-gridpoints per tile
 %   sNy = 27; %%% no. of y-gridpoints per tile
@@ -173,17 +173,18 @@
 %   nPy = 1; %%% no. of processors in y-direction
 %   Nr = 68; %%% no. of z-gridpoints 
 %   %%%% ~ 2km grid spacing
-%   sNx = 18; %%% no. of x-gridpoints per tile
-%   sNy = 20; %%% no. of y-gridpoints per tile
-%   nPx = 16; %%% no. of processors in x-direction
-%   nPy = 10; %%% no. of processors in y-direction
+%   sNx = 32; %%% no. of x-gridpoints per tile
+%   sNy = 13; %%% no. of y-gridpoints per tile
+%   nPx = 9; %%% no. of processors in x-direction
+%   nPy = 15; %%% no. of processors in y-direction
 %   Nr = 68; %%% no. of z-gridpoints 
   %%%% ~ 2km grid spacing
-%   sNx = 25; %%% no. of x-gridpoints per tile
-%   sNy = 20; %%% no. of y-gridpoints per tile
-%   nPx = 12; %%% no. of processors in x-direction
-%   nPy = 10; %%% no. of processors in y-direction
-%   Nr = 68; %%% no. of z-gridpoints 
+  sNx = 21; %%% no. of x-gridpoints per tile
+  sNy = 20; %%% no. of y-gridpoints per tile
+  nPx = 14; %%% no. of processors in x-direction
+  nPy = 10; %%% no. of processors in y-direction
+  Nr = 68; %%% no. of z-gridpoints 
+
 
 
 

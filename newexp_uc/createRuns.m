@@ -6,8 +6,8 @@
 close all;clear;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
-% batch_name = 'exps_aofd/shelfice_seaice';
-batch_name = 'exps_aofd/pseudo_shelfice_seaice';
+batch_name = 'exps_aofd/seaice_boundary';
+% batch_name = 'exps_aofd/pseudo_shelfice_seaice';
 
 
 %%% Input parameters
@@ -25,7 +25,7 @@ Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150
 
-is_ContinuedRun = true;
+is_ContinuedRun = false;
 
 %%% Select resolution
 is_hires = false;
@@ -37,7 +37,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res10km_' exp_name '_melt12.45m_ardbeg']
+exp_name = ['res2km_' exp_name '_ardbeg']
 
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids

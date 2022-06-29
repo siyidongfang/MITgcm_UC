@@ -64,7 +64,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% FIXED PARAMETER VALUES %%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  simTime = 5*t1year; %%% Simulation time   
+  simTime = 8*t1year; %%% Simulation time   
 %   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
 %   Lx = 400*m1km; %%% Domain size in x 
@@ -153,7 +153,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
   useGMRedi = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useLAYERS = true;
+  useLAYERS = false;
   useEXFwindstress = false; %%% apply wind speed in EXF package
   if(useSEAICE)
       useRBCS = false; 
@@ -173,7 +173,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useEmPmRFile = false;
 
   useSHELFICE = true; 
-  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
       useRBCS = true; 
   end
@@ -2420,43 +2420,43 @@ end
 
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
-... %%%%%%%%% for spin-up
-... %     'UVEL','VVEL', 'WVEL',...
-... %     'SALT','THETA',...
-... %     'ETAN',...
-... %     'UVELSQ','VVELSQ','WVELSQ'...
-... %     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
-... %     'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
-       ... %%%%%%%%% for analysis
-         'UVEL','VVEL', 'WVEL','SALT','THETA',...
-         'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
-      ... %%% Heat budget
-         'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
-         'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
-         ...
-         'VVELTH', ...
-         'oceQnet','UVELTH','WVELTH',...
-      ... %%% Energy budget
-         'UVELSQ','VVELSQ','WVELSQ',...
-         'UV_VEL_Z','WU_VEL','WV_VEL',...
-         ...
-      ... %%% Salt budget
-         'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
-         'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
-         ...
-         'VVELSLT',...
-         'oceSflux','UVELSLT','WVELSLT',...
-      ... %%% Momentum budget
-         'ETAN',...
-         'oceTAUX','oceTAUY',...
-     ... %%% Overturning streamfunction
-         'RHOAnoma','PHIHYD','LaTr1RHO',...
-         'LaUH1RHO','LaHw1RHO','LaUH2TH','LaHw2TH',... 
-         'LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH',...
-     ...
-         'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext','Um_AdvZ3','Um_AdvRe','Um_Cori',...
-         'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
-         'VISrI_Um','VISrI_Vm',...
+%%%%%%%% for spin-up
+    'UVEL','VVEL', 'WVEL',...
+    'SALT','THETA',...
+    'ETAN',...
+    'UVELSQ','VVELSQ','WVELSQ'...
+    'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
+    'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
+%        ... %%%%%%%%% for analysis
+%          'UVEL','VVEL', 'WVEL','SALT','THETA',...
+%          'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
+%       ... %%% Heat budget
+%          'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
+%          'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...
+%          ...
+%          'VVELTH', ...
+%          'oceQnet','UVELTH','WVELTH',...
+%       ... %%% Energy budget
+%          'UVELSQ','VVELSQ','WVELSQ',...
+%          'UV_VEL_Z','WU_VEL','WV_VEL',...
+%          ...
+%       ... %%% Salt budget
+%          'TOTSTEND','SFLUX','KPPg_SLT','oceFWflx','WSLTMASS',...
+%          'ADVr_SLT','ADVx_SLT','ADVy_SLT','DFrE_SLT','DFxE_SLT','DFyE_SLT','DFrI_SLT',...
+%          ...
+%          'VVELSLT',...
+%          'oceSflux','UVELSLT','WVELSLT',...
+%       ... %%% Momentum budget
+%          'ETAN',...
+%          'oceTAUX','oceTAUY',...
+%      ... %%% Overturning streamfunction
+%          'RHOAnoma','PHIHYD','LaTr1RHO',...
+%          'LaUH1RHO','LaHw1RHO','LaUH2TH','LaHw2TH',... 
+%          'LaVH1RHO','LaHs1RHO','LaVH2TH','LaHs2TH',...
+%      ...
+%          'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext','Um_AdvZ3','Um_AdvRe','Um_Cori',...
+%          'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
+%          'VISrI_Um','VISrI_Vm',...
      };
       
   numdiags_avg = length(diag_fields_avg);  
@@ -2545,12 +2545,6 @@ diag_fields_inst = {...
     createDIAGSIZEh(codepath,ndiags,Nr);
   end
   
-
-
-
-
-
-
 
 
 
@@ -2864,43 +2858,82 @@ diag_fields_inst = {...
             obsvice = 0
      end
 
+
+
+
+
+
+
+        %%%%%%%% Precribe uniform sea ice velocity at the zonal boundaries
+        % Ua_mean = mean(uwind(1,yidx_100km:end))
+        % Va_mean = mean(vwind(1,yidx_100km:end))
+        % tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
+        % tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
+        % syms ui vi
+        % %         eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
+        % %         eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
+        % Uo_mean = mean(uEast(yidx_100km:end,1));
+        % eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*(ui-Uo_mean);
+        % eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*vi;       
+        % eqns = [eq1, eq2];
+        % [solui solvi] = solve(eqns,[ui vi]);
+        % Nui = double(real(solui));
+        % Nvi = double(real(solvi));
+        % ui_idx = find(Nui==min(Nui));
+        % obvice = 0
+        % obuice = Nui(ui_idx)
+        % Uo_surf_min = min(uEast(:,1));
+        % if(abs(obuice)<abs(Uo_surf_min))
+        %     obuice = Uo_surf_min
+        % end
+
+        %%%%%%%% Calculate meridionally varying sea ice velocity, assume
+        %%%%%%%% free-drift condition, and solve ice velocity at each
+        %%%%%%%% boundary grid point.
+
+        yidx_icefront = find(yy>Yicefront);%%% Find the ice shelf front
+        if(yidx_icefront==0)
+            yidx_icefront=1;
+        end
+
+        obuice = zeros(1,Ny);
+        obvice = zeros(1,Ny);
+
+        for jjj = yidx_icefront
+            jjj
+            ua_local = uwind(1,jjj);
+            va_local = vwind(1,jjj);
+            uo_local = uEast(jjj,1);
+            tao_aix = rho_a*SEAICE_drag*sqrt(ua_local^2+va_local^2)*ua_local;       %%% Air-ice stress in x direction, N/m2
+            tao_aiy = rho_a*SEAICE_drag*sqrt(ua_local^2+va_local^2)*va_local;       %%% Air-ice stress in y direction, N/m2
+            syms ui vi
+            eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt((ui-uo_local)^2+vi^2)*(ui-uo_local);
+            eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt((ui-uo_local)^2+vi^2)*vi;       
+            eqns = [eq1, eq2];
+            [solui solvi] = solve(eqns,[ui vi]);
+            Nui = double(real(solui));
+            Nvi = double(real(solvi));
+            ui_idx = find(Nui==min(Nui));
+            obvice(jjj) = 0;
+            obuice(jjj) = Nui(ui_idx);
+        end
+
+        %%%%%% Plot obuice, obvice
+        figure()
+        plot(yy/1000,obuice)
+        title('obuice')
+        savefig([imgpath '/obuice.fig']);
+        saveas(gcf,[imgpath '/obuice.png']);
+
+
+
     if((~useobcsSouth) && useobcsNorth)
-
-        yidx_100km = round(100*m1km/(Ly/Ny));%%% Find the ice shelf front
-        if(yidx_100km==0)
-            yidx_100km=1;
-        end
-        Ua_mean = mean(uwind(1,yidx_100km:end))
-        Va_mean = mean(vwind(1,yidx_100km:end))
-        tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
-        tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
-        syms ui vi
-        %         eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
-        %         eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
-        Uo_mean = mean(uEast(yidx_100km:end,1));
-        eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*(ui-Uo_mean);
-        eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*vi;       
-        eqns = [eq1, eq2];
-        [solui solvi] = solve(eqns,[ui vi]);
-        Nui = double(real(solui));
-        Nvi = double(real(solvi));
-        %         ui_idx = (Nui<0);
-        ui_idx = find(Nui==min(Nui));
-        %         obsvice = Svi(ui_idx)
-        obvice = 0
-        obuice = Nui(ui_idx)
-        Uo_surf_min = min(uEast(:,1));
-        if(abs(obuice)<abs(Uo_surf_min))
-            obuice = Uo_surf_min
-        end
-
-
         OBNa = Ai0.*ones(Nx,1);
         OBNh = Hi0.*ones(Nx,1);
         OBNsn = Hs0.*ones(Nx,1); %%% snow thickness
         OBNsl = Si0.*ones(Nx,1); %%% sea ice salinity
-        OBNuice = obuice.*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
-        OBNvice = obvice.*ones(Nx,1);
+        OBNuice = obuice(end).*ones(Nx,1); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+        OBNvice = obvice(end).*ones(Nx,1);
         
         writeDataset(OBNa,fullfile(inputpath,'OBNaFile.bin'),ieee,prec);
         writeDataset(OBNh,fullfile(inputpath,'OBNhFile.bin'),ieee,prec);
@@ -2922,8 +2955,11 @@ diag_fields_inst = {...
         OBEh = Hi0.*ones(1,Ny);
         OBEsn = Hs0.*ones(1,Ny); %%% snow thickness
         OBEsl = Si0.*ones(1,Ny); %%% sea ice salinity
-        OBEuice = obuice.*ones(1,Ny); %%% Initial zonal ice velocity should be westward (negative!) or zero.
-        OBEvice = obvice.*ones(1,Ny);
+        % OBEuice = obuice.*ones(1,Ny); %%% Initial zonal ice velocity should be westward (negative!) or zero.
+        % OBEvice = obvice.*ones(1,Ny);
+        OBEuice = obuice; 
+        OBEvice = obvice;
+
         writeDataset(OBEa,fullfile(inputpath,'OBEaFile.bin'),ieee,prec);
         writeDataset(OBEh,fullfile(inputpath,'OBEhFile.bin'),ieee,prec);
         writeDataset(OBEsn,fullfile(inputpath,'OBEsnFile.bin'),ieee,prec);
