@@ -1,12 +1,12 @@
 clear;close all;
-expdir = '/Users/csi/MITgcm_UC/exps_aofd/no_seaice/';
-expname_old = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_shelfice_ErestWrest_ardbeg';
-expname_new = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_shelfice_ErestWrest_ardbeg_prod';
+expdir = '/Users/csi/MITgcm_UC/exps_aofd/pseudo_shelfice_seaice/';
+expname_old = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_ardbeg';
+expname_new = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_ardbeg_prod';
 
 
-expiter = 1669553;
+expiter = 1484048;
 
-useSEAICE = false;
+useSEAICE = true;
 
 initialize_3DuvtspIce (expdir,expname_old,expname_new,expiter,useSEAICE);
 
