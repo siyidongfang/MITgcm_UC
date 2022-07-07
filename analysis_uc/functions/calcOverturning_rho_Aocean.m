@@ -219,8 +219,8 @@ function calcOverturning_rho_Aocean (expdir,expname,prodir)
   
   
   %%% Calculate zonal-mean potential temperature
-  pt_xtavg = squeeze(nanmean(pt_tavg(:,:,:)));
-  pt_f_xtavg = squeeze(nanmean(pt_f(:,:,:)));
+  pt_xtavg = squeeze(mean(pt_tavg(:,:,:),'omitnan'));
+  pt_f_xtavg = squeeze(mean(pt_f(:,:,:),'omitnan'));
   
 %   figure(13)
 %     PSIlim=[-1.5 1.5];    YLIM = [36.4 37.5];
@@ -258,7 +258,7 @@ function calcOverturning_rho_Aocean (expdir,expname,prodir)
     Aocean_xint = squeeze(sum(DX_xyz.*DZ_xyz.*hFacS,1)); %%% Integrate the ocean area in the x-direction, on v-grid
     Aocean(:,1:Nr) = cumsum(Aocean_xint,2,'reverse'); %%% Integrate the ocean area in the z-direction from bottom to top
 
-    Aisop_xint = squeeze(nansum(DX_xypt.*h_pt_tavg,1));
+    Aisop_xint = squeeze(sum(DX_xypt.*h_pt_tavg,1,'omitnan'));
     Aisop(:,2:Npt+1) = cumsum(Aisop_xint,2);
     zzf = -[0 cumsum(delR)];
 

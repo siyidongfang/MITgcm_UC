@@ -5,22 +5,6 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
 
-
-%     tt = THETA;
-%     ss = SALT;
-%     uu = UVEL;
-%     vv = VVEL;
-%     vt = VVELTH;
-%     eta = ETAN;
-
-
-    tt = rdmds([exppath,'/results/THETA'],nIter);
-    ss = rdmds([exppath,'/results/SALT'],nIter);
-    uu = rdmds([exppath,'/results/UVEL'],nIter);
-    vv = rdmds([exppath,'/results/VVEL'],nIter);
-    vt = rdmds([exppath,'/results/VVELTH'],nIter);
-    eta = rdmds([exppath,'/results/ETAN'],nIter);
-
     rho_o = 1000;
     cp_o = 3994; % Unit: J/kg/degC
 

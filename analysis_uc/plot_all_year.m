@@ -15,20 +15,37 @@
 
 
 
-    expdir = '/Users/csi/MITgcm_UC/exps_aofd/pseudo_shelfice_seaice/';
-    expname = 'res15km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_ardbeg_prod'
-%     expdir = '/Users/csi/MITgcm_UC/exps_aofd/shelfice_seaice/';
-%     expname = 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_stampede2'
-%     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_longerRelaxTau_stampede2'
+    expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_ardbeg'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 200229;
+    nIter = 1484047;
     year = num2str(8);
     
+
+    tt = rdmds([exppath,'/results/THETA'],nIter);
+    ss = rdmds([exppath,'/results/SALT'],nIter);
+    uu = rdmds([exppath,'/results/UVEL'],nIter);
+    vv = rdmds([exppath,'/results/VVEL'],nIter);
+    vt = rdmds([exppath,'/results/VVELTH'],nIter);
+    eta = rdmds([exppath,'/results/ETAN'],nIter);
+
+    SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
+    SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
+    SHI_TauX = rdmds([exppath,'/results/SHI_TauX'],nIter);
+    SHI_TauY = rdmds([exppath,'/results/SHI_TauY'],nIter);
+    SHIForcT = rdmds([exppath,'/results/SHIForcT'],nIter);
+    SHIForcS = rdmds([exppath,'/results/SHIForcS'],nIter);
+
+    SIuice = rdmds([exppath,'/results/SIuice'],nIter);
+    SIvice = rdmds([exppath,'/results/SIvice'],nIter);
+    SIheff = rdmds([exppath,'/results/SIheff'],nIter);
+    SIarea = rdmds([exppath,'/results/SIarea'],nIter);
+
     plot_basics
-    %     plot_shelfIce
+    plot_shelfIce
     plot_seaice
 
 

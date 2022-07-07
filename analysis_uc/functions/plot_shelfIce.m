@@ -62,14 +62,6 @@
 
 
 
-    %%% Calculate ice shelf melt rate of one output file
-
-    SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter);
-    SHIhtFlx = rdmds([exppath,'/results/SHIhtFlx'],nIter);
-    SHI_TauX = rdmds([exppath,'/results/SHI_TauX'],nIter);
-    SHI_TauY = rdmds([exppath,'/results/SHI_TauY'],nIter);
-    SHIForcT = rdmds([exppath,'/results/SHIForcT'],nIter);
-    SHIForcS = rdmds([exppath,'/results/SHIForcS'],nIter);
     
 
     SHIfwFlx (SHIfwFlx==0)=NaN;

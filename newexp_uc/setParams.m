@@ -1725,6 +1725,49 @@ end
       
   
   
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%% VERTICAL DIFFUSIVITY %%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  
+  %%% If a diffusive layer is required in the north to represent the
+  %%% northern basin, set the diffusivity here
+  diffKr = diffKrT*ones(Nx,Ny,Nr);  
+  kappa_max = 0.003
+  kap_deep = kappa_max; %%% Max diffisivity in deep ocean  
+  H_kap = 150; %%% e-folding scale for mixing decrease with h.a.b.
+  for i=1:Nx
+    for j=1:Ny      
+      kap_profile = diffKrT + kap_deep*min(exp(-(zz-h(i,j))/H_kap),1);      
+      diffKr(i,j,:) = reshape(kap_profile,[1 1 Nr]);
+    end
+  end
+  
+   %%% Plot diffKr
+  if (showplots)
+    figure(fignum);
+    fignum = fignum + 1;
+    clf;
+    semilogx(squeeze(diffKr(round(Nx/2),Ny,:)),zz,'LineWidth',2); 
+    hold on;
+    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/3*2),:)),zz,'LineWidth',2); 
+    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/5*3),:)),zz,'LineWidth',2); 
+    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/2),:)),zz,'LineWidth',2); 
+    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/4),:)),zz,'LineWidth',2); 
+    hold off
+    set(gca,'fontsize',fontsize);
+    title('Diapycnal mixing coefficient');
+    %%% Save the figure
+    savefig([imgpath '/diffKr.fig']);
+    saveas(gcf,[imgpath '/diffKr.png']);
+  end  
+
+  save([imgpath 'diffKr.mat'],'diffKr','xx','yy','zz')
+  %%% Save as a parameter
+  writeDataset(diffKr,fullfile(inputpath,'diffKrFile.bin'),ieee,prec);
+  parm05.addParm('diffKrFile','diffKrFile.bin',PARM_STR);
+  
+  
   
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2421,13 +2464,13 @@ end
 %%% Annual mean diagnostics
 diag_fields_avg = {...   
 %%%%%%%% for spin-up
-    'UVEL','VVEL', 'WVEL',...
-    'SALT','THETA',...
-    'ETAN',...
-    'UVELSQ','VVELSQ','WVELSQ'...
-    'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
-    'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
-%        ... %%%%%%%%% for analysis
+     'UVEL','VVEL', 'WVEL',...
+     'SALT','THETA',...
+     'ETAN',...
+     'UVELSQ','VVELSQ','WVELSQ'...
+     'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
+     'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
+%       ... %%%%%%%%% for analysis
 %          'UVEL','VVEL', 'WVEL','SALT','THETA',...
 %          'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
 %       ... %%% Heat budget

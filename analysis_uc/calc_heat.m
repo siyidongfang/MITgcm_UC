@@ -9,7 +9,11 @@
     
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;    
-    prodir = '/Users/csi/MITgcm_UC/products_uc/';
+%     prodir = '/Users/csi/MITgcm_UC/products_uc/';
+    expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
+    expname = 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
+    prodir = [expdir expname '/'];
+
     
     %%% Load the list of the experiments
     list_exps;
@@ -114,7 +118,7 @@
     
 
     %%% Save the products
-    save([prodir,'heatbudget_aofd.mat'],'EXPDIR','EXPNAME','cp_o','rho_o',...
+    save([prodir,'heatbudget.mat'],'EXPDIR','EXPNAME','cp_o','rho_o',...
     'YcavityS','Yicefront','Yshelfbreak','YslopeN',...
     'Fheat_adv','Fheat_vvelth','Fmean_vgrid_xzint','Feddy_adv_xzint','Feddy_vvelth_xzint',...
     'F_cavityS',     'F_icefront',     'F_shelfbreak',...
