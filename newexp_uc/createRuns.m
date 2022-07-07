@@ -37,7 +37,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_kmax0.003']
+exp_name = ['res2km_' exp_name '_kmax0.001']
 
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids

@@ -91,7 +91,11 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   viscA4Grid = 0.1; %%% Grid-dependent biharmonic viscosity
 %   viscC4smag = 0; %%% Smagorinsky biharmonic viscosity  
 %   diffK4Tgrid = 0.1; %%% Grid-dependent biharmonic temp diffusivity
-  diffKrT = 1e-5; %%% Vertical temp diffusion     
+  diffKrT = 1e-5; %%% Vertical temp diffusion   
+  ALLOW_3D_DIFFKR = true;
+  if(ALLOW_3D_DIFFKR)
+      diffKrT = 5e-6; %%% Vertical temp diffusion 
+  end
 %   diffK4Sgrid = 0.1; %%% Grid-dependent biharmonic salt diffusivity
   diffKrS = 1e-5; %%% Vertical salt diffusion     
   viscA4Grid = 0;    %%%%% Update: 20210627
@@ -1724,51 +1728,50 @@ end
       
       
   
+  if(ALLOW_3D_DIFFKR)
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%%%% VERTICAL DIFFUSIVITY %%%%%
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      
+      
+      %%% If a diffusive layer is required in the north to represent the
+      %%% northern basin, set the diffusivity here
+      diffKr = diffKrT*ones(Nx,Ny,Nr);  
+      kappa_max = 0.001
+      kap_deep = kappa_max; %%% Max diffisivity in deep ocean  
+      H_kap = 150; %%% e-folding scale for mixing decrease with h.a.b.
+      for i=1:Nx
+        for j=1:Ny      
+          kap_profile = diffKrT + kap_deep*min(exp(-(zz-h(i,j))/H_kap),1);      
+          diffKr(i,j,:) = reshape(kap_profile,[1 1 Nr]);
+        end
+      end
+      
+       %%% Plot diffKr
+      if (showplots)
+        figure(fignum);
+        fignum = fignum + 1;
+        clf;
+        semilogx(squeeze(diffKr(round(Nx/2),Ny,:)),zz,'LineWidth',2); 
+        hold on;
+        semilogx(squeeze(diffKr(round(Nx/2),round(Ny/3*2),:)),zz,'LineWidth',2); 
+        semilogx(squeeze(diffKr(round(Nx/2),round(Ny/5*3),:)),zz,'LineWidth',2); 
+        semilogx(squeeze(diffKr(round(Nx/2),round(Ny/2),:)),zz,'LineWidth',2); 
+        semilogx(squeeze(diffKr(round(Nx/2),round(Ny/4),:)),zz,'LineWidth',2); 
+        hold off
+        set(gca,'fontsize',fontsize);
+        title('Diapycnal mixing coefficient');
+        %%% Save the figure
+        savefig([imgpath '/diffKr.fig']);
+        saveas(gcf,[imgpath '/diffKr.png']);
+      end  
+    
+      save([imgpath 'diffKr.mat'],'diffKr','xx','yy','zz')
+      %%% Save as a parameter
+      writeDataset(diffKr,fullfile(inputpath,'diffKrFile.bin'),ieee,prec);
+      parm05.addParm('diffKrFile','diffKrFile.bin',PARM_STR);
   
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%% VERTICAL DIFFUSIVITY %%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  
-  %%% If a diffusive layer is required in the north to represent the
-  %%% northern basin, set the diffusivity here
-  diffKr = diffKrT*ones(Nx,Ny,Nr);  
-  kappa_max = 0.003
-  kap_deep = kappa_max; %%% Max diffisivity in deep ocean  
-  H_kap = 150; %%% e-folding scale for mixing decrease with h.a.b.
-  for i=1:Nx
-    for j=1:Ny      
-      kap_profile = diffKrT + kap_deep*min(exp(-(zz-h(i,j))/H_kap),1);      
-      diffKr(i,j,:) = reshape(kap_profile,[1 1 Nr]);
-    end
   end
-  
-   %%% Plot diffKr
-  if (showplots)
-    figure(fignum);
-    fignum = fignum + 1;
-    clf;
-    semilogx(squeeze(diffKr(round(Nx/2),Ny,:)),zz,'LineWidth',2); 
-    hold on;
-    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/3*2),:)),zz,'LineWidth',2); 
-    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/5*3),:)),zz,'LineWidth',2); 
-    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/2),:)),zz,'LineWidth',2); 
-    semilogx(squeeze(diffKr(round(Nx/2),round(Ny/4),:)),zz,'LineWidth',2); 
-    hold off
-    set(gca,'fontsize',fontsize);
-    title('Diapycnal mixing coefficient');
-    %%% Save the figure
-    savefig([imgpath '/diffKr.fig']);
-    saveas(gcf,[imgpath '/diffKr.png']);
-  end  
-
-  save([imgpath 'diffKr.mat'],'diffKr','xx','yy','zz')
-  %%% Save as a parameter
-  writeDataset(diffKr,fullfile(inputpath,'diffKrFile.bin'),ieee,prec);
-  parm05.addParm('diffKrFile','diffKrFile.bin',PARM_STR);
-  
-  
-  
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%% WRITE THE 'data' FILE %%%%%
