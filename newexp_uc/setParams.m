@@ -92,7 +92,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   viscC4smag = 0; %%% Smagorinsky biharmonic viscosity  
 %   diffK4Tgrid = 0.1; %%% Grid-dependent biharmonic temp diffusivity
   diffKrT = 1e-5; %%% Vertical temp diffusion   
-  ALLOW_3D_DIFFKR = true;
+  ALLOW_3D_DIFFKR = false; %%% If true, need to define ALLOW_3D_DIFFKR in expname/code/CPP_OPTIONS.h
   if(ALLOW_3D_DIFFKR)
       diffKrT = 5e-6; %%% Vertical temp diffusion 
   end
