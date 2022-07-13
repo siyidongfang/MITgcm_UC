@@ -25,7 +25,7 @@ Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150
 
-is_ContinuedRun = true;
+is_ContinuedRun = false;
 
 %%% Select resolution
 is_hires = false;
@@ -37,7 +37,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_kmax0.001_prod']
+exp_name = ['res2km_' exp_name '_Wtrough15km']
 
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
