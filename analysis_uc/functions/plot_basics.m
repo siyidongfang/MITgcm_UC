@@ -218,7 +218,7 @@
     hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
     clabel(M,c,'LabelSpacing',200);hold off;
     shading interp;axis ij;colormap(mycolormap);colorbar
-    caxis([-0.08 0.08])
+    caxis([-0.08 0.08]*2)
     title('Zonal velocity (m/s)')
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:100:300 round(Ly/1000)]);
@@ -231,7 +231,7 @@
     hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
     clabel(M,c,'LabelSpacing',200);hold off;
     shading interp;axis ij;colormap(mycolormap);colorbar
-    caxis([-0.08 0.08])
+    caxis([-0.08 0.08]*2)
     title('Zoom in')
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:100:300 round(Ly/1000)]);

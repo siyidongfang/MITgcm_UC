@@ -19,13 +19,13 @@ Ai0 =1;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
 
-Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
-Htr = 200;    %%% Trough depth, ref 200
+Hbed = 0;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
+Htr = 0;    %%% Trough depth, ref 200
 Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150
 
-is_ContinuedRun = false;
+is_ContinuedRun = true;
 
 %%% Select resolution
 is_hires = false;
@@ -37,7 +37,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_Wtrough15km']
+exp_name = ['res2km_' exp_name '_prod']
 
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids

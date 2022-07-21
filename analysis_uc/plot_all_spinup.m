@@ -1,5 +1,5 @@
 %%%
-%%% plot_all.m
+%%% plot_all_spinup.m
 %%%
 %%% A convenient script to make plots for all simulations
 
@@ -16,13 +16,13 @@
 
 
     expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.001'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb550dZs150'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 1484047;
-    year = num2str(8);
+    nIter = 927529;
+    year = num2str(5);
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);
@@ -49,44 +49,44 @@
     plot_seaice
 
 
-    %% For groups of experiments 
-    
-    clear;close all;
-
-    %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
-
-    
-    list_exps;
-
-    nEXP = length(EXPNAME);
-
-for nn =4
-
-        expname = EXPNAME{nn}
-        expdir = EXPDIR{nn};
-        nIter = NITER(nn);
-        year = YEAR{nn};
-       
-        loadexp;
-
-        %%% Make plots!!
-        plot_KE_EKE_T_S_series
-%         plot_basics
-%    
-%         useSEAICE = USESEAICE(nn);
-%         useSHELFICE = USESHELFICE(nn);
-%         if(useSHELFICE)
-%             plot_shelfIce
-%         end
-%         if(useSEAICE)
-%             plot_seaice
-%         end
-
-    end
+%     %% For groups of experiments 
+%     
+%     clear;close all;
+% 
+%     %%% Add path
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
+% 
+%     
+%     list_exps;
+% 
+%     nEXP = length(EXPNAME);
+% 
+% for nn =4
+% 
+%         expname = EXPNAME{nn}
+%         expdir = EXPDIR{nn};
+%         nIter = NITER(nn);
+%         year = YEAR{nn};
+%        
+%         loadexp;
+% 
+%         %%% Make plots!!
+%         plot_KE_EKE_T_S_series
+% %         plot_basics
+% %    
+% %         useSEAICE = USESEAICE(nn);
+% %         useSHELFICE = USESHELFICE(nn);
+% %         if(useSHELFICE)
+% %             plot_shelfIce
+% %         end
+% %         if(useSEAICE)
+% %             plot_seaice
+% %         end
+% 
+%     end
 
 
 
