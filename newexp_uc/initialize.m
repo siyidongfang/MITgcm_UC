@@ -1,10 +1,10 @@
 clear;close all;
 expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
-expname_old = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Wtrough15km';
-expname_new = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Wtrough15km_prod';
+expname_old = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.0001';
+expname_new = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.0001_prod';
 
 
-expiter = 1298541;
+expiter = 1484048;
 
 useSEAICE = true;
 

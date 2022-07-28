@@ -104,7 +104,7 @@
 %   Nr = 68; %%% no. of z-gridspoints 
 %   end
 
-  
+ 
 % %%% Set-up for Stampede2
 %   opt_file = 'xsede_stampede'; %%% options file name
 %   use_mpi = true; %%% set true for parallel processing
@@ -146,7 +146,7 @@
 % %   nPy = 10; %%% no. of processors in y-direction
 % %   Nr = 68; %%% no. of z-gridpoints
 %  end
- 
+%  
 %   acct = 'tg854737';
 
  
