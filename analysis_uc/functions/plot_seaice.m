@@ -67,4 +67,17 @@
     print('-dpng','-r150',[figdir 'Year' year '_seaice.png']);
 
 
+    figure()
+    set(gcf,'Position',[25 367 805 426])
+    pcolor(xx/1000,yy/1000,(SIuice-u_surf)');
+    caxis([-0.15 0.15])
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    shading flat;colorbar;colormap('redblue');
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title({'Ice-ocean velocity shear, u_i-u_o (m/s)'})
+    set(gca,'FontSize',fontsize);
+    print('-dpng','-r150',[figdir 'Year' year '_IceOceanVelocityShear.png']);
+
+
 
