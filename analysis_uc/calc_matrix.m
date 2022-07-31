@@ -28,41 +28,72 @@
     clear;close all;
     
     %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;    
+    addpath /Users/csi/MITgcm_UC/analysis_uc/functions/;    
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/;
-    expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
-    expname = 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
-    prodir = [expdir expname '/'];
-    loadexp;
+    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
+    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
     
-    DX_xyz = repmat(reshape(delX,[Nx 1 1]),[1 Ny Nr]);
-    DY_xyz = repmat(reshape(delY,[1 Ny 1]),[Nx 1 Nr]);
-    DZ_xyz = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
-    
-    load([prodir '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
-            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS',...
-            'SIuice','SIvice','SIheff','SIarea');
-    
-    tt = THETA;
-    ss = SALT;
-    uu = UVEL;
-    vv = VVEL;
-    vt = VVELTH;
-    ut = UVELTH;
-    eta = ETAN;
-    
+    prodir = '/Users/csi/MITgcm_UC/products_uc/';
+
+    list_exps_seaiceboundary;
+
     m1km = 1000;
     Ws =30*m1km; %%% Reference value 30km, continental slope half-width
     Wshelf = 100*m1km; %%% Width of continental shelf
     Ycoast = 120*m1km; %%% Latitude of coastline
     Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
     Wsponge = 20*m1km;
-    
+    Lx = 600*m1km;
+
     Ymin = Yshelfbreak - Ws;
     Ymax = Yshelfbreak + 2*Ws;
     Xmin = Wsponge+20*m1km;
     Xmax = Lx-(Wsponge+20*m1km);
+
+    rho_i = 920;
+    t1day = 86400;
+    t1year = 365*t1day;
+    rho_o = 1027;
+    Cio = 5.54e-3;
+
+
+for n=1:nEXP
+% for n=1
+    expname = EXPNAME{n}
+    loadexp;
     
+    DX_xyz = repmat(reshape(delX,[Nx 1 1]),[1 Ny Nr]);
+    DY_xyz = repmat(reshape(delY,[1 Ny 1]),[Nx 1 Nr]);
+    DZ_xyz = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
+    
+    if(is_prod_run(n))
+        load([expdir expname '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
+                'SHIfwFlx','oceTAUX','oceTAUY','SIuice','SIvice');
+        tt = THETA;
+        ss = SALT;
+        uu = UVEL;
+        vv = VVEL;
+        vt = VVELTH;
+        ut = UVELTH;
+        eta = ETAN;
+        ui = SIuice;
+        vi = SIvice;
+    else
+        tt = rdmds([exppath,'/results/THETA'],nIter(n));
+        ss = rdmds([exppath,'/results/SALT'],nIter(n));
+        uu = rdmds([exppath,'/results/UVEL'],nIter(n));
+        vv = rdmds([exppath,'/results/VVEL'],nIter(n));
+        vt = rdmds([exppath,'/results/VVELTH'],nIter(n));
+        ut = rdmds([exppath,'/results/UVELTH'],nIter(n));
+        eta = rdmds([exppath,'/results/ETAN'],nIter(n));
+        SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter(n));
+        ui = rdmds([exppath,'/results/SIuice'],nIter(n));
+        vi = rdmds([exppath,'/results/SIvice'],nIter(n));
+    end
+    
+
     yidx = round(Ymin/delY(1)):round(Ymax/delY(1));
     xidx = round(Xmin/delX(1)):round(Xmax/delX(1)); %%% exclude the eastern and western sponge layers
     
@@ -100,34 +131,34 @@
     ub_west(ub_slope>=0)=NaN;
   
     %%% Calculate velocities
-    Ub_east_max=max(ub_east,[],'all','omitnan');
-    Ub_east_avg=mean(ub_east,'all','omitnan');
-    Ub_west_min=min(ub_west,[],'all','omitnan');
-    Ub_west_avg=mean(ub_west,'all','omitnan');
-    Ub_avg = mean(ub_slope,'all','omitnan');
+    Ub_east_max(n) = max(ub_east,[],'all','omitnan');
+    Ub_east_avg(n) = mean(ub_east,'all','omitnan');
+    Ub_west_min(n) = min(ub_west,[],'all','omitnan');
+    Ub_west_avg(n) = mean(ub_west,'all','omitnan');
+    Ub_avg(n) = mean(ub_slope,'all','omitnan');
 
     %%% Calculate transports
     Tot_east = sum(uu_east.*hFacW(xidx,yidx,:).*DX_xyz(xidx,yidx,:).*DY_xyz(xidx,yidx,:).*DZ_xyz(xidx,yidx,:),'all','omitnan');
     Vol_east = sum(hFacW_east.*DX_xyz(xidx,yidx,:).*DY_xyz(xidx,yidx,:).*DZ_xyz(xidx,yidx,:),'all','omitnan');
-    U_east_avg = Tot_east/Vol_east;
+    U_east_avg(n) = Tot_east/Vol_east;
     
     Tot_west = sum(uu_west.*hFacW(xidx,yidx,:).*DX_xyz(xidx,yidx,:).*DY_xyz(xidx,yidx,:).*DZ_xyz(xidx,yidx,:),'all','omitnan');
     Vol_west = sum(hFacW_west.*DX_xyz(xidx,yidx,:).*DY_xyz(xidx,yidx,:).*DZ_xyz(xidx,yidx,:),'all','omitnan');
-    U_west_avg = Tot_west/Vol_west;
+    U_west_avg(n) = Tot_west/Vol_west;
     
-    Tot_east_Sv = Tot_east/Lx/1e6;
-    Tot_west_Sv = Tot_west/Lx/1e6;
-    Tot_Sv = Tot_east_Sv+Tot_west_Sv;
+    Tot_east_Sv(n) = Tot_east/Lx/1e6;
+    Tot_west_Sv(n) = Tot_west/Lx/1e6;
+    Tot_Sv(n) = Tot_east_Sv(n)+Tot_west_Sv(n);
     
     %%% Calculate ice-shelf melt rate
     RAC = rdmds([exppath,'/results/RAC']);
-    rho_i = 920;
-    t1day = 86400;
-    t1year = 365*t1day;
+    RAC (SHIfwFlx==0)=NaN;
     SHIfwFlx (SHIfwFlx==0)=NaN;
-    MeltRate_Gt = -sum(SHIfwFlx.*RAC,'all','omitnan')*t1year/1e12; %%% Gt/yr
-    MeltRate_m = -sum(SHIfwFlx.*RAC,'all','omitnan')*t1year/rho_i/sum(RAC,'all','omitnan'); %%% m/yr
+    MeltRate_Gt(n) = -sum(SHIfwFlx.*RAC,'all','omitnan')*t1year/1e12; %%% Gt/yr
+    MeltRate_m(n) = -sum(SHIfwFlx.*RAC,'all','omitnan')*t1year/rho_i/sum(RAC,'all','omitnan'); %%% m/yr
 
+
+    %%% Calculate CDW heat transport
     %%% H_cdw: shoreward CDW heat transport
     %%% H_tot: shoreward total heat transport
     %%% Huc_east: eastward heat transport associated with the undercurrent
@@ -144,15 +175,62 @@
     vt_cdw = vt_tgrid.*idx_cdw;
     ut_cdw = ut_tgrid.*idx_cdw;
 
-    H_cdw = 
+%     H_cdw =  'H_cdw','H_tot','Huc_east',
 
 
-    %%% Calculate sea ice-ocean stress
+    %%% Calculate detrainment of CDW (diapycnal transport)
+
+
+    %%% Calculate the ocean surface stress (is almost ice-ocean stress)
+    uo_surf = uu(xidx,yidx,1);
+    vo_surf = vv(xidx,yidx,1);
+    if(is_prod_run(n))
+        TAUiox(n) = mean(oceTAUX(xidx,yidx),'all');
+        TAUioy(n) = mean(oceTAUY(xidx,yidx),'all');
+        TAUiox_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(ui(xidx,yidx)-uo_surf),'all');
+        TAUioy_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(vi(xidx,yidx)-vo_surf),'all');
+    else
+        TAUiox_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(ui(xidx,yidx)-uo_surf),'all');
+        TAUioy_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(vi(xidx,yidx)-vo_surf),'all');
+    end
+
+    %%% Calculate sea level gradient
+    yidx_shelf = round((Ymin-50*m1km)/delY(1)):round(Ymin/delY(1));
+    yidx_deep = round(Ymax/delY(1)):round((Ymax+50*m1km)/delY(1));
+    eta_shelf = mean(eta(xidx,yidx_shelf),'all');
+    eta_deep  = mean(eta(xidx,yidx_deep),'all');
+    deltaY = (Ymax+50*m1km/2) - (Ymin-50*m1km/2);
+    detady(n) = (eta_shelf-eta_deep)/deltaY*100*m1km; %%% Unit: m/(100km)
+
+    %%% Calculate the cross-slope buoyancy gradient
+    %%% isopycnal slope of gamma=1028.05kg/m^3, and gamma=1028.00kg/m^3
+    %%% Calculate zonal mean T, S, and neutral density
+    tt(tt==0)=NaN;
+    tt_xmean= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
+    ss(ss==0)=NaN;
+    ss_xmean= squeeze(mean(ss(2:end-1,:,:),'omitnan'));
     
-    
-%     save([prodir 'matrix.mat'],'EXPNAME',...
-%         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
-%         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
-%         'H_cdw','H_tot','Huc_east','MeltRate_m','MeltRate_Gt')
-%     
+    lon_sec = -115;
+    lat_sec = -71;
+    [ZZ_yz,YY_yz] = meshgrid(zz,yy);
+    [SA_xmean, in_ocean] = gsw_SA_from_SP(ss_xmean,-ZZ_yz,lon_sec,lat_sec);
+    T_insitu_xmean = gsw_t_from_pt0(SA_xmean,tt_xmean,-ZZ_yz);
+    for jj = 1:Ny
+        [gamma_n_xmean(jj,:)] = eos80_legacy_gamma_n(ss_xmean(jj,:),T_insitu_xmean(jj,:),-zz,lon_sec,lat_sec);
+    end
 
+
+
+end
+
+
+
+    save([prodir 'matrix_seaiceboundary.mat'],'EXPNAME',...
+        'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
+        'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
+        'MeltRate_m','MeltRate_Gt',...
+        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate')
+
+
+
+    
