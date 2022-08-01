@@ -62,6 +62,8 @@
 for n=1:nEXP
 % for n=1
     expname = EXPNAME{n}
+    expdir = EXPDIR{n};
+
     loadexp;
     
     DX_xyz = repmat(reshape(delX,[Nx 1 1]),[1 Ny Nr]);
@@ -242,23 +244,32 @@ for n=1:nEXP
         z_2805(jj) =  zz_f(zidx_2805(jj));
     end
 
-    %%% Calculate the cross-slope buoyancy gradients of the two isopycnals
+    %%% Calculate the cross-slope depth change of the two isopycnals
     slope_2800 = diff(z_2800)/delY(1);
     slope_2805 = diff(z_2805)/delY(1);
     max_slope_2800(n) = max(slope_2800);
     min_slope_2805(n) = min(slope_2805);
 
 
+    %%% Calculate the cross-slope buoyancy gradients of z=-490m
+    [c z490idx] = min(abs(-490-zz));
+    [c z520idx] = min(abs(-520-zz));
+    dy = delY(1);
+    db_490(n) = (gamma_n_xmean(end-15,z490idx)-gamma_n_xmean(15,z490idx)); %%% unit: kg/m^3
+%         ./(Ymax-15*dy-(Ymin+15*dy))*100*m1km %%% unit: kg/m^3/100km
+    db_520(n) = (gamma_n_xmean(end-15,z520idx)-gamma_n_xmean(15,z520idx));
+
 end
 
 
 
-    save([prodir 'matrix_seaiceboundary.mat'],'EXPNAME',...
+
+    save([prodir 'matrix.mat'],'EXPNAME',...
         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
         'MeltRate_m','MeltRate_Gt',...
         'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
-        'min_slope_2805','max_slope_2800')
+        'min_slope_2805','max_slope_2800','db_520','db_490')
 
 
 
