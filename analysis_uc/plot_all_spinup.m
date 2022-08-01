@@ -21,8 +21,8 @@
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 933018;
-    year = num2str(5);
+    nIter = 1306225;
+    year = num2str(7);
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);

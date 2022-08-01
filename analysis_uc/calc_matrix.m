@@ -37,7 +37,7 @@
 
     prodir = '/Users/csi/MITgcm_UC/products_uc/';
 
-    list_exps_seaiceboundary;
+    list_exps_new;
 
     m1km = 1000;
     Ws =30*m1km; %%% Reference value 30km, continental slope half-width
@@ -260,7 +260,6 @@ for n=1:nEXP
     db_520(n) = (gamma_n_xmean(end-15,z520idx)-gamma_n_xmean(15,z520idx));
 
 end
-
 
 
 

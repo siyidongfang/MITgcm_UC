@@ -67,7 +67,7 @@
         'Residual term', 'FontSize', fontsize-2,'interpreter','latex');
     set(leg1,'position',[0.1457    0.1405    0.4811    0.2429])
     legend boxon;
-    print('-dpng','-r180',[figdir 'tavg_5yr_momentum.png']);
+%     print('-dpng','-r180',[figdir 'tavg_5yr_momentum.png']);
 
 
 
@@ -105,7 +105,7 @@
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     xlim([0 Ly/1000])
 
-    print('-dpng','-r180',[figdir 'tavg_5yr_momentum_vert.png']);
+%     print('-dpng','-r180',[figdir 'tavg_5yr_momentum_vert.png']);
 
 %%
 
@@ -225,7 +225,7 @@
         'Residual term', 'FontSize', fontsize-1,'interpreter','latex');
     set(leg1,'position',[0.1457    0.1405    0.4811    0.2429])
     legend boxon;
-    print('-dpng','-r180',[figdir 'tavg_5yr_momentum_east.png']);
+%     print('-dpng','-r180',[figdir 'tavg_5yr_momentum_east.png']);
 
 
     %%% Vertical structure of Um_dPhiX_xint and Um_Advec_xint
@@ -261,7 +261,7 @@
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     xlim([0 Ly/1000])
 
-    print('-dpng','-r180',[figdir 'tavg_5yr_momentum_east_vert.png']);
+%     print('-dpng','-r180',[figdir 'tavg_5yr_momentum_east_vert.png']);
 
 
 
@@ -304,7 +304,7 @@
         'Residual term', 'FontSize', fontsize-1,'interpreter','latex');
     set(leg1,'position',[0.1457    0.1405    0.4811    0.2429])
     legend boxon;
-    print('-dpng','-r180',[figdir 'tavg_5yr_momentum_west.png']);
+%     print('-dpng','-r180',[figdir 'tavg_5yr_momentum_west.png']);
 
 
 
@@ -341,7 +341,7 @@
     set(gca,'YTick',[0:1:4]);ylim([0 4])
     xlim([0 Ly/1000])
 
-    print('-dpng','-r180',[figdir 'tavg_5yr_momentum_west_vert.png']);
+%     print('-dpng','-r180',[figdir 'tavg_5yr_momentum_west_vert.png']);
 
 
 
