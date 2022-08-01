@@ -34,7 +34,7 @@
     addpath /Users/csi/Software/eos80_legacy_gamma_n/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    
+
     prodir = '/Users/csi/MITgcm_UC/products_uc/';
 
     list_exps_seaiceboundary;
@@ -202,23 +202,51 @@ for n=1:nEXP
     deltaY = (Ymax+50*m1km/2) - (Ymin-50*m1km/2);
     detady(n) = (eta_shelf-eta_deep)/deltaY*100*m1km; %%% Unit: m/(100km)
 
-    %%% Calculate the cross-slope buoyancy gradient
-    %%% isopycnal slope of gamma=1028.05kg/m^3, and gamma=1028.00kg/m^3
+    
     %%% Calculate zonal mean T, S, and neutral density
     tt(tt==0)=NaN;
-    tt_xmean= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
+    tt_xmean= squeeze(mean(tt(xidx,yidx,:),'omitnan'));
     ss(ss==0)=NaN;
-    ss_xmean= squeeze(mean(ss(2:end-1,:,:),'omitnan'));
+    ss_xmean= squeeze(mean(ss(xidx,yidx,:),'omitnan'));
     
     lon_sec = -115;
     lat_sec = -71;
-    [ZZ_yz,YY_yz] = meshgrid(zz,yy);
+    [ZZ_yz,YY_yz] = meshgrid(zz,yy(yidx));
     [SA_xmean, in_ocean] = gsw_SA_from_SP(ss_xmean,-ZZ_yz,lon_sec,lat_sec);
     T_insitu_xmean = gsw_t_from_pt0(SA_xmean,tt_xmean,-ZZ_yz);
-    for jj = 1:Ny
+    for jj = 1:length(yidx)
         [gamma_n_xmean(jj,:)] = eos80_legacy_gamma_n(ss_xmean(jj,:),T_insitu_xmean(jj,:),-zz,lon_sec,lat_sec);
     end
 
+    %%% Create a finer vertical grid
+    ffac = 10;
+    Nrf = ffac*Nr;
+    delRf = zeros(1,Nrf); 
+    for nz=1:Nr
+        for m=1:ffac
+          delRf((nz-1)*ffac+m) = delR(nz)/ffac;
+        end
+    end
+    zz = - cumsum((delR + [0 delR(1:Nr-1)])/2);
+    zz_f = - cumsum((delRf + [0 delRf(1:Nrf-1)])/2);
+
+    gamma_n_xmean_f = zeros(length(yidx),Nrf);
+
+    %%% Find the depth of two isopycnals gamma=1028.05kg/m^3 and gamma=1028.00kg/m^3, for
+    %%% each latitude
+    for jj = 1:length(yidx)
+        gamma_n_xmean_f(jj,:)=interp1(zz,gamma_n_xmean(jj,:),zz_f);
+        [c zidx_2800(jj)] = min(abs(28-gamma_n_xmean_f(jj,:)));
+        [c zidx_2805(jj)] = min(abs(28.05-gamma_n_xmean_f(jj,:)));
+        z_2800(jj) =  zz_f(zidx_2800(jj));
+        z_2805(jj) =  zz_f(zidx_2805(jj));
+    end
+
+    %%% Calculate the cross-slope buoyancy gradients of the two isopycnals
+    slope_2800 = diff(z_2800)/delY(1);
+    slope_2805 = diff(z_2805)/delY(1);
+    max_slope_2800(n) = max(slope_2800);
+    min_slope_2805(n) = min(slope_2805);
 
 
 end
@@ -229,7 +257,8 @@ end
         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
         'MeltRate_m','MeltRate_Gt',...
-        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate')
+        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
+        'min_slope_2805','max_slope_2800')
 
 
 

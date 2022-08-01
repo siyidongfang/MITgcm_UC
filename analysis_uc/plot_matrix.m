@@ -7,7 +7,19 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/;
     prodir = '/Users/csi/MITgcm_UC/products_uc/';
 
-    load([prodir 'matrix_seaiceboundary.mat'])
+    load([prodir 'matrix_seaiceboundary.mat'],'EXPNAME',...
+        'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
+        'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
+        'MeltRate_m','MeltRate_Gt',...
+        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
+        'min_slope_2805','max_slope_2800')
+
+    
+    figure()
+    scatter(detady,min_slope_2805)
+    corrcoef(detady,min_slope_2805)
+
+    
 
 %     figure()
 %     scatter(Tot_Sv,MeltRate_m)
