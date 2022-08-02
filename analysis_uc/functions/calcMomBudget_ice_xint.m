@@ -30,7 +30,6 @@ DX_xy = repmat(delX',[1 Ny]);
 DY_xy = repmat(delY,[Nx 1]);
 
 
-
 %%% SIsig12 is on vorticity point
 internal_xint = zeros(1,Ny);
 internal_xint(1:Ny-1) =  Lx* diff(mean( SIsig12(:,:,1),1))./delY(1); % u-grid
