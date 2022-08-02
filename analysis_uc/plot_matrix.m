@@ -80,7 +80,7 @@
     xlabel('Buoyancy gradient at z = -490 m (kg/m^3/30km)')
     ylabel('Mean eastward bottom velocity (m/s)')
     title('Correlation coefficient = 0.81')
-    print('-dpng','-r150',[prodir 'corr1.png']);
+%     print('-dpng','-r150',[prodir 'corr1.png']);
 
     figure(2)
     subplot(1,2,1)
@@ -102,7 +102,7 @@
     xlabel('Max. eastward bottom velocity (m/s)')
     ylabel('Ice shelf melt rate (m/yr)')
     title('Correlation coefficient = 0.71')
-    print('-dpng','-r150',[prodir 'corr2.png']);
+%     print('-dpng','-r150',[prodir 'corr2.png']);
 
 
 
