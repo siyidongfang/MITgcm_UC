@@ -13,7 +13,7 @@ batch_name = 'exps_aofd/seaice_boundary';
 %%% Input parameters
 Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
 Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
-Atide = 0;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
+Atide = 0.05;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
 Hi0 =1;       %%% Reference value 1
 Ai0 =1;       %%% Reference value 1
 m1km = 1000;
@@ -22,10 +22,10 @@ Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
 Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
 Htr = 200;    %%% Trough depth, ref 200
 Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
-Zsb = 750;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
-dZs = 250;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
+Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
+dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
 
-is_ContinuedRun = true;
+is_ContinuedRun = false;
 
 %%% Select resolution
 is_hires = false;
@@ -37,7 +37,7 @@ useSEAICE = true;
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
-exp_name = ['res2km_' exp_name '_prod']
+exp_name = ['res2km_' exp_name]
 
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
