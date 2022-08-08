@@ -192,6 +192,9 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% OBCS package options
   useOBCS = true;
   useOBCStides = false;
+  if(Atide~=0)
+     useOBCStides = true;
+  end
   useobcsNorth = true;
   useobcsSouth = false;
   useOrlanskiNorth = false;

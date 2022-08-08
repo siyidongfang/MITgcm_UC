@@ -13,7 +13,7 @@ batch_name = 'exps_aofd/seaice_boundary';
 %%% Input parameters
 Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
 Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
-Atide = 0.05;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
+Atide = 0.025;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
 Hi0 =1;       %%% Reference value 1
 Ai0 =1;       %%% Reference value 1
 m1km = 1000;
