@@ -59,6 +59,7 @@
     %     corrcoef(detady,db_520,'Rows','pairwise')
 
 
+[R211,P211,RL211,RU211] = corrcoef(Ub_east_avg([1:12 16:23]),db_520([1:12 16:23]),'Rows','pairwise');
 
 
 

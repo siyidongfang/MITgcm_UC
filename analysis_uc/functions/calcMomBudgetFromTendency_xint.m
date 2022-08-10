@@ -53,13 +53,13 @@ Um_Ext_xzint = rho0.*sum(sum(Um_Ext(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz
 
 
 % %%% U momentum tendency from Vorticity Advection
-% Um_AdvZ3_xzint = rho0.*sum(sum(Um_AdvZ3.*hFacW.*DZ_xyz.*DX_xyz,3),1);
+% Um_AdvZ3_xzint = rho0.*sum(sum(Um_AdvZ3(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
 % 
 % %%% U momentum tendency from vertical Advection (Explicit part)
-% Um_AdvRe_xzint = rho0.*sum(sum(Um_AdvRe.*hFacW.*DZ_xyz.*DX_xyz,3),1);
+% Um_AdvRe_xzint = rho0.*sum(sum(Um_AdvRe(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
 % 
 % %%% U momentum tendency from Coriolis term
-% Um_Cori_xzint = rho0.*sum(sum(Um_Cori.*hFacW.*DZ_xyz.*DX_xyz,3),1);
+% Um_Cori_xzint = rho0.*sum(sum(Um_Cori(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
 
 
 % totalchange_tendency = Um_dPhiX_xzint+Um_Advec_xzint+Um_Diss_xzint+Um_Ext_xzint+AB_gU_xzint;

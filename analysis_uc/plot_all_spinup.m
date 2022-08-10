@@ -16,7 +16,7 @@
 
 
     expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150'
+    expname = 'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150'
 
     loadexp;
     plot_KE_EKE_T_S_series

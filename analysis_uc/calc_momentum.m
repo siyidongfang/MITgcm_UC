@@ -16,8 +16,8 @@
     Yshelfbreak = 220;
     Ydeep = 310;
     
-    for n=1:nEXP
-%     for n=13
+%     for n=1:nEXP
+    for n=10
         if(is_prod_run(n))
             clear vi vi_mass
             close all
@@ -30,8 +30,8 @@
             spongeThickness = 10;
             zonal_idx = (spongeThickness+5):(Nx-spongeThickness-5);
 
-%             calcMomBudgetFromTendency_xint
-%             plot_momentum_ocean
+            calcMomBudgetFromTendency_xint
+            plot_momentum_ocean
 
             calcMomBudget_ice_xint
             plot_momentum_seaice
