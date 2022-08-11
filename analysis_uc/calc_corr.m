@@ -4,14 +4,12 @@
     
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;  
-    prodir = '/Users/csi/MITgcm_UC/products_uc/';
 
-    load([prodir 'matrix.mat'],'EXPNAME',...
-        'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
-        'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
-        'MeltRate_m','MeltRate_Gt',...
-        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
-        'min_slope_2805','max_slope_2800','db_520','db_490')
+    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+    exp_group = EXP_GROUP{1}
+    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+
+    load([prodir 'matrix_' exp_group '.mat'])
  
     %%%% Calculate the correlation coefficients
     [R1,P1,RL1,RU1] = corrcoef(detady,min_slope_2805);
@@ -60,6 +58,19 @@
 
 
 [R211,P211,RL211,RU211] = corrcoef(Ub_east_avg,db_520,'Rows','pairwise');
+
+corrcoef(detady,U_west_avg) %%% Very high correlation -0.97
+corrcoef(detady,avg_slope_2805) 
+corrcoef(Ub_east_max,avg_slope_2805) 
+corrcoef(Ub_east_max,avg_slope_2800) 
+corrcoef(U_east_avg,avg_slope_2800) 
+corrcoef(U_west_avg,avg_slope_2805) 
+corrcoef(MeltRate_m,avg_slope_2800) 
+corrcoef(MeltRate_m,avg_slope_2805) 
+
+
+
+
 
 
 
