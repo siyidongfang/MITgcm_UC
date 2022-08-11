@@ -35,9 +35,6 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
-    prodir = '/Users/csi/MITgcm_UC/products_uc/';
-
-    list_exps_new;
 
     m1km = 1000;
     Ws =30*m1km; %%% Reference value 30km, continental slope half-width
@@ -59,10 +56,14 @@
     Cio = 5.54e-3;
 
 
+    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+    exp_group = EXP_GROUP{2}
+    list_exps_new;
+
+
 for n=1:nEXP
 % for n=1
     expname = EXPNAME{n}
-    expdir = EXPDIR{n};
 
     loadexp;
     
@@ -71,7 +72,7 @@ for n=1:nEXP
     DZ_xyz = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
     
     if(is_prod_run(n))
-        load([expdir expname '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
+        load([prodir expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
                 'SHIfwFlx','oceTAUX','oceTAUY','SIuice','SIvice');
         tt = THETA;
         ss = SALT;
@@ -263,7 +264,7 @@ end
 
 
 
-    save([prodir 'matrix.mat'],'EXPNAME',...
+    save([prodir 'matrix_' exp_group '.mat'],'exp_group','EXPNAME',...
         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
         'MeltRate_m','MeltRate_Gt',...

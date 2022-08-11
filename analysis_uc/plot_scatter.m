@@ -24,7 +24,7 @@
 
     figure(1)
     subplot(1,2,1)
-    idx_excludenan=[1:15 17 19 20 22];
+    idx_excludenan=[1:15 17 19 20 22 24 25];
     f=fit(db_520(idx_excludenan)',Ub_east_avg(idx_excludenan)','poly1');
     dataX = db_520;
     dataY = Ub_east_avg;

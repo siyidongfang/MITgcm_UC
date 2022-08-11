@@ -2,9 +2,11 @@
     close all;clear;
     addpath functions/
     addpath colormaps/
-    expdir = '/Users/csi/MITgcm_UC/exps_aofd/shelfice_seaice/';
-    expname = 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_ardbeg'
-    prodir = [expdir expname '/'];
+    exp_group = 'no_seaice'
+    expdir = ['/Users/csi/MITgcm_UC/exps_uc/' exp_group '/'];
+    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+
+    expname = 'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_shelfice_ErestWrest_ardbeg_prod'
 
     tmin = 0;
     tmax = 5;
