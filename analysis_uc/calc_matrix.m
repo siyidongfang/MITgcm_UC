@@ -33,9 +33,8 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{3}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
-
 
     m1km = 1000;
     Ws =30*m1km; %%% Reference value 30km, continental slope half-width

@@ -21,6 +21,10 @@
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
     a3 = load([prodir 'matrix_' exp_group '.mat']);
     f3=fieldnames(a3);
+    rho_i=920;
+    a3.MeltRate_Gt=[4.15 12.45 20.75 4.15 12.45 20.75 4.15 12.45 20.75]*rho_i*1.7612e+10/1e12; %%% Gt/yr
+    a3.MeltRate_m=[4.15 12.45 20.75 4.15 12.45 20.75 4.15 12.45 20.75]; %%% m/yr
+    save '/Users/csi/MITgcm_UC/products_uc/pseudo_shelfice_seaice/matrix_pseudo_shelfice_seaice.mat' '-struct' a3
 
     exp_group = EXP_GROUP{4}
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
