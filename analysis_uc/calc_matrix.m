@@ -12,9 +12,6 @@
 %%% U_west_max: strongest westward velocity (negative) 
 %%% Tot_west_Sv: total westward transport (negative), in Sv
 %%% Tot_Sv = Tot_west_Sv + Tot_east_Sv: total zonal ocean transport (negative) 
-%%% H_cdw: shoreward CDW heat transport
-%%% H_tot: shoreward total heat transport
-%%% Huc_east: eastward heat transport associated with the undercurrent
 %%% MeltRate: ice shelf melting rate
 
 %%% Correlation coefficient between (1) total eastward transport, (2) mean
@@ -36,7 +33,7 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{3}
     list_exps_new;
 
 

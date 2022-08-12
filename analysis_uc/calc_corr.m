@@ -5,11 +5,13 @@
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;  
 
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
-    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
-
-    load([prodir 'matrix_' exp_group '.mat'])
+%     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+%     exp_group = EXP_GROUP{1}
+%     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+% 
+%     load([prodir 'matrix_' exp_group '.mat'])
+ 
+ load('/Users/csi/MITgcm_UC/products_uc/matrix_combined.mat')
  
     %%%% Calculate the correlation coefficients
     [R1,P1,RL1,RU1] = corrcoef(detady,min_slope_2805);
@@ -18,17 +20,17 @@
     [R4,P4,RL4,RU4] = corrcoef(Ub_west_avg,min_slope_2805);
     [R5,P5,RL5,RU5] = corrcoef(Ub_avg,min_slope_2805);
 
-    [R6,P6,RL6,RU6] = corrcoef(MeltRate_m,max_slope_2800);
-    [R7,P7,RL7,RU7] = corrcoef(MeltRate_m,min_slope_2805);
-    [R8,P8,RL8,RU8] = corrcoef(MeltRate_m,U_west_avg);
-    [R9,P9,RL9,RU9] = corrcoef(MeltRate_m,Ub_west_min);
+    [R6,P6,RL6,RU6] = corrcoef(MeltRate_m,max_slope_2800,'Rows','pairwise');
+    [R7,P7,RL7,RU7] = corrcoef(MeltRate_m,min_slope_2805,'Rows','pairwise');
+    [R8,P8,RL8,RU8] = corrcoef(MeltRate_m,U_west_avg,'Rows','pairwise');
+    [R9,P9,RL9,RU9] = corrcoef(MeltRate_m,Ub_west_min,'Rows','pairwise');
 
-    [R10,P10,RL10,RU10] = corrcoef(MeltRate_m,Tot_east_Sv);
-    [R11,P11,RL11,RU11] = corrcoef(MeltRate_m,Tot_west_Sv);
-    [R12,P12,RL12,RU12] = corrcoef(MeltRate_m,Tot_Sv);
+    [R10,P10,RL10,RU10] = corrcoef(MeltRate_m,Tot_east_Sv,'Rows','pairwise');
+    [R11,P11,RL11,RU11] = corrcoef(MeltRate_m,Tot_west_Sv,'Rows','pairwise');
+    [R12,P12,RL12,RU12] = corrcoef(MeltRate_m,Tot_Sv,'Rows','pairwise');
 
-    [R13,P13,RL13,RU13] = corrcoef(MeltRate_m,Ub_east_max);
-    [R14,P14,RL14,RU14] = corrcoef(MeltRate_m,Ub_avg);
+    [R13,P13,RL13,RU13] = corrcoef(MeltRate_m,Ub_east_max,'Rows','pairwise');
+    [R14,P14,RL14,RU14] = corrcoef(MeltRate_m,Ub_avg,'Rows','pairwise');
     %     [R15,P15,RL15,RU15] = corrcoef(MeltRate_m,U_east_avg);
     %     [R16,P16,RL16,RU16] = corrcoef(MeltRate_m,Ub_east_avg);
     %%% Ice shelf melt rate has strong correlation with maximum undercurrent
@@ -36,7 +38,7 @@
     %%% even stronger correlation with the total westward transport
     %%% (r=0.76) or total transport (east+west, r=0.79).
 
-    [R17,P17,RL17,RU17] = corrcoef(MeltRate_m,detady);
+    [R17,P17,RL17,RU17] = corrcoef(MeltRate_m,detady,'Rows','pairwise');
     %%% Ice shelf melt rate is also correlated with SSH gradient (r=-0.78)
 
     %%% Zonal sea surface stress is not correlated with ice shelf melt rate or
@@ -59,20 +61,31 @@
 
 [R211,P211,RL211,RU211] = corrcoef(Ub_east_avg,db_520,'Rows','pairwise');
 
-corrcoef(detady,U_west_avg) %%% Very high correlation -0.97
 corrcoef(detady,avg_slope_2805) 
 corrcoef(Ub_east_max,avg_slope_2805) 
 corrcoef(Ub_east_max,avg_slope_2800) 
 corrcoef(U_east_avg,avg_slope_2800) 
 corrcoef(U_west_avg,avg_slope_2805) 
-corrcoef(MeltRate_m,avg_slope_2800) 
-corrcoef(MeltRate_m,avg_slope_2805) 
+corrcoef(MeltRate_m,avg_slope_2800,'Rows','pairwise');
+corrcoef(MeltRate_m,avg_slope_2805,'Rows','pairwise');
 
 
-corrcoef(MeltRate_m,Hcdw)
+corrcoef(MeltRate_m,Hcdw,'Rows','pairwise');
+corrcoef(MeltRate_m,Tcdw,'Rows','pairwise');
+
+corrcoef(MeltRate_m,Ucdw_west,'Rows','pairwise');
+
+corrcoef(Vcdw_east,Ucdw_west)
+
+corrcoef(Vcdw_east,Ucdw_west_max)
+
+corrcoef(Fheatcdw_east,Ucdw_west_max)
+corrcoef(Fheatcdw_east,Ucdw_west)
 
 
-
-
+corrcoef(detady,min_slope_2805)
+corrcoef(detady,U_west_avg) %%% Very high correlation -0.97
+corrcoef(detady,avg_slope_2805)
+corrcoef(detady,Ub_east_max)
 
 

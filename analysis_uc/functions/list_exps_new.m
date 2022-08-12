@@ -32,6 +32,7 @@ switch(exp_group)
             is_prod_run([8 9 12 13 14 15])=false;
             nIter([8 9 12 13 14 15])=[1484047 1484047 1492828 1492828 1119621 1484047]';
             useSEAICE=true;
+            useSHELFICE=true;
 
 
 
@@ -72,6 +73,7 @@ switch(exp_group)
             nIter([2:9])=[1261440 1261440 1261440 1290947 1261440 1261440 1268690 1261440]';
             nIter([10:nEXP])=[519416 519416 519416 259403 259403 259403 259403 259403 259403]';
             useSEAICE=true;
+            useSHELFICE=true;
   
 
 
@@ -90,10 +92,6 @@ switch(exp_group)
             'res10km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_ardbeg_prod';...
             'res10km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_ardbeg_prod';...
             'res10km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_ardbeg_prod';...
-            ...
-            'res15km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_ardbeg_prod';...
-            'res15km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_ardbeg_prod';...
-            'res15km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_ardbeg_prod';...
             };
         nEXP = length(EXPNAME);
         is_prod_run=true*ones(nEXP,1);
@@ -101,6 +99,7 @@ switch(exp_group)
         is_prod_run(2)=false;
         nIter(2) = [1441646]';
         useSEAICE=true;
+        useSHELFICE=false;
 
 
 
@@ -114,6 +113,7 @@ switch(exp_group)
         is_prod_run=true*ones(nEXP,1);
         nIter=NaN*ones(nEXP,1); 
         useSEAICE=false;
+        useSHELFICE=true;
 
 
         
