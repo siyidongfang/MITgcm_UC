@@ -38,8 +38,6 @@
     lfit1 = plot(f1,'r--');
     lfit2 = plot(f2,'g-.');
     lfit3 = plot(f3,'b:');
-
-    % scatter(dataX,dataY)
    
     g1_ref = scatter(dataX(1),dataY(1),sz,'k','o','filled');
     g1_wind1 = scatter(dataX(2),dataY(2),sz*0.75,red,'<','filled','MarkerEdgeColor',boxcolor);
@@ -99,12 +97,22 @@
     g3_10km_melt21=scatter(dataX(ne+9),dataY(ne+9),sz*1.5,green,'o','filled','MarkerEdgeColor',boxcolor);
 
 
+    g4=scatter(dataX(end),dataY(end),sz,red,'d','filled','MarkerEdgeColor',red);
 
     hold off;
     grid on;grid minor;
     set(gca,'FontSize',fontsize)
-%     xlim([min(dataX) max(dataX)])
-%     ylim([min(dataY) max(dataY)])
+    %     xlim([min(dataX) max(dataX)])
+    %     ylim([min(dataY) max(dataY)])
+    leg1 = legend([lfit lfit1 lfit2 lfit3],'Fitted curve: all exps',...
+        'Group 1: Varying u_i at zonal boundaries',...
+        'Group 2: Fix u_i at zonal boundaries',...
+        'Group 3: Pseudo ice shelf','FontSize',fontsize);
+    ah=axes('position',get(gca,'position'),'visible','off');
+    leg2 = legend(ah,[g1_ref g1_wind1],'Ref.','Varying U_a','FontSize',fontsize);
+    
+
+
 %     leg1 = legend([sref swind1 swind2 ...
 %         sdiff1 sdiff2 sdiff3 ...
 %         Hbed0Htr0 Hbed0Htr200 Hbed300Htr0 sWtr ...
