@@ -69,6 +69,8 @@ corrcoef(MeltRate_m,avg_slope_2800)
 corrcoef(MeltRate_m,avg_slope_2805) 
 
 
+corrcoef(MeltRate_m,Hcdw)
+
 
 
 

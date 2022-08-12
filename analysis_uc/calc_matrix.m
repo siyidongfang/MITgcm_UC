@@ -36,7 +36,7 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
 
 
@@ -67,7 +67,7 @@
 
 
 for n=1:nEXP
-% for n=1
+% for n=12
     expname = EXPNAME{n}
     loadexp;
     
@@ -80,7 +80,7 @@ for n=1:nEXP
     
     if(is_prod_run(n))
         load([prodir expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
-                'SHIfwFlx','oceTAUX','oceTAUY','SIuice','SIvice');
+                'SHIfwFlx','oceTAUX','oceTAUY');
         tt = THETA;
         ss = SALT;
         uu = UVEL;
@@ -88,8 +88,11 @@ for n=1:nEXP
         vt = VVELTH;
         ut = UVELTH;
         eta = ETAN;
-        ui = SIuice;
-        vi = SIvice;
+        if(useSEAICE)
+            load([prodir expname '_tavg_5yrs.mat'],'SIuice','SIvice');
+            ui = SIuice;
+            vi = SIvice;
+        end
     else
         tt = rdmds([exppath,'/results/THETA'],nIter(n));
         ss = rdmds([exppath,'/results/SALT'],nIter(n));
@@ -99,8 +102,10 @@ for n=1:nEXP
         ut = rdmds([exppath,'/results/UVELTH'],nIter(n));
         eta = rdmds([exppath,'/results/ETAN'],nIter(n));
         SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter(n));
-        ui = rdmds([exppath,'/results/SIuice'],nIter(n));
-        vi = rdmds([exppath,'/results/SIvice'],nIter(n));
+        if(useSEAICE)
+            ui = rdmds([exppath,'/results/SIuice'],nIter(n));
+            vi = rdmds([exppath,'/results/SIvice'],nIter(n));
+        end
     end
     
 
@@ -172,13 +177,14 @@ for n=1:nEXP
     uo_surf = uu(xidx,yidx,1);
     vo_surf = vv(xidx,yidx,1);
     if(is_prod_run(n))
-        TAUiox(n) = mean(oceTAUX(xidx,yidx),'all');
-        TAUioy(n) = mean(oceTAUY(xidx,yidx),'all');
-        TAUiox_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(ui(xidx,yidx)-uo_surf),'all');
-        TAUioy_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(vi(xidx,yidx)-vo_surf),'all');
+        TAUx(n) = mean(oceTAUX(xidx,yidx),'all');
+        TAUy(n) = mean(oceTAUY(xidx,yidx),'all');
+    end
+    if(useSEAICE)
+        TAUx_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(ui(xidx,yidx)-uo_surf),'all');
+        TAUy_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(vi(xidx,yidx)-vo_surf),'all');
     else
-        TAUiox_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(ui(xidx,yidx)-uo_surf),'all');
-        TAUioy_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(vi(xidx,yidx)-vo_surf),'all');
+        TAUx_estimate(n)=NaN;TAUy_estimate(n)=NaN;
     end
 
     %%% Calculate sea level gradient cross the slope
@@ -250,13 +256,15 @@ for n=1:nEXP
     [c z547idx] = min(abs(-547-zz));
     [c z575idx] = min(abs(-575-zz));
     [c z603idx] = min(abs(-603-zz));
-    yidx_shelfbreak = round((Yshelfbreak-Ymin)/dy)+1;
-    db_463(n) = (gamma_n_xmean(yidx_shelfbreak+15,z463idx)-gamma_n_xmean(yidx_shelfbreak-15,z463idx)); %%% unit: kg/m^3
-    db_490(n) = (gamma_n_xmean(yidx_shelfbreak+15,z490idx)-gamma_n_xmean(yidx_shelfbreak-15,z490idx)); %%% unit: kg/m^3
-    db_520(n) = (gamma_n_xmean(yidx_shelfbreak+15,z520idx)-gamma_n_xmean(yidx_shelfbreak-15,z520idx));
-    db_547(n) = (gamma_n_xmean(yidx_shelfbreak+15,z547idx)-gamma_n_xmean(yidx_shelfbreak-15,z547idx));
-    db_575(n) = (gamma_n_xmean(yidx_shelfbreak+15,z575idx)-gamma_n_xmean(yidx_shelfbreak-15,z575idx));
-    db_603(n) = (gamma_n_xmean(yidx_shelfbreak+15,z603idx)-gamma_n_xmean(yidx_shelfbreak-15,z603idx));
+    ymax_db = round((Yshelfbreak-Ymin+30*m1km)/dy)+1;
+    ymin_db = round((Yshelfbreak-Ymin-30*m1km)/dy)+1;
+
+    db_463(n) = (gamma_n_xmean(ymax_db,z463idx)-gamma_n_xmean(ymin_db,z463idx)); %%% unit: kg/m^3
+    db_490(n) = (gamma_n_xmean(ymax_db,z490idx)-gamma_n_xmean(ymin_db,z490idx)); %%% unit: kg/m^3
+    db_520(n) = (gamma_n_xmean(ymax_db,z520idx)-gamma_n_xmean(ymin_db,z520idx));
+    db_547(n) = (gamma_n_xmean(ymax_db,z547idx)-gamma_n_xmean(ymin_db,z547idx));
+    db_575(n) = (gamma_n_xmean(ymax_db,z575idx)-gamma_n_xmean(ymin_db,z575idx));
+    db_603(n) = (gamma_n_xmean(ymax_db,z603idx)-gamma_n_xmean(ymin_db,z603idx));
 
     %%% Calculate CDW heat transport
     %%% H_cdw: shoreward CDW heat transport
@@ -312,18 +320,18 @@ for n=1:nEXP
     xidx_uuwest = round(Lx/2/dx)-5:round(Lx/2/dx);
     yidx_uuwest = round(Ymaxcdw/dy):round(Ymaxcdw/dy)+5;
 
-
+    HH_cdw(isnan(HH_cdw))=0;
     Hcdw(n) = mean(HH_cdw(xidxcdw,yidxcdw),'all');
-    Scdw(n) = mean(SS_cdw(xidxcdw,yidxcdw),'all');
-    Tcdw(n) = mean(TT_cdw(xidxcdw,yidxcdw),'all');
-    Vcdw(n) = mean(VV_cdw(xidxcdw,yidxcdw),'all'); 
-    Fheatcdw(n) = mean(Fheat_cdw(xidxcdw,yidxcdw),'all'); 
-    Fheattot(n) = mean(Fheat_xy(xidxcdw,yidxcdw),'all'); 
+    Scdw(n) = mean(SS_cdw(xidxcdw,yidxcdw),'all','omitnan');
+    Tcdw(n) = mean(TT_cdw(xidxcdw,yidxcdw),'all','omitnan');
+    Vcdw(n) = mean(VV_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
+    Fheatcdw(n) = mean(Fheat_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
+    Fheattot(n) = mean(Fheat_xy(xidxcdw,yidxcdw),'all','omitnan'); 
 
-    Vcdw_east(n) = mean(VV_cdw(xidx_east,yidxcdw),'all'); 
-    Fheatcdw_east(n) = mean(Fheat_cdw(xidx_east,yidxcdw),'all'); 
-    Fheattot_east(n) = mean(Fheat_xy(xidx_east,yidxcdw),'all'); 
-    Ucdw_west(n) = mean(UU_cdw(xidx_uuwest,yidx_uuwest),'all'); 
+    Vcdw_east(n) = mean(VV_cdw(xidx_east,yidxcdw),'all','omitnan'); 
+    Fheatcdw_east(n) = mean(Fheat_cdw(xidx_east,yidxcdw),'all','omitnan'); 
+    Fheattot_east(n) = mean(Fheat_xy(xidx_east,yidxcdw),'all','omitnan'); 
+    Ucdw_west(n) = mean(UU_cdw(xidx_uuwest,yidx_uuwest),'all','omitnan'); 
     Ucdw_west_max(n) = max(max(UU_cdw(xidx_uuwest,yidx_uuwest))); 
 
     %%% Calculate detrainment of CDW (diapycnal transport)
@@ -337,7 +345,7 @@ end
         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
         'MeltRate_m','MeltRate_Gt',...
-        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
+        'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
         'min_slope_2805','max_slope_2800','avg_slope_2805','avg_slope_2800',...
         'db_463','db_490','db_520','db_547','db_575','db_603',...
         'Hcdw','Scdw','Tcdw','Vcdw','Fheatcdw','Fheattot',...
