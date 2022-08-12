@@ -36,17 +36,21 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
 
 
     m1km = 1000;
     Ws =30*m1km; %%% Reference value 30km, continental slope half-width
     Wshelf = 100*m1km; %%% Width of continental shelf
+    Yicefront = 100*m1km; %%% Latitude of ice shelf face
     Ycoast = 120*m1km; %%% Latitude of coastline
     Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
     Ydeep = Ycoast+Wshelf+3*Ws; %%% Latitude of deep ocean
+    Xeast = 400*m1km; %%% Longitude of eastern trough wall
+    Xwest = 200*m1km; %%% Longitude of western trough wall
     Wsponge = 20*m1km;
+    Wtrough = 30*m1km;
     Lx = 600*m1km;
 
     Ymin = Yshelfbreak-50*m1km;
@@ -62,14 +66,17 @@
     cp_o = 3994; % Unit: J/kg/degC
 
 
-% for n=1:nEXP
-for n=1
+for n=1:nEXP
+% for n=1
     expname = EXPNAME{n}
     loadexp;
     
     DX = repmat(reshape(delX,[Nx 1 1]),[1 Ny Nr]);
     DY = repmat(reshape(delY,[1 Ny 1]),[Nx 1 Nr]);
     DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
+    dy = delY(1);
+    dx = delX(1);
+
     
     if(is_prod_run(n))
         load([prodir expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
@@ -97,8 +104,8 @@ for n=1
     end
     
 
-    yidx = round(Ymin/delY(1)):round(Ymax/delY(1));
-    xidx = round(Xmin/delX(1)):round(Xmax/delX(1)); %%% exclude the eastern and western sponge layers
+    yidx = round(Ymin/dy):round(Ymax/dy);
+    xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
     
     %%% Find bottom velocity
     uu_bottom = zeros(Nx,Ny);   % bottom velocity
@@ -177,8 +184,8 @@ for n=1
     %%% Calculate sea level gradient cross the slope
     Ymin_eta = Yshelfbreak-30*m1km;
     Ymax_eta = Yshelfbreak+30*m1km;
-    yidx_shelf = round(Ymin_eta/delY(1)):round((Ymin_eta+10*m1km)/delY(1));
-    yidx_deep = round((Ymax_eta-10*m1km)/delY(1)):round(Ymax_eta/delY(1));
+    yidx_shelf = round(Ymin_eta/dy):round((Ymin_eta+10*m1km)/dy);
+    yidx_deep = round((Ymax_eta-10*m1km)/dy):round(Ymax_eta/dy);
     eta_shelf = mean(eta(xidx,yidx_shelf),'all');
     eta_deep  = mean(eta(xidx,yidx_deep),'all');
     deltaY = (Ymax_eta-10*m1km/2) - (Ymin_eta+10*m1km/2);
@@ -228,8 +235,8 @@ for n=1
     end
 
     %%% Calculate the cross-slope depth change of the two isopycnals
-    slope_2800 = diff(z_2800)/delY(1);
-    slope_2805 = diff(z_2805)/delY(1);
+    slope_2800 = diff(z_2800)/dy;
+    slope_2805 = diff(z_2805)/dy;
     max_slope_2800(n) = max(slope_2800);
     min_slope_2805(n) = min(slope_2805);
 
@@ -243,8 +250,7 @@ for n=1
     [c z547idx] = min(abs(-547-zz));
     [c z575idx] = min(abs(-575-zz));
     [c z603idx] = min(abs(-603-zz));
-    dy = delY(1);
-    yidx_shelfbreak = (Yshelfbreak-Ymin)/dy+1;
+    yidx_shelfbreak = round((Yshelfbreak-Ymin)/dy)+1;
     db_463(n) = (gamma_n_xmean(yidx_shelfbreak+15,z463idx)-gamma_n_xmean(yidx_shelfbreak-15,z463idx)); %%% unit: kg/m^3
     db_490(n) = (gamma_n_xmean(yidx_shelfbreak+15,z490idx)-gamma_n_xmean(yidx_shelfbreak-15,z490idx)); %%% unit: kg/m^3
     db_520(n) = (gamma_n_xmean(yidx_shelfbreak+15,z520idx)-gamma_n_xmean(yidx_shelfbreak-15,z520idx));
@@ -295,9 +301,30 @@ for n=1
     Fheat_cdw = rho_o*cp_o*sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); % Depth-integrated heat flux of the CDW layer, in W/m
     Fheat_xz = rho_o*cp_o*squeeze(sum(sum(vt.*delX(1).*DZ.*hFacS,3)))/1e12;%%% Zonally and depth-integrated, in TW
    
+    Ymincdw = Yicefront;
+    Ymaxcdw = Yshelfbreak;
+    Xmincdw = Lx/2-2*Wtrough;
+    Xmaxcdw = Lx/2+2*Wtrough;
+    yidxcdw = round(Ymincdw/dy):round(Ymaxcdw/dy);
+    xidxcdw = round(Xmincdw/dx):round(Xmaxcdw/dx);
+    xidx_east = round(Lx/2/dx):round(Xmaxcdw/dx);
 
-%     H_cdw =  'H_cdw','H_tot','Huc_east',
+    xidx_uuwest = round(Lx/2/dx)-5:round(Lx/2/dx);
+    yidx_uuwest = round(Ymaxcdw/dy):round(Ymaxcdw/dy)+5;
 
+
+    Hcdw(n) = mean(HH_cdw(xidxcdw,yidxcdw),'all');
+    Scdw(n) = mean(SS_cdw(xidxcdw,yidxcdw),'all');
+    Tcdw(n) = mean(TT_cdw(xidxcdw,yidxcdw),'all');
+    Vcdw(n) = mean(VV_cdw(xidxcdw,yidxcdw),'all'); 
+    Fheatcdw(n) = mean(Fheat_cdw(xidxcdw,yidxcdw),'all'); 
+    Fheattot(n) = mean(Fheat_xy(xidxcdw,yidxcdw),'all'); 
+
+    Vcdw_east(n) = mean(VV_cdw(xidx_east,yidxcdw),'all'); 
+    Fheatcdw_east(n) = mean(Fheat_cdw(xidx_east,yidxcdw),'all'); 
+    Fheattot_east(n) = mean(Fheat_xy(xidx_east,yidxcdw),'all'); 
+    Ucdw_west(n) = mean(UU_cdw(xidx_uuwest,yidx_uuwest),'all'); 
+    Ucdw_west_max(n) = max(max(UU_cdw(xidx_uuwest,yidx_uuwest))); 
 
     %%% Calculate detrainment of CDW (diapycnal transport)
 
@@ -306,13 +333,15 @@ end
 
 
 
-%     save([prodir 'matrix_' exp_group '.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
-%         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
-%         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
-%         'MeltRate_m','MeltRate_Gt',...
-%         'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
-%         'min_slope_2805','max_slope_2800','avg_slope_2805','avg_slope_2800',...
-%         'db_463','db_490','db_520','db_547','db_575','db_603')
+    save([prodir 'matrix_' exp_group '.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
+        'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
+        'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
+        'MeltRate_m','MeltRate_Gt',...
+        'detady','TAUiox','TAUioy','TAUiox_estimate','TAUioy_estimate',...
+        'min_slope_2805','max_slope_2800','avg_slope_2805','avg_slope_2800',...
+        'db_463','db_490','db_520','db_547','db_575','db_603',...
+        'Hcdw','Scdw','Tcdw','Vcdw','Fheatcdw','Fheattot',...
+        'Vcdw_east','Fheatcdw_east','Fheattot_east','Ucdw_west','Ucdw_west_max')
 
 
 
