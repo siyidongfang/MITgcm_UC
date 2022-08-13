@@ -2,10 +2,13 @@
 
     clear;close all;
     addpath functions/;
-    list_exps_new
+
+    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+    exp_group = EXP_GROUP{3}
+    list_exps_new;
     
-    prodir = '/Users/csi/MITgcm_UC/products_uc/';
-    figdir = '/Users/csi/MITgcm_UC/figures_uc/momentum/';
+    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+    figdir = ['/Users/csi/MITgcm_UC/figures_uc/momentum/' exp_group '/'];
     
     useSEAICE = true;
 
@@ -16,14 +19,12 @@
     Yshelfbreak = 220;
     Ydeep = 310;
     
-%     for n=1:nEXP
-    for n=10
+    for n=1:nEXP
+% for n=11
         if(is_prod_run(n))
             clear vi vi_mass
             close all
             expname = EXPNAME{n}
-            expdir = EXPDIR{n};
-            prodir = [expdir expname '/'];
             loadexp;
 
             %%% Zonal integal for the entire domain, excluding the zonal sponge layers 

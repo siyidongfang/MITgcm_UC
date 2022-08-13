@@ -25,24 +25,51 @@
     group3 = (nexp1+nexp2+1):(nexp1+nexp2+nexp3);
     group4 = nexp1+nexp2+nexp3+nexp4;
 
-    plotMeltrate=true;
+    plotMeltrate=false;
 
-    dataX = -detady;
-    xlabeltext = 'Cross-slope SSH gradient (m/100km)';
-
+%     dataX = -detady;
+%     xlabeltext = 'Cross-slope SSH gradient (m/100km)';
 %     dataX = Hcdw;
 %     xlabeltext = 'CDW thickness over the trough (m)';
+%     dataX=Tcdw;
+%     xlabeltext = 'CDW temperature in the trough (^oC)';
+%     dataX=Ub_avg;
+%     xlabeltext = 'Mean bottom velocity over the slope (m/s)';
+%     dataX=avg_slope_2800*100*1000;
+%     xlabeltext = 'Cross-slope depth change of isopycnal slope \gamma = 28.00 kg/m^2 (m/100km)';
+%     dataX=avg_slope_2805*100*1000;
+%     xlabeltext = 'Cross-slope depth change of isopycnal slope \gamma = 28.05 kg/m^2 (m/100km)';
+     dataX=(avg_slope_2800-avg_slope_2805)*100*1000;
+     xlabeltext = '2800-2805';
 
-    dataY = MeltRate_m;
-    ylabeltext = 'Ice shelf melt rate (m/yr)';
-    titletext='Melt rate sensitivity'
-    figname = 'MeltRate_m-detady';
-    
+%     dataX=Tot_east_Sv;
+%     xlabeltext = 'Total eastward transport over the shelf and slope (Sv)';
+%     dataX=U_east_avg;
+%     xlabeltext = 'Mean undercurrent velocity (m/s)';
+%     dataX=Ub_east_avg;
+%     xlabeltext = 'Undercurrent velocity at seafloor (m/s)';
+%     dataX=Ub_east_max;
+%     xlabeltext = 'Maximum undercurrent velocity at seafloor (m/s)';
+%     dataX=db_490;
+%     xlabeltext = 'Cross-slope density change at 490-m depth (kg/m^3)';
+%     dataX=Vcdw;
+%     xlabeltext = 'Depth-integrated meridional CDW volume flux in the trough (m^2/s)';
+%     dataX=Fheatcdw;
+%     xlabeltext = 'CDW heat flux in the trough (m/s)';
 
-    % dataY = Tot_Sv;
-    % ylabeltext = 'Total along-slope transport (Sv)';
-    % titletext = 'Along-slope transport sensitivity';
-    % figname = 'Tot_Sv-detady';
+%     dataY = MeltRate_m;
+%     ylabeltext = 'Ice shelf melt rate (m/yr)';
+%     titletext='Melt rate sensitivity'
+%     dataY = Tot_Sv;
+%     ylabeltext = 'Total along-slope transport (Sv)';
+%     titletext = 'Along-slope transport sensitivity';
+    dataY = Ub_east_max;
+    ylabeltext = 'Maximum undercurrent velocity at seafloor (m/s)';
+%     dataY=Ub_east_avg;
+%     ylabeltext = 'Undercurrent velocity at seafloor (m/s)';
+    titletext = 'Undercurrent sensitivity';
+
+    figname = 'Ub_east_max-avg_slope_2800-2805';
 
     
     xrange = max(dataX)-min(dataX);
@@ -60,7 +87,7 @@
 
     f=fit(dataX',dataY','poly1');
     if(plotMeltrate)
-    f1 = fit(dataX([group1 group2 group4])',dataY([group1 group2 group4])','poly1');
+    f = fit(dataX([group1 group2 group4])',dataY([group1 group2 group4])','poly1');
     end
     f1 = fit(dataX(group1)',dataY(group1)','poly1');
     f2 = fit(dataX(group2)',dataY(group2)','poly1');
@@ -208,8 +235,8 @@
 
     ah3=axes('position',get(gca,'position'),'visible','off');
     leg3 = legend(ah3,[g3_melt4 g3_5km_melt4 g3_10km_melt4],...
-        'Group3: 2 km','Group3: 5 km','Group3: 10 km',...
-        'FontSize',fontsize-2,'Position',[0.6227 0.1187 0.1355 0.0867]);
+        'Group3: 2 km, varying prescribed meltwater','Group3: 5 km, varying prescribed meltwater','Group3: 10 km, varying prescribed meltwater',...
+        'FontSize',fontsize-2,'Position',[0.6227 0.1214 0.3318 0.0867]);
 
 
     ah4=axes('position',get(gca,'position'),'visible','off');

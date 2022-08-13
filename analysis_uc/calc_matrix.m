@@ -62,8 +62,8 @@
     cp_o = 3994; % Unit: J/kg/degC
 
 
-for n=1:nEXP
-% for n=12
+% for n=1:nEXP
+for n=1
     expname = EXPNAME{n}
     loadexp;
     
@@ -303,7 +303,7 @@ for n=1:nEXP
     %%% Calculate the heat fluxes
     Fheat_xy = rho_o*cp_o*sum(vt.*DZ.*hFacS,3); % Total depth-integrated heat flux, in W/m
     Fheat_cdw = rho_o*cp_o*sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); % Depth-integrated heat flux of the CDW layer, in W/m
-    Fheat_xz = rho_o*cp_o*squeeze(sum(sum(vt.*delX(1).*DZ.*hFacS,3)))/1e12;%%% Zonally and depth-integrated, in TW
+    %     Fheat_xz = rho_o*cp_o*squeeze(sum(sum(vt.*dx.*DZ.*hFacS,3)))/1e12;%%% Zonally and depth-integrated, in TW
    
     Ymincdw = Yicefront;
     Ymaxcdw = Yshelfbreak;
@@ -321,8 +321,11 @@ for n=1:nEXP
     Scdw(n) = mean(SS_cdw(xidxcdw,yidxcdw),'all','omitnan');
     Tcdw(n) = mean(TT_cdw(xidxcdw,yidxcdw),'all','omitnan');
     Vcdw(n) = mean(VV_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
-    Fheatcdw(n) = mean(Fheat_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
-    Fheattot(n) = mean(Fheat_xy(xidxcdw,yidxcdw),'all','omitnan'); 
+    Fheatcdw_icefront_trough(n) = sum(Fheat_cdw(xidxcdw,yidxcdw(1))*dx)/1e12; 
+    Fheattot_icefront_trough(n) = sum(Fheat_xy(xidxcdw,yidxcdw(1))*dx)/1e12; 
+
+    Fheatcdw_icefront_all(n) = sum(Fheat_cdw(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
+    Fheattot_icefront_all(n) = sum(Fheat_xy(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
 
     Vcdw_east(n) = mean(VV_cdw(xidx_east,yidxcdw),'all','omitnan'); 
     Fheatcdw_east(n) = mean(Fheat_cdw(xidx_east,yidxcdw),'all','omitnan'); 
@@ -344,7 +347,8 @@ end
         'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
         'min_slope_2805','max_slope_2800','avg_slope_2805','avg_slope_2800',...
         'db_463','db_490','db_520','db_547','db_575','db_603',...
-        'Hcdw','Scdw','Tcdw','Vcdw','Fheatcdw','Fheattot',...
+        'Hcdw','Scdw','Tcdw','Vcdw',...
+        'Fheatcdw_icefront_trough','Fheattot_icefront_trough','Fheatcdw_icefront_all','Fheattot_icefront_all',...
         'Vcdw_east','Fheatcdw_east','Fheattot_east','Ucdw_west','Ucdw_west_max')
 
 
