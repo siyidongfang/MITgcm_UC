@@ -1493,7 +1493,7 @@ end
       %%%%%%%%%%%%%%%%%%%%%%
         
       %%% Wind stress scale
-    tau_max = 1e-3*1.3*sqrt(Ua^2+Va^2)*Va
+     tau_max = 1e-3*1.3*sqrt(Ua^2+Va^2)*Va
     %       tau_max = 0.05; 
       %%% Amplitude of slope wind variations - only used if
       %%% periodicExternalForcing == true

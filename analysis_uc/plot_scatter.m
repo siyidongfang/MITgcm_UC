@@ -39,11 +39,11 @@
 %     xlabeltext = 'Cross-slope depth change of isopycnal slope \gamma = 28.00 kg/m^2 (m/100km)';
 %     dataX=avg_slope_2805*100*1000;
 %     xlabeltext = 'Cross-slope depth change of isopycnal slope \gamma = 28.05 kg/m^2 (m/100km)';
-     dataX=(avg_slope_2800-avg_slope_2805)*100*1000;
-     xlabeltext = '2800-2805';
+%      dataX=(avg_slope_2800-avg_slope_2805)*100*1000;
+%      xlabeltext = '2800-2805';
 
-%     dataX=Tot_east_Sv;
-%     xlabeltext = 'Total eastward transport over the shelf and slope (Sv)';
+    dataX=Tot_east_Sv;
+    xlabeltext = 'Total eastward transport over the shelf and slope (Sv)';
 %     dataX=U_east_avg;
 %     xlabeltext = 'Mean undercurrent velocity (m/s)';
 %     dataX=Ub_east_avg;
@@ -54,8 +54,12 @@
 %     xlabeltext = 'Cross-slope density change at 490-m depth (kg/m^3)';
 %     dataX=Vcdw;
 %     xlabeltext = 'Depth-integrated meridional CDW volume flux in the trough (m^2/s)';
-%     dataX=Fheatcdw;
-%     xlabeltext = 'CDW heat flux in the trough (m/s)';
+%     dataX=Fheatcdw_icefront_all;
+%     xlabeltext = 'CDW heat flux at the ice shelf front';
+
+    dataY = Fheatcdw_icefront_trough;
+    ylabeltext = 'CDW heat flux in the trough';
+    titletext='Heat transport sensitivity'
 
 %     dataY = MeltRate_m;
 %     ylabeltext = 'Ice shelf melt rate (m/yr)';
@@ -63,13 +67,15 @@
 %     dataY = Tot_Sv;
 %     ylabeltext = 'Total along-slope transport (Sv)';
 %     titletext = 'Along-slope transport sensitivity';
-    dataY = Ub_east_max;
-    ylabeltext = 'Maximum undercurrent velocity at seafloor (m/s)';
+%     dataY = Ub_east_max;
+%     ylabeltext = 'Maximum undercurrent velocity at seafloor (m/s)';
 %     dataY=Ub_east_avg;
 %     ylabeltext = 'Undercurrent velocity at seafloor (m/s)';
-    titletext = 'Undercurrent sensitivity';
+%     titletext = 'Undercurrent sensitivity';
 
-    figname = 'Ub_east_max-avg_slope_2800-2805';
+
+
+    figname = 'Fheatcdw_icefront_trough-Tot_east_Sv';
 
     
     xrange = max(dataX)-min(dataX);

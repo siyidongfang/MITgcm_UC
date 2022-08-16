@@ -33,7 +33,7 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{4}
     list_exps_new;
 
     m1km = 1000;
@@ -62,8 +62,8 @@
     cp_o = 3994; % Unit: J/kg/degC
 
 
-% for n=1:nEXP
-for n=1
+for n=1:nEXP
+% for n=1
     expname = EXPNAME{n}
     loadexp;
     
@@ -72,39 +72,9 @@ for n=1
     DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
     dy = delY(1);
     dx = delX(1);
-
     
-    if(is_prod_run(n))
-        load([prodir expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
-                'SHIfwFlx','oceTAUX','oceTAUY');
-        tt = THETA;
-        ss = SALT;
-        uu = UVEL;
-        vv = VVEL;
-        vt = VVELTH;
-        ut = UVELTH;
-        eta = ETAN;
-        if(useSEAICE)
-            load([prodir expname '_tavg_5yrs.mat'],'SIuice','SIvice');
-            ui = SIuice;
-            vi = SIvice;
-        end
-    else
-        tt = rdmds([exppath,'/results/THETA'],nIter(n));
-        ss = rdmds([exppath,'/results/SALT'],nIter(n));
-        uu = rdmds([exppath,'/results/UVEL'],nIter(n));
-        vv = rdmds([exppath,'/results/VVEL'],nIter(n));
-        vt = rdmds([exppath,'/results/VVELTH'],nIter(n));
-        ut = rdmds([exppath,'/results/UVELTH'],nIter(n));
-        eta = rdmds([exppath,'/results/ETAN'],nIter(n));
-        SHIfwFlx = rdmds([exppath,'/results/SHIfwFlx'],nIter(n));
-        if(useSEAICE)
-            ui = rdmds([exppath,'/results/SIuice'],nIter(n));
-            vi = rdmds([exppath,'/results/SIvice'],nIter(n));
-        end
-    end
-    
-
+    load_data;
+   
     yidx = round(Ymin/dy):round(Ymax/dy);
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
     
@@ -321,6 +291,7 @@ for n=1
     Scdw(n) = mean(SS_cdw(xidxcdw,yidxcdw),'all','omitnan');
     Tcdw(n) = mean(TT_cdw(xidxcdw,yidxcdw),'all','omitnan');
     Vcdw(n) = mean(VV_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
+    
     Fheatcdw_icefront_trough(n) = sum(Fheat_cdw(xidxcdw,yidxcdw(1))*dx)/1e12; 
     Fheattot_icefront_trough(n) = sum(Fheat_xy(xidxcdw,yidxcdw(1))*dx)/1e12; 
 
@@ -328,6 +299,7 @@ for n=1
     Fheattot_icefront_all(n) = sum(Fheat_xy(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
 
     Vcdw_east(n) = mean(VV_cdw(xidx_east,yidxcdw),'all','omitnan'); 
+
     Fheatcdw_east(n) = mean(Fheat_cdw(xidx_east,yidxcdw),'all','omitnan'); 
     Fheattot_east(n) = mean(Fheat_xy(xidx_east,yidxcdw),'all','omitnan'); 
     Ucdw_west(n) = mean(UU_cdw(xidx_uuwest,yidx_uuwest),'all','omitnan'); 

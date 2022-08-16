@@ -4,7 +4,7 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{3}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
@@ -19,8 +19,8 @@
     Yshelfbreak = 220;
     Ydeep = 310;
     
-    for n=1:nEXP
-% for n=11
+%     for n=1:nEXP
+for n=[8 9 15]
         if(is_prod_run(n))
             clear vi vi_mass
             close all
