@@ -11,5 +11,6 @@
         TAUx_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(ui(xidx,yidx)-uo_surf),'all');
         TAUy_estimate(n) = mean(rho_o*Cio*sqrt((ui(xidx,yidx)-uo_surf).^2+(vi(xidx,yidx)-vo_surf).^2).*(vi(xidx,yidx)-vo_surf),'all');
     else
-        TAUx_estimate(n)=NaN;TAUy_estimate(n)=NaN;
+        TAUx_estimate(n)=TAUx;
+        TAUy_estimate(n)=TAUy;
     end

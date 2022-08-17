@@ -34,8 +34,7 @@
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
 
-for ngroup=1:4
-    exp_group = EXP_GROUP{ngroup}
+    exp_group = EXP_GROUP{4}
     list_exps_new;
 
     m1km = 1000;
@@ -105,9 +104,6 @@ end
 
 
 
-end
-
-
-    calc_matrix_combine;
+%     calc_matrix_combine;
 
 
