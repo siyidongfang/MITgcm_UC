@@ -54,11 +54,19 @@
     Tot_west_Sv(n) = Tot_west/Lx/1e6;
     Tot_Sv(n) = Tot_east_Sv(n)+Tot_west_Sv(n);
 
+    Umin(n) = min(uu_slope,[],'all','omitnan');
+    Umax(n) = max(uu_slope,[],'all','omitnan');
 
 
     %%% Calculate upper ocean velocity and transport
 
+    zupper = 1:sum(zz>=-500);
+
+    Tot_west_upper(n) = sum(uu_west(:,:,zupper).*hFacW(xidx,yidx,zupper).*DX(xidx,yidx,zupper).*DY(xidx,yidx,zupper).*DZ(xidx,yidx,zupper),'all','omitnan');
+    Vol_west_upper(n) = sum(hFacW_west(:,:,zupper).*DX(xidx,yidx,zupper).*DY(xidx,yidx,zupper).*DZ(xidx,yidx,zupper),'all','omitnan');
+    U_west_avg_upper(n) = Tot_west_upper(n)/Vol_west_upper(n);
 
 
-    
+
+
 

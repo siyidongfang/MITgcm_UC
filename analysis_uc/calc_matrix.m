@@ -81,7 +81,6 @@ for n=1:nEXP
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
     
 
-
     calc_matrix_transport;
     calc_matrix_melt_rate;
     calc_matrix_surface_stress;
@@ -92,11 +91,10 @@ for n=1:nEXP
 
 end
 
-
-
     save([prodir 'matrix_' exp_group '.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
         'U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
+        'Umin','Umax','U_west_avg_upper','Tot_west_upper','Vol_west_upper',...
         'MeltRate_m','MeltRate_Gt',...
         'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
         'min_slope_2805','max_slope_2800','avg_slope_2805','avg_slope_2800',...
@@ -108,3 +106,8 @@ end
 
 
 end
+
+
+    calc_matrix_combine;
+
+
