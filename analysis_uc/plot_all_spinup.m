@@ -15,14 +15,14 @@
 
 
 
-    expdir = '/Users/csi/MITgcm_UC/exps_aofd/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150'
+    expdir = '/Users/csi/MITgcm_UC/exps_uc/no_seaice/';
+    expname = 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 742024;
-    year = num2str(4);
+    nIter = 556518;
+    year = num2str(3);
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);
@@ -39,17 +39,21 @@
     SHIForcT = rdmds([exppath,'/results/SHIForcT'],nIter);
     SHIForcS = rdmds([exppath,'/results/SHIForcS'],nIter);
 
+    if(useSEAICE)
     SIuice = rdmds([exppath,'/results/SIuice'],nIter);
     SIvice = rdmds([exppath,'/results/SIvice'],nIter);
     SIheff = rdmds([exppath,'/results/SIheff'],nIter);
     SIarea = rdmds([exppath,'/results/SIarea'],nIter);
+    end
 
     u_surf = uu(:,:,1);
     v_surf = vv(:,:,1);
 
     plot_basics
     plot_shelfIce
+    if(useSEAICE)
     plot_seaice
+    end
 
 
 %     %% For groups of experiments 

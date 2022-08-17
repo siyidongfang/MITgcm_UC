@@ -6,11 +6,11 @@
 close all;clear;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
-batch_name = 'exps_uc/no_seaice';
+batch_name = 'exps_uc/seaice_boundary';
 
 %%% Input parameters
-Ua = -8;      %%% Reference value -5 (-4 with no ice shelf)
-Va = 8;       %%% Reference value 5  ( 4 with no ice shelf)
+Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
+Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
 Atide = 0;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
 Hi0 =1;       %%% Reference value 1
 Ai0 =1;       %%% Reference value 1
@@ -29,13 +29,15 @@ is_ContinuedRun = false;
 is_hires = false;
 
 %%% Use sea ice or not
-useSEAICE = false;
+useSEAICE = true;
 
 %%% Name pf the simulation
 exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
 %%% Create simulations
 exp_name = ['res2km_' exp_name]
+
+exp_name = [exp_name '_2narrowIceShelves_Nr100_stampede2']
 
 if(is_ContinuedRun)
     exp_name = [exp_name '_prod']

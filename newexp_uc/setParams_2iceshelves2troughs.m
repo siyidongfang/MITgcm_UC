@@ -1,5 +1,5 @@
 %%%
-%%% setParams.m
+%%% setParams_2iceshelves2troughs.m
 %%%
 %%% Sets basic MITgcm parameters plus parameters for included packages, and
 %%% writes out the appropriate input files.,
@@ -7,7 +7,7 @@
 function [nTimeSteps,h,obsuice,obsvice,lwdown,...
     tNorth,sNorth,rho_north_surf,rho_north_sigma2,rho_north_sigma4,...
     tSouth,sSouth,rho_south_surf,rho_south_sigma2,rho_south_sigma4]...
-    = setParams(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,...
+    = setParams_2iceshelves2troughs(exp_name,inputpath,codepath,imgpath,listterm,Nx,Ny,Nr,...
     Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_ContinuedRun,useSEAICE)  
 
   addpath ../../Software/gsw_matlab_v3_06_11/thermodynamics_from_t/;
@@ -248,8 +248,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
   Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
-  Xeast = 350*m1km; %%% Longitude of eastern trough wall, default 400*m1km
-  Xwest = 250*m1km; %%% Longitude of western trough wall, default 200*m1km
+  Xeast = 225*m1km; %%% Longitude of eastern trough wall, default 400*m1km
+  Xwest = 125*m1km; %%% Longitude of western trough wall, default 200*m1km
+  Xeast2 = 475*m1km; %%% Longitude of eastern trough wall, default 400*m1km
+  Xwest2 = 375*m1km; %%% Longitude of western trough wall, default 200*m1km
   if(useSHELFICE)
       Yicefront = 100*m1km; %%% Latitude of ice shelf face
       Hicefront = 200; %%% Depth of ice shelf frace
@@ -262,6 +264,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
   Wtrough = 30*m1km; %%% Trough width, ref 30km
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
+  Xtrough2 = (Xeast2+Xwest2)/2; %%% Longitude of trough2
 
   Wpoly = 20*m1km;   %%% Latitudinal width of polynya
   Ypoly = Yicefront; %%% Latitudinal location of polynya
@@ -525,7 +528,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   h_trough_profile = interp1(y_interp,h_interp,yy,'pchip');
   h_trough = repmat(h_trough_profile,[Nx 1]);
   h_trough = h_trough .* 1./(cosh((X-Xtrough)/Wtrough)).^2;
-  h = h + h_trough;
+
+  h_trough2_profile = interp1(y_interp,h_interp,yy,'pchip');
+  h_trough2 = repmat(h_trough2_profile,[Nx 1]);
+  h_trough2 = h_trough2 .* 1./(cosh((X-Xtrough2)/Wtrough)).^2;
+
+  h = h + h_trough + h_trough2;
   
     
   %%% Add coastal wall %%%
@@ -545,22 +553,48 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% Western trough wall
   coastidx = (Y<Ycoast-Wcoast/2) & (X<=Xwest+Wcoast/2) & (X>Xwest-Wcoast/2);
   h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((X(coastidx)-Xwest+Wcoast/2)/Wcoast);   
-  
-  %%% Eastern coastline
-  coastidx = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2);
-  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((Y(coastidx)-Ycoast+Wcoast/2)/Wcoast);
-  landidx = find((Y<=Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2));
+ 
+  %%% Eastern coastline2
+  coastidx2 = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X>=Xeast2+Wcoast/2);
+  h_coast(coastidx2) = h_coast(coastidx2) - h(coastidx2).*coastShape((Y(coastidx2)-Ycoast+Wcoast/2)/Wcoast);
+  landidx = find((Y<=Ycoast-Wcoast/2) & (X>=Xeast2+Wcoast/2));
   h_coast(landidx) = -h(landidx);
   
-  %%% Eastern corner
+  %%% Eastern corner2
+  R2 = sqrt((X-(Xeast2+Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
+  coastidx2 = (Y>Ycoast-Wcoast/2) & (X<Xeast2+Wcoast/2) & (R2 <= Wcoast);  
+  h_coast(coastidx2) = h_coast(coastidx2) - h(coastidx2).*coastShape((R2(coastidx2))/Wcoast);
+  
+  %%% Eastern trough wall2
+  coastidx2 = (Y<Ycoast-Wcoast/2) & (X<Xeast2+Wcoast/2) & (X>=Xeast2-Wcoast/2);
+  h_coast(coastidx2) = h_coast(coastidx2) - h(coastidx2).*coastShape(-(X(coastidx2)-Xeast2-Wcoast/2)/Wcoast);   
+  
+
+  %%% center coastline
+  coastidx = (Y<Ycoast+Wcoast/2) & (Y>Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2) & (X<=Xwest2-Wcoast/2);
+  h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((Y(coastidx)-Ycoast+Wcoast/2)/Wcoast);
+  landidx = find((Y<=Ycoast-Wcoast/2) & (X>=Xeast+Wcoast/2) & (X<=Xwest2-Wcoast/2));
+  h_coast(landidx) = -h(landidx);
+ 
+  %%% Western corner of the center coastline
   R = sqrt((X-(Xeast+Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
-  coastidx = (Y>Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (R <= Wcoast);  
+  coastidx = (Y>Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (X<=Xwest2-Wcoast/2) & (R <= Wcoast);  
   h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape((R(coastidx))/Wcoast);
   
-  %%% Eastern trough wall
-  coastidx = (Y<Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2) & (X>=Xeast-Wcoast/2);
+  %%% Western trough wall of the center coastline
+  coastidx = (Y<Ycoast-Wcoast/2) & (X<Xeast+Wcoast/2)  & (X<=Xwest2-Wcoast/2) & (X>=Xeast-Wcoast/2);
   h_coast(coastidx) = h_coast(coastidx) - h(coastidx).*coastShape(-(X(coastidx)-Xeast-Wcoast/2)/Wcoast);   
+
   
+  %%% Eastern corner of the center coastline
+  R2 = sqrt((X-(Xwest2-Wcoast/2)).^2+(Y-(Ycoast-Wcoast/2)).^2);
+  coastidx2 = (Y>Ycoast-Wcoast/2) & (X>Xwest2-Wcoast/2) & (X<Xeast2+Wcoast/2) & (R2 <= Wcoast);  
+  h_coast(coastidx2) = h_coast(coastidx2) - h(coastidx2).*coastShape((R2(coastidx2))/Wcoast);
+  
+  %%% Eastern trough wall of the center coastline
+  coastidx2 = (Y<Ycoast-Wcoast/2) & (X<=Xwest2+Wcoast/2) & (X>Xwest2-Wcoast/2) & (X<Xeast2+Wcoast/2);
+  h_coast(coastidx2) = h_coast(coastidx2) - h(coastidx2).*coastShape((X(coastidx2)-Xwest2+Wcoast/2)/Wcoast);   
+
   h = h + h_coast;
 
  
