@@ -36,9 +36,9 @@
 %     dataX=Ub_avg;
 %     xlabeltext = 'Mean bottom velocity over the slope (m/s)';
 %     dataX=avg_slope_2800*100*1000;
-%     xlabeltext = 'Cross-slope depth change of isopycnal slope \gamma = 28.00 kg/m^2 (m/100km)';
+%     xlabeltext = 'Cross-slope depth change of isopycnal \gamma = 28.00 kg/m^2 (m/100km)';
 %     dataX=avg_slope_2805*100*1000;
-%     xlabeltext = 'Cross-slope depth change of isopycnal slope \gamma = 28.05 kg/m^2 (m/100km)';
+%     xlabeltext = 'Cross-slope depth change of isopycnal \gamma = 28.05 kg/m^2 (m/100km)';
 %      dataX=(avg_slope_2800-avg_slope_2805)*100*1000;
 %      xlabeltext = '2800-2805';
 
