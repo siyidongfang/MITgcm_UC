@@ -248,8 +248,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
   Yslope = Ycoast+Wshelf+Wslope; %%% Latitude of mid-continental slope
   Ydeep = Ycoast+Wshelf+Wslope*3; %%% Latitude of deep ocean
-  Xeast = 350*m1km; %%% Longitude of eastern trough wall, default 400*m1km
-  Xwest = 250*m1km; %%% Longitude of western trough wall, default 200*m1km
+  Xeast = 400*m1km; %%% Longitude of eastern trough wall, default 400*m1km
+  Xwest = 200*m1km; %%% Longitude of western trough wall, default 200*m1km
   if(useSHELFICE)
       Yicefront = 100*m1km; %%% Latitude of ice shelf face
       Hicefront = 200; %%% Depth of ice shelf frace
