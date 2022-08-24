@@ -10,7 +10,7 @@
     DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
     
     %%% Calculate depth-averaged zonal velocity
-    UU = sum(uu.*DZ.*hFacW,3);
+    UU = sum(uu.*DZ.*hFacW,3); %%% u-grid
     
     %%% Calculate barotropic streamfunction
     Psi = zeros(Nx+1,Ny+1);

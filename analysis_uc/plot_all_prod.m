@@ -25,13 +25,12 @@
     vt = VVELTH;
     eta = ETAN;
 
-%     year = '1to5';
-%     plot_KE_EKE_T_S_series
-%     plot_basics
-%     plot_shelfIce
-%     plot_seaice
+    year = '1to5';
+    plot_KE_EKE_T_S_series
+    plot_basics
+    plot_shelfIce
+    plot_seaice
 
-calc_BTStreamfunc
-plot_BTStreamfunc
+
 
     
