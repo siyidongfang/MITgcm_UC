@@ -1,5 +1,7 @@
 
 
+    clear gamma_n_xmean
+
     %%% Calculate zonal mean T, S, and neutral density
     tt(tt==0)=NaN;
     tt_xmean= squeeze(mean(tt(xidx,yidx,:),'omitnan'));
