@@ -183,7 +183,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useEmPmRFile = false;
 
   useSHELFICE = true; 
-  usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
       useRBCS = true; 
   end
@@ -419,28 +419,28 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   [Y,X] = meshgrid(yy,xx);
 
 
-  %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
-  dz0 = 2;
-  dz1 = 15; 
-  dz2 = 20;
-  dz3 = 100;
-  dz4 = 200;  
-  N0 = 1;
-  N1 = 20; 
-  N2 = 50;
-  N3 = 15;
-  N4 = 14;  
-
-%   dz0 = 2*10/6;
-%   dz1 = 15*10/6; 
-%   dz2 = 20*10/6;
-%   dz3 = 100*10/6;
-%   dz4 = 200*10/6;  
+%   %%% Variable grid with high resolution at ice shelf cavity depths, very high in surface mixed layer    
+%   dz0 = 2;
+%   dz1 = 15; 
+%   dz2 = 20;
+%   dz3 = 100;
+%   dz4 = 200;  
 %   N0 = 1;
-%   N1 = 14; 
-%   N2 = 34;
-%   N3 = 11;
-%   N4 = 8;
+%   N1 = 20; 
+%   N2 = 50;
+%   N3 = 15;
+%   N4 = 14;  
+
+  dz0 = 2*10/6;
+  dz1 = 15*10/6; 
+  dz2 = 20*10/6;
+  dz3 = 100*10/6;
+  dz4 = 200*10/6;  
+  N0 = 1;
+  N1 = 14; 
+  N2 = 34;
+  N3 = 11;
+  N4 = 8;
   nn_c = cumsum([N0 N1 N2 N3 N4]);
   dz_c = [dz0 dz1 dz2 dz3 dz4];
   nn = 1:(N1+N2+N3+N4+1);
