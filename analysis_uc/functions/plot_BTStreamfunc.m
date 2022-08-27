@@ -5,9 +5,16 @@
 %%%
 
 
+
+Psi = Psif;
+
 %%% Meshgrid for plotting
-xx_u = [0 cumsum(delX)];
-yy_v = [0 cumsum(delY)];
+% xx_u = [0 cumsum(delX)];
+% yy_v = [0 cumsum(delY)];
+% xx_u = xx+Lx/2;
+% yy_v = yy;
+xx_u = xxf+Lx/2;
+yy_v = yyf;
 [YY_Psi,XX_Psi] = meshgrid(yy_v/1000,xx_u/1000);
 [YY,XX] = meshgrid(yy,xx-xx(1));
 
