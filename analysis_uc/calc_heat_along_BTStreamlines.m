@@ -4,7 +4,8 @@
 %%% Calculate heat flux along the time-mean barotropic streamfunction.
 %%%
 
-    clear; close all;
+    clear; 
+    close all;
 
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
@@ -15,7 +16,16 @@
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
+    figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/';
+
     loadexp;
+
+    %%% Plotting options
+    scrsz = get(0,'ScreenSize');
+    fontsize = 17;
+    framepos = [0 scrsz(4)/2 900 550];
+    plotloc = [0.15 0.15 0.7 0.75];
+
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'UVEL','VVELTH','UVELTH','WVELTH');
     uu = UVEL;
@@ -42,7 +52,7 @@
     WT = sum(wt.*DZ.*hFacC,3); %%% mass-grid  WT is much smaller than VT
 
     %%% Create a finer horizontal grid
-    ffac = 10;
+    ffac = 20;
     Nxf = ffac*Nx;
     Nyf = ffac*Ny;
     delXf = zeros(1,Nxf); 
@@ -82,7 +92,7 @@
         Psif(i,:)=Psif(find(Psif(:,1)~=0,1,'last'),:);
     end
     %%% Plot BT streamfunction
-    plot_BTStreamfunc
+%     plot_BTStreamfunc
 
     %%% Calculate heat transport along the streamlines
 
@@ -93,12 +103,32 @@
     Sv=1e6;
     Phi_value_estimate = -1.45*Sv;
     find_continuousBTstreamline; 
+
+    std_stfn = std(Phi_value-Phi_value(1))/Sv %%% Unit: Sv
+
     %%% The code is unable to find a continuous BT streamline that accross the domain (connecting the eastern boundary 
     %%% with the western boundary) when this streamline encounters with standing eddies. 
 
+    %%% Find the angles between the x-axis and this streamline    
+    %%% angle>0 onshore; angle<0 offshore; 
+    %%% angle=0 westward; angle = 180 eastward; angle=90 southward; angle=-90 northward
+    Ns = length(loc);
+    angle = zeros(1,Ns);
+    angle(1) = 0; %%% at the eastern boundary
+    angle(Ns) =  angle(Ns-1); %%% at the western boundary
+    %%% Centered Difference Formula for calculating the angle
+    angle(2:Ns-1) = atand((lat(3:Ns)-lat(1:Ns-2))./(lon(3:Ns)-lon(1:Ns-2)));
+
+    angle = flip(angle);
+    figure(5)
+    plot(angle)
+    angle = smooth(angle)';
+    hold on;
+    plot(angle,'LineWidth',2)
+    
     %%% Find the corresponding values of VTf and UTf along this streamline
     for n=1:length(loc)
-        vt_along(n) = VTf(loc(n,1),loc(n,2));
+        vt_along(n) = VTf(loc(n,1),loc(n,2));  %%% from east to west
         ut_along(n) = UTf(loc(n,1),loc(n,2));
     end
 
@@ -107,16 +137,12 @@
     figure(4)
     plot(ut_along)
 
-    %%% Find the angles between the x-axis and this streamline
-    xloc = flip(xxf(loc(:,1))/1000+Lx/2/1000); %%% in km, start from the west
-    yloc = flip(yyf(loc(:,2))/1000);           %%% in km
-    %%% angle>0 onshore; angle<0 offshore; 
-    %%% angle=0 westward; angle = 180 eastward; angle=90 southward; angle=-90 northward
-    for n=1:length(loc)
-       angle(n) =
-    end
-    %%% Integrate heat flux along this streamline
 
+    %%% Integrated heat transport along this streamline from east to west
+    HT = cumsum(ut_along.*cosd(angle)+vt_along.*sind(angle),'omitnan');
+
+    figure(6)
+    plot(HT)
 
     %%% End the loop
 

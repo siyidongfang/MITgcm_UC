@@ -52,18 +52,28 @@
 
 
 
+    lon = xxf(loc(:,1))/1000; %%% in km, from the east to the west
+    lat = yyf(loc(:,2))/1000; %%% in km
+
     [YY,XX] = meshgrid(yy,xx);
     handle = figure(1);set(handle,'Position',framepos);clf;set(gcf,'color','w');
     [C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',2,'ShowText','on');clabel(C,h,'LabelSpacing',1000);
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',800);
-    plot(xxf(loc(:,1))/1000,yyf(loc(:,2))/1000,'LineWidth',3); xlim([-300 300]);ylim([0 400]); hold off;
+    plot(lon,lat,'LineWidth',3); xlim([-300 300]);ylim([0 400]); hold off;
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
 
-
-    figure(2)
-    plot(loc)
+    lat = smooth(lat,100)';
+    lon = smooth(lon,100)';
+    
+%     handle = figure(2);set(handle,'Position',framepos);clf;set(gcf,'color','w');
+%     [C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',2,'ShowText','on');clabel(C,h,'LabelSpacing',1000);
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',800);
+%     plot(lon,lat,'LineWidth',3); xlim([-300 300]);ylim([0 400]); hold off;
+%     xlabel('Longitude, x (km)');
+%     ylabel('Latitude, y (km)');
+%     set(gca,'FontSize',fontsize);
 
 
 

@@ -7,14 +7,10 @@
 
 
 Psi = Psif;
-
 %%% Meshgrid for plotting
-% xx_u = [0 cumsum(delX)];
-% yy_v = [0 cumsum(delY)];
-% xx_u = xx+Lx/2;
-% yy_v = yy;
 xx_u = xxf+Lx/2;
 yy_v = yyf;
+
 [YY_Psi,XX_Psi] = meshgrid(yy_v/1000,xx_u/1000);
 [YY,XX] = meshgrid(yy,xx-xx(1));
 
@@ -50,7 +46,7 @@ set(gca,'Position',plotloc);
 set(gca,'XTick',[0:100:600]);
 set(gca,'YTick',[0:100:400]);
 annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Psi_\mathrm{BT}$ (Sv)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
-% print('-djpeg','-r200', ['../../Figures/plotBTStreamfunc/', expname, '.jpg'])
+print('-djpeg','-r200', [figdir, expname, '_BTstfn.jpg'])
 
 
 
@@ -80,7 +76,7 @@ set(gca,'Position',plotloc);
 set(gca,'XTick',[0:100:600]);
 set(gca,'YTick',[0:100:400]);
 annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Psi_\mathrm{BT}$ (Sv)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
-% print('-djpeg','-r200', ['../../Figures/plotBTStreamfunc/', expname, '.jpg'])
+print('-djpeg','-r200', [figdir, expname, '_BTstfn_zoomin.jpg'])
 
 
 
