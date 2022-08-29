@@ -6,6 +6,7 @@
 
     clear; 
     close all;
+    
 
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
@@ -19,6 +20,9 @@
     figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/';
 
     loadexp;
+
+    rho_o =1000;
+    cp_o = 3994; % Unit: J/kg/degC
 
     %%% Plotting options
     scrsz = get(0,'ScreenSize');
@@ -82,8 +86,15 @@
     UTf = interp2(YY,XX,UT,YYf,XXf,'linear');
     UUf = interp2(YY,XX,UU,YYf,XXf,'linear');
 
+    UUf_vgrid = zeros(Nxf,Nyf);
+    UUf_vgrid(1,:) = 0;
+    UUf_vgrid(2:Nxf,:) = (UUf(1:Nxf-1,:)+UUf(2:Nxf,:))/2; %%% mass-grid
+    UUf_vgrid(:,1) = 0;
+    UUf_vgrid(:,2:Nyf) = (UUf_vgrid(:,1:Nyf-1)+UUf_vgrid(:,2:Nyf))/2; %%% v-grid
+    
+
     %%% Calculate the barotropic streamfunction using UUf
-    Psif = flip(cumsum(flip(UUf.*delYf(1),2),2,'omitnan'),2);
+    Psif = flip(cumsum(flip(UUf_vgrid.*delYf(1),2),2,'omitnan'),2); %%% on v-grid
     %%% Fill the zeros at the zonal boundaries
     for i = 1:find(Psif(:,1)~=0,1,'first')-1
         Psif(i,:)=Psif(find(Psif(:,1)~=0,1,'first'),:);
@@ -97,52 +108,47 @@
     %%% Calculate heat transport along the streamlines
 
     %%% Start a loop
- 
+    Sv=1e6;
+    min_stfn = min(min(Psif))/Sv;
+    stfn = min_stfn:0.05:0;
+    
+for ns = 1:length(stfn)
+% for ns = 2
+    clear HT Phi_value loc ut_along vt_along angle
     %%% Select one streamline: e.g, -1.45 Sv
     %%% The qualified streamlines must connect the eastern and western boundaries across the domain.
-    Sv=1e6;
-    Phi_value_estimate = -1.45*Sv;
+    Phi_value_estimate = stfn(ns)*Sv;
     find_continuousBTstreamline; 
-
-    std_stfn = std(Phi_value-Phi_value(1))/Sv %%% Unit: Sv
-
     %%% The code is unable to find a continuous BT streamline that accross the domain (connecting the eastern boundary 
     %%% with the western boundary) when this streamline encounters with standing eddies. 
+    Phi_value_real(ns) = Phi_value(1);
+    std_stfn(ns) = std(Phi_value-Phi_value(1))/Sv; %%% Unit: Sv
 
-    %%% Find the angles between the x-axis and this streamline    
-    %%% angle>0 onshore; angle<0 offshore; 
-    %%% angle=0 westward; angle = 180 eastward; angle=90 southward; angle=-90 northward
     Ns = length(loc);
-    angle = zeros(1,Ns);
-    angle(1) = 0; %%% at the eastern boundary
-    angle(Ns) =  angle(Ns-1); %%% at the western boundary
-    %%% Centered Difference Formula for calculating the angle
-    angle(2:Ns-1) = atand((lat(3:Ns)-lat(1:Ns-2))./(lon(3:Ns)-lon(1:Ns-2)));
-
-    angle = flip(angle);
-    figure(5)
-    plot(angle)
-    angle = smooth(angle)';
-    hold on;
-    plot(angle,'LineWidth',2)
-    
     %%% Find the corresponding values of VTf and UTf along this streamline
-    for n=1:length(loc)
+    for n=1:Ns
         vt_along(n) = VTf(loc(n,1),loc(n,2));  %%% from east to west
-        ut_along(n) = UTf(loc(n,1),loc(n,2));
+    %   ut_along(n) = UTf(loc(n,1),loc(n,2));
     end
 
-    figure(3)
-    plot(vt_along)
-    figure(4)
-    plot(ut_along)
-
-
     %%% Integrated heat transport along this streamline from east to west
-    HT = cumsum(ut_along.*cosd(angle)+vt_along.*sind(angle),'omitnan');
+    %   HT = cumsum(ut_along.*cosd(angle)+vt_along.*sind(angle),'omitnan');
+    ddist = [0 sqrt((lat(2:Ns)-lat(1:Ns-1)).^2+(lon(2:Ns)-lon(1:Ns-1)).^2)];
+    VHT = cp_o*rho_o*cumsum(-vt_along.*ddist,'omitnan')/1e9; %%% positive shoreward, in 1e9 W
 
-    figure(6)
-    plot(HT)
+    handle = figure(6);set(handle,'Position',[656 151 900 811]);clf;set(gcf,'color','w');
+    plot(lon,zeros(1,Ns),'k--')
+    hold on;plot(lon,VHT,'LineWidth',3); xlim([-300 300]);ylim([-4 8]);hold off;
+    xlabel('Longitude, x (km)');
+    ylabel('Onshore Heat transport (GW)');grid on;
+    set(gca,'FontSize',fontsize);
+    text(-280, 6.2,'Positive: onshore heat transport','FontSize',fontsize+3);
+    title(['Integrated onshore heat transport along the streamline \Psi = ' num2str(stfn(ns),'%.2f') ' Sv'],'FontSize',fontsize+3);
+    print('-djpeg','-r200', [figdir expname '/VHT_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
+
+end
+
+
 
     %%% End the loop
 
