@@ -1,6 +1,6 @@
 
 %%%
-%%% calc_AreaWeightedHT_BTstfnCoor.m
+%%% calc_heat_AreaWeightedBTstfnCoor.m
 %%%
 %%% Calculate area-weighted onshore heat transport in Barotropic
 %%% streamfunction coordinate, following Eqs. (11)-(13) of Stewart et al (2019).
@@ -16,11 +16,11 @@
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Nr100_prod'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod'
     figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/seaice_boundary/';
 
     mkdir /Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/seaice_boundary/ ...
-        res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Nr100_prod
+        res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod
 
 
     loadexp;

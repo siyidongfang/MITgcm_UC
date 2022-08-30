@@ -143,9 +143,8 @@ for ns = 1:length(stfn)
     %   HT = cumsum(ut_along.*cosd(angle)+vt_along.*sind(angle),'omitnan');
 %     ddist = [0
 %     sqrt((lat(2:Ns)-lat(1:Ns-1)).^2+(lon(2:Ns)-lon(1:Ns-1)).^2)]; %%% in km
-    ddist = dxf;
-    VHT = cp_o*rho_o*cumsum(-vt_along.*ddist,'omitnan')/1e12; %%% positive shoreward, in TW
-    UHT = cp_o*rho_o*flip(cumsum(flip(ut_along.*ddist),'omitnan'))/1e12; %%% positive shoreward, in TW
+    VHT = cp_o*rho_o*cumsum(-vt_along.*dxf,'omitnan')/1e12; %%% positive shoreward, in TW
+    UHT = cp_o*rho_o*flip(cumsum(flip(ut_along.*dyf),'omitnan'))/1e12; %%% positive shoreward, in TW
 
     handle = figure(6);set(handle,'Position',[656 151 900 811]);clf;set(gcf,'color','w');
     plot(lon,zeros(1,Ns),'k--')
