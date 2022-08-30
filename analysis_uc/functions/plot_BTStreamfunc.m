@@ -45,8 +45,9 @@ set(gca,'FontSize',fontsize);
 set(gca,'Position',plotloc);
 set(gca,'XTick',[0:100:600]);
 set(gca,'YTick',[0:100:400]);
+title('Barotropic streamfunction','FontSize',fontsize+3);
 annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Psi_\mathrm{BT}$ (Sv)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
-print('-djpeg','-r200', [figdir, expname, '_BTstfn.jpg'])
+print('-djpeg','-r200', [figdir expname '/BTstfn.jpg'])
 
 
 
@@ -75,8 +76,9 @@ set(gca,'FontSize',fontsize);
 set(gca,'Position',plotloc);
 set(gca,'XTick',[0:100:600]);
 set(gca,'YTick',[0:100:400]);
+title('Barotropic streamfunction (zoom in)','FontSize',fontsize+3);
 annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Psi_\mathrm{BT}$ (Sv)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
-print('-djpeg','-r200', [figdir, expname, '_BTstfn_zoomin.jpg'])
+print('-djpeg','-r200', [figdir expname '/BTstfn_zoomin.jpg'])
 
 
 

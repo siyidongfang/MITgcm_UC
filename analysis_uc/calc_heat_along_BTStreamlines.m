@@ -56,7 +56,7 @@
     WT = sum(wt.*DZ.*hFacC,3); %%% mass-grid  WT is much smaller than VT
 
     %%% Create a finer horizontal grid
-    ffac = 20;
+    ffac = 5;
     Nxf = ffac*Nx;
     Nyf = ffac*Ny;
     delXf = zeros(1,Nxf); 
@@ -120,8 +120,8 @@
     min_stfn = min(min(Psif))/Sv;
     stfn = [min_stfn:0.05:0 0];
     
-for ns = 1:length(stfn)
-% for ns = 2
+% for ns = 1:length(stfn)
+for ns = 30
     clear HT Phi_value loc ut_along vt_along angle
     %%% Select one streamline: e.g, -1.45 Sv
     %%% The qualified streamlines must connect the eastern and western boundaries across the domain.
@@ -180,7 +180,6 @@ for ns = 1:length(stfn)
 end
 
     %%% End the loop
-
 
 
 
