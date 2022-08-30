@@ -6,6 +6,7 @@ mycolormap = customcolormap(linspace(0,1,11), {'#68011d','#b5172f','#d75f4e','#f
 
 
 black = [0 0 0];
+verydarkgray = [0.25 0.25 0.25];
 darkgray = [0.5 0.5 0.5];
 gray = [0.7 0.7 0.7];
 boxcolor = [0.85 0.85 0.85];

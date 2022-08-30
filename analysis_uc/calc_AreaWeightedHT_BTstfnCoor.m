@@ -20,6 +20,8 @@
     figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/seaice_boundary/';
 
     loadexp;
+    load_colors;
+    fontsize = 17;
 
     rho_o =1000;
     cp_o = 3994; % Unit: J/kg/degC
@@ -43,7 +45,7 @@
     DZC = repmat(reshape(DRC(1:end-1),[1 1 Nr]),[Nx Ny 1]);
 
     %%% Create a finer horizontal grid
-    ffac = 10;
+    ffac = 15;
     Nxf = ffac*Nx;
     Nyf = ffac*Ny;
     delXf = zeros(1,Nxf); 
@@ -113,44 +115,89 @@
         HT_Aint(ns) = sum(-cp_o*rho_o*VTf.*Psi0./Psi0*dxf*dyf,'all','omitnan');
     end
 
+    HTint = HT_Aint./Lx/1e12; %%% in TW
+
     HT = (HT_Aint(2:Nsf)-HT_Aint(1:Nsf-1))./ (A(2:Nsf)-A(1:Nsf-1));
     m1km = 1000;
     ystar = A/Lx/m1km;
 
-    figure(1)
+
+    Ycoast = max(ystar)-300; %%% y = 120 km
+    Yshelfbreak = max(ystar)-180; %%% y = 220 km
+    Ydeep = max(ystar)-90;  %%% y = 310 km
+
+    figure(1);clf;
     plot(ystar,stfn,'LineWidth',2)
-    grid on;
-    set(gca,'FontSize',fontsize);
+    grid off;
+    set(gca,'FontSize',fontsize,'YGrid', 'on','XGrid','off');
     xlabel('Pseudo-offshore distance y* (km)','FontSize',fontsize+2,'interpreter','latex');
     ylabel('Barotropic streamline (Sv)','FontSize',fontsize+2,'interpreter','latex');
-    
+    yup = max(stfn)+0.5;
+    ydown = min(stfn)-0.5; 
+    ylim([ydown yup]);xlim([0 330]);
+    hold on;plot([0:400],zeros(1,401),'k--','LineWidth',1);
+    line([Ycoast Ycoast],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    line([Yshelfbreak Yshelfbreak],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    line([Ydeep Ydeep],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    hold off;
+    text(-10,yup-0.5,{'Ice shelf','cavity'},'FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(40,yup-0.5,'Continental shelf','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(170,yup-0.5,'Slope','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(250,yup-0.5,'Deep ocean','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    print('-djpeg','-r200', [figdir expname '/stfn_ystar.jpg'])
 
-    figure(2)
-    plot(ystar,HT_Aint./Lx/1e12,'LineWidth',2)
+    figure(2);clf;
+    plot(ystar,HTint,'LineWidth',2)
     grid on;
-    set(gca,'FontSize',fontsize);
+    set(gca,'FontSize',fontsize,'YGrid', 'on','XGrid','off');
     xlabel('Pseudo-offshore distance y* (km)','FontSize',fontsize+2,'interpreter','latex');
     ylabel('(TW)','FontSize',fontsize+2,'interpreter','latex');
-    title('Onshore heat transport $\frac{1}{L_y}\big[c_p\rho_o\int_{z=-\eta_{\,b}}^{z=0}\overline{v\theta}^t dz\big]_\Psi$','FontSize',fontsize+3,'interpreter','latex');
+    title('Integrated onshore heat transport $\frac{1}{L_y}\big[c_p\rho_o\int_{z=-\eta_{\,b}}^{z=0}\overline{v\theta}^t dz\big]_\Psi$','FontSize',fontsize+3,'interpreter','latex');
+    yup = max(HTint)+0.05;
+    ydown = min(HTint)-0.05; 
+    ylim([ydown yup]);xlim([0 330]);
+    hold on;plot([0:400],zeros(1,401),'k--','LineWidth',1);
+    line([Ycoast Ycoast],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    line([Yshelfbreak Yshelfbreak],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    line([Ydeep Ydeep],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    hold off;
+    text(-10,yup-0.05,{'Ice shelf','cavity'},'FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(40,yup-0.05,'Continental shelf','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(170,yup-0.05,'Slope','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(250,yup-0.05,'Deep ocean','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    print('-djpeg','-r200', [figdir expname '/HTint_ystar.jpg'])
 
-    figure(3)
+
+    figure(3);clf;
     plot(ystar(2:Nsf),HT/1e6,'LineWidth',2)
     grid on;
-    set(gca,'FontSize',fontsize);
+    set(gca,'FontSize',fontsize,'YGrid', 'on','XGrid','off');
     xlabel('Pseudo-offshore distance y* (km)','FontSize',fontsize+2,'interpreter','latex');
     ylabel('($10^6 \ \mathrm{W/m}$)','FontSize',fontsize+2,'interpreter','latex');
     title('Onshore heat flux $\frac{d}{dA}\big[c_p\rho_o\int_{z=-\eta_{b}}^{z=0}\overline{v\theta}^t dz\big]_\Psi$','FontSize',fontsize+3,'interpreter','latex');
+    yup = max(HT/1e6)+1;
+    ydown = min(HT/1e6)-1; 
+    ylim([ydown yup]);xlim([0 330]);
+    hold on;plot([0:400],zeros(1,401),'k--','LineWidth',1);
+    line([Ycoast Ycoast],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    line([Yshelfbreak Yshelfbreak],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    line([Ydeep Ydeep],[ydown yup],'Color',verydarkgray,'LineStyle',':','LineWidth',1);
+    hold off;
+    text(-10,yup-3,{'Ice shelf','cavity'},'FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(40,yup-3,'Continental shelf','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(170,yup-3,'Slope','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    text(250,yup-3,'Deep ocean','FontSize',fontsize-2,'Color',verydarkgray,'interpreter','latex');
+    print('-djpeg','-r200', [figdir expname '/HT_ystar.jpg'])
 
-
-    ns = 2
-    clear Psi0
-    Psi0 = Psif;
-    st = stfn(ns)*Sv;
-    Psi0(Psi0>=st)=NaN;
-
-    figure(4)
-    pcolor(Psi0)
-    shading flat;colorbar;colormap;
+%     ns = 2
+%     clear Psi0
+%     Psi0 = Psif;
+%     st = stfn(ns)*Sv;
+%     Psi0(Psi0>=st)=NaN;
+% 
+%     figure(4)
+%     pcolor(Psi0)
+%     shading flat;colorbar;colormap;
 
 
 
