@@ -86,7 +86,7 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     title(['Barotropic streamline \Psi = ' num2str(stfn(ns),'%.2f') ' Sv'],'FontSize',fontsize+3);
-    print('-djpeg','-r200', [figdir expname '/BTstfn_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
+    print('-djpeg','-r200', [figdir expname '/HT/BTstfn_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
 
     if(useSMOOTH)
         lat = smooth(lat,100)';

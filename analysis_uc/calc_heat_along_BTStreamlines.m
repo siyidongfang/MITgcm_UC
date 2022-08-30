@@ -16,9 +16,8 @@
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod'
     figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/seaice_boundary/';
-
     loadexp;
 
     rho_o =1000;
@@ -56,7 +55,7 @@
     WT = sum(wt.*DZ.*hFacC,3); %%% mass-grid  WT is much smaller than VT
 
     %%% Create a finer horizontal grid
-    ffac = 5;
+    ffac = 20;
     Nxf = ffac*Nx;
     Nyf = ffac*Ny;
     delXf = zeros(1,Nxf); 
@@ -72,6 +71,7 @@
         end
     end
 
+    dxf = delXf(1); dyf = delYf(1);
     xx  = cumsum((delX +  [0 delX(1:Nx-1)])/2)  -Lx/2;
     xxf= cumsum((delXf + [0 delXf(1:Nxf-1)])/2)-Lx/2;
     
@@ -120,8 +120,8 @@
     min_stfn = min(min(Psif))/Sv;
     stfn = [min_stfn:0.05:0 0];
     
-% for ns = 1:length(stfn)
-for ns = 30
+for ns = 1:length(stfn)
+% for ns = 30
     clear HT Phi_value loc ut_along vt_along angle
     %%% Select one streamline: e.g, -1.45 Sv
     %%% The qualified streamlines must connect the eastern and western boundaries across the domain.
@@ -141,25 +141,27 @@ for ns = 30
 
     %%% Integrated heat transport along this streamline from east to west
     %   HT = cumsum(ut_along.*cosd(angle)+vt_along.*sind(angle),'omitnan');
-    ddist = [0 sqrt((lat(2:Ns)-lat(1:Ns-1)).^2+(lon(2:Ns)-lon(1:Ns-1)).^2)];
-    VHT = cp_o*rho_o*cumsum(-vt_along.*ddist,'omitnan')/1e9; %%% positive shoreward, in 1e9 W
-    UHT = cp_o*rho_o*flip(cumsum(flip(ut_along.*ddist),'omitnan'))/1e9; %%% positive shoreward, in 1e9 W
+%     ddist = [0
+%     sqrt((lat(2:Ns)-lat(1:Ns-1)).^2+(lon(2:Ns)-lon(1:Ns-1)).^2)]; %%% in km
+    ddist = dxf;
+    VHT = cp_o*rho_o*cumsum(-vt_along.*ddist,'omitnan')/1e12; %%% positive shoreward, in TW
+    UHT = cp_o*rho_o*flip(cumsum(flip(ut_along.*ddist),'omitnan'))/1e12; %%% positive shoreward, in TW
 
     handle = figure(6);set(handle,'Position',[656 151 900 811]);clf;set(gcf,'color','w');
     plot(lon,zeros(1,Ns),'k--')
     hold on;
     plot(lon,VHT,'LineWidth',3); 
     xlim([-300 300]);
-    ylim([-4 8]);
+    ylim([-8 8]);
     hold off;
     xlabel('Longitude, x (km)');
-    ylabel('Onshore Heat transport (GW)');
+    ylabel('Onshore Heat transport (TW)');
     grid on;
     set(gca,'FontSize',fontsize);
     text(-280, 6.2,'Positive: onshore heat transport','FontSize',fontsize+3);
     text(-280, 5.5,'Integrated from \it east to west','FontSize',fontsize+3);
     title(['Cumulative eastward heat transport along the streamline \Psi = ' num2str(stfn(ns),'%.2f') ' Sv'],'FontSize',fontsize+3);
-    print('-djpeg','-r200', [figdir expname '/VHT_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
+    print('-djpeg','-r200', [figdir expname '/HT/VHT_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
 
 
     handle = figure(7);set(handle,'Position',[656 151 900 811]);clf;set(gcf,'color','w');
@@ -170,13 +172,13 @@ for ns = 30
     ylim([-50 60]);
     hold off;
     xlabel('Longitude, x (km)');
-    ylabel('Eastward Heat transport (GW)');
+    ylabel('Eastward Heat transport (TW)');
     grid on;
     set(gca,'FontSize',fontsize);
     text(-280, 53,'Positive: eastward heat transport','FontSize',fontsize+3);
     text(-280, 45,'Integrated from \it west to east','FontSize',fontsize+3);
     title(['Cumulative eastward heat transport along the streamline \Psi = ' num2str(stfn(ns),'%.2f') ' Sv'],'FontSize',fontsize+3);
-    print('-djpeg','-r200', [figdir expname '/UHT_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
+    print('-djpeg','-r200', [figdir expname '/HT/UHT_' num2str(stfn(ns),'%.2f') 'Sv.jpg'])
 end
 
     %%% End the loop

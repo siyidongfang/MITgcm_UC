@@ -16,8 +16,12 @@
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Nr100_prod'
     figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/seaice_boundary/';
+
+    mkdir /Users/csi/MITgcm_UC/figures_uc/heat_along_BTstreamfunc/seaice_boundary/ ...
+        res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Nr100_prod
+
 
     loadexp;
     load_colors;
