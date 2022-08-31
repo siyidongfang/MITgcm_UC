@@ -1,6 +1,6 @@
 
 %%%
-%%% calc_heat_AreaWeightedBTstfnCoor.m
+%%% calc_heat_BTstfnCoor.m
 %%%
 %%% Calculate area-weighted onshore heat transport in Barotropic
 %%% streamfunction coordinate, following Eqs. (11)-(13) of Stewart et al (2019).
