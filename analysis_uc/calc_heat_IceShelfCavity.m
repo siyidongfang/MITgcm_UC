@@ -91,56 +91,6 @@
     %%% Make and save the figure
     fontsize = 17; 
 
-    figure(3)
-    set(gcf,'Position',[294 476 1326 754])
-    subplot(2,2,1)
-    pcolor(xx/1000,yy/1000,-Zupper');
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
-    xlabel('Longitude (km)');ylabel('Latitude (km)');
-    title('Depth of the upper bound of the CDW layer (m)')
-    set(gca,'FontSize',fontsize);
-    ylim([0 200])
-    caxis([0 1000])
-
-    subplot(2,2,2)
-    pcolor(xx/1000,yy/1000,-Zlower');
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
-    xlabel('Longitude (km)');ylabel('Latitude (km)');
-    title('Depth of the lower bound of the CDW layer (m)')
-    set(gca,'FontSize',fontsize);
-    ylim([0 200])
-    caxis([0 1000])
-   
-
-    subplot(2,2,3)
-    pcolor(xx/1000,yy/1000,HH_cdw');
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
-    xlabel('Longitude (km)');ylabel('Latitude (km)');
-    title('CDW thickness (m)')
-    set(gca,'FontSize',fontsize);
-    ylim([0 200])
-    caxis([0 1000])
-
-    subplot(2,2,4)
-    pcolor(xx/1000,yy/1000,-bathy');
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-    shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
-    xlabel('Longitude (km)');ylabel('Latitude (km)');
-    title('Depth of the seafloor (m)')
-    set(gca,'FontSize',fontsize);
-    ylim([0 200])
-    caxis([0 1000])
-
-
-
-
     figure(1)
     set(gcf,'Position',[294 476 1326 754])
     clf;
@@ -186,7 +136,6 @@
     title('Meridional-mean heat transport in the cavity','interpreter','latex');
     
    
-
 
     figure(2)
     set(gcf,'Position',[294 476 1326 754])
@@ -235,4 +184,52 @@
 
 
 
+
+
+%     figure(3)
+%     set(gcf,'Position',[294 476 1326 754])
+%     subplot(2,2,1)
+%     pcolor(xx/1000,yy/1000,-Zupper');
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+%     shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
+%     xlabel('Longitude (km)');ylabel('Latitude (km)');
+%     title('Depth of the upper bound of the CDW layer (m)')
+%     set(gca,'FontSize',fontsize);
+%     ylim([0 200])
+%     caxis([0 1000])
+% 
+%     subplot(2,2,2)
+%     pcolor(xx/1000,yy/1000,-Zlower');
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+%     shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
+%     xlabel('Longitude (km)');ylabel('Latitude (km)');
+%     title('Depth of the lower bound of the CDW layer (m)')
+%     set(gca,'FontSize',fontsize);
+%     ylim([0 200])
+%     caxis([0 1000])
+%    
+% 
+%     subplot(2,2,3)
+%     pcolor(xx/1000,yy/1000,HH_cdw');
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+%     shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
+%     xlabel('Longitude (km)');ylabel('Latitude (km)');
+%     title('CDW thickness (m)')
+%     set(gca,'FontSize',fontsize);
+%     ylim([0 200])
+%     caxis([0 1000])
+% 
+%     subplot(2,2,4)
+%     pcolor(xx/1000,yy/1000,-bathy');
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+%     shading flat;colorbar;colormap(WhiteBlueGreenYellowRed(0))
+%     xlabel('Longitude (km)');ylabel('Latitude (km)');
+%     title('Depth of the seafloor (m)')
+%     set(gca,'FontSize',fontsize);
+%     ylim([0 200])
+%     caxis([0 1000])
 
