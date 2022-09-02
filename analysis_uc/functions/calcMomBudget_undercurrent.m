@@ -8,7 +8,14 @@
 rho0 = 999.8;
 
 loadexp;
-load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext');
+load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext','UVEL');
+
+
+%%% Find (x,y,z) indices for the undercurrent
+
+
+
+
 
 %%% Grid spacing matrices
 DX_xy = repmat(delX',[1 Ny]);

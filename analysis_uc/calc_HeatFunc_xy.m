@@ -67,9 +67,10 @@
 
 
     %%% Calculate the horizontal heatfunction using VT
-    phi_H = cp_o*rho_o*cumsum(VT*dx);
+    VT_exclude=VT; %%% Exclude the zonal boundary
+    VT_exclude(1:11,:)=0;
+    phi_H = cp_o*rho_o*cumsum(VT_exclude*dx);
     phi_H(VT==0)=NaN;
-
 
 
     figure(1)
