@@ -1,10 +1,10 @@
 clear;close all;
-expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-expname_old = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_stampede2';
-expname_new = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod';
+expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
+expname_old = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_stampede2';
+expname_new = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_ardbeg_prod';
 
 
-expiter = 1492828;
+expiter = 1441646;
 
 useSEAICE = true;
 

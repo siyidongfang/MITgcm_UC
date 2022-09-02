@@ -36,8 +36,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   realfmt=['%.',num2str(realdigits),'e'];
   
   %%% Get parameter type definitions
-  paramTypes;
-      
+  paramTypes;     
 
   %%% To store parameter names and values
   parm01 = parmlist;
@@ -183,7 +182,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useEmPmRFile = false;
 
   useSHELFICE = true; 
-  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
       useRBCS = true; 
   end
@@ -2924,28 +2923,28 @@ diag_fields_inst = {...
 
 
 
-        %%%%%%%% Precribe uniform sea ice velocity at the zonal boundaries
-        % Ua_mean = mean(uwind(1,yidx_100km:end))
-        % Va_mean = mean(vwind(1,yidx_100km:end))
-        % tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
-        % tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
-        % syms ui vi
-        % %         eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
-        % %         eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
-        % Uo_mean = mean(uEast(yidx_100km:end,1));
-        % eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*(ui-Uo_mean);
-        % eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*vi;       
-        % eqns = [eq1, eq2];
-        % [solui solvi] = solve(eqns,[ui vi]);
-        % Nui = double(real(solui));
-        % Nvi = double(real(solvi));
-        % ui_idx = find(Nui==min(Nui));
-        % obvice = 0
-        % obuice = Nui(ui_idx)
-        % Uo_surf_min = min(uEast(:,1));
-        % if(abs(obuice)<abs(Uo_surf_min))
-        %     obuice = Uo_surf_min
-        % end
+%         %%%%%%% Precribe uniform sea ice velocity at the zonal boundaries
+%         Ua_mean = mean(uwind(1,yidx_100km:end))
+%         Va_mean = mean(vwind(1,yidx_100km:end))
+%         tao_aix = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Ua_mean;       %%% Air-ice stress in x direction, N/m2
+%         tao_aiy = rho_a*SEAICE_drag*sqrt(Ua_mean^2+Va_mean^2)*Va_mean;       %%% Air-ice stress in y direction, N/m2
+%         syms ui vi
+%         %         eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*ui;
+%         %         eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt(ui^2+vi^2)*vi;
+%         Uo_mean = mean(uEast(yidx_100km:end,1));
+%         eq1 =  rho_i*Hi0*f0*vi + tao_aix - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*(ui-Uo_mean);
+%         eq2 = -rho_i*Hi0*f0*ui + tao_aiy - rho_o*SEAICE_waterDrag*sqrt((ui-Uo_mean)^2+vi^2)*vi;       
+%         eqns = [eq1, eq2];
+%         [solui solvi] = solve(eqns,[ui vi]);
+%         Nui = double(real(solui));
+%         Nvi = double(real(solvi));
+%         ui_idx = find(Nui==min(Nui));
+%         obvice = 0
+%         obuice = Nui(ui_idx)
+%         Uo_surf_min = min(uEast(:,1));
+%         if(abs(obuice)<abs(Uo_surf_min))
+%             obuice = Uo_surf_min
+%         end
 
         %%%%%%%% Calculate meridionally varying sea ice velocity, assume
         %%%%%%%% free-drift condition, and solve ice velocity at each
@@ -3128,10 +3127,10 @@ diag_fields_inst = {...
   
 
   if (useSeaiceSponge)
-%     T_relaxinner = 864000;
-%     T_relaxbound = 43200;
-       T_relaxinner = 864000;
-       T_relaxbound = 43200;
+%     T_relaxinner = 86400;
+%     T_relaxbound = 7200;
+    T_relaxinner = 864000;
+    T_relaxbound = 43200;
     Arelaxobcsinner = T_relaxinner;
     Arelaxobcsbound = T_relaxbound;
     Hrelaxobcsinner = T_relaxinner;
