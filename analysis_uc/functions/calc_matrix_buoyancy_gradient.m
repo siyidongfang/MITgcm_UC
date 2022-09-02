@@ -70,3 +70,8 @@
     db_547(n) = (gamma_n_xmean(ymax_db,z547idx)-gamma_n_xmean(ymin_db,z547idx));
     db_575(n) = (gamma_n_xmean(ymax_db,z575idx)-gamma_n_xmean(ymin_db,z575idx));
     db_603(n) = (gamma_n_xmean(ymax_db,z603idx)-gamma_n_xmean(ymin_db,z603idx));
+
+
+
+
+    
