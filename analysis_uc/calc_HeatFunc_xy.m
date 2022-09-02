@@ -22,6 +22,7 @@
     rho_o =1000;
     cp_o = 3994; % Unit: J/kg/degC
     m1km = 1000;
+    fontsize = 17;
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'VVELTH','VVEL','THETA','UVELTH','WVELTH');
     vt = VVELTH;
@@ -45,37 +46,72 @@
     dFdy(:,1:Ny-1) = (VT(:,2:Ny)-VT(:,1:Ny-1))/dy; %%% on mass-grid
 
     divF = dFdx + dFdy;
-    figure(1)
-    pcolor(xx/1000,yy/1000,dy*divF')
-    shading flat;caxis([-0.001 0.001]*dy);colorbar;colormap(redblue);
-
     divF_vgrid = zeros(Nx,Ny);
     divF_vgrid(:,2:Ny) = (divF(:,1:Ny-1)+divF(:,2:Ny))/2;
     p = abs(divF_vgrid)*dy./VT;
 
-%     figure(2)
-%     pcolor(xx/1000,yy/1000,p');caxis([-1 1]);
-%     shading flat;colorbar;colormap(redblue);
+    %%% Check horizontal divergence by creating a box near the trough, and
+    %%% calculate F_in and F_out.
+    Xboxmin = -100*m1km+Lx/2;
+    Xboxmax = 100*m1km+Lx/2;
+    Yboxmin = 100*m1km;
+    Yboxmax = 200*m1km;
+    xboxidx = round(Xboxmin/dx):round(Xboxmax/dx);
+    yboxidx = round(Yboxmin/dy):round(Yboxmax/dy);
+    x1 = xboxidx(1); x2 = xboxidx(end);
+    y1 = yboxidx(1); y2 = yboxidx(end);
+    Tin = sum(-VT(xboxidx,y2)*dx) + sum(UT(x1,yboxidx)*dy);
+    Tout = sum(-VT(xboxidx,y1)*dx) + sum(UT(x2,yboxidx)*dy);
+
+    (Tout-Tin)/(0.5*(Tin+Tout))
+
+
+    %%% Calculate the horizontal heatfunction using VT
+    phi_H = cp_o*rho_o*cumsum(VT*dx);
+    phi_H(VT==0)=NaN;
 
 
 
-
-
-%     %%% Calculate the horizontal heatfunction using VT
-%     phi_H = cp_o*rho_o*cumsum(VT*dx);
-%     phi_H(VT==0)=NaN;
-% 
-    figure(5)
+    figure(1)
+    subplot(1,2,1)
     pcolor(xx/1000,yy/1000,VT')
     shading flat;colorbar;colormap(redblue);caxis([-80 80])
-% 
-%     figure(3)
-%     %     pcolor(xx/1000,yy/1000,phi_H')
-%     %     shading flat;
-%     set(gcf,'color','w');
-%     contourf(XX/1000,YY/1000,phi_H/1e12,[min(min(phi_H/1e12)):0.1:max(max(phi_H/1e12))],'EdgeColor','k');  
-%     caxis([-4 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
-%     ylim([0 250])
+    subplot(1,2,2)
+    pcolor(xx/1000,yy/1000,UT')
+    shading flat;colorbar;colormap(redblue);caxis([-80 80])
+
+    figure(2)
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;
+    svx = 8; svy = 8;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
+    UT(1:svx:end,1:svy:end)',VT(1:svx:end,1:svy:end)');
+    curr.Color = [0 102 0]/255;
+    curr.LineWidth = 1.5;
+    hold off;
+    ylim([0 280])
+    set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    title('Shoreward heat flux (vector, GW/m)')
+    set(gca,'FontSize',fontsize);
+
+
+    figure(3)
+    subplot(1,2,1)
+    pcolor(xx/1000,yy/1000,dy*divF')
+    shading flat;caxis([-0.001 0.001]*dy);colorbar;colormap(redblue);
+    subplot(1,2,2)
+    pcolor(xx/1000,yy/1000,p');caxis([-1 1]);
+    shading flat;colorbar;colormap(redblue);
+
+    figure(4)
+    %     pcolor(xx/1000,yy/1000,phi_H')
+    %     shading flat;
+    set(gcf,'color','w');
+    contourf(XX/1000,YY/1000,phi_H/1e12,[min(min(phi_H/1e12)):0.1:max(max(phi_H/1e12))],'EdgeColor','k');  
+    caxis([-4 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
+    ylim([0 250])
 
 
     
