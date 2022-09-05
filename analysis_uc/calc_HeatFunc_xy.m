@@ -72,6 +72,14 @@
     phi_H = cp_o*rho_o*cumsum(VT_exclude*dx);
     phi_H(VT==0)=NaN;
 
+    %%% Calculate the horizontal heatfunction using UT
+    UT_exclude=UT; %%% Exclude the northern boundary
+%     UT_exclude(:,end-75:end)=0;
+%     UT_exclude(UT_exclude==0)=NaN;
+    phi_Hu = cp_o*rho_o*flip(cumsum(flip(UT_exclude*dy,2),2,'omitnan'),2);
+    phi_Hu(VT==0)=NaN;
+
+
 
     figure(1)
     subplot(1,2,1)
@@ -107,12 +115,20 @@
     shading flat;colorbar;colormap(redblue);
 
     figure(4)
+    subplot(1,2,1)
     %     pcolor(xx/1000,yy/1000,phi_H')
     %     shading flat;
     set(gcf,'color','w');
     contourf(XX/1000,YY/1000,phi_H/1e12,[min(min(phi_H/1e12)):0.1:max(max(phi_H/1e12))],'EdgeColor','k');  
     caxis([-4 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
-    ylim([0 250])
+%     ylim([0 250])
+
+    subplot(1,2,2)
+    set(gcf,'color','w');
+    contourf(XX/1000,YY/1000,-phi_Hu/1e12,[min(min(phi_H/1e12)):0.1:max(max(phi_H/1e12))],'EdgeColor','k');  
+%     caxis([-4 0]);
+    colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
+%     ylim([0 250])
 
 
     

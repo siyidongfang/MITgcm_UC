@@ -13,8 +13,8 @@
     Wtrough = 30*m1km;
     Lx = 600*m1km;
 
-    Ymin = Yshelfbreak-50*m1km;
-    Ymax = Ydeep;
+    Ymin = Yshelfbreak-10*m1km;
+    Ymax = Yshelfbreak+Ws;
     Xmin = Wsponge+20*m1km;
     Xmax = Lx-(Wsponge+20*m1km);
 
