@@ -50,8 +50,9 @@
     Vol_west = sum(hFacW_west.*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
     U_west_avg(n) = Tot_west/Vol_west;
     
-    Tot_east_Sv(n) = Tot_east/Lx/1e6;
-    Tot_west_Sv(n) = Tot_west/Lx/1e6;
+    Lx_xidx = xx(xidx(end))-xx(xidx(1))+dx;
+    Tot_east_Sv(n) = Tot_east/Lx_xidx/1e6;
+    Tot_west_Sv(n) = Tot_west/Lx_xidx/1e6;
     Tot_Sv(n) = Tot_east_Sv(n)+Tot_west_Sv(n);
 
     Umin(n) = min(uu_slope,[],'all','omitnan');
