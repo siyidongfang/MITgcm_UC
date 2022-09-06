@@ -34,9 +34,10 @@
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
 
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
+    savefigure = true;
 
 for n=1:nEXP
 % for n=1
@@ -54,6 +55,7 @@ for n=1:nEXP
     calc_matrix_SSHgradient;
     calc_matrix_buoyancy_gradient;
     calc_matrix_cdw;
+    calc_heat_IceShelfCavity;
 
 
 end
@@ -67,7 +69,8 @@ end
         'Ug_east_avg','ug_xmean_max','Totg_east_Sv',...
         'Hcdw','Scdw','Tcdw','Vcdw',...
         'Fheatcdw_icefront_trough','Fheattot_icefront_trough','Fheatcdw_icefront_all','Fheattot_icefront_all',...
-        'Vcdw_east','Fheatcdw_east','Fheattot_east','Ucdw_west','Ucdw_west_max')
+        'Vcdw_east','Fheatcdw_east','Fheattot_east','Ucdw_west','Ucdw_west_max',...
+        'Tc_bc_cdw','Tc_uc_cdw','Tc_bc','Tc_uc','Tc_bc_cdw_mean','Tc_uc_cdw_mean','Tc_bc_mean','Tc_uc_mean')
 
 
 %     calc_matrix_combine;

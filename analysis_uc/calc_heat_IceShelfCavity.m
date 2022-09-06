@@ -4,32 +4,34 @@
 %%%
 %%% Calculate the cumulative heat transport within the ice shelf cavity
 
-    clear; 
-    close all;
+%     clear; 
+%     close all;
+% 
+%     %%% Add path
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
+% 
+%     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
+%     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+%     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
+    figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
+    figname = expname;
+   
 
-    %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
+%     loadexp;
 
-    expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
-    figdir = '/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/seaice_boundary/';
+%     rho_o =1000;
+%     cp_o = 3994; % Unit: J/kg/degC
+%     m1km = 1000;
+%     Yicefront = 100*m1km; %%% Latitude of ice shelf face
 
-    loadexp;
-
-    rho_o =1000;
-    cp_o = 3994; % Unit: J/kg/degC
-    m1km = 1000;
-    Yicefront = 100*m1km; %%% Latitude of ice shelf face
-
-    load([prodir '/' expname '_tavg_5yrs.mat'],'VVELTH','SHI_TauY','THETA','SHIfwFlx');
-    vt = VVELTH;
-    tt = THETA;
-    DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
-    dx = delX(1);
+%     load([prodir '/' expname '_tavg_5yrs.mat'],'VVELTH','SHI_TauY','THETA','SHIfwFlx');
+%     vt = VVELTH;
+%     tt = THETA;
+%     DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
+%     dx = delX(1);
     [YY,XX] = meshgrid(yy,xx);
 
     %%% Find ice shelf cavity
@@ -91,7 +93,7 @@
     end
 
     %%% Make and save the figure
-    fontsize = 17; 
+%     fontsize = 17; 
 
     figure(1)
     set(gcf,'Position',[294 476 1326 754])
@@ -117,7 +119,7 @@
 
     subplot(2,2,3)
     plot(xx/1000,Tc,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.5 2.5]);
+    ylim([-0.5 4]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;
@@ -136,7 +138,10 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Meridional-mean heat transport in the cavity','interpreter','latex');
-    
+
+    if(savefigure)
+    print('-dpng','-r150',[figdir figname '_alldepth.png']);
+    end
    
 
     figure(2)
@@ -163,7 +168,7 @@
 
     subplot(2,2,3)
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.5 2.5]);
+    ylim([-0.5 4]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;
@@ -182,7 +187,10 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Meridional-mean $\bf{CDW}$ heat transport in the cavity','interpreter','latex');
-    
+
+    if(savefigure)
+    print('-dpng','-r150',[figdir figname '_cdw.png']);
+    end
 
     Xmin_bc = 35*m1km+Lx/2;
     Xmax_bc = 45*m1km+Lx/2;
@@ -202,6 +210,9 @@
 
     Tc_bc_mean(n) = mean(Tc_mean(xidx_bc),'omitnan');
     Tc_uc_mean(n) = mean(Tc_mean(xidx_uc),'omitnan');
+
+
+%     clear Tc_xy Tc_xy_cdw Tc Tc_cdw vt_zint idx_iceshelf_vgrid idx_iceshelf_massgrid vt DZ hFacS
 
 
 %     figure(3)

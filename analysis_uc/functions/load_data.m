@@ -2,7 +2,7 @@
     
     if(is_prod_run(n))
         load([prodir expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
-                'SHIfwFlx','oceTAUX','oceTAUY');
+                'SHIfwFlx','oceTAUX','oceTAUY','SHI_TauY');
         tt = THETA;
         ss = SALT;
         uu = UVEL;
