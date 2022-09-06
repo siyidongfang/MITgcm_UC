@@ -12,13 +12,6 @@ load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_E
 % 'Um_Cori','Um_AdvZ3','Um_AdvRe');
 
 %%% Grid spacing matrices
-DX_xy = repmat(delX',[1 Ny]);
-DY_xy = repmat(delY,[Nx 1]);
-DY = repmat(delY',[1 Nr]);
-DZ = repmat(delR,[Ny 1]);
-DX_xyz = repmat(reshape(delX,[Nx 1 1]),[1 Ny Nr]);
-DY_xyz = repmat(reshape(delY,[1 Ny 1]),[Nx 1 Nr]);
-DZ_xyz = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
 
 Um_dPhiX(Um_dPhiX==0)=NaN;
 Um_Advec(Um_Advec==0)=NaN;
@@ -27,39 +20,39 @@ Um_Ext(Um_Ext==0)=NaN;
 
 
 % spongeThickness = 10;
-% zonal_idx = (spongeThickness+1):(Nx-spongeThickness);
+% xidx = (spongeThickness+1):(Nx-spongeThickness);
 
 %%% U momentum tendency from surface pressure horizontal gradient == 0,
 %%% integrated zonally
 
 %%% U momentum tendency from Hydrostatic Pressure gradient
-Um_dPhiX_xint = squeeze(rho0.*sum(Um_dPhiX(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),1,'omitnan'));
-Um_dPhiX_xzint = rho0.*sum(sum(Um_dPhiX(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+Um_dPhiX_xint = squeeze(rho0.*sum(Um_dPhiX(xidx,:,:).*DX(xidx,:,:),1,'omitnan'));
+Um_dPhiX_xzint = rho0.*sum(sum(Um_dPhiX(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 
 %%% U momentum tendency from Advection terms
-Um_Advec_xint = squeeze(rho0.*sum(Um_Advec(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),1,'omitnan'));
-Um_Advec_xzint = rho0.*sum(sum(Um_Advec(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+Um_Advec_xint = squeeze(rho0.*sum(Um_Advec(xidx,:,:).*DX(xidx,:,:),1,'omitnan'));
+Um_Advec_xzint = rho0.*sum(sum(Um_Advec(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 
 %%% U momentum tendency from Dissipation
-Um_Diss_xzint = rho0.*sum(sum(Um_Diss(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+Um_Diss_xzint = rho0.*sum(sum(Um_Diss(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 
 %%% U momentum tendency from external forcing
-Um_Ext_xzint = rho0.*sum(sum(Um_Ext(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+Um_Ext_xzint = rho0.*sum(sum(Um_Ext(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 
 % %%% U momentum tendency from Adams-Bashforth
-% AB_gU_xzint = rho0.*sum(sum(AB_gU.*hFacW.*DZ_xyz.*DX_xyz,3),1);
+% AB_gU_xzint = rho0.*sum(sum(AB_gU.*hFacW.*DZ.*DX,3),1);
 
 %%% TODO: Implicit vertical viscosity tendency (Vertical Viscous Flux of U momentum (Implicit part))
 
 
 % %%% U momentum tendency from Vorticity Advection
-% Um_AdvZ3_xzint = rho0.*sum(sum(Um_AdvZ3(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+% Um_AdvZ3_xzint = rho0.*sum(sum(Um_AdvZ3(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 % 
 % %%% U momentum tendency from vertical Advection (Explicit part)
-% Um_AdvRe_xzint = rho0.*sum(sum(Um_AdvRe(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+% Um_AdvRe_xzint = rho0.*sum(sum(Um_AdvRe(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 % 
 % %%% U momentum tendency from Coriolis term
-% Um_Cori_xzint = rho0.*sum(sum(Um_Cori(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+% Um_Cori_xzint = rho0.*sum(sum(Um_Cori(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 
 
 % totalchange_tendency = Um_dPhiX_xzint+Um_Advec_xzint+Um_Diss_xzint+Um_Ext_xzint+AB_gU_xzint;
@@ -86,8 +79,8 @@ else
     fclose(fid);
 end
 
-    windStress_xint = sum(zonalWind(zonal_idx,:).*DX_xy(zonal_idx,:),1);
+    windStress_xint = sum(zonalWind(xidx,:).*DX_xy(xidx,:),1);
 
-    length_int = sum(DX_xy(zonal_idx,1),1);
+    length_int = sum(DX_xy(xidx,1),1);
 
     

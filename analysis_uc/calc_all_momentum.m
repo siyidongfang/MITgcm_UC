@@ -22,11 +22,9 @@ for n=1
             expname = EXPNAME{n}
             loadexp;
             load_data;
+            load_spacing;
 
             %%% Zonal integal for the entire domain, excluding the zonal sponge layers 
-            spongeThickness = 10;
-            zonal_idx = (spongeThickness+5):(Nx-spongeThickness-5);
-
 %             calcMomBudgetFromTendency_xint
 %             plot_momentum_ocean
 % 

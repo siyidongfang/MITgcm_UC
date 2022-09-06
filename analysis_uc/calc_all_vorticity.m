@@ -23,6 +23,7 @@ for n=1
             expname = EXPNAME{n}
             loadexp;
             load_data;
+            load_spacing;
 
             calc_vorticity
             plot_vorticity

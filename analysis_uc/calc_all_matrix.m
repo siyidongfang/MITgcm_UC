@@ -42,14 +42,8 @@ for n=1:nEXP
 % for n=1
     expname = EXPNAME{n}
     loadexp;
-    
-    DX = repmat(reshape(delX,[Nx 1 1]),[1 Ny Nr]);
-    DY = repmat(reshape(delY,[1 Ny 1]),[Nx 1 Nr]);
-    DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
-    dy = delY(1);
-    dx = delX(1);
-    
     load_data;
+    load_spacing;
    
     yidx = round(Ymin/dy):round(Ymax/dy);
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
