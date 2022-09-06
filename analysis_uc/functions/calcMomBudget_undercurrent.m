@@ -1,17 +1,14 @@
     %%%
-    %%% calcMomBudgetFromTendency_undercurrent.m
+    %%% calcMomBudget_undercurrent.m
     %%%
     %%% Convenience script to calculate the momentum budget from momentum tendency diagnostics.
     %%%
     
+    %%%% Calculate the isopycnal form stress!!!
     
-    rho0 = 999.8;
-    
-    loadexp;
+    rho0 = rhoConst;
     load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext','UVEL');
     
-    load_constants;
-   
     %%% Grid spacing matrices
     DX_xy = repmat(delX',[1 Ny]);
     DY_xy = repmat(delY,[Nx 1]);
@@ -25,16 +22,14 @@
     dx = delX(1);
     yidx = round(Ymin/dy):round(Ymax/dy);
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
-        
+    zidx = Nr-length(zz(zz<-100))+1:Nr;
+
     %%% Find (x,y,z) indices for the undercurrent
-    uu = UVEL;
-    uu_slope = uu(xidx,yidx,:);
-    uu_east = uu_slope;
-    uu_east(uu_slope<=0)=NaN;
-    hFacW_east = hFacW(xidx,yidx,:);
-    hFacW_east(uu_slope<=0)=NaN;
+    uu_slope = uu(xidx,yidx,zidx);
+    mask_uc = zeros(length(xidx),length(yidx),length(zidx)); %%% mask of the undercurrent
+    mask_uc(uu_slope>0)=1;
+
    
-    
     Um_dPhiX(Um_dPhiX==0)=NaN;
     Um_Advec(Um_Advec==0)=NaN;
     Um_Diss(Um_Diss==0)=NaN;
@@ -42,21 +37,24 @@
     
     
     %%% U momentum tendency from Hydrostatic Pressure gradient
-    Um_dPhiX_xint = squeeze(rho0.*sum(Um_dPhiX(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),1,'omitnan'));
-    Um_dPhiX_xzint = rho0.*sum(sum(Um_dPhiX(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+    Um_dPhiX_xint = squeeze(rho0.*sum(mask_uc.*Um_dPhiX(xidx,yidx,zidx).*DX_xyz(xidx,yidx,zidx),1,'omitnan'));
+    Um_dPhiX_xzint = rho0.*sum(sum(mask_uc.*Um_dPhiX(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ_xyz(xidx,yidx,zidx).*DX_xyz(xidx,yidx,zidx),3,'omitnan'),1,'omitnan');
     
     %%% U momentum tendency from Advection terms
-    Um_Advec_xint = squeeze(rho0.*sum(Um_Advec(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),1,'omitnan'));
-    Um_Advec_xzint = rho0.*sum(sum(Um_Advec(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+    Um_Advec_xint = squeeze(rho0.*sum(mask_uc.*Um_Advec(xidx,yidx,zidx).*DX_xyz(xidx,yidx,zidx),1,'omitnan'));
+    Um_Advec_xzint = rho0.*sum(sum(mask_uc.*Um_Advec(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ_xyz(xidx,yidx,zidx).*DX_xyz(xidx,yidx,zidx),3,'omitnan'),1,'omitnan');
     
     %%% U momentum tendency from Dissipation
-    Um_Diss_xzint = rho0.*sum(sum(Um_Diss(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+    Um_Diss_xzint = rho0.*sum(sum(mask_uc.*Um_Diss(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ_xyz(xidx,yidx,zidx).*DX_xyz(xidx,yidx,zidx),3,'omitnan'),1,'omitnan');
     
     %%% U momentum tendency from external forcing
-    Um_Ext_xzint = rho0.*sum(sum(Um_Ext(zonal_idx,:,:).*hFacW(zonal_idx,:,:).*DZ_xyz(zonal_idx,:,:).*DX_xyz(zonal_idx,:,:),3,'omitnan'),1,'omitnan');
+    Um_Ext_xzint = rho0.*sum(sum(mask_uc.*Um_Ext(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ_xyz(xidx,yidx,zidx).*DX_xyz(xidx,yidx,zidx),3,'omitnan'),1,'omitnan');
     
     
     totalchange_tendency = Um_dPhiX_xzint+Um_Advec_xzint+Um_Diss_xzint+Um_Ext_xzint;
+
+
+
     
     
     if(useSEAICE)
@@ -78,8 +76,8 @@
         fclose(fid);
     end
     
-        windStress_xint = sum(zonalWind(zonal_idx,:).*DX_xy(zonal_idx,:),1);
+        windStress_xint = sum(zonalWind(xidx,yidx).*DX_xy(xidx,yidx),1);
     
-        length_int = sum(DX_xy(zonal_idx,1),1);
+        length_int = sum(DX_xy(xidx,1),1);
     
         

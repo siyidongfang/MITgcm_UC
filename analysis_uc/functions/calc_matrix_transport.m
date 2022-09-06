@@ -58,6 +58,9 @@
     Umin(n) = min(uu_slope,[],'all','omitnan');
     Umax(n) = max(uu_slope,[],'all','omitnan');
 
+    uu_slope(uu_slope==0)=NaN;
+    u_xmean = squeeze(mean(uu_slope,'omitnan'));
+    u_xmean_max(n) = max(u_xmean,[],'all','omitnan');
 
     %%% Calculate upper ocean velocity and transport
 

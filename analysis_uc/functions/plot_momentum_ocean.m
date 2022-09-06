@@ -35,9 +35,9 @@
     l4 = plot(yy/1000,Um_dPhiX_xzint/length_int,'LineWidth',2,'Color',yellow);
     l5 = plot(yy/1000,Um_Diss_xzint/length_int,'LineWidth',2,'Color',purple);
     l20 = plot(yy/1000,zeros(1,size(yy,2)),':','LineWidth',0.5,'color',[0.5 0.5 0.5]);
-    line([Ycoast Ycoast],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
-    line([Yshelfbreak Yshelfbreak],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
-    line([Ydeep Ydeep],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+    line([Ycoast/m1km Ycoast/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+    line([Yshelfbreak/m1km Yshelfbreak/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+    line([Ydeep/m1km Ydeep/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
     text(2,yup-0.05,'Ice shelf/continent','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
     text(120,yup-0.05,'Continental shelf','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
     text(250,yup-0.05,'Slope','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
@@ -68,9 +68,9 @@
     l2 = plot(yy/1000,Um_Diss_xzint/length_int,'LineWidth',2,'Color',purple);
     l3 = plot(yy/1000,(Um_dPhiX_xzint+Um_Advec_xzint)/length_int,'LineWidth',2,'Color',green);
     l20 = plot(yy/1000,zeros(1,size(yy,2)),':','LineWidth',0.5,'color',[0.5 0.5 0.5]);
-    line([Ycoast Ycoast],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
-    line([Yshelfbreak Yshelfbreak],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
-    line([Ydeep Ydeep],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+    line([Ycoast/m1km Ycoast/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+    line([Yshelfbreak/m1km Yshelfbreak/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+    line([Ydeep/m1km Ydeep/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
     text(2,0.038,'Ice shelf/continent','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
     text(120,0.038,'Continental shelf','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
     text(250,0.038,'Slope','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
@@ -108,9 +108,9 @@
 %     l5 = plot(yy/1000,Um_Diss_xzint/length_int,'LineWidth',2,'Color',purple);
 %     l6 = plot(yy/1000,Um_Cori_xzint/length_int,'--','LineWidth',2,'Color',gold);
 %     l20 = plot(yy/1000,zeros(1,size(yy,2)),':','LineWidth',0.5,'color',[0.5 0.5 0.5]);
-%     line([Ycoast Ycoast],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
-%     line([Yshelfbreak Yshelfbreak],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
-%     line([Ydeep Ydeep],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+%     line([Ycoast/m1km Ycoast/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+%     line([Yshelfbreak/m1km Yshelfbreak/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
+%     line([Ydeep/m1km Ydeep/m1km],[ydown yup],'Color',[0.5 0.5 0.5],'LineStyle',':','LineWidth',0.5);
 %     text(2,yup-0.05,'Ice shelf/continent','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
 %     text(120,yup-0.05,'Continental shelf','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');
 %     text(250,yup-0.05,'Slope','FontSize',fontsize-2,'Color',[0.5 0.5 0.5],'interpreter','latex');

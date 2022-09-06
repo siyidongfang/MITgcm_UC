@@ -28,35 +28,36 @@
     pd_slope(pd_slope==0)=NaN;
     pd_xmean= squeeze(mean(pd_slope,'omitnan'));
 
-    figure(1)
-    pcolor(yy(yidx)/1000,-zz/1000,pd_xmean');shading flat;colorbar;colormap;colormap(jet);caxis([1027 1027.9]);axis ij;ylim([0 2.5])
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
-    title('Potential density (kg/m^3)');ylabel('Depth (km)');xlabel('y (km)')
-    set(gca,'FontSize',fontsize);
+%     figure(1)
+%     pcolor(yy(yidx)/1000,-zz/1000,pd_xmean');shading flat;colorbar;colormap;colormap(jet);caxis([1027 1027.9]);axis ij;ylim([0 2.5])
+%     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+%     title('Potential density (kg/m^3)');ylabel('Depth (km)');xlabel('y (km)')
+%     set(gca,'FontSize',fontsize);
 
 
     dudz = gravity/rhoConst/f0*diff(pd_slope,1,2)/dy; %%% on v-grid
+    dudz_xmean = squeeze(mean(dudz,'omitnan'));
 
     DZ_slope = repmat(reshape(delR,[1 1 Nr]),[length(xidx) length(yidx)-1 1]);
     hFAC = hFacS(xidx,yidx(2:end),:);
     ug = cumsum(dudz.*DZ_slope.*hFAC,3,'reverse','omitnan');  %%% on v-grid
-    ug(ug==0)=NaN;
 
-    dudz_xmean = squeeze(mean(dudz,'omitnan'));
+    
+    ug(ug==0)=NaN;
     ug_xmean = squeeze(mean(ug,'omitnan'));
     
 
-    figure(2)
-    pcolor(yy(yidx(2:end))/1000,-zz/1000,dudz_xmean');shading flat;colorbar;colormap;colormap(redblue);caxis([-1 1]/1e4);axis ij;ylim([0 2.5])
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
-    title('Thermal-wind shear (s^{-1})');ylabel('Depth (km)');xlabel('y (km)')
-    set(gca,'FontSize',fontsize);
-
-    figure(3)
-    pcolor(yy(yidx(2:end))/1000,-zz/1000,ug_xmean');shading flat;colorbar;colormap;colormap(redblue);caxis([-0.05 0.05]);axis ij;ylim([0 2.5])
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
-    title('Geostrophic velocity u_g (m/s)');ylabel('Depth (km)');xlabel('y (km)')
-    set(gca,'FontSize',fontsize);
+%     figure(2)
+%     pcolor(yy(yidx(2:end))/1000,-zz/1000,dudz_xmean');shading flat;colorbar;colormap;colormap(redblue);caxis([-1 1]/1e4);axis ij;ylim([0 2.5])
+%     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+%     title('Thermal-wind shear (s^{-1})');ylabel('Depth (km)');xlabel('y (km)')
+%     set(gca,'FontSize',fontsize);
+% 
+%     figure(3)
+%     pcolor(yy(yidx(2:end))/1000,-zz/1000,ug_xmean');shading flat;colorbar;colormap;colormap(redblue);caxis([-0.05 0.05]);axis ij;ylim([0 2.5])
+%     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+%     title('Geostrophic velocity u_g (m/s)');ylabel('Depth (km)');xlabel('y (km)')
+%     set(gca,'FontSize',fontsize);
 
     ug_east = ug;
     ug_east(ug_east<=0)=NaN;  %%% on v-grid
@@ -68,7 +69,7 @@
     Ug_east_avg(n) = Totg_east/Volg_east;
 
     %%% Maximum eastward velocity
-    Ug_xmean_max(n) = max(ug_xmean,[],'all','omitnan');
+    ug_xmean_max(n) = max(ug_xmean,[],'all','omitnan');
 
     %%% Total eastward transport
     Lx_xidx = xx(xidx(end))-xx(xidx(1))+dx;

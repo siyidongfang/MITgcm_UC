@@ -156,5 +156,8 @@
         'No sea ice: Varying zonal wind',...
         'FontSize',fontsize-2,'Position', [0.6218 0.0571 0.2118 0.0513]);
 
+    if(savefigure)
     print('-dpng','-r150',[figdir figname '.png']);
+    end
+
     
