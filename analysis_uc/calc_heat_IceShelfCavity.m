@@ -61,6 +61,8 @@
     idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/2),:)),1,'last');
     Tc_cdw = Tc_xy_cdw(:,idx_Tc);
 
+    Tc_cdw_mean = mean(Tc_xy_cdw,2,'omitnan');
+    Tc_mean = mean(Tc_xy,2,'omitnan');
 
     %%% Find the upper bound and lower bound of the CDW layer
     HH_cdw = sum(idx_cdw.*DZ.*hFacC,3,'omitnan'); %%% CDW thickness
@@ -169,9 +171,9 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Cumulative $\bf{CDW}$ heat transport at ice front (y = 100 km)','interpreter','latex');
-     
+    
     subplot(2,2,4)
-    plot(xx/1000,mean(Tc_xy_cdw,2,'omitnan'),'LineWidth',2);xlim([-110 110]);
+    plot(xx/1000,Tc_cdw_mean,'LineWidth',2);xlim([-110 110]);
     ylim([-0.5 2.5]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
@@ -182,8 +184,24 @@
     title('Meridional-mean $\bf{CDW}$ heat transport in the cavity','interpreter','latex');
     
 
+    Xmin_bc = 35*m1km+Lx/2;
+    Xmax_bc = 45*m1km+Lx/2;
+    Xmin_uc = -25*m1km+Lx/2;
+    Xmax_uc = -15*m1km+Lx/2;
+    xidx_bc = round(Xmin_bc/dx):round(Xmax_bc/dx); %%% boundary current heat transport indices
+    xidx_uc = round(Xmin_uc/dx):round(Xmax_uc/dx); %%% undercurrent heat transport indices
 
+    Tc_bc_cdw(n) = mean(Tc_cdw(xidx_bc),'omitnan');
+    Tc_uc_cdw(n) = mean(Tc_cdw(xidx_uc),'omitnan');
 
+    Tc_bc(n) = mean(Tc(xidx_bc),'omitnan');
+    Tc_uc(n) = mean(Tc(xidx_uc),'omitnan');
+
+    Tc_bc_cdw_mean(n) = mean(Tc_cdw_mean(xidx_bc),'omitnan');
+    Tc_uc_cdw_mean(n) = mean(Tc_cdw_mean(xidx_uc),'omitnan');
+
+    Tc_bc_mean(n) = mean(Tc_mean(xidx_bc),'omitnan');
+    Tc_uc_mean(n) = mean(Tc_mean(xidx_uc),'omitnan');
 
 
 %     figure(3)
