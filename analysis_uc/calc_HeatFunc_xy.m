@@ -4,7 +4,7 @@
 %%% Calculate the horizontal heatfunction
 
     clear; 
-%     close all;
+    close all;
 
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
@@ -52,10 +52,10 @@
 
     %%% Check horizontal divergence by creating a box near the trough, and
     %%% calculate F_in and F_out.
-    Xboxmin = -100*m1km+Lx/2;
-    Xboxmax = 100*m1km+Lx/2;
-    Yboxmin = 100*m1km;
-    Yboxmax = 200*m1km;
+    Xboxmin = -200*m1km+Lx/2;
+    Xboxmax = -140*m1km+Lx/2;
+    Yboxmin = 120*m1km;
+    Yboxmax = 190*m1km;
     xboxidx = round(Xboxmin/dx):round(Xboxmax/dx);
     yboxidx = round(Yboxmin/dy):round(Yboxmax/dy);
     x1 = xboxidx(1); x2 = xboxidx(end);
@@ -102,39 +102,56 @@
     ylim([0 280])
     set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
     xlabel('Longitude (km)');ylabel('Latitude (km)');
-    title('Shoreward heat flux (vector, GW/m)')
+    title('Heat flux (vector, GW/m)')
     set(gca,'FontSize',fontsize);
+    set(gcf,'color','w');
 
 
     figure(3)
     subplot(1,2,1)
-    pcolor(xx/1000,yy/1000,dy*divF')
-    shading flat;caxis([-0.001 0.001]*dy);colorbar;colormap(redblue);
+    pcolor(xx/1000,yy/1000,divF')
+    shading flat;caxis([-0.001 0.001]);colorbar;colormap(redblue);
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    set(gca,'FontSize',fontsize);
+    title('Horizontal divergence $\nabla F = \frac{\partial \int u\theta dz}{\partial x} + \frac{\partial \int v\theta dz}{\partial y} $','Interpreter','latex','FontSize',fontsize+4);
+
     subplot(1,2,2)
     pcolor(xx/1000,yy/1000,p');caxis([-1 1]);
     shading flat;colorbar;colormap(redblue);
+    set(gca,'FontSize',fontsize);
+    title({'Estimated ratio of divergence to','onshore heat flux $\frac{\Delta_y\cdot\nabla F}{\int v\theta dz}$'},'Interpreter','latex','FontSize',fontsize+4);
 
     figure(4)
     subplot(1,2,1)
-    %     pcolor(xx/1000,yy/1000,phi_H')
-    %     shading flat;
     set(gcf,'color','w');
     contourf(XX/1000,YY/1000,phi_H/1e12,[min(min(phi_H/1e12)):0.1:max(max(phi_H/1e12))],'EdgeColor','k');  
     caxis([-4 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
-%     ylim([0 250])
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    set(gca,'FontSize',fontsize);
+    title('Horizontal heat function (integral of v\theta dx)','FontSize',fontsize+3)
 
     subplot(1,2,2)
     set(gcf,'color','w');
-    contourf(XX/1000,YY/1000,-phi_Hu/1e12,[min(min(phi_H/1e12)):0.1:max(max(phi_H/1e12))],'EdgeColor','k');  
-%     caxis([-4 0]);
-    colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
-%     ylim([0 250])
+    contourf(XX/1000,YY/1000,-phi_Hu/1e12,[min(min(-phi_Hu/1e12)):0.1:max(max(-phi_Hu/1e12))],'EdgeColor','k');  
+    caxis([-4 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    set(gca,'FontSize',fontsize);
+    title('Horizontal heat function (integral of u\theta dy)','FontSize',fontsize+3)
 
 
-    
 
 
-    
+%     figure(5)
+%     
+%     phi_modified = -phi_Hu - repmat(reshape(squeeze(phi_Hu(1,:)),[1 Ny]),[Nx Ny]);
+%     subplot(1,2,2)
+%     set(gcf,'color','w');
+%     contourf(XX/1000,YY/1000,-phi_Hu/1e12,[min(min(-phi_Hu/1e12)):0.1:max(max(-phi_Hu/1e12))],'EdgeColor','k');  
+%     caxis([-4 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
+%     xlabel('Longitude (km)');ylabel('Latitude (km)');
+%     set(gca,'FontSize',fontsize);
+%     title('Horizontal heat function (integral of u\theta dy)','FontSize',fontsize+3)
+   
 
 
 

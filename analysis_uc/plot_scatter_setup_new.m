@@ -24,9 +24,9 @@
     plotMeltrate = false;
     excludeLOWRES = true;
 
-    dataX = Tc_uc_cdw;
+    dataX = Ug_east_avg;
     xlabeltext='Mean geostrophic undercurrent velocity';
-    dataY= Tc_bc_cdw;
+    dataY= U_east_avg;
     ylabeltext = 'Mean diagnosed undercurrent elocity (m/s)';
     titletext = 'Undercurrent sensitivity';
     figname = 'U_east_avg-Ug_east_avg';

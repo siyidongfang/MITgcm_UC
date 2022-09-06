@@ -18,6 +18,9 @@
 %     expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
     figname = expname;
+
+    savefigure = false;
+    showfigure = false;
    
 
 %     loadexp;
@@ -43,6 +46,13 @@
     Tc_xy = cp_o*rho_o*flip(cumsum(flip(-vt_zint.*idx_iceshelf_vgrid*dx),'omitnan'))/1e12; %%% in TW
     Tc_xy = Tc_xy.*idx_iceshelf_vgrid;
     idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/2),:)),1,'last');
+
+    %%% For the simulation with 2 narrow ice shelves: 
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/4),:)),1,'last');
+        end
+    end
     Tc = Tc_xy(:,idx_Tc);
 
 
@@ -60,11 +70,21 @@
     vt_zint_cdw = sum(vt.*DZ.*hFacS.*idx_cdw_vgrid,3,'omitnan'); 
     Tc_xy_cdw = cp_o*rho_o*flip(cumsum(flip(-vt_zint_cdw.*idx_iceshelf_vgrid*dx),'omitnan'))/1e12; %%% in TW
     Tc_xy_cdw = Tc_xy_cdw.*idx_iceshelf_vgrid;
-    idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/2),:)),1,'last');
     Tc_cdw = Tc_xy_cdw(:,idx_Tc);
 
     Tc_cdw_mean = mean(Tc_xy_cdw,2,'omitnan');
     Tc_mean = mean(Tc_xy,2,'omitnan');
+
+
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            Tc_cdw_mean(62:113)=  Tc_cdw_mean(62:113)-Tc_cdw_mean(187);
+            Tc_mean(62:113)= Tc_mean(62:113)-Tc_mean(187);
+            Tc_cdw(62:113)=  Tc_cdw(62:113)-Tc_cdw(187);
+            Tc(62:113)= Tc(62:113)-Tc(187);
+        end
+    end
+
 
     %%% Find the upper bound and lower bound of the CDW layer
     HH_cdw = sum(idx_cdw.*DZ.*hFacC,3,'omitnan'); %%% CDW thickness
@@ -92,6 +112,8 @@
         end
     end
 
+
+    if(showfigure)
     %%% Make and save the figure
 %     fontsize = 17; 
 
@@ -107,6 +129,11 @@
     caxis([-0.1 0.1])
     title('Onshore heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
     freezeColors;
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
 
     subplot(2,2,2)
     pcolor(xx/1000,yy/1000,Tc_xy');colorbar;colormap(WhiteBlueGreenYellowRed(0));shading flat;xlim([-110 110]);ylim([0 110])
@@ -116,6 +143,11 @@
     set(gca,'FontSize',fontsize);
     caxis([0 2.5])
     title('Cumulative heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
 
     subplot(2,2,3)
     plot(xx/1000,Tc,'LineWidth',2);xlim([-110 110]);
@@ -127,9 +159,14 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Cumulative heat transport at ice front (y = 100 km)','interpreter','latex');
-    
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
+
     subplot(2,2,4)
-    plot(xx/1000,mean(Tc_xy,2,'omitnan'),'LineWidth',2);xlim([-110 110]);
+    plot(xx/1000,Tc_mean,'LineWidth',2);xlim([-110 110]);
     ylim([-0.5 2.5]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
@@ -138,11 +175,16 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Meridional-mean heat transport in the cavity','interpreter','latex');
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
+
 
     if(savefigure)
     print('-dpng','-r150',[figdir figname '_alldepth.png']);
     end
-   
 
     figure(2)
     set(gcf,'Position',[294 476 1326 754])
@@ -156,6 +198,11 @@
     caxis([-0.1 0.1])
     title('Onshore $\bf{CDW}$ heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
     freezeColors;
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
 
     subplot(2,2,2)
     pcolor(xx/1000,yy/1000,Tc_xy_cdw');colorbar;colormap(WhiteBlueGreenYellowRed(0));shading flat;xlim([-110 110]);ylim([0 110])
@@ -165,6 +212,11 @@
     set(gca,'FontSize',fontsize);
     caxis([0 2.5])
     title('Cumulative $\bf{CDW}$ heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
 
     subplot(2,2,3)
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
@@ -176,6 +228,11 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Cumulative $\bf{CDW}$ heat transport at ice front (y = 100 km)','interpreter','latex');
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
     
     subplot(2,2,4)
     plot(xx/1000,Tc_cdw_mean,'LineWidth',2);xlim([-110 110]);
@@ -187,29 +244,56 @@
     ylabel('($10^{12}\,$W)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     title('Meridional-mean $\bf{CDW}$ heat transport in the cavity','interpreter','latex');
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            xlim([-180 180])
+        end
+    end
 
     if(savefigure)
     print('-dpng','-r150',[figdir figname '_cdw.png']);
+    end
+
+
+   
     end
 
     Xmin_bc = 35*m1km+Lx/2;
     Xmax_bc = 45*m1km+Lx/2;
     Xmin_uc = -25*m1km+Lx/2;
     Xmax_uc = -15*m1km+Lx/2;
+
+    %%% For the simulation with 1 narrow ice shelf: Xmax_bc = 37*m1km+Lx/2;
+    if (n==18)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod')==1)
+            Xmax_bc = 37*m1km+Lx/2;
+        end
+    end
+
+    %%% For the simulation with 2 narrow ice shelves: 
+    if (n==19)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+            Xmin_bc = -90*m1km+Lx/2;
+            Xmax_bc = -88*m1km+Lx/2;
+            Xmin_uc = -155*m1km+Lx/2;
+            Xmax_uc = -150*m1km+Lx/2;
+        end
+    end
+
     xidx_bc = round(Xmin_bc/dx):round(Xmax_bc/dx); %%% boundary current heat transport indices
     xidx_uc = round(Xmin_uc/dx):round(Xmax_uc/dx); %%% undercurrent heat transport indices
 
     Tc_bc_cdw(n) = mean(Tc_cdw(xidx_bc),'omitnan');
-    Tc_uc_cdw(n) = mean(Tc_cdw(xidx_uc),'omitnan');
+    Tc_uc_cdw(n) = mean(Tc_cdw(xidx_uc),'omitnan') - Tc_bc_cdw(n);
 
     Tc_bc(n) = mean(Tc(xidx_bc),'omitnan');
-    Tc_uc(n) = mean(Tc(xidx_uc),'omitnan');
+    Tc_uc(n) = mean(Tc(xidx_uc),'omitnan') - Tc_bc(n);
 
     Tc_bc_cdw_mean(n) = mean(Tc_cdw_mean(xidx_bc),'omitnan');
-    Tc_uc_cdw_mean(n) = mean(Tc_cdw_mean(xidx_uc),'omitnan');
+    Tc_uc_cdw_mean(n) = mean(Tc_cdw_mean(xidx_uc),'omitnan') - Tc_bc_cdw_mean(n);
 
     Tc_bc_mean(n) = mean(Tc_mean(xidx_bc),'omitnan');
-    Tc_uc_mean(n) = mean(Tc_mean(xidx_uc),'omitnan');
+    Tc_uc_mean(n) = mean(Tc_mean(xidx_uc),'omitnan') - Tc_bc_mean(n);
 
 
 %     clear Tc_xy Tc_xy_cdw Tc Tc_cdw vt_zint idx_iceshelf_vgrid idx_iceshelf_massgrid vt DZ hFacS

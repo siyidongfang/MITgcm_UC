@@ -34,13 +34,13 @@
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
 
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{4}
     list_exps_new;
     load_constants;
-    savefigure = true;
+    savefigure = false;
+    showfigure = false;
 
 for n=1:nEXP
-% for n=1
     expname = EXPNAME{n}
     loadexp;
     load_data;
