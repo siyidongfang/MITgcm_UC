@@ -74,6 +74,7 @@
     g2_10km_wind4_gmredi = scatter(dataX(18+ne),dataY(18+ne),sz*1.5,'_','MarkerEdgeColor',gold,'LineWidth',3);
 
 
+    if(~excludegroup3)
     ne = nexp1+nexp2;
     g3_melt4=scatter(dataX(ne+1),dataY(ne+1),sz*0.5,'*','filled','MarkerEdgeColor',lightblue,'LineWidth',2);
     g3_melt12=scatter(dataX(ne+2),dataY(ne+2),sz*1.2,'*','filled','MarkerEdgeColor',lightblue,'LineWidth',2);
@@ -84,7 +85,8 @@
     g3_10km_melt4=scatter(dataX(ne+7),dataY(ne+7),sz*0.5,'+','filled','MarkerEdgeColor',lightblue,'LineWidth',2);
     g3_10km_melt12=scatter(dataX(ne+8),dataY(ne+8),sz*1.2,'+','filled','MarkerEdgeColor',lightblue,'LineWidth',2);
     g3_10km_melt21=scatter(dataX(ne+9),dataY(ne+9),sz*2.2,'+','filled','MarkerEdgeColor',lightblue,'LineWidth',2);
-
+    end
+    
     ne = nexp1+nexp2+nexp3;
     g4_ref=scatter(dataX(ne+1),dataY(ne+1),sz*0.7,orange,'d','filled','MarkerEdgeColor',boxcolor);
     g4_wind1=scatter(dataX(ne+2),dataY(ne+2),sz*1,orange,'<','filled','MarkerEdgeColor',boxcolor);
@@ -144,14 +146,15 @@
         'Group2: 10 km + GM Redi, varying zonal wind',...
         'FontSize',fontsize-2,'Position',[0.6227 0.2260 0.3373 0.2233]);
 
+    if(~excludegroup3)
     ah3=axes('position',get(gca,'position'),'visible','off');
     leg3 = legend(ah3,[g3_melt4 g3_5km_melt4 g3_10km_melt4],...
         'Group3: 2 km, varying prescribed meltwater','Group3: 5 km, varying prescribed meltwater','Group3: 10 km, varying prescribed meltwater',...
         'FontSize',fontsize-2,'Position',[0.6227 0.1214 0.3318 0.0867]);
-
+    end
 
     ah4=axes('position',get(gca,'position'),'visible','off');
-    leg4 = legend(ah4,[g4_ref g4_wind1 g4_wind2],...
+    leg4 = legend(ah4,[g4_ref g4_wind1],...
         'No sea ice: ref.',...
         'No sea ice: Varying zonal wind',...
         'FontSize',fontsize-2,'Position', [0.6218 0.0571 0.2118 0.0513]);

@@ -8,9 +8,8 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions; 
     load('/Users/csi/MITgcm_UC/products_uc/matrix_combined.mat')
 
-    figdir = '/Users/csi/MITgcm_UC/figures_uc/correlation_new/'; 
-    savefigure = false;
-
+    figdir = '/Users/csi/MITgcm_UC/figures_uc/correlation/'; 
+    savefigure = true;
    
     nexp1 = 19;
     nexp2 = 18;
@@ -21,15 +20,20 @@
     group3 = (nexp1+nexp2+1):(nexp1+nexp2+nexp3);
     group4 = nexp1+nexp2+nexp3+nexp4;
 
-    plotMeltrate = false;
+    plotMeltrate = true;
     excludeLOWRES = true;
+    if(plotMeltrate)
+       excludegroup3 = true;
+    end
 
-    dataX = Tc_uc_cdw;
-    xlabeltext='Mean geostrophic undercurrent velocity';
-    dataY= Tc_bc_cdw;
-    ylabeltext = 'Mean diagnosed undercurrent elocity (m/s)';
+    dataX = Totg_east_Sv;
+    xlabeltext='Total geostrophic undercurrent transport';
+    dataY= Tot_east_Sv;
+    ylabeltext = 'Total undercurrent transport';
+    figname = 'Tot_east_Sv-Totg_east_Sv';
+
     titletext = 'Undercurrent sensitivity';
-    figname = 'U_east_avg-Ug_east_avg';
+%     titletext='Melt rate sensitivity'
 
     xrange = max(dataX)-min(dataX);
     yrange = max(dataY)-min(dataY);

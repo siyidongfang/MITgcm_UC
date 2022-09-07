@@ -1,5 +1,5 @@
 %%%
-%%% load_grid.m
+%%% load_spacing.m
 %%%
 
 
@@ -14,7 +14,12 @@
 
     dy = delY(1);
     dx = delX(1);
+
+    [YY,XX] = meshgrid(yy,xx);
+
     %%% Indices for the undercurrent
     yidx = round(Ymin/dy):round(Ymax/dy);
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
     zidx = Nr-length(zz(zz<-100))+1:Nr;   %%% exclude the surface 100m
+
+
