@@ -32,27 +32,51 @@ for n=1
     %%% Calculate horizontal heatfunction on mass-grid %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+    %%% Find the CDW layer
+    tt_cdw = tt;
+    tt_cdw(tt<0)=NaN; %%% Find the CDW layer: temperature above 0 degC
+
+    uu_tgrid = zeros(Nx,Ny,Nr);
+    ut_tgrid = zeros(Nx,Ny,Nr);
+    vv_tgrid = zeros(Nx,Ny,Nr);
+    vt_tgrid = zeros(Nx,Ny,Nr);
+
+    uu_tgrid(1:Nx-1,:,:) = (uu(1:Nx-1,:,:)+uu(2:Nx,:,:))/2;   % mass-grid
+    ut_tgrid(1:Nx-1,:,:) = (ut(1:Nx-1,:,:)+ut(2:Nx,:,:))/2;   % mass-grid
+    vv_tgrid(:,1:Ny-1,:) = (vv(:,1:Ny-1,:)+vv(:,2:Ny,:))/2;   % mass-grid
+    vt_tgrid(:,1:Ny-1,:) = (vt(:,1:Ny-1,:)+vt(:,2:Ny,:))/2;   % mass-grid
+
+    idx_cdw = tt_cdw./tt_cdw;
+    uu_cdw = uu_tgrid.*idx_cdw; %%% zonal velocity of the CDW layer
+    ut_cdw = ut_tgrid.*idx_cdw;
+    vv_cdw = vv_tgrid.*idx_cdw; %%% meridional velocity of the CDW layer
+    vt_cdw = vt_tgrid.*idx_cdw;
+    
     %%% Vertically integrate the horizontal heat flux
-    UT = sum(ut.*DZ.*hFacW,3); %%% u-grid
-    UT(UT==0)=NaN;
-    UT_tgrid = zeros(Nx,Ny);
-    UT_tgrid(1:Nx-1,:) = (UT(1:Nx-1,:)+UT(2:Nx,:))/2; %%% mass-grid 
+    UU_tgrid = sum(uu_cdw.*DZ.*hFacC,3,'omitnan'); %%% mass-grid
+    UT_tgrid = sum(ut_cdw.*DZ.*hFacC,3,'omitnan'); %%% mass-grid
+    VV_tgrid = sum(vv_cdw.*DZ.*hFacC,3,'omitnan'); %%% mass-grid
+    VT_tgrid = sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); %%% mass-grid
 
-    UU = sum(uu.*DZ.*hFacW,3); %%% u-grid
-    UU(UU==0)=NaN;
-    UU_tgrid = zeros(Nx,Ny);
-    UU_tgrid(1:Nx-1,:) = (UU(1:Nx-1,:)+UU(2:Nx,:))/2; %%% mass-grid 
+% UT = sum(ut_cdw.*DZ.*hFacW,3); %%% u-grid
+% UT(UT==0)=NaN;
+% UT_tgrid = zeros(Nx,Ny);
+% UT_tgrid(1:Nx-1,:) = (UT(1:Nx-1,:)+UT(2:Nx,:))/2; %%% mass-grid 
 
-    VT = sum(vt.*DZ.*hFacS,3); %%% v-grid
-    VT(VT==0)=NaN;
-    VT_tgrid = zeros(Nx,Ny); 
-    VT_tgrid(:,1:Ny-1) = (VT(:,1:Ny-1,:)+VT(:,2:Ny,:))/2; %%% mass-grid
+% UU = sum(uu_cdw.*DZ.*hFacW,3); %%% u-grid
+% UU(UU==0)=NaN;
+% UU_tgrid = zeros(Nx,Ny);
+% UU_tgrid(1:Nx-1,:) = (UU(1:Nx-1,:)+UU(2:Nx,:))/2; %%% mass-grid 
 
-    VV = sum(vv.*DZ.*hFacS,3); %%% v-grid
-    VV(VV==0)=NaN;
-    VV_tgrid = zeros(Nx,Ny); 
-    VV_tgrid(:,1:Ny-1) = (VV(:,1:Ny-1,:)+VV(:,2:Ny,:))/2; %%% mass-grid
+% VT = sum(vt_cdw.*DZ.*hFacS,3); %%% v-grid
+% VT(VT==0)=NaN;
+% VT_tgrid = zeros(Nx,Ny); 
+% VT_tgrid(:,1:Ny-1) = (VT(:,1:Ny-1,:)+VT(:,2:Ny,:))/2; %%% mass-grid
 
+% VV = sum(vv_cdw.*DZ.*hFacS,3); %%% v-grid
+% VV(VV==0)=NaN;
+% VV_tgrid = zeros(Nx,Ny); 
+% VV_tgrid(:,1:Ny-1) = (VV(:,1:Ny-1,:)+VV(:,2:Ny,:))/2; %%% mass-grid
 
     theta_ref = -1.87;
     phih = zeros(Nx,Ny);%%% horizontal heat function
@@ -68,7 +92,7 @@ for n=1
     
     phih(phih==0)=NaN;
 
-    figure(1)
+    figure(2)
     set(gcf,'color','w');
     contourf(XX/1000,YY/1000,phih/1e12,[min(min(phih/1e12)):1:max(max(phih/1e12))],'EdgeColor','k');  
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
@@ -78,7 +102,7 @@ for n=1
     colormap(redblue)
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     set(gca,'FontSize',fontsize);
-    title('Horizontal heat function','FontSize',fontsize+3)
+    title('Quasi-heatfunction','FontSize',fontsize+3)
     set(gcf,'Position',[204 248 874 601])
     ylim([0 400]);xlim([-300 300])
     xticks([-300:100:300]); yticks([0:100:400])
