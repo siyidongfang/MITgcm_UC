@@ -20,11 +20,57 @@
     load_data;
     load_colors;
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Calculate horizontal heatfunction on mass-grid %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     %%% Vertically integrate the horizontal heat flux
     VT = sum(vt.*DZ.*hFacS,3); %%% v-grid
-    UT = sum(ut.*DZ.*hFacW,3); %%% v-grid
+    UT = sum(ut.*DZ.*hFacW,3); %%% u-grid
+    VT(VT==0)=NaN;
+    UT(UT==0)=NaN;
 
-    %%% Check horizontal divergence of the heat flux
+    VT_mg = VT; %%% mass-grid TODO 
+    UT_mg = UT; %%% mass-grid TODO
+
+    phih = zeros(Nx,Ny);%%% horizontal heat function
+
+    Xstart = 110*m1km + Lx/2;
+    Xidx = round(Xstart/dx);
+    phih(Xidx:Nx,:) = cp_o*rho_o*cumsum(-UT_mg(Xidx:Nx,:)*dy,2,'omitnan');
+
+    Yidx = find(abs((phih(Xidx,:)))>0,1);
+    Ystart = yy(Yidx); 
+    phih(1:Xidx-1,Yidx:Ny) = repmat(phih(Xidx,Yidx:Ny),[Xidx-1 1]) ...
+              + cp_o*rho_o*flip(cumsum(flip(VT_mg(1:Xidx-1,Yidx:Ny))*dx,'omitnan'));
+    
+    %%% TO DO: SUBTRACT FREEZING TEMPERATURE FROM THE HEAT FUNCTION
+
+
+    figure(1)
+    set(gcf,'color','w');
+    contourf(XX/1000,YY/1000,phih/1e12,[min(min(phih/1e12)):0.2:max(max(phih/1e12))],'EdgeColor','k');  
+    caxis([-12 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
+    xlabel('Longitude (km)');ylabel('Latitude (km)');
+    set(gca,'FontSize',fontsize);
+    title('Horizontal heat function','FontSize',fontsize+3)
+
+
+    % %%% Calculate the horizontal heatfunction using VT
+    % VT_exclude=VT; %%% Exclude the zonal boundary
+    % VT_exclude(1:11,:)=0;
+    % phi_H = cp_o*rho_o*cumsum(VT_exclude*dx);
+    % phi_H(VT==0)=NaN;
+    % 
+    % %%% Calculate the horizontal heatfunction using UT
+    % UT_exclude=UT; %%% Exclude the northern boundary
+    % phi_Hu = cp_o*rho_o*flip(cumsum(flip(UT_exclude*dy,2),2,'omitnan'),2);
+    % phi_Hu(VT==0)=NaN;
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Check horizontal divergence %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     dFdx = zeros(Nx,Ny);
     dFdy = zeros(Nx,Ny);
     dFdx(2:Nx,:) = (UT(2:Nx,:)-UT(1:Nx-1,:))/dx; %%% on mass-grid
@@ -49,18 +95,6 @@
     Tout = sum(-VT(xboxidx,y1)*dx) + sum(UT(x2,yboxidx)*dy);
 
     (Tout-Tin)/(0.5*(Tin+Tout))
-
-    %%% Calculate the horizontal heatfunction using VT
-    VT_exclude=VT; %%% Exclude the zonal boundary
-    VT_exclude(1:11,:)=0;
-    phi_H = cp_o*rho_o*cumsum(VT_exclude*dx);
-    phi_H(VT==0)=NaN;
-
-    %%% Calculate the horizontal heatfunction using UT
-    UT_exclude=UT; %%% Exclude the northern boundary
-    phi_Hu = cp_o*rho_o*flip(cumsum(flip(UT_exclude*dy,2),2,'omitnan'),2);
-    phi_Hu(VT==0)=NaN;
-
 
 
        

@@ -25,7 +25,7 @@
 
     %%% Vertically integrate the horizontal heat flux
     VT = sum(vt.*DZ.*hFacS,3); %%% v-grid
-    UT = sum(ut.*DZ.*hFacW,3); %%% v-grid
+    UT = sum(ut.*DZ.*hFacW,3); %%% u-grid
 
     %%% Check horizontal divergence of the heat flux
     dFdx = zeros(Nx,Ny);
