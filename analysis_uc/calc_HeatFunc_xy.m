@@ -38,44 +38,50 @@ for n=1
     UT_tgrid = zeros(Nx,Ny);
     UT_tgrid(1:Nx-1,:) = (UT(1:Nx-1,:)+UT(2:Nx,:))/2; %%% mass-grid 
 
+    UU = sum(uu.*DZ.*hFacW,3); %%% u-grid
+    UU(UU==0)=NaN;
+    UU_tgrid = zeros(Nx,Ny);
+    UU_tgrid(1:Nx-1,:) = (UU(1:Nx-1,:)+UU(2:Nx,:))/2; %%% mass-grid 
+
     VT = sum(vt.*DZ.*hFacS,3); %%% v-grid
     VT(VT==0)=NaN;
     VT_tgrid = zeros(Nx,Ny); 
     VT_tgrid(:,1:Ny-1) = (VT(:,1:Ny-1,:)+VT(:,2:Ny,:))/2; %%% mass-grid
 
+    VV = sum(vv.*DZ.*hFacS,3); %%% v-grid
+    VV(VV==0)=NaN;
+    VV_tgrid = zeros(Nx,Ny); 
+    VV_tgrid(:,1:Ny-1) = (VV(:,1:Ny-1,:)+VV(:,2:Ny,:))/2; %%% mass-grid
 
-    phih = zeros(Nx,Ny);%%% horizontal heat function
 
     theta_ref = -1.87;
+    phih = zeros(Nx,Ny);%%% horizontal heat function
+
     Xstart = 110*m1km + Lx/2;
     Xidx = round(Xstart/dx);
-    phih(Xidx:Nx,:) = cp_o*rho_o*cumsum(-UT_tgrid(Xidx:Nx,:)*dy,2,'omitnan');
+    phih(Xidx:Nx,:) = cp_o*rho_o*cumsum(-( UT_tgrid(Xidx:Nx,:) - UU_tgrid(Xidx:Nx,:)*theta_ref )*dy,2,'omitnan');
 
     Yidx = find(abs((phih(Xidx,:)))>0,1);
     Ystart = yy(Yidx); 
     phih(1:Xidx-1,Yidx:Ny) = repmat(phih(Xidx,Yidx:Ny),[Xidx-1 1]) ...
-              + cp_o*rho_o*flip(cumsum(flip(VT_tgrid(1:Xidx-1,Yidx:Ny))*dx,'omitnan'));
+              + cp_o*rho_o*flip(cumsum(flip(( VT_tgrid(1:Xidx-1,Yidx:Ny) - VV_tgrid(1:Xidx-1,Yidx:Ny)*theta_ref ))*dx,'omitnan'));
     
     phih(phih==0)=NaN;
-    %%% TO DO: SUBTRACT FREEZING TEMPERATURE FROM THE HEAT FUNCTION
-
-    %%% TO DO: CALCULATE HEAT FUNCTION FOR THE CDW LAYER
-
 
     figure(1)
     set(gcf,'color','w');
-    contourf(XX/1000,YY/1000,phih/1e12,[min(min(phih/1e12)):0.2:max(max(phih/1e12))],'EdgeColor','k');  
+    contourf(XX/1000,YY/1000,phih/1e12,[min(min(phih/1e12)):1:max(max(phih/1e12))],'EdgeColor','k');  
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','off');hold off;
-    caxis([-12 0]);colorbar;colormap(flip(WhiteBlueGreenYellowRed(0)));
+    caxis([-30 30]);colorbar;
+    % colormap(flip(WhiteBlueGreenYellowRed(0)));
+    colormap(redblue)
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     set(gca,'FontSize',fontsize);
     title('Horizontal heat function','FontSize',fontsize+3)
     set(gcf,'Position',[204 248 874 601])
     ylim([0 400]);xlim([-300 300])
     xticks([-300:100:300]); yticks([0:100:400])
-
-
     if(savefigure)
     print('-dpng','-r150',[figdir expname '_heatfunc_xy.png']);
     end
