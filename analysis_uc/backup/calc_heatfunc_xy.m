@@ -13,16 +13,16 @@
     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{4}
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/HeatFunc_xy/' exp_group '/'];
 
     list_exps_new;
     load_constants;
     load_colors;
-    savefigure = false;
+    savefigure = true;
 
-% for n=1:nEXP
-for n=1
+for n=1:nEXP
+% for n=1
     expname = EXPNAME{n}
     loadexp;
     load_spacing;
@@ -58,26 +58,6 @@ for n=1
     VV_tgrid = sum(vv_cdw.*DZ.*hFacC,3,'omitnan'); %%% mass-grid
     VT_tgrid = sum(vt_cdw.*DZ.*hFacC,3,'omitnan'); %%% mass-grid
 
-% UT = sum(ut_cdw.*DZ.*hFacW,3); %%% u-grid
-% UT(UT==0)=NaN;
-% UT_tgrid = zeros(Nx,Ny);
-% UT_tgrid(1:Nx-1,:) = (UT(1:Nx-1,:)+UT(2:Nx,:))/2; %%% mass-grid 
-
-% UU = sum(uu_cdw.*DZ.*hFacW,3); %%% u-grid
-% UU(UU==0)=NaN;
-% UU_tgrid = zeros(Nx,Ny);
-% UU_tgrid(1:Nx-1,:) = (UU(1:Nx-1,:)+UU(2:Nx,:))/2; %%% mass-grid 
-
-% VT = sum(vt_cdw.*DZ.*hFacS,3); %%% v-grid
-% VT(VT==0)=NaN;
-% VT_tgrid = zeros(Nx,Ny); 
-% VT_tgrid(:,1:Ny-1) = (VT(:,1:Ny-1,:)+VT(:,2:Ny,:))/2; %%% mass-grid
-
-% VV = sum(vv_cdw.*DZ.*hFacS,3); %%% v-grid
-% VV(VV==0)=NaN;
-% VV_tgrid = zeros(Nx,Ny); 
-% VV_tgrid(:,1:Ny-1) = (VV(:,1:Ny-1,:)+VV(:,2:Ny,:))/2; %%% mass-grid
-
     theta_ref = -1.87;
     phih = zeros(Nx,Ny);%%% horizontal heat function
 
@@ -109,18 +89,6 @@ for n=1
     if(savefigure)
     print('-dpng','-r150',[figdir expname '_heatfunc_xy.png']);
     end
-
-
-    % %%% Calculate the horizontal heatfunction using VT
-    % VT_exclude=VT; %%% Exclude the zonal boundary
-    % VT_exclude(1:11,:)=0;
-    % phi_H = cp_o*rho_o*cumsum(VT_exclude*dx);
-    % phi_H(VT==0)=NaN;
-    % 
-    % %%% Calculate the horizontal heatfunction using UT
-    % UT_exclude=UT; %%% Exclude the northern boundary
-    % phi_Hu = cp_o*rho_o*flip(cumsum(flip(UT_exclude*dy,2),2,'omitnan'),2);
-    % phi_Hu(VT==0)=NaN;
 
 
 %     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
