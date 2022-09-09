@@ -13,6 +13,7 @@
     %%%%% Make scatter plots
     figure(1)
     clf;
+    set(gcf,'color','w');
     set(gcf,'Position',[83 183 1100 750]);
     ax1 = subplot('position',[0.08 0.08 subplotsize]);
     lfit = plot(xgrid,f.p1*xgrid+f.p2,'k','LineWidth',1);
@@ -96,9 +97,9 @@
     xlim([min(dataX)-xrange/20 max(dataX)+xrange/20])
     ylim([min(dataY)-yrange/20 max(dataY)+yrange/20])
     set(gca,'FontSize',fontsize)
-    xlabel(xlabeltext,'FontSize',fontsize);
-    ylabel(ylabeltext,'FontSize',fontsize);
-    title(titletext,'FontSize',fontsize+2);
+    xlabel(xlabeltext,'FontSize',fontsize+2);
+    ylabel(ylabeltext,'FontSize',fontsize+2);
+    title(titletext,'FontSize',fontsize+3);
     grid on;grid minor;
 
     if(~plotMeltrate)

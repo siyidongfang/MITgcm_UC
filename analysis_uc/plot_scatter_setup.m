@@ -9,7 +9,7 @@
     load('/Users/csi/MITgcm_UC/products_uc/matrix_combined.mat')
 
     figdir = '/Users/csi/MITgcm_UC/figures_uc/correlation/'; 
-    savefigure = true;
+    savefigure = false;
    
     nexp1 = 19;
     nexp2 = 18;
@@ -24,16 +24,28 @@
     excludeLOWRES = true;
     if(plotMeltrate)
        excludegroup3 = true;
+    else
+       excludegroup3 = false;
     end
+%     excludegroup3 = false;
 
-    dataX = Totg_east_Sv;
-    xlabeltext='Total geostrophic undercurrent transport';
-    dataY= Tot_east_Sv;
-    ylabeltext = 'Total undercurrent transport';
-    figname = 'Tot_east_Sv-Totg_east_Sv';
 
-    titletext = 'Undercurrent sensitivity';
-%     titletext='Melt rate sensitivity'
+dataX = Tc_bc_cdw_mean;
+xlabeltext = 'Total CDW heat transport at the ice front, T_{uc}+T_{bc} (TW)';
+%     dataX = -detady;
+%     xlabeltext = 'Cross-slope SSH gradient';
+%     xlabeltext='Mean geostrophic undercurrent velocity (m/s)';
+%      dataY=Tot_west_Sv;
+%      ylabeltext = 'Total westward transport over the slope (Sv)';
+% dataY = MeltRate_m;
+%     ylabeltext = 'Ice shelf melt rate (m/yr)';
+dataY = MeltRate_m;
+    ylabeltext = 'Ice shelf melt rate (m/yr)';
+%     figname = 'Tot_east_Sv-Totg_east_Sv';
+%     ylabeltext='Mean undercurrent velocity (m/s)';
+%     titletext = 'Undercurrent sensitivity';
+%     titletext='Undercurrent vs thermal-wind shear'
+titletext ='Melt rate vs T_{uc}+T_{bc}'
 
     xrange = max(dataX)-min(dataX);
     yrange = max(dataY)-min(dataY);

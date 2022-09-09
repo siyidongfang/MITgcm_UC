@@ -23,6 +23,9 @@
 
     plotMeltrate = false;
     excludeLOWRES = true;
+    if(plotMeltrate)
+       excludegroup3 = true;
+    end
 
     dataX = Ug_east_avg;
     xlabeltext='Mean geostrophic undercurrent velocity';

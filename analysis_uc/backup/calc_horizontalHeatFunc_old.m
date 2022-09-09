@@ -87,7 +87,7 @@
     curr.Color = [0 102 0]/255;
     curr.LineWidth = 1.5;
     hold off;
-    ylim([0 280])
+%     ylim([0 280])
     set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     title('Heat flux (vector, GW/m)')

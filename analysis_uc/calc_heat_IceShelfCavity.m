@@ -19,8 +19,6 @@
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
     figname = expname;
 
-    savefigure = false;
-    showfigure = false;
    
 
 %     loadexp;
@@ -127,6 +125,7 @@
     ylabel('Latitude, y (km)','interpreter','latex');
     set(gca,'FontSize',fontsize);
     caxis([-0.1 0.1])
+    colorbar
     title('Onshore heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
     freezeColors;
     if (n==19)
@@ -197,6 +196,7 @@
     set(gca,'FontSize',fontsize);
     caxis([-0.1 0.1])
     title('Onshore $\bf{CDW}$ heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
+    c1 = colorbar;
     freezeColors;
     if (n==19)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
@@ -220,9 +220,12 @@
 
     subplot(2,2,3)
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.5 4]);
+%     ylim([-0.5 4]);
+    ylim([-0.5 2.5]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
+    rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    rectangle('Position',[-25 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;
     xlabel('Longitude, x (km)','interpreter','latex');
     ylabel('($10^{12}\,$W)','interpreter','latex');
@@ -239,6 +242,8 @@
     ylim([-0.5 2.5]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
+    rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    rectangle('Position',[-25 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;
     xlabel('Longitude, x (km)','interpreter','latex');
     ylabel('($10^{12}\,$W)','interpreter','latex');

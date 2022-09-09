@@ -13,16 +13,16 @@
     prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{4}
+    exp_group = EXP_GROUP{1}
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/HeatFunc_xy/' exp_group '/'];
 
     list_exps_new;
     load_constants;
     load_colors;
-    savefigure = true;
+    savefigure = false;
 
-for n=1:nEXP
-% for n=1
+% for n=1:nEXP
+for n=1
     expname = EXPNAME{n}
     loadexp;
     load_spacing;
@@ -72,20 +72,32 @@ for n=1:nEXP
     
     phih(phih==0)=NaN;
 
-    figure(2)
+
+    %%% Plotting options
+    scrsz = get(0,'ScreenSize');
+    fontsize = 17;
+    framepos = [0 scrsz(4)/2 900 550];
+    plotloc = [0.15 0.15 0.7 0.75];
+
+    %%% Make the plot
+    handle = figure(12);
+    set(handle,'Position',framepos);
+    clf;
     set(gcf,'color','w');
     contourf(XX/1000,YY/1000,phih/1e12,[min(min(phih/1e12)):1:max(max(phih/1e12))],'EdgeColor','k');  
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','off');hold off;
     caxis([-30 30]);colorbar;
     % colormap(flip(WhiteBlueGreenYellowRed(0)));
-    colormap(redblue)
+    colormap(flip(cmocean('balance')))
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     set(gca,'FontSize',fontsize);
     title('Quasi-heatfunction','FontSize',fontsize+3)
-    set(gcf,'Position',[204 248 874 601])
+    set(gca,'Position',plotloc);
     ylim([0 400]);xlim([-300 300])
     xticks([-300:100:300]); yticks([0:100:400])
+    annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Phi_\mathrm{h}$ ($10^{12}$W)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
+
     if(savefigure)
     print('-dpng','-r150',[figdir expname '_heatfunc_xy.png']);
     end
