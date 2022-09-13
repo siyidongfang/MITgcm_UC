@@ -8,6 +8,10 @@
         'Um_Cori','Vm_Cori','Um_dPhiX','Vm_dPhiY','Um_Diss','Vm_Diss',...
         'Um_Advec','Vm_Advec','VISrI_Um','VISrI_Vm');
 
+%     TODO: 1. TOTUTEND, TOTVTEND
+%     2. Surface pressure torque
+%     3. There must be something wrong with the nonlinear term (way too large)
+
     dxC = rdmds(fullfile(resultspath,'DXC'));
     dyC = rdmds(fullfile(resultspath,'DYC'));
     rAz = rdmds(fullfile(resultspath,'RAZ'));
