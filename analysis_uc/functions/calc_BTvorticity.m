@@ -4,116 +4,166 @@
 %%% Calculate the barotropic vorticity budget
 
 
+    load([prodir expname '_tavg_5yrs.mat'],'Um_Ext','Vm_Ext',...
+        'Um_Cori','Vm_Cori','Um_dPhiX','Vm_dPhiY','Um_Diss','Vm_Diss',...
+        'Um_Advec','Vm_Advec','VISrI_Um','VISrI_Vm');
 
-    UU = sum(uu.*DZ.*hFacW,3); %%% Depth-integrated volume flux
-    VV = sum(vv.*DZ.*hFacS,3);
+    dxC = rdmds(fullfile(resultspath,'DXC'));
+    dyC = rdmds(fullfile(resultspath,'DYC'));
+    rAz = rdmds(fullfile(resultspath,'RAZ'));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Depth-integrated momentum equation %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    Um_Ext_int = sum(Um_Ext.*DZ.*hFacW,3); 
+    Vm_Ext_int = sum(Vm_Ext.*DZ.*hFacS,3); 
     
-    VV_vorgrid = zeros(Nx,Ny);  
-    VV_vorgrid(1:Nx-1,:) = (VV(1:Nx-1,:)+ VV(2:Nx,:))/2; % vorticity-gird
-    VV_vorgrid(Nx,:) = (VV(Nx,:)+0)/2;
-
-    load([prodir expname '_tavg_5yrs.mat'],'PHIHYD');
-    ZZ_3D = repmat(reshape(zz,[1 1 Nr]),[Nx Ny 1]);
-
-    dp = PHIHYD; %%% pressure anomaly
-    pp =  rhoConst*(-gravity*ZZ_3D + dp)/1e4; %%% 3D pressure, unit: dbar (1e4 kg/m/s^2)
-
-    %%% Find bottom pressure
-    pb = zeros(Nx,Ny);          % bottom pressure
-    ss(ss==0) = NaN;            % make the topography (where dp==0) NaN values
-    idx_topog = isnan(ss);      % The dry grids (topography): 1, wet grids: 0
-    idxb = Nr-sum(idx_topog,3); % Find the vertical grid of bottom velocity
-    for i = 1:Nx
-        for j = 1:Ny
-            if(idxb(i,j)~=0)
-               pb(i,j) = pp(i,j,idxb(i,j));
-            end
-        end
-    end
-    pb(pb==0) = NaN;
-    ss(isnan(ss)) = 0;          
-
-    HH = -bathy; %%% t-grid
-
-    dpbdx = zeros(Nx,Ny);
-    dpbdy = zeros(Nx,Ny);
-    dHdx = zeros(Nx,Ny);
-    dHdy = zeros(Nx,Ny); 
-
-    dpbdx(2:Nx-1,:) = diff(pb,2,1)/dx; %%% Centered difference, on t-grid
-    dpbdy(:,2:Ny-1) = diff(pb,2,2)/dy; %%% Centered difference, on t-grid
-    dHdx(2:Nx-1,:)  = diff(HH,2,1)/dx; %%% Centered difference, on t-grid
-    dHdy(:,2:Ny-1)  = diff(HH,2,2)/dy; %%% Centered difference, on t-grid
-
-%     HH_vgrid = zeros(Nx,Ny);    
-%     HH_ugrid = zeros(Nx,Ny); 
-%     pb_vgrid = zeros(Nx,Ny); 
-%     pb_ugrid = zeros(Nx,Ny); 
-% 
-%     HH_vgrid(:,1) = HH(:,1);
-%     HH_vgrid(:,2:Ny) = (HH(:,1:Ny-1)+HH(:,2:Ny))/2; %%% v-grid
-%     pb_vgrid(:,1) = pb(:,1);
-%     pb_vgrid(:,2:Ny) = (pb(:,1:Ny-1)+pb(:,2:Ny))/2; %%% v-grid
-% 
-%     HH_ugrid(2:Nx,:) = 0.5.*(HH(1:Nx-1,:)+HH(2:Nx,:));
-%     pb_ugrid(2:Nx,:) = 0.5.*(pb(1:Nx-1,:)+pb(2:Nx,:));
-% 
-%     dpbdx(1:Nx-1,:) = diff(pb_vgrid)/dx;
-%     dHdx(1:Nx-1,:)  = diff(HH_vgrid)/dx;
-%     dpbdy(:,2:Ny) = diff(pb_ugrid,1,2)/dy;
-%     dHdy(:,2:Ny)  = diff(HH_ugrid,1,2)/dy;
-
+    Um_Cori_int = sum(Um_Cori.*DZ.*hFacW,3); 
+    Vm_Cori_int = sum(Vm_Cori.*DZ.*hFacS,3); 
+    
+    Um_dPHdx_int = sum(Um_dPhiX.*DZ.*hFacW,3); 
+    Vm_dPHdy_int = sum(Vm_dPhiY.*DZ.*hFacS,3); 
+    
+    Um_Diss_int = sum(Um_Diss.*DZ.*hFacW,3); 
+    Vm_Diss_int = sum(Vm_Diss.*DZ.*hFacS,3); 
+    
+    Um_Advec_int = sum(Um_Advec.*DZ.*hFacW,3); 
+    Vm_Advec_int = sum(Vm_Advec.*DZ.*hFacS,3); 
+    
+    latViscU_int = sum(VISrI_Um.*DZ,3); 
+    latViscV_int = sum(VISrI_Vm.*DZ,3); 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Calculate the vorticity terms %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Surface and bottom stress terms 
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(Um_Ext_int.*dxC,1,2);
+d2(2:Nx,:) =  diff(Vm_Ext_int.*dyC);
+zeta_wind_int = ( d1 + d2 ) ./rAz;        % Surface stress curl
+
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(Um_Diss_int.*dxC,1,2);
+d2(2:Nx,:) =  diff(Vm_Diss_int.*dyC);
+zeta_bottomDrag_int = ( d1 + d2 ) ./rAz;  % Bottom frictional stress curl
+
+zeta_tau_bt = zeta_wind_int+zeta_bottomDrag_int;
+
+%%% Planetary vorticity advection, on t-grid
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(Um_Cori_int.*dxC,1,2);
+d2(2:Nx,:) =  diff(Vm_Cori_int.*dyC);
+% d1(1:Nx-1,:) = diff(Um_Cori_int.*dyC);
+% d2(:,1:Ny-1) = diff(Vm_Cori_int.*dxC,1,2);
+zeta_cori_bt = ( d1 + d2 ) ./rAz;
+
+%%% Bottom pressure torque
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(Um_dPHdx_int.*dxC,1,2);
+d2(2:Nx,:) =  diff(Vm_dPHdy_int.*dyC);
+zeta_phiHyd_int = ( d1 + d2 ) ./rAz;  % Bottom frictional stress curl
+
+% dETANdx = zeros(Nx,Ny);
+% dETANdx(2:Nx,:) = diff(ETAN)/dx; % u-grid
+% 
+% depth_x=np.nansum(ds_llc.hFacW*makeVectorECCO_global(ds_llc.drF), axis=0) #Den e bra
+% Um_dETANdx=dETANdx*depth_x
+% 
+% d1 = zeros(Nx,Ny);
+% d2 = zeros(Nx,Ny);
+% d1(:,2:Ny) = -diff(Um_dETANdx.*dxC,1,2);
+% d2(2:Nx,:) =  diff(Vm_dETANdy.*dyC);
+% zeta_phiSurf_int = ( d1 + d2 ) ./rAz;  % Bottom frictional stress curl
+zeta_phiSurf_int = 0;
+
+zeta_bpt_bt = zeta_phiHyd_int+zeta_phiSurf_int;
+
+   
+%%% non-linear term
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(latViscU_int.*dxC,1,2);
+d2(2:Nx,:) =  diff(latViscV_int.*dyC);
+zeta_ViscLat_int = ( d1 + d2 ) ./rAz;
+zeta_A_bt = zeta_ViscLat_int;
+zeta_A_bt =0;
     
+%%% Viscous term
 
-    %%% Planetary vorticity advection
-    betaV = beta*VV_vorgrid;  % vorticity-gird
-
-    %%% Bottom pressure torque
-    pb_torq_tgrid = 1/rhoConst*(dpbdx.*dHdy - dpbdy.*dHdx); % t-grid
-    pb_torq = zeros(Nx,Ny);   % vorticity-gird
-
-    pb_torq(2:Nx,:) = 0.5*(pb_torq_tgrid(1:Nx-1,:)+pb_torq_tgrid(2:Nx,:));% u-grid
-    pb_torq(:,2:Ny) = 0.5*(pb_torq_tgrid(:,1:Ny-1)+pb_torq_tgrid(:,2:Ny));% vorticity-grid
-
-%     %%% Wind stress curl
-%     wind_curl
-%     
-%     %%% Bottom frictional stress curl
-%     fric_curl
-%     
-%     %%% Nonlinear torque
-%     non_torq
-%     
-%     %%% Viscous torque
-%     visc_torq
-%     
-%     
-%     %%% Residual term
-%     residual_BTvort = 
-%     
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(Um_Advec_int.*dxC,1,2);
+d2(2:Nx,:) =  diff(Vm_Advec_int.*dyC);
+zeta_Adv_int = ( d1 + d2 ) ./rAz;
+zeta_AB_int = 0;
+zeta_B_bt = (zeta_Adv_int-zeta_cori_bt)+zeta_AB_int;
+    
+    
+%%% Residual term
+residual_BTvort = zeta_tau_bt + zeta_bpt_bt + zeta_A_bt + zeta_B_bt;
+    
     
     
 figure(1)
-subplot(1,2,1)
-pcolor(betaV)
-shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e9);
+subplot(3,3,1)
+pcolor(zeta_wind_int)
+shading flat;colorbar;colormap(redblue);caxis([-2 2]/1e9);
 
-subplot(1,2,2)
-pcolor(pb_torq)
-shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e9);
-    
-    
-%%%%%%%%%%%%%%%%%%%%%
-%%% Save the data %%%
-%%%%%%%%%%%%%%%%%%%%%
-    
-    
-    
-    
-    
 
+subplot(3,3,2)
+pcolor(zeta_bottomDrag_int)
+shading flat;colorbar;colormap(redblue);caxis([-5 5]/1e9);
+      
+
+subplot(3,3,3)
+pcolor(zeta_cori_bt)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+
+
+% subplot(3,3,4)
+% pcolor(zeta_A_bt)
+% shading flat;colorbar;colormap(redblue);caxis([-5 5]/1e2);
+
+subplot(3,3,5)
+pcolor(zeta_Adv_int)
+shading flat;colorbar;colormap(redblue);caxis([-1.5 1.5]/1e8);
+
+subplot(3,3,6)
+pcolor(zeta_B_bt)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+
+
+subplot(3,3,7)
+pcolor(zeta_phiHyd_int)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+
+subplot(3,3,7)
+pcolor(zeta_phiHyd_int)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+
+
+
+subplot(3,3,8)
+pcolor(residual_BTvort);title('Residual')
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+
+
+%     zeta_bpt_bt = zeta_phiHyd_int+zeta_phiSurf_int;
+
+
+% %%%%%%%%%%%%%%%%%%%%%
+% %%% Save the data %%%
+% %%%%%%%%%%%%%%%%%%%%%
+%     
+%     
+%     
+%     
+%     
+% 

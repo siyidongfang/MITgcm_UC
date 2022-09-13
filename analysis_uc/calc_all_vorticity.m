@@ -25,8 +25,8 @@ for n=1
             load_data;
             load_spacing;
 
-            calc_vorticity
-            plot_vorticity
+            calc_BTvorticity
+            plot_BTvorticity
             
         end
 end
