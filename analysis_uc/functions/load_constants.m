@@ -28,7 +28,7 @@
     gravity = 9.81;
     f0 = -1.3e-4; %%% Coriolis parameter
     beta = 1e-11; %%% Beta parameter      
-    rhoConst = 1027; %%% Reference density
+    rhoConst = 1027; %%% Reference density (MITgcm default is 999.8, but you have changed rhoConst to 1027 in setParams!)
     rho_o = rhoConst; % rho_o = 1027; % rho_o = 1000;
 
     
