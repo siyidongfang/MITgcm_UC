@@ -15,6 +15,7 @@
     dxC = rdmds(fullfile(resultspath,'DXC'));
     dyC = rdmds(fullfile(resultspath,'DYC'));
     rAz = rdmds(fullfile(resultspath,'RAZ'));
+    drF = rdmds(fullfile(resultspath,'DRF'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Depth-integrated momentum equation %%%
@@ -58,38 +59,41 @@ zeta_bottomDrag_int = ( d1 + d2 ) ./rAz;  % Bottom frictional stress curl
 
 zeta_tau_bt = zeta_wind_int+zeta_bottomDrag_int;
 
-%%% Planetary vorticity advection, on t-grid
+%%% Planetary vorticity advection
 d1 = zeros(Nx,Ny);
 d2 = zeros(Nx,Ny);
 d1(:,2:Ny) = -diff(Um_Cori_int.*dxC,1,2);
 d2(2:Nx,:) =  diff(Vm_Cori_int.*dyC);
-% d1(1:Nx-1,:) = diff(Um_Cori_int.*dyC);
-% d2(:,1:Ny-1) = diff(Vm_Cori_int.*dxC,1,2);
 zeta_cori_bt = ( d1 + d2 ) ./rAz;
 
-%%% Bottom pressure torque
+%%% Hydrostatic pressure torque
 d1 = zeros(Nx,Ny);
 d2 = zeros(Nx,Ny);
 d1(:,2:Ny) = -diff(Um_dPHdx_int.*dxC,1,2);
 d2(2:Nx,:) =  diff(Vm_dPHdy_int.*dyC);
-zeta_phiHyd_int = ( d1 + d2 ) ./rAz;  % Bottom frictional stress curl
+zeta_phiHyd_int = ( d1 + d2 ) ./rAz;  
 
-% dETANdx = zeros(Nx,Ny);
-% dETANdx(2:Nx,:) = diff(ETAN)/dx; % u-grid
-% 
-% depth_x=np.nansum(ds_llc.hFacW*makeVectorECCO_global(ds_llc.drF), axis=0) #Den e bra
-% Um_dETANdx=dETANdx*depth_x
-% 
-% d1 = zeros(Nx,Ny);
-% d2 = zeros(Nx,Ny);
-% d1(:,2:Ny) = -diff(Um_dETANdx.*dxC,1,2);
-% d2(2:Nx,:) =  diff(Vm_dETANdy.*dyC);
-% zeta_phiSurf_int = ( d1 + d2 ) ./rAz;  % Bottom frictional stress curl
-zeta_phiSurf_int = 0;
+%%% Surface pressure torque
+dETANdx = zeros(Nx,Ny);
+dETANdx(2:Nx,:) = diff(ETAN)/dx; % u-grid
+depth_x = sum(hFacW.*drF,3,'omitnan');
+Um_dETANdx=dETANdx.*depth_x;
 
+dETANdy = zeros(Nx,Ny);
+dETANdy(:,2:Ny) = diff(ETAN,1,2)/dy; % v-grid
+depth_y = sum(hFacS.*drF,3,'omitnan');
+Vm_dETANdy=dETANdy.*depth_y;
+
+d1 = zeros(Nx,Ny);
+d2 = zeros(Nx,Ny);
+d1(:,2:Ny) = -diff(Um_dETANdx.*dxC,1,2);
+d2(2:Nx,:) =  diff(Vm_dETANdy.*dyC);
+zeta_phiSurf_int = ( d1 + d2 ) ./rAz;  
+
+zeta_phiSurf_int = zeros(Nx,Ny);
+%%% The bottom pressure torque = surface pressure torque + hydrostatic pressure torque
 zeta_bpt_bt = zeta_phiHyd_int+zeta_phiSurf_int;
 
-   
 %%% non-linear term
 d1 = zeros(Nx,Ny);
 d2 = zeros(Nx,Ny);
@@ -100,7 +104,6 @@ zeta_A_bt = zeta_ViscLat_int;
 zeta_A_bt =0;
     
 %%% Viscous term
-
 d1 = zeros(Nx,Ny);
 d2 = zeros(Nx,Ny);
 d1(:,2:Ny) = -diff(Um_Advec_int.*dxC,1,2);
@@ -113,50 +116,67 @@ zeta_B_bt = (zeta_Adv_int-zeta_cori_bt)+zeta_AB_int;
 %%% Residual term
 residual_BTvort = zeta_tau_bt + zeta_bpt_bt + zeta_A_bt + zeta_B_bt;
     
-    
-    
+ 
+
+fontsize = 18;
 figure(1)
 subplot(3,3,1)
-pcolor(zeta_wind_int)
-shading flat;colorbar;colormap(redblue);caxis([-2 2]/1e9);
-
+pcolor(XX/1000,YY/1000,zeta_wind_int)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+title('Ice-ocean stress curl')
+set(gca,'FontSize',fontsize);
 
 subplot(3,3,2)
-pcolor(zeta_bottomDrag_int)
-shading flat;colorbar;colormap(redblue);caxis([-5 5]/1e9);
-      
-
-subplot(3,3,3)
-pcolor(zeta_cori_bt)
-shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+pcolor(XX/1000,YY/1000,zeta_bottomDrag_int)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8); 
+title('Bottom frictional stress curl')
+set(gca,'FontSize',fontsize);
 
 
 % subplot(3,3,4)
 % pcolor(zeta_A_bt)
 % shading flat;colorbar;colormap(redblue);caxis([-5 5]/1e2);
+% set(gca,'FontSize',fontsize);
+
+subplot(3,3,4)
+pcolor(XX/1000,YY/1000,zeta_Adv_int)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+title('Total advection')
+set(gca,'FontSize',fontsize);
 
 subplot(3,3,5)
-pcolor(zeta_Adv_int)
-shading flat;colorbar;colormap(redblue);caxis([-1.5 1.5]/1e8);
+pcolor(XX/1000,YY/1000,zeta_cori_bt)
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+title('Planetary vorticity advection')
+set(gca,'FontSize',fontsize);
 
 subplot(3,3,6)
-pcolor(zeta_B_bt)
+pcolor(XX/1000,YY/1000,zeta_B_bt)
 shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
-
+title('Nonlinear term  = Total adv. - Planetary vort. adv.')
+set(gca,'FontSize',fontsize);
 
 subplot(3,3,7)
-pcolor(zeta_phiHyd_int)
+pcolor(XX/1000,YY/1000,zeta_phiHyd_int)
 shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
-
-subplot(3,3,7)
-pcolor(zeta_phiHyd_int)
-shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
-
-
+title('Hydrostatic pressure torque')
+set(gca,'FontSize',fontsize);
 
 subplot(3,3,8)
-pcolor(residual_BTvort);title('Residual')
+pcolor(XX/1000,YY/1000,zeta_phiSurf_int)
 shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+title('Surface pressure torque')
+set(gca,'FontSize',fontsize);
+
+subplot(3,3,9)
+pcolor(XX/1000,YY/1000,residual_BTvort);
+shading flat;colorbar;colormap(redblue);caxis([-1 1]/1e8);
+title('Residual')
+set(gca,'FontSize',fontsize);
+
+if(savefigure)
+print('-dpng','-r150',[figdir expname '_vorticity.png']);
+end
 
 
 %     zeta_bpt_bt = zeta_phiHyd_int+zeta_phiSurf_int;

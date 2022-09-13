@@ -11,10 +11,10 @@
     load_constants;
     
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
-    figdir = ['/Users/csi/MITgcm_UC/figures_uc/momentum/' exp_group '/'];
+    figdir = ['/Users/csi/MITgcm_UC/figures_uc/vorticity/' exp_group '/'];
     
     useSEAICE = true;
-
+    savefigure = false;
 
 %     for n=1:nEXP
 for n=1
