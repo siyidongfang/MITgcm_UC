@@ -11,7 +11,7 @@
 
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/no_seaice/';
-    expname = 'res2km_Ua-2Va2_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
+    expname = 'res2km_Ua-8Va8_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod'
     prodir = '/Users/csi/MITgcm_UC/products_uc/no_seaice/';
     loadexp;
 
