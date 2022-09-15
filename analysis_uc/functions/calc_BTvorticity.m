@@ -119,6 +119,7 @@ residual_BTvort = zeta_tau_bt + zeta_bpt_bt + zeta_A_bt + zeta_B_bt;
  
 
 fontsize = 18;
+load_colors;
 figure(1)
 subplot(3,3,1)
 pcolor(XX/1000,YY/1000,zeta_wind_int)
