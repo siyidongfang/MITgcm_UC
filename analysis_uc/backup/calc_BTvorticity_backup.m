@@ -187,8 +187,11 @@ end
 % %%% Save the data %%%
 % %%%%%%%%%%%%%%%%%%%%%
 %     
-%     
-%     
-%     
-%     
-% 
+%    
+
+
+% if(useSHELFICE)
+%     load([prodir '/' expname '_tavg_5yrs.mat'],'SHI_TauX','SHI_TauY')
+%     Um_Diss_zint = Um_Diss_zint - SHI_TauX;
+%     Vm_Diss_zint = Vm_Diss_zint - SHI_TauY;
+% end

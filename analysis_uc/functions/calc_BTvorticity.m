@@ -5,7 +5,8 @@
 
 
 load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
-    'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext');
+    'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext','Um_Cori','Vm_Cori',...
+    'Um_AdvZ3','Um_AdvRe','Vm_AdvZ3','Vm_AdvRe');
 
 DXG = rdmds(fullfile(resultspath,'DXG'));
 DYF = rdmds(fullfile(resultspath,'DYF'));
@@ -31,12 +32,6 @@ Vm_Diss_zint = rho0.*sum(Vm_Diss.*hFacS.*DZ,3);
 Um_Ext_zint = rho0.*sum(Um_Ext.*hFacW.*DZ,3);
 Vm_Ext_zint = rho0.*sum(Vm_Ext.*hFacS.*DZ,3);
 
-% if(useSHELFICE)
-%     load([prodir '/' expname '_tavg_5yrs.mat'],'SHI_TauX','SHI_TauY')
-%     Um_Diss_zint = Um_Diss_zint - SHI_TauX;
-%     Vm_Diss_zint = Vm_Diss_zint - SHI_TauY;
-% end
-
 %%% Residual term
 residualU = Um_dPhiX_zint+Um_Advec_zint+Um_Diss_zint+Um_Ext_zint;
 residualV = Vm_dPhiY_zint+Vm_Advec_zint+Vm_Diss_zint+Vm_Ext_zint;
@@ -44,7 +39,15 @@ residualV = Vm_dPhiY_zint+Vm_Advec_zint+Vm_Diss_zint+Vm_Ext_zint;
 %%% momentum tendency from Coriolis term
 Um_Cori_zint = rho0.*sum(Um_Cori.*hFacW.*DZ,3);
 Vm_Cori_zint = rho0.*sum(Vm_Cori.*hFacS.*DZ,3);
-    
+ 
+%%% momentum tendency from Vorticity Advection
+Um_AdvZ3_zint = rho0.*sum(Um_AdvZ3.*hFacW.*DZ,3);
+Vm_AdvZ3_zint = rho0.*sum(Vm_AdvZ3.*hFacS.*DZ,3);
+
+%%% momentum tendency from Vertical Advection (Explicit part)
+Um_AdvRe_zint = rho0.*sum(Um_AdvRe.*hFacW.*DZ,3);
+Vm_AdvRe_zint = rho0.*sum(Vm_AdvRe.*hFacS.*DZ,3);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Calculate the vorticity terms %%%
@@ -83,27 +86,53 @@ zeta_Diss(zeta_Diss==0)=NaN;
 zeta_Ext(zeta_Ext==0)=NaN;
 zeta_residual(zeta_residual==0)=NaN;
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Decompose the vorticity balance %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+load([prodir '/' expname '_tavg_5yrs.mat'],'VVEL');
+zeta_Cori_betaV = -rho0*beta.*sum(VVEL.*hFacS.*DZ,3);
+zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
+
 zeta_Cori = zeros(Nx,Ny);
+zeta_AdvZ3 = zeros(Nx,Ny);
+zeta_AdvRe = zeros(Nx,Ny);
+
 for i = 2:Nx
     for j = 2:Ny
         %%% Coriolis term (planetary vorticity advection)
         zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXG(i,j-1) + Vm_Cori_zint(i,j)*DYF(i,j) ...
                          - Um_Cori_zint(i,j)*DXG(i,j)     - Vm_Cori_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+
+        %%% Vorticity Advection
+        zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXG(i,j-1) + Vm_AdvZ3_zint(i,j)*DYF(i,j) ...
+                          - Um_AdvZ3_zint(i,j)*DXG(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+
+        %%% Vertical Advection (Explicit part)
+        zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXG(i,j-1) + Vm_AdvRe_zint(i,j)*DYF(i,j) ...
+                          - Um_AdvRe_zint(i,j)*DXG(i,j)     - Vm_AdvRe_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
     end
 end
-zeta_Cori(zeta_Cori==0)=NaN;
 
-load([prodir '/' expname '_tavg_5yrs.mat'],'VVEL');
-zeta_Cori_betaV = rho0*beta.*sum(VVEL.*hFacS.*DZ,3);
-zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
+zeta_Cori(zeta_Cori==0)=NaN;
+zeta_AdvZ3(zeta_AdvZ3==0)=NaN;
+zeta_AdvRe(zeta_AdvRe==0)=NaN;
+
 
 %%% Nonlinear advection term
 zeta_nonLin = zeta_Advec - zeta_Cori; 
+
 %%% Ageostrophic term
 zeta_ageo = zeta_Advec + zeta_dPhi;
+
+%%% Calculate the bottom pressure torque by beta_t*VV
+%%% TODO: STAGGERED GRID!!!
+f = f0+beta*YY;  %%% f in (x,y) section
+ho = ETAN-bathy; %%% Ocean depth
+sb = zeros(Nx,Ny);
+sb(:,2:Ny) = -diff(ho,1,2)/dy; %%% topographic slope
+beta_t = f.*sb./ho; %%% topographic beta parameter
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,6 +142,7 @@ zeta_ageo = zeta_Advec + zeta_dPhi;
 fontsize = 18;
 load_colors;
 figure(1)
+set(gcf,'Position',[234 88 1361 1110])
 clf;set(gcf,'color','w');
 subplot(3,2,1)
 pcolor(XX/1000,YY/1000,zeta_dPhi)
@@ -164,10 +194,15 @@ ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
 
+if(savefigure)
+print('-dpng','-r150',[figdir expname '_vort.png']);
+end
 
 figure(2)
+set(gcf,'Position',[90 232 2201 776])
 clf;set(gcf,'color','w');
-subplot(3,2,1)
+subplot(2,3,1)
+colormap(cmocean('balance'));
 pcolor(XX/1000,YY/1000,zeta_Cori)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
@@ -177,25 +212,40 @@ ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
 
-subplot(3,2,2)
-pcolor(XX/1000,YY/1000,zeta_nonLin)
+subplot(2,3,2)
+pcolor(XX/1000,YY/1000,zeta_AdvZ3)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Nonlinear advection term = Advec. - Cori. (Pa/m)')
+title('Vorticity Advection (Pa/m)')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
 
-subplot(3,2,3)
-pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
+subplot(2,3,3)
+pcolor(XX/1000,YY/1000,zeta_AdvRe)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('\rho_0 \beta V (Pa/m)')
+title('Vertical Advection (explicit part) (Pa/m)')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+
+subplot(2,3,5)
+pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
+shading flat;colorbar;colormap(cmocean('balance'));
+caxis([-1 1]/1e5);
+title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+
+if(savefigure)
+print('-dpng','-r150',[figdir expname '_decomposeAdv.png']);
+end
+
 
 % subplot(3,2,5)
 % pcolor(XX/1000,YY/1000,zeta_ageo)
@@ -207,3 +257,27 @@ xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
 % yticks(0:100:400);xticks(-300:100:300)
 % xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
 
+% subplot(3,2,2)
+% pcolor(XX/1000,YY/1000,zeta_nonLin)
+% shading flat;colorbar;
+% caxis([-1 1]/1e5);
+% title('Nonlinear advection term = Advec. - Cori. (Pa/m)')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+
+figure(3)
+clf;set(gcf,'color','w');
+pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
+shading flat;colorbar;colormap(cmocean('balance'));
+caxis([-1 1]/1e5);
+title('-\rho_0 \beta V (Pa/m)')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+
+if(savefigure)
+print('-dpng','-r150',[figdir expname '_betaV.png']);
+end

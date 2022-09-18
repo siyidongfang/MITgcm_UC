@@ -12,9 +12,8 @@
     
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/vorticity/' exp_group '/'];
-    
     useSEAICE = true;
-    savefigure = false;
+    savefigure = true;
 
 %     for n=1:nEXP
 for n=1
@@ -25,9 +24,8 @@ for n=1
             load_data;
             load_spacing;
 
-            calc_BTvorticity
-            plot_BTvorticity
-            
+            calc_BTvorticity;  
+            calc_BTvorticity_uc;
         end
 end
 
