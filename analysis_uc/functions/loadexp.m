@@ -48,8 +48,8 @@ startTime = nIter0*deltaT;
 nTimeSteps = nIter0 + ceil((endTime-startTime)/deltaT);
 
 %%% Other physical parameters
-rho0 = 1000;
-Cp = 4e3;
+rho0 = 1027;
+Cp = 3994;
 
 %%% Load data files
 

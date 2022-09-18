@@ -102,7 +102,7 @@ switch(exp_group)
         is_prod_run=true*ones(nEXP,1);
         nIter=NaN*ones(nEXP,1);  
         useSEAICE=true;
-        useSHELFICE=false;
+        useSHELFICE=true;
 
 
 
