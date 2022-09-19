@@ -138,51 +138,51 @@ subplot(3,2,1)
 pcolor(XX/1000,YY/1000,zeta_dPhi)
 shading flat;colorbar;colormap(cmocean('balance'));
 caxis([-1 1]/1e5);
-title('Pressure torque (Pa/m)')
+title('Pressure torque (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(3,2,2)
 pcolor(XX/1000,YY/1000,zeta_Advec)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Advection term = Coriolis + nonlinear  (Pa/m)')
+title('Advection term = Coriolis + nonlinear  (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(3,2,3)
 pcolor(XX/1000,YY/1000,zeta_Diss)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Dissipation term (Pa/m)')
+title('Dissipation term (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(3,2,4)
 pcolor(XX/1000,YY/1000,zeta_Ext)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Surface stress term (Pa/m)')
+title('Surface stress term (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(3,2,5)
 pcolor(XX/1000,YY/1000,zeta_residual)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Residual term  (Pa/m)')
+title('Residual term  (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
 print('-dpng','-r150',[figdir expname '_vort.png']);
@@ -196,41 +196,41 @@ colormap(cmocean('balance'));
 pcolor(XX/1000,YY/1000,zeta_Cori)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Coriolis term (model diagnosed) (Pa/m)')
+title('Coriolis term (model diagnosed) (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(2,3,2)
 pcolor(XX/1000,YY/1000,zeta_AdvZ3)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Vorticity Advection (Pa/m)')
+title('Vorticity Advection (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(2,3,3)
 pcolor(XX/1000,YY/1000,zeta_AdvRe)
 shading flat;colorbar;
 caxis([-1 1]/1e5);
-title('Vertical Advection (explicit part) (Pa/m)')
+title('Vertical Advection (explicit part) (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 subplot(2,3,5)
 pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
 shading flat;colorbar;colormap(cmocean('balance'));
 caxis([-1 1]/1e5);
-title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)')
+title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
 print('-dpng','-r150',[figdir expname '_decomposeAdv.png']);
@@ -242,11 +242,11 @@ clf;set(gcf,'color','w');
 pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
 shading flat;colorbar;colormap(cmocean('balance'));
 caxis([-1 1]/1e5);
-title('-\rho_0 \beta V (Pa/m)')
+title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
 print('-dpng','-r150',[figdir expname '_betaV.png']);
