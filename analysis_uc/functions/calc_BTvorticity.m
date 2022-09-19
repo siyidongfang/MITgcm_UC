@@ -1,7 +1,7 @@
 %%%
 %%% calc_BTvorticity.m
 %%%
-%%% Calculate the barotropic vorticity budget
+%%% Calculate the barotropic vorticity budget using model diagnostics
 
 
 load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
@@ -90,9 +90,8 @@ zeta_residual(zeta_residual==0)=NaN;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Decompose the vorticity balance %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-load([prodir '/' expname '_tavg_5yrs.mat'],'VVEL');
-zeta_Cori_betaV = -rho0*beta.*sum(VVEL.*hFacS.*DZ,3);
+VV = sum(vv.*hFacS.*DZ,3);
+zeta_Cori_betaV = -rho0*beta.*VV;
 zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
 
 zeta_Cori = zeros(Nx,Ny);
@@ -119,20 +118,11 @@ zeta_Cori(zeta_Cori==0)=NaN;
 zeta_AdvZ3(zeta_AdvZ3==0)=NaN;
 zeta_AdvRe(zeta_AdvRe==0)=NaN;
 
-
 %%% Nonlinear advection term
 zeta_nonLin = zeta_Advec - zeta_Cori; 
 
 %%% Ageostrophic term
 zeta_ageo = zeta_Advec + zeta_dPhi;
-
-%%% Calculate the bottom pressure torque by beta_t*VV
-%%% TODO: STAGGERED GRID!!!
-f = f0+beta*YY;  %%% f in (x,y) section
-ho = ETAN-bathy; %%% Ocean depth
-sb = zeros(Nx,Ny);
-sb(:,2:Ny) = -diff(ho,1,2)/dy; %%% topographic slope
-beta_t = f.*sb./ho; %%% topographic beta parameter
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -246,26 +236,6 @@ if(savefigure)
 print('-dpng','-r150',[figdir expname '_decomposeAdv.png']);
 end
 
-
-% subplot(3,2,5)
-% pcolor(XX/1000,YY/1000,zeta_ageo)
-% shading flat;colorbar;
-% caxis([-1 1]/1e5);
-% title('Ageostrophic term = Advec. + Pressure torque')
-% set(gca,'FontSize',fontsize);
-% ylim([0 400]);xlim([-300 300])
-% yticks(0:100:400);xticks(-300:100:300)
-% xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
-
-% subplot(3,2,2)
-% pcolor(XX/1000,YY/1000,zeta_nonLin)
-% shading flat;colorbar;
-% caxis([-1 1]/1e5);
-% title('Nonlinear advection term = Advec. - Cori. (Pa/m)')
-% set(gca,'FontSize',fontsize);
-% ylim([0 400]);xlim([-300 300])
-% yticks(0:100:400);xticks(-300:100:300)
-% xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
 
 figure(3)
 clf;set(gcf,'color','w');
