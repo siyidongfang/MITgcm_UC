@@ -17,17 +17,17 @@
 
 %     for n=1:nEXP
 for n=1
-        if(is_prod_run(n))
-            close all
-            expname = EXPNAME{n}
-            loadexp;
-            load_data;
-            load_spacing;
+    if(is_prod_run(n))
+        close all
+        expname = EXPNAME{n}
+        loadexp;
+        load_data;
+        load_spacing;
 
-            calc_BTvorticity;  
-            calc_pressure_torque;
-            calc_BTvorticity_uc;
-        end
+        calc_BTvorticity;  
+        calc_pressure_torque;
+        calc_BTvorticity_uc;
+    end
 end
 
 

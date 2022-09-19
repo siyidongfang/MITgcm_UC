@@ -138,7 +138,7 @@ set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-title('Bottom zonal velocity $u_b$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
+title('Bottom zonal velocity $u_g^b$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
 
 subplot(2,3,2)
 pcolor(XX/1000,YY/1000,vb_tgrid);
@@ -148,27 +148,27 @@ set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-title('Bottom meridonal velocity $v_b$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
+title('Bottom meridonal velocity $v_g^b$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
 
-subplot(2,3,4)
-pcolor(XX/1000,YY/1000,us_tgrid);
-shading flat;colorbar;colormap(cmocean('balance'));
-caxis([-1 1]/10);
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-title('Surface zonal velocity $u_s$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
-
-subplot(2,3,5)
-pcolor(XX/1000,YY/1000,vs_tgrid);
-shading flat;colorbar;colormap(cmocean('balance'));
-caxis([-1 1]/10);
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-title('Surface meridonal velocity $v_s$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
+% subplot(2,3,4)
+% pcolor(XX/1000,YY/1000,us_tgrid);
+% shading flat;colorbar;colormap(cmocean('balance'));
+% caxis([-1 1]/10);
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% title('Surface zonal velocity $u_s$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
+% 
+% subplot(2,3,5)
+% pcolor(XX/1000,YY/1000,vs_tgrid);
+% shading flat;colorbar;colormap(cmocean('balance'));
+% caxis([-1 1]/10);
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% title('Surface meridonal velocity $v_s$ (m/s)','Interpreter','latex','FontSize',fontsize+3)
 
 
 subplot(2,3,3)
@@ -179,17 +179,17 @@ set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-title('Bottom pressure torque (Pa/s)','Interpreter','latex','FontSize',fontsize+3)
+title({'Bottom pressure torque (Pa/s)','$-\rho_oh_o \big(u_g^b\beta_t^{b,x}+v_g^b\beta_t^{b,y}\big)$'},'Interpreter','latex','FontSize',fontsize+3)
 
-subplot(2,3,6)
-pcolor(XX/1000,YY/1000,zeta_dPhi_surf);
-shading flat;colorbar;colormap(cmocean('balance'));
-caxis([-1 1]/1e5);
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-title('Surface pressure torque (Pa/s)','Interpreter','latex','FontSize',fontsize+3)
+% subplot(2,3,6)
+% pcolor(XX/1000,YY/1000,zeta_dPhi_surf);
+% shading flat;colorbar;colormap(cmocean('balance'));
+% caxis([-1 1]/1e8);
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% title({'Surface pressure torque (Pa/s)','$-\rho_oh_o \big(u_g^{s}\beta_t^{s,x}+v_g^{s}\beta_t^{s,y}\big)$'},'Interpreter','latex','FontSize',fontsize+3)
 
 
 if(savefigure)
