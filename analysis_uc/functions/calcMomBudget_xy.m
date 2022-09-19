@@ -1,5 +1,5 @@
 %%%
-%%% calcMomBudgetFromTendency_xint.m
+%%% calcMomBudget_xy.m
 %%%
 %%% Convenience script to calculate the momentum budget from momentum tendency diagnostics.
 %%%
@@ -136,27 +136,27 @@ subplot(3,3,1)
 pcolor(XX/1000,YY/1000,Vm_dPhiX_zint+Vm_Advec_zint)
 shading flat;colorbar;colormap(redblue);
 caxis([-1 1]/10);
-title('Um_dPhiX_zint+Um_Advec_zint')
+title('Vm_dPhiX_zint+Vm_Advec_zint')
 set(gca,'FontSize',fontsize);
 
 subplot(3,3,2)
 pcolor(XX/1000,YY/1000,Vm_Advec_zint-Vm_Cori_zint)
 shading flat;colorbar;colormap(redblue);
-title('Um_Advec_zint-Um_Cori_zint')
+title('Vm_Advec_zint-Vm_Cori_zint')
 caxis([-1 1]/10);
 set(gca,'FontSize',fontsize);
 
 subplot(3,3,3)
 pcolor(XX/1000,YY/1000,Vm_Diss_zint)
 shading flat;colorbar;colormap(redblue);
-title('Um_Diss_zint')
+title('Vm_Diss_zint')
 caxis([-1 1]/100);
 set(gca,'FontSize',fontsize);
 
 subplot(3,3,4)
 pcolor(XX/1000,YY/1000,Vm_Ext_zint)
 shading flat;colorbar;colormap(redblue);
-title('Um_Ext_zint')
+title('Vm_Ext_zint')
 caxis([-1 1]/10);
 set(gca,'FontSize',fontsize);
 

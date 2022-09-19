@@ -1,5 +1,5 @@
     %%%
-    %%% calcMomBudget_undercurrent.m
+    %%% calcMomBudget_uc_xint.m
     %%%
     %%% Convenience script to calculate the momentum budget from momentum tendency diagnostics.
     %%%
