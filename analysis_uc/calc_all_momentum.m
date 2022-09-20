@@ -31,8 +31,9 @@ for n=1
 %             calcMomBudget_ice_xint
 %             plot_momentum_seaice
 
-            calcMomBudget_undercurrent
-            plot_momentum_undercurrent
+%             calcMomBudget_uc_xint
+            calcMomBudget_uc_xy
+            
             
         end
 end

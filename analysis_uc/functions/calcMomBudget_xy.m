@@ -8,7 +8,7 @@ rho0 = 999.8;
 
 loadexp;
 load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
-    'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext');
+    'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext','Um_Cori','Vm_Cori');
 % load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
 % 'Um_Cori','Um_AdvZ3','Um_AdvRe');
 
