@@ -15,13 +15,13 @@
 
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed150Htr200_Zn350Zsb550dZs150'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_SEAICEnonLinIterMax100'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 1484047;
-    year = num2str(8);
+    nIter = 1298541;
+    year = num2str(7);
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);
