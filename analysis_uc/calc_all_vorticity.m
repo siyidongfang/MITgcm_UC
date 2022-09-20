@@ -24,9 +24,10 @@ for n=1
         load_data;
         load_spacing;
 
-        calc_BTvorticity;  
-        calc_pressure_torque;
+%         calc_BTvorticity;  
+%         calc_pressure_torque;
 %         calc_BTvorticity_uc;
+        calc_BTvorticity_cdw;
     end
 end
 
