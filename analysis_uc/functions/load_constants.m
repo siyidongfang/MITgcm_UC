@@ -22,8 +22,8 @@
 
     Ymin = Yshelfbreak;
     Ymax = Yshelfbreak+Ws;
-    Xmin = Wsponge+20*m1km;
-    Xmax = Lx-(Wsponge+20*m1km);
+    Xmin = Wsponge+10*m1km;
+    Xmax = Lx-(Wsponge+10*m1km);
 
     rho_i = 920;
     t1day = 86400;

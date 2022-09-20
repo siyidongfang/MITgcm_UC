@@ -80,92 +80,147 @@ else
 end
 
 
-
-
+Um_dPhiX_zint(Um_dPhiX_zint==0)=NaN;
+Um_Advec_zint(Um_Advec_zint==0)=NaN;
+Um_Diss_zint(Um_Diss_zint==0)=NaN;
+totalchange_tendencyU(totalchange_tendencyU==0)=NaN;
+Vm_dPhiX_zint(Vm_dPhiX_zint==0)=NaN;
+Vm_Advec_zint(Vm_Advec_zint==0)=NaN;
+Vm_Diss_zint(Vm_Diss_zint==0)=NaN;
+totalchange_tendencyV(totalchange_tendencyV==0)=NaN;
 
 fontsize = 18;
 load_colors;
-figure(1)
-clf;
-subplot(3,3,1)
-pcolor(XX/1000,YY/1000,Um_dPhiX_zint+Um_Advec_zint)
-shading flat;colorbar;colormap(redblue);
-caxis([-1 1]/10);
-title('Um_dPhiX_zint+Um_Advec_zint')
-set(gca,'FontSize',fontsize);
+YLIM = [0 400];
 
-subplot(3,3,2)
-pcolor(XX/1000,YY/1000,Um_Advec_zint-Um_Cori_zint)
-shading flat;colorbar;colormap(redblue);
-title('Um_Advec_zint-Um_Cori_zint')
-caxis([-1 1]/10);
+figure(7)
+set(gcf,'Position',[1 503 1839 1000])
+clf;set(gcf,'color','w');
+subplot(2,2,1)
+pcolor(XX/1000,YY/1000,Um_dPhiX_zint)
+shading flat;colorbar;colormap(cmocean('balance'));
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]*5);
 set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');
+ylabel('Latitude, y (km)','Interpreter','latex')
+title('Pressure gradient force (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
-subplot(3,3,3)
+subplot(2,2,2)
+pcolor(XX/1000,YY/1000,Um_Advec_zint)
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]*5);
+set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');
+ylabel('Latitude, y (km)','Interpreter','latex')
+title('Coriolis force (Pa)','Interpreter','latex','FontSize',fontsize+3)
+
+
+subplot(2,2,3)
 pcolor(XX/1000,YY/1000,Um_Diss_zint)
-shading flat;colorbar;colormap(redblue);
-title('Um_Diss_zint')
-caxis([-1 1]/100);
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]/50);
 set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+title('Bottom dissipation (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
-subplot(3,3,4)
-pcolor(XX/1000,YY/1000,Um_Ext_zint)
-shading flat;colorbar;colormap(redblue);
-title('Um_Ext_zint')
-caxis([-1 1]/10);
-set(gca,'FontSize',fontsize);
-
-subplot(3,3,5)
+subplot(2,2,4)
 pcolor(XX/1000,YY/1000,totalchange_tendencyU)
-shading flat;colorbar;colormap(redblue);
-title('totalchange_tendency')
-caxis([-1 1]/1000);
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]/50);
 set(gca,'FontSize',fontsize);
-
-% savefigure = false;
-% if(savefigure)
-% print('-dpng','-r150',[figdir expname '_momentum_xy.png']);
-% end
-
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+title('Residual term (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
 
+if(savefigure)
+print('-dpng','-r150',[figdir expname '/geomom_x.png']);
+end
 
-figure(2)
-clf;
-subplot(3,3,1)
-pcolor(XX/1000,YY/1000,Vm_dPhiX_zint+Vm_Advec_zint)
-shading flat;colorbar;colormap(redblue);
-caxis([-1 1]/10);
-title('Vm_dPhiX_zint+Vm_Advec_zint')
+
+
+
+
+
+figure(8)
+set(gcf,'Position',[1 503 1839 1000])
+clf;set(gcf,'color','w');
+subplot(2,2,1)
+pcolor(XX/1000,YY/1000,Vm_dPhiX_zint)
+shading flat;colorbar;colormap(cmocean('balance'));
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]*5);
 set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');
+ylabel('Latitude, y (km)','Interpreter','latex')
+title('Pressure gradient force (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
-subplot(3,3,2)
-pcolor(XX/1000,YY/1000,Vm_Advec_zint-Vm_Cori_zint)
-shading flat;colorbar;colormap(redblue);
-title('Vm_Advec_zint-Vm_Cori_zint')
-caxis([-1 1]/10);
+subplot(2,2,2)
+pcolor(XX/1000,YY/1000,Vm_Advec_zint)
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]*5);
 set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');
+ylabel('Latitude, y (km)','Interpreter','latex')
+title('Coriolis force (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
-subplot(3,3,3)
+
+subplot(2,2,3)
 pcolor(XX/1000,YY/1000,Vm_Diss_zint)
-shading flat;colorbar;colormap(redblue);
-title('Vm_Diss_zint')
-caxis([-1 1]/100);
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]/50);
 set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+title('Bottom dissipation (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
-subplot(3,3,4)
-pcolor(XX/1000,YY/1000,Vm_Ext_zint)
-shading flat;colorbar;colormap(redblue);
-title('Vm_Ext_zint')
-caxis([-1 1]/10);
-set(gca,'FontSize',fontsize);
-
-subplot(3,3,5)
+subplot(2,2,4)
 pcolor(XX/1000,YY/1000,totalchange_tendencyV)
-shading flat;colorbar;colormap(redblue);
-title('totalchange_tendency')
-caxis([-1 1]/1000);
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis([-1 1]/50);
 set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+title('Residual term (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
 
+if(savefigure)
+print('-dpng','-r150',[figdir expname '/geomom_y.png']);
+end
     

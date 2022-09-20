@@ -21,8 +21,9 @@ hi = SIheff(xidx,:,1);
 % ui = SIuice(:,:,1);  % u-grid
 vi = SIvice;  % v-grid
 % ui_mass = (ui(1:Nx,:) + ui([2:Nx 1],:))/2; % mass-grid
-vi_mass(:,1:Ny-1) = (vi(xidx,1:Ny-1) + vi(xidx,2:Ny))/2;  % mass-grid
-vi_mass(:,Ny) = 0;
+vi_mass = zeros(Nx,Ny);
+vi_mass(xidx,1:Ny-1) = (vi(xidx,1:Ny-1) + vi(xidx,2:Ny))/2;  % mass-grid
+vi_mass(xidx,Ny) = 0;
 
 
 %%% SIsig12 is on vorticity point
@@ -31,7 +32,7 @@ internal_xint(1:Ny-1) =  Lx* diff(mean(SIsig12(xidx,:,1),1))./delY(1); % u-grid
 internal_xint(Ny)= internal_xint(Ny-1);
 
 %%% Coriolis force
-coriolisforce = sum(f0*rho_i.*SIheff(xidx,:,1).*vi_mass(xidx,:).*DX_xy(xidx,:),1);
+coriolisforce = sum(f0*rho_i.*SIheff(xidx,:).*vi_mass(xidx,:).*DX_xy(xidx,:),1);
 
 
 
@@ -46,12 +47,12 @@ TAUoi_xint = - sum(oceTAUX(xidx,:,1).*DX_xy(xidx,:),1); % u-grid
 
 %%% Surface pressure gradient force: is negligible
 g = 9.81; %%% Gravity
-etaOCN = ETAN(xidx,:,1);  % C-grid location: mass
-detaOCN_dx = zeros(length(xidx),:);
+etaOCN = ETAN;  % C-grid location: mass
+detaOCN_dx = zeros(length(xidx),Ny);
 detaOCN_dx(2:end-1,:) = (etaOCN(xidx(3:end),:) - etaOCN(xidx(1:end-2),:)) /2 ./ DX_xy(xidx(2:end-1),:);
 detaOCN_dx(1,:) = detaOCN_dx(2,:);
 detaOCN_dx(end,:) = detaOCN_dx(end-1,:);
-surfacepressure = -g*rho_i.*sum(detaOCN_dx(xidx,:).*SIheff(xidx,:,1).*DX_xy(xidx,:),1); %%% negligible, 4 orders smaller than other terms
+surfacepressure = -g*rho_i.*sum(detaOCN_dx.*SIheff(xidx,:,1).*DX_xy(xidx,:),1); %%% negligible, 4 orders smaller than other terms
 
 %%% Residual term
 totalchange =  internal_xint + TAUai_xint + TAUoi_xint + coriolisforce;

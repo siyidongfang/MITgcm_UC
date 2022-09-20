@@ -12,6 +12,7 @@
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/momentum/' exp_group '/'];
     
     useSEAICE = true;
+    savefigure = true;
 
 
 %     for n=1:nEXP
@@ -25,13 +26,15 @@ for n=1
             load_spacing;
 
             %%% Zonal integal for the entire domain, excluding the zonal sponge layers 
-%             calcMomBudgetFromTendency_xint
-%             plot_momentum_ocean
-% 
-%             calcMomBudget_ice_xint
-%             plot_momentum_seaice
+            calcMomBudget_xint
+            plot_momentum_ocean
 
-%             calcMomBudget_uc_xint
+            calcMomBudget_ice_xint
+            plot_momentum_seaice
+
+            calcMomBudget_xy
+
+            calcMomBudget_uc_xint
             calcMomBudget_uc_xy
             
             

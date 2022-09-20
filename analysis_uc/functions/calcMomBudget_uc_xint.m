@@ -75,7 +75,7 @@
     subplotsize = [0.4 0.6];
 
     %%% All the momentum budget terms
-    figure(1)
+    figure(3)
     clf;  
     set(gcf,'Position',[83 183 1100 600]);
     ax1 = subplot('position',[0.08 0.3 subplotsize]);
@@ -134,6 +134,10 @@
         'Residual term', 'FontSize', fontsize-1,'interpreter','latex');
     set(leg2,'position', [0.6791 0.0569 0.1873 0.1372])
     legend boxon;
+
+    if(savefigure)
+    print('-dpng','-r150',[figdir expname '/uc_mom_xint.png']);
+    end
 
 
 

@@ -94,4 +94,7 @@ leg4=legend([l1 l2 l4 l3],'Wind stress','Ocean-ice stress',...
     'interpreter','latex', 'FontSize', fontsize-1);
 set(leg4,'position', [0.6695 0.3596 0.3087 0.1097])
 
-print('-dpng','-r180',[figdir expname '.png']);
+
+    if(savefigure)
+    print('-dpng','-r150',[figdir expname '/mom_xint.png']);
+    end

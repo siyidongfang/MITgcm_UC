@@ -26,36 +26,36 @@ mask_uc(uu_slope>0)=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% momentum tendency from hydrostatic pressure gradient
-Um_dPhiX_zint = rho0.*sum(mask_uc.*Um_dPhiX(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_dPhiY_zint = rho0.*sum(mask_uc.*Vm_dPhiY(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_dPhiX_zint = rho0.*sum(mask_uc.*Um_dPhiX(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_dPhiY_zint = rho0.*sum(mask_uc.*Vm_dPhiY(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
 
 %%% momentum tendency from advection terms
-Um_Advec_zint = rho0.*sum(mask_uc.*Um_Advec(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_Advec_zint = rho0.*sum(mask_uc.*Vm_Advec(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_Advec_zint = rho0.*sum(mask_uc.*Um_Advec(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_Advec_zint = rho0.*sum(mask_uc.*Vm_Advec(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
 
 %%% momentum tendency from dissipation
-Um_Diss_zint = rho0.*sum(mask_uc.*Um_Diss(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_Diss_zint = rho0.*sum(mask_uc.*Vm_Diss(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_Diss_zint = rho0.*sum(mask_uc.*Um_Diss(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_Diss_zint = rho0.*sum(mask_uc.*Vm_Diss(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
 
 %%% momentum tendency from external forcing (ice-ocean stress)
-Um_Ext_zint = rho0.*sum(mask_uc.*Um_Ext(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_Ext_zint = rho0.*sum(mask_uc.*Vm_Ext(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_Ext_zint = rho0.*sum(mask_uc.*Um_Ext(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_Ext_zint = rho0.*sum(mask_uc.*Vm_Ext(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
 
 %%% Residual term
 residualU = Um_dPhiX_zint+Um_Advec_zint+Um_Diss_zint+Um_Ext_zint;
 residualV = Vm_dPhiY_zint+Vm_Advec_zint+Vm_Diss_zint+Vm_Ext_zint;
 
 %%% momentum tendency from Coriolis term
-Um_Cori_zint = rho0.*sum(mask_uc.*Um_Cori(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_Cori_zint = rho0.*sum(mask_uc.*Vm_Cori(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_Cori_zint = rho0.*sum(mask_uc.*Um_Cori(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_Cori_zint = rho0.*sum(mask_uc.*Vm_Cori(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
  
 %%% momentum tendency from Vorticity Advection
-Um_AdvZ3_zint = rho0.*sum(mask_uc.*Um_AdvZ3(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_AdvZ3_zint = rho0.*sum(mask_uc.*Vm_AdvZ3(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_AdvZ3_zint = rho0.*sum(mask_uc.*Um_AdvZ3(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_AdvZ3_zint = rho0.*sum(mask_uc.*Vm_AdvZ3(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
 
 %%% momentum tendency from Vertical Advection (Explicit part)
-Um_AdvRe_zint = rho0.*sum(mask_uc.*Um_AdvRe(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
-Vm_AdvRe_zint = rho0.*sum(mask_uc.*Vm_AdvRe(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+Um_AdvRe_zint = rho0.*sum(mask_uc.*Um_AdvRe(xidx,yidx,zidx).*hFacW(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
+Vm_AdvRe_zint = rho0.*sum(mask_uc.*Vm_AdvRe(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3,'omitnan');
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,8 +99,8 @@ zeta_residual(zeta_residual==0)=NaN;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Decompose the vorticity balance %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-VV = sum(vv.*hFacS.*DZ,3);
-zeta_Cori_betaV = -rho0*beta.*VV(xidx,yidx);
+VV = sum(mask_uc.*vv(xidx,yidx,zidx).*hFacS(xidx,yidx,zidx).*DZ(xidx,yidx,zidx),3);
+zeta_Cori_betaV = -rho0*beta.*VV;
 zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
 
 zeta_Cori = zeros(length(xidx),length(yidx));
@@ -203,11 +203,11 @@ title('Residual term  (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_vort.png']);
+print('-dpng','-r150',[figdir expname '_uc_vort.png']);
 end
 
 figure(2)
-set(gcf,'Position',[90 232 2201 776])
+set(gcf,'Position',[1 142 2503 566])
 clf;set(gcf,'color','w');
 subplot(2,3,1)
 colormap(cmocean('balance'));
@@ -263,18 +263,19 @@ yticks(0:10:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_decomposeAdv.png']);
+print('-dpng','-r150',[figdir expname '_uc_decomposeAdv.png']);
 end
 
 
 figure(3)
 clf;set(gcf,'color','w');
+set(gcf,'Position',[704 169 1000 236])
 pcolor(XX(xidx,yidx)/1000,YY(xidx,yidx)/1000,zeta_Cori_betaV)
 shading flat;colorbar;colormap(cmocean('balance'));
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-caxis([-1 1]/1e4);
+caxis([-1 1]/5e6);
 title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim(YLIM);xlim([-300 300])
@@ -282,5 +283,5 @@ yticks(0:10:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_betaV.png']);
+print('-dpng','-r150',[figdir expname '_uc_betaV.png']);
 end

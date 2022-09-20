@@ -84,12 +84,21 @@ end
 
 %%
 
+Um_dPhiX_zint(Um_dPhiX_zint==0)=NaN;
+Um_Advec_zint(Um_Advec_zint==0)=NaN;
+Um_Diss_zint(Um_Diss_zint==0)=NaN;
+totalchange_tendencyU(totalchange_tendencyU==0)=NaN;
+Vm_dPhiX_zint(Vm_dPhiX_zint==0)=NaN;
+Vm_Advec_zint(Vm_Advec_zint==0)=NaN;
+Vm_Diss_zint(Vm_Diss_zint==0)=NaN;
+totalchange_tendencyV(totalchange_tendencyV==0)=NaN;
+
 
 fontsize = 18;
 load_colors;
 YLIM = [Ymin-5*m1km Ymax+3*m1km]/1000;
 
-figure(1)
+figure(4)
 set(gcf,'Position',[1 503 1839 549])
 clf;set(gcf,'color','w');
 subplot(2,2,1)
@@ -148,9 +157,8 @@ xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Int
 title('Residual term (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
 
-savefigure = false;
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_geomom_uc_x.png']);
+print('-dpng','-r150',[figdir expname '/uc_geomom_x.png']);
 end
 
 
@@ -158,7 +166,7 @@ end
 
 
 
-figure(2)
+figure(5)
 set(gcf,'Position',[1 503 1839 549])
 clf;set(gcf,'color','w');
 subplot(2,2,1)
@@ -217,7 +225,6 @@ xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Int
 title('Residual term (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
 
-savefigure = false;
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_geomom_uc_y.png']);
+print('-dpng','-r150',[figdir expname '/uc_geomom_y.png']);
 end
