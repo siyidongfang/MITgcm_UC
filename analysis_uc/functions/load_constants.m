@@ -4,6 +4,7 @@
     addpath /Users/csi/Software/eos80_legacy_gamma_n/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11/thermodynamics_from_t/;
     
 
     fontsize = 17;
