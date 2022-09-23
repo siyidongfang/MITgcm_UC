@@ -20,7 +20,7 @@
     load_colors;
 
 %     for n=1:nEXP
-for n=15
+for n=6
     if(is_prod_run(n))
 %         close all
         expname = EXPNAME{n}

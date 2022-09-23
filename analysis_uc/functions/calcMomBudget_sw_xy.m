@@ -1,7 +1,8 @@
 %%%
-%%% calcMomBudget_cdw_xy.m
+%%% calcMomBudget_sw_xy.m
 %%%
-%%% Convenience script to calculate the momentum budget from momentum tendency diagnostics.
+%%% Convenience script to calculate the momentum budget from momentum
+%%% tendency diagnostics, for surface waters (t<=0)
 %%%
 
 
@@ -11,10 +12,9 @@ load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_E
 % load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
 % 'Um_Cori','Um_AdvZ3','Um_AdvRe');
 
-%%% Find (x,y,z) indices for CDW
-mask_cdw = zeros(Nx,Ny,Nr);
-mask_cdw(tt>0)=1;
-
+%%% Find (x,y,z) indices for the surface waters
+mask = zeros(Nx,Ny,Nr);
+mask(tt<=0)=1;
 
 Um_dPhiX(Um_dPhiX==0)=NaN;
 Um_Advec(Um_Advec==0)=NaN;
@@ -28,20 +28,20 @@ Vm_Ext(Vm_Ext==0)=NaN;
 
 
 %%% momentum tendency from Hydrostatic Pressure gradient
-Um_dPhiX_zint = rho0.*sum(mask_cdw.*Um_dPhiX.*hFacW.*DZ,3,'omitnan');
-Vm_dPhiX_zint = rho0.*sum(mask_cdw.*Vm_dPhiY.*hFacS.*DZ,3,'omitnan');
+Um_dPhiX_zint = rho0.*sum(mask.*Um_dPhiX.*hFacW.*DZ,3,'omitnan');
+Vm_dPhiX_zint = rho0.*sum(mask.*Vm_dPhiY.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from Advection terms
-Um_Advec_zint = rho0.*sum(mask_cdw.*Um_Advec.*hFacW.*DZ,3,'omitnan');
-Vm_Advec_zint = rho0.*sum(mask_cdw.*Vm_Advec.*hFacS.*DZ,3,'omitnan');
+Um_Advec_zint = rho0.*sum(mask.*Um_Advec.*hFacW.*DZ,3,'omitnan');
+Vm_Advec_zint = rho0.*sum(mask.*Vm_Advec.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from Dissipation
-Um_Diss_zint = rho0.*sum(mask_cdw.*Um_Diss.*hFacW.*DZ,3,'omitnan');
-Vm_Diss_zint = rho0.*sum(mask_cdw.*Vm_Diss.*hFacS.*DZ,3,'omitnan');
+Um_Diss_zint = rho0.*sum(mask.*Um_Diss.*hFacW.*DZ,3,'omitnan');
+Vm_Diss_zint = rho0.*sum(mask.*Vm_Diss.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from external forcing
-Um_Ext_zint = rho0.*sum(mask_cdw.*Um_Ext.*hFacW.*DZ,3,'omitnan');
-Vm_Ext_zint = rho0.*sum(mask_cdw.*Vm_Ext.*hFacS.*DZ,3,'omitnan');
+Um_Ext_zint = rho0.*sum(mask.*Um_Ext.*hFacW.*DZ,3,'omitnan');
+Vm_Ext_zint = rho0.*sum(mask.*Vm_Ext.*hFacS.*DZ,3,'omitnan');
 
 
 %%% TODO: Implicit vertical viscosity tendency (Vertical Viscous Flux of U momentum (Implicit part))
@@ -53,8 +53,8 @@ Vm_Ext_zint = rho0.*sum(mask_cdw.*Vm_Ext.*hFacS.*DZ,3,'omitnan');
 % Um_AdvRe_xzint = rho0.*sum(sum(Um_AdvRe(xidx,:,:).*hFacW(xidx,:,:).*DZ(xidx,:,:).*DX(xidx,:,:),3,'omitnan'),1,'omitnan');
 % 
 %%% momentum tendency from Coriolis term
-Um_Cori_zint = rho0.*sum(mask_cdw.*Um_Cori.*hFacW.*DZ,3,'omitnan');
-Vm_Cori_zint = rho0.*sum(mask_cdw.*Vm_Cori.*hFacS.*DZ,3,'omitnan');
+Um_Cori_zint = rho0.*sum(mask.*Um_Cori.*hFacW.*DZ,3,'omitnan');
+Vm_Cori_zint = rho0.*sum(mask.*Vm_Cori.*hFacS.*DZ,3,'omitnan');
 
 % totalchange_tendency = Um_dPhiX_zint+Um_Advec_zint+Um_Diss_zint+Um_Ext_zint+AB_gU_zint;
 totalchange_tendencyU = Um_dPhiX_zint+Um_Advec_zint+Um_Diss_zint+Um_Ext_zint;
@@ -99,8 +99,8 @@ load_colors;
 % YLIM = [Ymin-5*m1km Ymax+3*m1km]/1000;
 YLIM = [0 400];
 
-figure(4)
-set(gcf,'Position',[1 503 1839 1000])
+figure(6)
+set(gcf,'Position',[1 503 1839 1050])
 clf;set(gcf,'color','w');
 subplot(2,2,1)
 pcolor(XX/1000,YY/1000,Um_dPhiX_zint)
@@ -159,7 +159,7 @@ title('Residual term (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '/cdw_geomom_x.png']);
+print('-dpng','-r150',[figdir expname '/sw_geomom_x.png']);
 end
 
 
@@ -167,8 +167,8 @@ end
 
 
 
-figure(5)
-set(gcf,'Position',[1 503 1839 1000])
+figure(7)
+set(gcf,'Position',[1 503 1839 1050])
 clf;set(gcf,'color','w');
 subplot(2,2,1)
 pcolor(XX/1000,YY/1000,Vm_dPhiX_zint)
@@ -227,5 +227,5 @@ title('Residual term (Pa)','Interpreter','latex','FontSize',fontsize+3)
 
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '/cdw_geomom_y.png']);
+print('-dpng','-r150',[figdir expname '/sw_geomom_y.png']);
 end

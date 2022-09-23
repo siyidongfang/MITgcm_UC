@@ -28,6 +28,7 @@ for n=1
 %         calc_pressure_torque;
 %         calc_BTvorticity_uc;
         calc_BTvorticity_cdw;
+        calc_BTvorticity_sw;
     end
 end
 

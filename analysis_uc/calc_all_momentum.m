@@ -26,18 +26,19 @@ for n=1
             load_spacing;
 
             %%% Zonal integal for the entire domain, excluding the zonal sponge layers 
-%             calcMomBudget_xint
-%             plot_momentum_ocean
-% 
-%             calcMomBudget_ice_xint
-%             plot_momentum_seaice
-% 
-%             calcMomBudget_xy
+            calcMomBudget_xint
+            plot_momentum_ocean
 
-%             calcMomBudget_uc_xint
-%             calcMomBudget_uc_xy
+            calcMomBudget_ice_xint
+            plot_momentum_seaice
+
+            calcMomBudget_xy
+
+            calcMomBudget_uc_xint
+            calcMomBudget_uc_xy
 
             calcMomBudget_cdw_xy
+            calcMomBudget_sw_xy
             
             
         end

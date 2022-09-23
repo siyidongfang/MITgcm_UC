@@ -17,8 +17,8 @@
     lightred = [249 102 102]/255;
     seagreen = [46 139 87]/255;
     
-    yup = 0.6;
-    ydown = -0.6;  
+    yup = 0.8;
+    ydown = -0.8;  
     
     subplotsize = [0.4 0.4];
 

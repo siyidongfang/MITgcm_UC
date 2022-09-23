@@ -1,7 +1,7 @@
 %%%
-%%% calc_BTvorticity_cdw.m
+%%% calc_BTvorticity_sw.m
 %%%
-%%% Calculate the barotropic vorticity budget for the undercurrent
+%%% Calculate the barotropic vorticity budget 
 
 
 load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
@@ -18,11 +18,10 @@ DXG = dxg;
 DYF = dyf;
 RAZ = raz;
 
-%%% Find (x,y,z) indices for CDW
-mask_cdw = zeros(Nx,Ny,Nr);
+%%% Find (x,y,z) indices for surface waters
+mask_sw = zeros(Nx,Ny,Nr);
 % mask_cdw(tt>0)=1;
-% mask_cdw(:,:,1:20)=1;
- mask_cdw(:,:,20:end)=1;
+mask_sw(:,:,1:20)=1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -30,36 +29,36 @@ mask_cdw = zeros(Nx,Ny,Nr);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% momentum tendency from hydrostatic pressure gradient
-Um_dPhiX_zint = rho0.*sum(mask_cdw.*Um_dPhiX.*hFacW.*DZ,3,'omitnan');
-Vm_dPhiY_zint = rho0.*sum(mask_cdw.*Vm_dPhiY.*hFacS.*DZ,3,'omitnan');
+Um_dPhiX_zint = rho0.*sum(mask_sw.*Um_dPhiX.*hFacW.*DZ,3,'omitnan');
+Vm_dPhiY_zint = rho0.*sum(mask_sw.*Vm_dPhiY.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from advection terms
-Um_Advec_zint = rho0.*sum(mask_cdw.*Um_Advec.*hFacW.*DZ,3,'omitnan');
-Vm_Advec_zint = rho0.*sum(mask_cdw.*Vm_Advec.*hFacS.*DZ,3,'omitnan');
+Um_Advec_zint = rho0.*sum(mask_sw.*Um_Advec.*hFacW.*DZ,3,'omitnan');
+Vm_Advec_zint = rho0.*sum(mask_sw.*Vm_Advec.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from dissipation
-Um_Diss_zint = rho0.*sum(mask_cdw.*Um_Diss.*hFacW.*DZ,3,'omitnan');
-Vm_Diss_zint = rho0.*sum(mask_cdw.*Vm_Diss.*hFacS.*DZ,3,'omitnan');
+Um_Diss_zint = rho0.*sum(mask_sw.*Um_Diss.*hFacW.*DZ,3,'omitnan');
+Vm_Diss_zint = rho0.*sum(mask_sw.*Vm_Diss.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from external forcing (ice-ocean stress)
-Um_Ext_zint = rho0.*sum(mask_cdw.*Um_Ext.*hFacW.*DZ,3,'omitnan');
-Vm_Ext_zint = rho0.*sum(mask_cdw.*Vm_Ext.*hFacS.*DZ,3,'omitnan');
+Um_Ext_zint = rho0.*sum(mask_sw.*Um_Ext.*hFacW.*DZ,3,'omitnan');
+Vm_Ext_zint = rho0.*sum(mask_sw.*Vm_Ext.*hFacS.*DZ,3,'omitnan');
 
 %%% Residual term
 residualU = Um_dPhiX_zint+Um_Advec_zint+Um_Diss_zint+Um_Ext_zint;
 residualV = Vm_dPhiY_zint+Vm_Advec_zint+Vm_Diss_zint+Vm_Ext_zint;
 
 %%% momentum tendency from Coriolis term
-Um_Cori_zint = rho0.*sum(mask_cdw.*Um_Cori.*hFacW.*DZ,3,'omitnan');
-Vm_Cori_zint = rho0.*sum(mask_cdw.*Vm_Cori.*hFacS.*DZ,3,'omitnan');
+Um_Cori_zint = rho0.*sum(mask_sw.*Um_Cori.*hFacW.*DZ,3,'omitnan');
+Vm_Cori_zint = rho0.*sum(mask_sw.*Vm_Cori.*hFacS.*DZ,3,'omitnan');
  
 %%% momentum tendency from Vorticity Advection
-Um_AdvZ3_zint = rho0.*sum(mask_cdw.*Um_AdvZ3.*hFacW.*DZ,3,'omitnan');
-Vm_AdvZ3_zint = rho0.*sum(mask_cdw.*Vm_AdvZ3.*hFacS.*DZ,3,'omitnan');
+Um_AdvZ3_zint = rho0.*sum(mask_sw.*Um_AdvZ3.*hFacW.*DZ,3,'omitnan');
+Vm_AdvZ3_zint = rho0.*sum(mask_sw.*Vm_AdvZ3.*hFacS.*DZ,3,'omitnan');
 
 %%% momentum tendency from Vertical Advection (Explicit part)
-Um_AdvRe_zint = rho0.*sum(mask_cdw.*Um_AdvRe.*hFacW.*DZ,3,'omitnan');
-Vm_AdvRe_zint = rho0.*sum(mask_cdw.*Vm_AdvRe.*hFacS.*DZ,3,'omitnan');
+Um_AdvRe_zint = rho0.*sum(mask_sw.*Um_AdvRe.*hFacW.*DZ,3,'omitnan');
+Vm_AdvRe_zint = rho0.*sum(mask_sw.*Vm_AdvRe.*hFacS.*DZ,3,'omitnan');
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,7 +102,7 @@ zeta_residual(zeta_residual==0)=NaN;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Decompose the vorticity balance %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-VV = sum(mask_cdw.*vv.*hFacS.*DZ,3);
+VV = sum(mask_sw.*vv.*hFacS.*DZ,3);
 zeta_Cori_betaV = -rho0*beta.*VV;
 zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
 
@@ -145,7 +144,7 @@ zeta_ageo = zeta_Advec + zeta_dPhi;
 fontsize = 18;
 load_colors;
 YLIM = [0 400];
-CLIM = [-1 1]/1e5;
+CLIM = [-1 1]/5e5;
 
 figure(1)
 set(gcf,'Position',[1 503 1839 1000])
@@ -208,7 +207,7 @@ title('Surface stress term (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_cdw_vort.png']);
+print('-dpng','-r150',[figdir expname '_sw_vort.png']);
 end
 
 figure(2)
@@ -268,7 +267,7 @@ yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_cdw_decomposeAdv.png']);
+print('-dpng','-r150',[figdir expname '_sw_decomposeAdv.png']);
 end
 
 
@@ -288,5 +287,5 @@ yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
-print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
+print('-dpng','-r150',[figdir expname '_sw_betaV.png']);
 end

@@ -41,8 +41,8 @@
     savefigure = true;
     showfigure = true;
 
-% for n=1:nEXP
-for n=8
+for n=1:nEXP
+% for n=8
     expname = EXPNAME{n}
     loadexp;
     load_data;
