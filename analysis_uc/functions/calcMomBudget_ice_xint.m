@@ -12,6 +12,15 @@ load([prodir '/' expname '_tavg_5yrs.mat'],'SIvice',...
     'SIheff','SIarea',...
     'ETAN','SIsig12'...
     );
+
+%  SIvice = rdmds([exppath,'/results/SIvice'],nIter(n));
+%  oceTAUX = rdmds([exppath,'/results/oceTAUX'],nIter(n));
+%  SItaux = rdmds([exppath,'/results/SItaux'],nIter(n));
+%  SIheff = rdmds([exppath,'/results/SIheff'],nIter(n));
+%  SIarea = rdmds([exppath,'/results/SIarea'],nIter(n));
+%  ETAN = rdmds([exppath,'/results/ETAN'],nIter(n));
+%  SIsig12 = rdmds([exppath,'/results/SIsig12'],nIter(n));
+
 rho_i = 920; % Density of sea ice
 
 Ai = SIarea(xidx,:,1);

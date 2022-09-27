@@ -8,6 +8,10 @@ rho0 = 999.8;
 
 loadexp;
 load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext');
+%  Um_dPhiX = rdmds([exppath,'/results/Um_dPhiX'],nIter(n));
+%  Um_Advec = rdmds([exppath,'/results/Um_Advec'],nIter(n));
+%  Um_Diss = rdmds([exppath,'/results/Um_Diss'],nIter(n));
+%  Um_Ext = rdmds([exppath,'/results/Um_Ext'],nIter(n));
 % load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
 % 'Um_Cori','Um_AdvZ3','Um_AdvRe');
 

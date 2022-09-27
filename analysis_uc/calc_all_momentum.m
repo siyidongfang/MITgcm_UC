@@ -4,7 +4,7 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{3}
     list_exps_new;
     load_constants;
     
