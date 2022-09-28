@@ -6,10 +6,17 @@
 
 
 
-Psi = Psif;
+
+
+% Psi = Psif;
 %%% Meshgrid for plotting
-xx_u = xxf+Lx/2;
-yy_v = yyf;
+% xx_u = xxf+Lx/2;
+% yy_v = yyf;
+
+load_colors;
+
+xx_u = xx+Lx/2;
+yy_v = yy;
 
 [YY_Psi,XX_Psi] = meshgrid(yy_v/1000,xx_u/1000);
 [YY,XX] = meshgrid(yy,xx-xx(1));
@@ -23,6 +30,8 @@ plotloc = [0.15 0.15 0.7 0.75];
 %%% Set plot limits
 Psi_max = 13;
 Psi_min = -13;
+
+Psi(UU==0)=NaN;
 
 %%% Make the plot
 handle = figure(12);

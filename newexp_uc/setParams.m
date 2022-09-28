@@ -176,8 +176,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
       useRBCS = true; 
       useEXF = false;
       EXFoption = 1; %%% Read-in hflux, swflux and sflux.
-      useDATAzonalwindstress = true;
-      useDATAoffshorewindstress = true;
+      if((Ua~=0)&&(Va~=0))
+          useDATAzonalwindstress = true;
+          useDATAoffshorewindstress = true;
+      else
+          useDATAzonalwindstress = false;
+          useDATAoffshorewindstress = false;
+      end
   end
 
   useSURFACE_SALT = false;
@@ -187,6 +192,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
       useRBCS = true; 
+%     useRBCS = false;
   end
 
   
@@ -202,10 +208,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useOrlanskiSouth = false;
   % Zonal boundary condition
   use2Orlanski = false;
-  useErestWorlanski = false; %%% OBCS to the east, and Orlanski to the west
-  useErestWrest = true;     %%% OBCS to the east and west
-  usePeriodic = false;
-
+  useErestWorlanski = false; %%% Restoring T/S/u/ui to the east, and Orlanski to the west
+  useErestWrest = true;      %%% Restoring T/S/u/ui to the east and west
+  usePeriodic = false;       %%% Periodic boundary condition for the zonal boundaries
+ 
   if(use2Orlanski)
       useobcsEast = true;
       useobcsWest = true;
@@ -295,6 +301,8 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%% diffusivity
   parm01.addParm('tempAdvScheme',80,PARM_INT);
   parm01.addParm('saltAdvScheme',80,PARM_INT);
+%   parm01.addParm('tempAdvScheme',7,PARM_INT);
+%   parm01.addParm('saltAdvScheme',7,PARM_INT);
   parm01.addParm('diffKrT',diffKrT,PARM_REAL);
   parm01.addParm('diffKhT',diffKhT,PARM_REAL);
   parm01.addParm('diffKrS',diffKrS,PARM_REAL);
@@ -1345,7 +1353,7 @@ end
   deltaT = min([deltaT_fgw deltaT_gw deltaT_adv deltaT_itl deltaT_Ah deltaT_Ar deltaT_KhT deltaT_KrT deltaT_A4]);
   deltaT = round(deltaT) 
 %   deltaT = 140
-%   deltaT = round(deltaT/4)
+%   deltaT = round(deltaT/3*2)
 
   nTimeSteps = ceil(simTime/deltaT);
   simTimeAct = nTimeSteps*deltaT
@@ -1447,8 +1455,12 @@ end
         %       tau_y(j) = tau_y(j) * (tau_0 + tau_amp * sin(2*pi*(n-1)/nForcingPeriods));    
         %     end
     
-             %%% linear zonal wind stress  
-              tau_y = [tau_max:-tau_max/(Ny-1):0];
+             %%% linear zonal wind stress 
+             if(tau_max~=0)
+                tau_y = [tau_max:-tau_max/(Ny-1):0];
+             else
+                tau_y = 0;
+             end
               tau_y = tau_y + tau_amp * sin(2*pi*(n-1)/nForcingPeriods);    
     
             %%% Fill in this time-component of the wind stress matrix
@@ -3117,7 +3129,7 @@ diag_fields_inst = {...
   obcs_parm03.addParm('Vrelaxobcsinner',Vrelaxobcsinner,PARM_REAL);
   obcs_parm03.addParm('Vrelaxobcsbound',Vrelaxobcsbound,PARM_REAL);
 
-  if(useobcsEast||useobcsWast)
+  if(useobcsEast||useobcsWest)
 %         Urelaxobcsinner = 864000*3;
 %         Urelaxobcsbound = 43200*20;
         Urelaxobcsinner = 864000;

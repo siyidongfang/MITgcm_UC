@@ -110,6 +110,7 @@ switch(exp_group)
         nEXP = length(EXPNAME);
         is_prod_run=true*ones(nEXP,1);
         nIter=NaN*ones(nEXP,1);  
+        is_prod_run(1) = false;
         nIter(1) = 185506;
         useSEAICE=true;
         useSHELFICE=true;

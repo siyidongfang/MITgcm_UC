@@ -46,6 +46,7 @@
             end
         end
     end
+
     ww_cdw(ww_cdw==0)=NaN;
     wt_cdw(wt_cdw==0)=NaN;
     zz_cdw(zz_cdw==0)=NaN;
