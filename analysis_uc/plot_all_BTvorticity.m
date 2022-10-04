@@ -13,7 +13,7 @@
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
 
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{4}
     list_exps_new;
     load_constants;
     load_colors;
@@ -21,15 +21,13 @@
     showfigure = true;
 
 % for n=1:nEXP
-for n=1
+for n=4
     expname = EXPNAME{n}
     loadexp;
     load_data;
     load_spacing;
     
-    calc_BTvorticity;
-    plot_BTvorticity;
-   
+    calc_BTvorticity;   
 end
 
 

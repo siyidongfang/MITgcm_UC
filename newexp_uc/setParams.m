@@ -189,10 +189,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useEmPmRFile = false;
 
   useSHELFICE = true; 
-  usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
-      useRBCS = true; 
-%     useRBCS = false;
+%       useRBCS = true; 
+    useRBCS = false;
   end
 
   

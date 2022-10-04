@@ -14,19 +14,17 @@
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/ww/' exp_group '/'];
     useSEAICE = true;
-    savefigure = true;
+    savefigure = false;
 
     n=1
 
     expname = EXPNAME{n}
     loadexp;
-    load([prodir expname '_tavg_5yrs.mat'],'WVEL','THETA','WVELTH');
+%     load([prodir expname '_tavg_5yrs.mat'],'WVEL','THETA','WVELTH');
+    load_data;
 
     [YY,XX] = meshgrid(yy,xx);
 
-    ww = WVEL;
-    tt = THETA;
-    wt = WVELTH;
 
     mask_cdw = ones(Nx,Ny,Nr);
     mask_cdw(tt<0)=NaN; %%% Find the CDW layer: temperature above 0 degC

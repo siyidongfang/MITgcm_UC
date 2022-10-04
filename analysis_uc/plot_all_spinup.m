@@ -14,8 +14,8 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
 
 
-    expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_periodic'
+    expdir = '/Users/csi/MITgcm_UC/exps_uc/no_seaice/';
+    expname = 'res2km_Ua0Va0_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_noIceShelfThermo_prod'
 
     loadexp;
     plot_KE_EKE_T_S_series
