@@ -4,7 +4,7 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{3}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     
@@ -16,7 +16,7 @@
 
 
 %     for n=1:nEXP
-for n=1
+for n=26
         if(is_prod_run(n))
             clear vi vi_mass
             close all

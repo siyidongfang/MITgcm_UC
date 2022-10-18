@@ -73,7 +73,7 @@
     end
     pd_selected(pd_selected==0)=NaN;
 
-    figure(2)
+    figure(5)
     pcolor(pd_selected)
     shading flat
 %     caxis([1027.26 1027.35])
@@ -82,16 +82,20 @@
 
 
     %%% Calculate diapycnal velocity wdia
-    dUdx = diff(UU)/dx;
-    dVdy = diff(VV,1,2)/dy;
+%     dUdx = diff(UU)/dx;
+%     dVdy = diff(VV,1,2)/dy;
+%     div=zeros(Nx,Ny);
+%     div(1:Nx-1,1:Ny-1) = dUdx(:,1:Ny-1) + dVdy(1:Nx-1,:);
+%     wdia = -div;
+%     wdia(wdia==0)=NaN;
+    dUdx = diff(umdphix)/dx;
+    dVdy = diff(vmdphiy,1,2)/dy;
     div=zeros(Nx,Ny);
     div(1:Nx-1,1:Ny-1) = dUdx(:,1:Ny-1) + dVdy(1:Nx-1,:);
     wdia = -div;
     wdia(wdia==0)=NaN;
 
-
    %%% Calculate IFS
-
 
 
     %%% Plotting options
@@ -108,7 +112,7 @@
     pcolor(xx/1000,yy/1000,wdia');colorbar;shading flat;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','off');hold off;
-    caxis([-5 5]/1e5);
+    caxis([-2 2]/1e7);
     colormap(flip(cmocean('balance')))
 %     colormap(redblue);
     xlabel('Longitude (km)');ylabel('Latitude (km)');
@@ -127,15 +131,15 @@
     set(handle,'Position',framepos);
     clf;
     set(gcf,'color','w');
-    pcolor(xx/1000,yy/1000,umdphix');colorbar;shading flat;
+    pcolor(xx/1000,yy/1000,rho0*umdphix');colorbar;shading flat;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','off');hold off;
-    caxis([-3 3]/1000);
+    caxis([-3 3]);
     colormap(flip(cmocean('balance')))
 %     colormap(redblue);
     xlabel('Longitude (km)');ylabel('Latitude (km)');
     set(gca,'FontSize',fontsize);
-    title('IFS at the upper bound of the CDW layer','FontSize',fontsize+3)
+    title('Standing-eddy IFS at the upper bound of the CDW layer (N/m^2)','FontSize',fontsize+3)
     set(gca,'Position',plotloc);
     ylim([0 400]);xlim([-300 300])
     xticks([-300:100:300]); yticks([0:100:400])

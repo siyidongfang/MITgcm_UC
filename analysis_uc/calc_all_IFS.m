@@ -13,23 +13,23 @@
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+    prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/vorticity/' exp_group '/'];
     useSEAICE = true;
     savefigure = false;
     load_colors;
 
 %     for n=1:nEXP
-for n=6
+for n=26
     if(is_prod_run(n))
 %         close all
         expname = EXPNAME{n}
         loadexp;
         load([prodir expname '_tavg_5yrs.mat'],'VVEL','SALT','THETA','PHIHYD','VVELSLT','VVELTH',...
-            'UVEL','SIuice','WVEL','WU_VEL');        
+            'UVEL','SIuice','WVEL','WU_VEL','UVELSLT','UVELTH');        
         load_spacing;
         calcFeddy;
-        calcFeddy_uw;
+
     end
 end
 
