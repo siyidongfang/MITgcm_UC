@@ -65,7 +65,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   simTime = 8*t1year; 
   if(is_ContinuedRun)
-      simTime = 5*t1year; %%% Simulation time   
+      simTime = 7*t1year; %%% Simulation time   
   end
 %   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
@@ -189,10 +189,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useEmPmRFile = false;
 
   useSHELFICE = true; 
-  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
-%       useRBCS = true; 
-    useRBCS = false;
+      useRBCS = true; 
+%     useRBCS = false;
   end
 
   
@@ -299,10 +299,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   parm01.addParm('viscC2leith',0,PARM_REAL);
   parm01.addParm('viscC2leithD',0,PARM_REAL);  
   %%% diffusivity
-  parm01.addParm('tempAdvScheme',80,PARM_INT);
-  parm01.addParm('saltAdvScheme',80,PARM_INT);
-%   parm01.addParm('tempAdvScheme',7,PARM_INT);
-%   parm01.addParm('saltAdvScheme',7,PARM_INT);
+%   parm01.addParm('tempAdvScheme',80,PARM_INT);
+%   parm01.addParm('saltAdvScheme',80,PARM_INT);
+  parm01.addParm('tempAdvScheme',7,PARM_INT);
+  parm01.addParm('saltAdvScheme',7,PARM_INT);
   parm01.addParm('diffKrT',diffKrT,PARM_REAL);
   parm01.addParm('diffKhT',diffKhT,PARM_REAL);
   parm01.addParm('diffKrS',diffKrS,PARM_REAL);
@@ -3213,8 +3213,8 @@ diag_fields_inst = {...
   SEAICE_no_slip          = false;
 %   SEAICE_no_slip          = true;
 
-%   SEAICEadvScheme         = 7;
-  SEAICEadvScheme         = 33;
+  SEAICEadvScheme         = 7;
+%   SEAICEadvScheme         = 33;
   SEAICEmomAdvection      = false; % Default: false
   %%%SOSEdoesn't have a seaice dataset for salinity, they used this value
   %%%in their estimate

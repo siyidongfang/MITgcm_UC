@@ -41,12 +41,13 @@ switch(exp_group)
                 ...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_periodic';...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_AdvScheme7_smalldT';...
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...
                 };
             nEXP = length(EXPNAME);
             is_prod_run=true*ones(nEXP,1);
             nIter=NaN*ones(nEXP,1);
-            is_prod_run([25 26])=false;
-            nIter([25 26])=[1484047 558159]';
+            is_prod_run([25 26 27])=false;
+            nIter([25 26 27])=[1484047 558159 185506]';
             useSEAICE=true;
             useSHELFICE=true;
 

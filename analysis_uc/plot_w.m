@@ -3,7 +3,8 @@
 %%% 
 %%% Plot the vertical velocity of the CDW layer
 
-    clear;close all;
+    clear;
+%     close all;
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
@@ -16,7 +17,7 @@
     useSEAICE = true;
     savefigure = false;
 
-    n=1
+    n=27
 
     expname = EXPNAME{n}
     loadexp;
@@ -56,7 +57,7 @@
     plotloc = [0.15 0.15 0.7 0.75];
 
     %%% Make the plot
-    handle = figure(1);
+    handle = figure(10);
     set(handle,'Position',framepos);
     clf;
     set(gcf,'color','w');

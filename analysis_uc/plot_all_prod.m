@@ -11,8 +11,8 @@
 
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod'
-    prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+    expname = 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7'
+    prodir = '/Users/csi/MITgcm_UC/products_new/seaice_boundary/';
     loadexp;
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','ETAN',...
@@ -25,7 +25,7 @@
     vt = VVELTH;
     eta = ETAN;
 
-    year = '1to5';
+    year = '2to7';
     plot_KE_EKE_T_S_series
     plot_basics
     plot_shelfIce
