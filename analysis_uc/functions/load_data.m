@@ -2,7 +2,8 @@
     
 
 clear oceTAUX oceTAUY
-    if(expname(end-4:end)=='_prod')
+%     if(expname(end-4:end)=='_prod')
+    if(is_prod_run(n))
         load([prodir expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','UVELTH','ETAN',...
                 'SHIfwFlx','oceTAUX','oceTAUY','SHI_TauY','WVEL','WVELTH');
         tt = THETA;

@@ -11,12 +11,12 @@
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+    prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/ww/' exp_group '/'];
     useSEAICE = true;
     savefigure = false;
 
-    n=1
+    n=26
     expname = EXPNAME{n}
     loadexp;
     load_data;

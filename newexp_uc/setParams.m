@@ -95,13 +95,14 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 %   diffK4Tgrid = 0.1; %%% Grid-dependent biharmonic temp diffusivity
   diffKrT = 1e-5; %%% Vertical temp diffusion   
 % diffKrT = 0;
+  diffKrS = 1e-5; %%% Vertical salt diffusion 
+% diffKrS = 0;
   ALLOW_3D_DIFFKR = false; %%% If true, need to define ALLOW_3D_DIFFKR in expname/code/CPP_OPTIONS.h
   if(ALLOW_3D_DIFFKR)
       diffKrT = 5e-6; %%% Vertical temp diffusion 
+      diffKrS = 5e-6; %%% Vertical temp diffusion
   end
 %   diffK4Sgrid = 0.1; %%% Grid-dependent biharmonic salt diffusivity
-  diffKrS = 1e-5; %%% Vertical salt diffusion 
-% diffKrS = 0;
   viscA4Grid = 0;    %%%%% Update: 20210627
   viscC4smag = 4;    %%%%% Update: 20210627
   diffK4Tgrid = 0;   %%%%% Update: 20210627
@@ -1759,7 +1760,7 @@ end
       %%% If a diffusive layer is required in the north to represent the
       %%% northern basin, set the diffusivity here
       diffKr = diffKrT*ones(Nx,Ny,Nr);  
-      kappa_max = 0.0001
+      kappa_max = 0.003
       kap_deep = kappa_max; %%% Max diffisivity in deep ocean  
       H_kap = 150; %%% e-folding scale for mixing decrease with h.a.b.
       for i=1:Nx
