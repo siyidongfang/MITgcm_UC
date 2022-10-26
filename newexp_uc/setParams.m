@@ -2995,9 +2995,16 @@ diag_fields_inst = {...
             else
                 ui_idx = find(Nui==min(Nui));
             end
+            if(unique(Nui(ui_idx))<=0)
+                obuice(jjj) = unique(Nui(ui_idx));
+            else
+                obuice(jjj) = obuice(jjj-1);
+                ob_check_idx = jjj
+            end
             obvice(jjj) = 0;
-            obuice(jjj) = unique(Nui(ui_idx));
         end
+
+        obuice(ob_check_idx) = 0.5*(obuice(ob_check_idx-1)+obuice(ob_check_idx+1));
 
         % Nsponge = length(yidx_northernsponge);
         % obuice(Ny-Nsponge:Ny)=flip([0:(obuice(Ny-Nsponge)/Nsponge):obuice(Ny-Nsponge)]);

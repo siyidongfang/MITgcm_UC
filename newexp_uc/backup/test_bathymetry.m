@@ -64,15 +64,15 @@
   
   fontsize = 12;
   
-%   %%% Plot the bathymetry
-%     figure(1);
-%     clf;
-%     surf(X/1000,Y/1000,h,'EdgeColor','None');   
-%     xlabel('x (km)');
-%     ylabel('y (km)');
-%     zlabel('hb','Rotation',0);
-% %     plot(Y(1,:),h(1,:));
-%     title('Model bathymetry');
-%     set(gca,'fontsize',fontsize+2,'Ydir','reverse');
-%     PLOT = gcf;
-%     PLOT.Position = [248 284 655 442];  
+  %%% Plot the bathymetry
+    figure(1);
+    clf;
+    surf(X/1000,Y/1000,h,'EdgeColor','None');   
+    xlabel('x (km)');
+    ylabel('y (km)');
+    zlabel('hb','Rotation',0);
+%     plot(Y(1,:),h(1,:));
+    title('Model bathymetry');
+    set(gca,'fontsize',fontsize+2,'Ydir','reverse');
+    PLOT = gcf;
+    PLOT.Position = [248 284 655 442];  

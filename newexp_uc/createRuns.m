@@ -23,7 +23,7 @@ Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
 
-is_ContinuedRun = true;
+is_ContinuedRun = false;
 
 %%% Select resolution
 is_hires = false;
@@ -37,8 +37,7 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is
 %%% Create simulations
 exp_name = ['res2km_' exp_name]
 
-% exp_name = [exp_name '_kmax0.003']
-
+% exp_name = [exp_name '_noIceShelf']
 
 if(is_ContinuedRun)
     exp_name = [exp_name '_prod']
