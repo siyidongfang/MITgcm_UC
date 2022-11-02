@@ -1,29 +1,14 @@
 %%%
-%%% calc_BTvorticity.m
+%%% calc_BTvorticity_int_curl.m
 %%%
 %%% Calculate the barotropic vorticity budget using model diagnostics
+%%% First vertically integrate the momentum budget terms, then take the
+%%% curl
 
 
-% load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
-%     'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext','Um_Cori','Vm_Cori',...
-%     'Um_AdvZ3','Um_AdvRe','Vm_AdvZ3','Vm_AdvRe');
-
- Um_dPhiX = rdmds([exppath,'/results/Um_dPhiX'],nIter(n));
- Um_Advec = rdmds([exppath,'/results/Um_Advec'],nIter(n));
- Um_Diss = rdmds([exppath,'/results/Um_Diss'],nIter(n));
- Um_Ext = rdmds([exppath,'/results/Um_Ext'],nIter(n));
-
- Vm_dPhiY = rdmds([exppath,'/results/Vm_dPhiY'],nIter(n));
- Vm_Advec = rdmds([exppath,'/results/Vm_Advec'],nIter(n));
- Vm_Diss = rdmds([exppath,'/results/Vm_Diss'],nIter(n));
- Vm_Ext = rdmds([exppath,'/results/Vm_Ext'],nIter(n));
-
- Um_Cori = rdmds([exppath,'/results/Um_Cori'],nIter(n));
- Vm_Cori = rdmds([exppath,'/results/Vm_Cori'],nIter(n));
- Um_AdvZ3 = rdmds([exppath,'/results/Um_AdvZ3'],nIter(n));
- Um_AdvRe = rdmds([exppath,'/results/Um_AdvRe'],nIter(n));
- Vm_AdvZ3 = rdmds([exppath,'/results/Vm_AdvZ3'],nIter(n));
- Vm_AdvRe = rdmds([exppath,'/results/Vm_AdvRe'],nIter(n));
+load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...
+    'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext','Um_Cori','Vm_Cori',...
+    'Um_AdvZ3','Um_AdvRe','Vm_AdvZ3','Vm_AdvRe');
 
 DXG = rdmds(fullfile(resultspath,'DXG'));
 DYF = rdmds(fullfile(resultspath,'DYF'));
