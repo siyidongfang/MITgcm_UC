@@ -17,13 +17,13 @@ Ai0 =1;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
 
-Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
+Hbed = -200;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
 Htr = 200;    %%% Trough depth, ref 200
 Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
 
-is_ContinuedRun = false;
+is_ContinuedRun = true;
 
 %%% Select resolution
 is_hires = false;

@@ -15,13 +15,13 @@
 
 
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr200_Zn350Zsb550dZs150_noIceShelf'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 371012;
-    year = num2str(2);
+    nIter = 927529;
+    year = num2str(5);
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);
@@ -49,7 +49,7 @@
     v_surf = vv(:,:,1);
 
     plot_basics
-    plot_shelfIce
+%     plot_shelfIce
     if(useSEAICE)
     plot_seaice
     end

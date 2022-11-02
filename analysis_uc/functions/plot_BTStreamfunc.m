@@ -33,24 +33,21 @@ Psi_min = -13;
 
 Psi(UU==0)=NaN;
 
-%%% Make the plot
-handle = figure(12);
+ff = f0+beta*YY;
+
+handle = figure(13);
 set(handle,'Position',framepos);
 clf;
 set(gcf,'color','w');
-contourf(XX_Psi,YY_Psi,Psi/1e6,[Psi_min:0.1:0],'EdgeColor','k'); hold on;
-contourf(XX_Psi,YY_Psi,Psi/1e6,[0:0.1:Psi_max],'EdgeColor','k'); 
-[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',2,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+pcolor(XX/1000,YY/1000,Psi/1e6);
+% hold on;[C,h]=contour(XX/1000,YY/1000,-ff./abs(bathy),[3e-8:2e-8:9e-6],'g-','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',2,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
-% pcolor(XX_Psi,YY_Psi,Psi/1e6);shading flat;
+shading flat;
+handle=colorbar;
+colormap(cmocean('balance',50))
 xlabel('Longitude, x (km)');
 ylabel('Latitude, y (km)');
-% title([num2str(ridge_height_batch(i)), 'm ridge, ', num2str(randtopog_height_batch(i)), 'm topog, $\kappa$ = ', num2str(kappa_max_batch(i)), ' $m^2/s$, $\tau$ = ', num2str(taue_max_batch(i)), ' $N/m^2$, $\theta_{AABW}$ = ',  num2str(AABW_temp_batch(i)), ' C'], 'interpreter','latex')
-handle=colorbar;
-% colormap redblue;
-colormap(cmocean('balance'))
-% colormap(WhiteBlueGreenYellowRed(0));
-% caxis([Psi_min Psi_max]);
 caxis([-5 5]);
 set(handle,'FontSize',fontsize);
 set(gca,'FontSize',fontsize);
@@ -60,8 +57,41 @@ xticklabels({'-300','-200','-100','0','100','200','300'})
 set(gca,'YTick',[0:100:400]);
 title('Barotropic streamfunction','FontSize',fontsize+3);
 annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Psi_\mathrm{BT}$ (Sv)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
-print('-djpeg','-r200', [figdir expname '/BTstfn.jpg'])
 
+
+
+
+
+
+
+% %%% Make the plot
+% handle = figure(12);
+% set(handle,'Position',framepos);
+% clf;
+% set(gcf,'color','w');
+% contourf(XX_Psi,YY_Psi,Psi/1e6,[Psi_min:0.1:0],'EdgeColor','k'); hold on;
+% contourf(XX_Psi,YY_Psi,Psi/1e6,[0:0.1:Psi_max],'EdgeColor','k'); 
+% [C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',2,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
+% % pcolor(XX_Psi,YY_Psi,Psi/1e6);shading flat;
+% xlabel('Longitude, x (km)');
+% ylabel('Latitude, y (km)');
+% % title([num2str(ridge_height_batch(i)), 'm ridge, ', num2str(randtopog_height_batch(i)), 'm topog, $\kappa$ = ', num2str(kappa_max_batch(i)), ' $m^2/s$, $\tau$ = ', num2str(taue_max_batch(i)), ' $N/m^2$, $\theta_{AABW}$ = ',  num2str(AABW_temp_batch(i)), ' C'], 'interpreter','latex')
+% handle=colorbar;
+% % colormap redblue;
+% colormap(cmocean('balance'))
+% % colormap(WhiteBlueGreenYellowRed(0));
+% % caxis([Psi_min Psi_max]);
+% caxis([-5 5]);
+% set(handle,'FontSize',fontsize);
+% set(gca,'FontSize',fontsize);
+% set(gca,'Position',plotloc);
+% xticks([0:100:600])
+% xticklabels({'-300','-200','-100','0','100','200','300'})
+% set(gca,'YTick',[0:100:400]);
+% title('Barotropic streamfunction','FontSize',fontsize+3);
+% annotation('textbox',[0.8 0.05 0.25 0.05],'String','$\Psi_\mathrm{BT}$ (Sv)','interpreter','latex','FontSize',fontsize+2,'LineStyle','None');
+% % print('-djpeg','-r200', [figdir expname '/BTstfn.jpg'])
 
 
 
