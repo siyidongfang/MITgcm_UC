@@ -190,66 +190,66 @@ if(savefigure)
 print('-dpng','-r150',[figdir expname '_vort.png']);
 end
 
-figure(2)
-set(gcf,'Position',[90 232 2201 776])
-clf;set(gcf,'color','w');
-subplot(2,3,1)
-colormap(cmocean('balance'));
-pcolor(XX/1000,YY/1000,zeta_Cori)
-shading flat;colorbar;
-caxis([-1 1]/1e5);
-title('Coriolis term (model diagnosed) (Pa/m)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-
-subplot(2,3,2)
-pcolor(XX/1000,YY/1000,zeta_AdvZ3)
-shading flat;colorbar;
-caxis([-1 1]/1e5);
-title('Vorticity Advection (Pa/m)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-
-subplot(2,3,3)
-pcolor(XX/1000,YY/1000,zeta_AdvRe)
-shading flat;colorbar;
-caxis([-1 1]/1e5);
-title('Vertical Advection (explicit part) (Pa/m)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-
-subplot(2,3,5)
-pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
-shading flat;colorbar;colormap(cmocean('balance'));
-caxis([-1 1]/1e5);
-title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-
-if(savefigure)
-print('-dpng','-r150',[figdir expname '_decomposeAdv.png']);
-end
-
-
-figure(3)
-clf;set(gcf,'color','w');
-pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
-shading flat;colorbar;colormap(cmocean('balance'));
-caxis([-1 1]/1e5);
-title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-
-if(savefigure)
-print('-dpng','-r150',[figdir expname '_betaV.png']);
-end
+% figure(2)
+% set(gcf,'Position',[90 232 2201 776])
+% clf;set(gcf,'color','w');
+% subplot(2,3,1)
+% colormap(cmocean('balance'));
+% pcolor(XX/1000,YY/1000,zeta_Cori)
+% shading flat;colorbar;
+% caxis([-1 1]/1e5);
+% title('Coriolis term (model diagnosed) (Pa/m)','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% 
+% subplot(2,3,2)
+% pcolor(XX/1000,YY/1000,zeta_AdvZ3)
+% shading flat;colorbar;
+% caxis([-1 1]/1e5);
+% title('Vorticity Advection (Pa/m)','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% 
+% subplot(2,3,3)
+% pcolor(XX/1000,YY/1000,zeta_AdvRe)
+% shading flat;colorbar;
+% caxis([-1 1]/1e5);
+% title('Vertical Advection (explicit part) (Pa/m)','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% 
+% subplot(2,3,5)
+% pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
+% shading flat;colorbar;colormap(cmocean('balance'));
+% caxis([-1 1]/1e5);
+% title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% 
+% if(savefigure)
+% print('-dpng','-r150',[figdir expname '_decomposeAdv.png']);
+% end
+% 
+% 
+% figure(3)
+% clf;set(gcf,'color','w');
+% pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
+% shading flat;colorbar;colormap(cmocean('balance'));
+% caxis([-1 1]/1e5);
+% title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% 
+% if(savefigure)
+% print('-dpng','-r150',[figdir expname '_betaV.png']);
+% end

@@ -21,6 +21,15 @@ zeta_Advec_3D = zeros(Nx,Ny,Nr);
 zeta_Diss_3D = zeros(Nx,Ny,Nr);
 zeta_Ext_3D = zeros(Nx,Ny,Nr);
 
+Um_dPhiX(Um_dPhiX==0)=NaN;
+Vm_dPhiY(Vm_dPhiY==0)=NaN;
+Um_Advec(Um_Advec==0)=NaN;
+Vm_Advec(Vm_Advec==0)=NaN;
+Um_Diss(Um_Diss==0)=NaN;
+Vm_Diss(Vm_Diss==0)=NaN;
+Um_Ext(Um_Ext==0)=NaN;
+Vm_Ext(Vm_Ext==0)=NaN;
+
 for k=1:Nr
     for i = 2:Nx
         for j = 2:Ny
@@ -54,6 +63,13 @@ zeta_Cori_3D = zeros(Nx,Ny,Nr);
 zeta_AdvZ3_3D = zeros(Nx,Ny,Nr);
 zeta_AdvRe_3D = zeros(Nx,Ny,Nr);
 
+Um_Cori(Um_Cori==0)=NaN;
+Vm_Cori(Vm_Cori==0)=NaN;
+Um_AdvZ3(Um_AdvZ3==0)=NaN;
+Vm_AdvZ3(Vm_AdvZ3==0)=NaN;
+Um_AdvRe(Um_AdvRe==0)=NaN;
+Vm_AdvRe(Vm_AdvRe==0)=NaN;
+
 for k=1:Nr
     for i = 2:Nx
         for j = 2:Ny
@@ -82,6 +98,90 @@ zeta_ageo_3D = zeta_Advec_3D + zeta_dPhi_3D;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Depth-integrated vorticity budget %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hFacZeta = zeros(Nx,Ny,Nr);
+for i=1:Nx-1
+    for j=2:Ny
+        hFacZeta(i,j,:) = 0.25*( hFacW(i,j,:) + hFacW(i,j-1,:)...
+                              + hFacS(i,j,:) + hFacS(i+1,j,:));
+    end
+end
+
+zeta_dPhi = rho0.*sum(zeta_dPhi_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_Advec = rho0.*sum(zeta_Advec_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_Diss = rho0.*sum(zeta_Diss_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_Ext = rho0.*sum(zeta_Ext_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_residual = rho0.*sum(zeta_residual_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_Cori = rho0.*sum(zeta_Cori_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_AdvZ3 = rho0.*sum(zeta_AdvZ3_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_AdvRe = rho0.*sum(zeta_AdvRe_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_nonLin = rho0.*sum(zeta_nonLin_3D.*hFacZeta.*DZ,3,'omitnan');
+zeta_ageo = rho0.*sum(zeta_ageo_3D.*hFacZeta.*DZ,3,'omitnan');
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Plot the vorticity balance %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+fontsize = 18;
+load_colors;
+figure(2)
+set(gcf,'Position',[234 88 1361 1110])
+clf;set(gcf,'color','w');
+subplot(3,2,1)
+pcolor(XX/1000,YY/1000,zeta_dPhi)
+shading flat;colorbar;colormap(cmocean('balance'));
+caxis([-1 1]/1e5);
+title('Pressure torque (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(3,2,2)
+pcolor(XX/1000,YY/1000,zeta_Advec)
+shading flat;colorbar;
+caxis([-1 1]/1e5);
+title('Advection term = Coriolis + nonlinear  (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(3,2,3)
+pcolor(XX/1000,YY/1000,zeta_Diss)
+shading flat;colorbar;
+caxis([-1 1]/1e5);
+title('Dissipation term (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(3,2,4)
+pcolor(XX/1000,YY/1000,zeta_Ext)
+shading flat;colorbar;
+caxis([-1 1]/1e5);
+title('Surface stress term (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(3,2,5)
+pcolor(XX/1000,YY/1000,zeta_residual)
+shading flat;colorbar;
+caxis([-1 1]/1e5);
+title('Residual term  (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+if(savefigure)
+print('-dpng','-r150',[figdir expname '_vort.png']);
+end
+
 
 
 

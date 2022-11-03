@@ -10,7 +10,7 @@
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+    prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/vorticity/' exp_group '/'];
     useSEAICE = true;
     savefigure = false;
@@ -24,8 +24,8 @@ for n=1
         load_data;
         load_spacing;
 
-%         calc_BTvorticity_curl_int;  
-%         calc_BTvorticity_int_curl;  
+        calc_BTvorticity_curl_int;  
+        calc_BTvorticity_int_curl;  
 %         calc_pressure_torque;
 %         calc_BTvorticity_uc;
 %         calc_BTvorticity_cdw;
