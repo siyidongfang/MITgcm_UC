@@ -22,7 +22,7 @@
     savefigure = true;
     showfigure = true;
 
-for n=1
+for n=27
     expname = EXPNAME{n}
     loadexp;
     load_data;
@@ -30,3 +30,4 @@ for n=1
     calc_BTStreamfunc;   
     plot_BTStreamfunc;
 end
+

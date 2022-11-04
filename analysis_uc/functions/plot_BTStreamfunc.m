@@ -40,7 +40,7 @@ set(handle,'Position',framepos);
 clf;
 set(gcf,'color','w');
 pcolor(XX/1000,YY/1000,Psi/1e6);
-% hold on;[C,h]=contour(XX/1000,YY/1000,-ff./abs(bathy),[3e-8:2e-8:9e-6],'g-','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,-ff./abs(bathy),[3e-8:2e-8:9e-6],'g-','LineWidth',1,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',2,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',800);hold off;
 shading flat;
