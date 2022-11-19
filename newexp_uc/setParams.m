@@ -268,7 +268,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
   Hice = Hicefront-(Hshelf+Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
   
-  Wtrough = 30*m1km; %%% Trough width, ref 30km
+  Wtrough = 15*m1km; %%% Trough width, ref 30km
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
   Wpoly = 20*m1km;   %%% Latitudinal width of polynya
@@ -2494,8 +2494,8 @@ end
             'ETAN',...
             'UVELSQ','VVELSQ','WVELSQ'...
             'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
-            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS',...
             'oceTAUX','oceTAUY'...
+            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS',...
         };
   else 
         diag_fields_avg = {...   
@@ -2975,6 +2975,7 @@ diag_fields_inst = {...
         obvice = zeros(1,Ny);
 
 
+        ob_check_idx = 0;
         for jjj = yidx_icefront
             jjj
             ua_local = uwind(1,jjj);
@@ -3004,8 +3005,9 @@ diag_fields_inst = {...
             obvice(jjj) = 0;
         end
 
-        obuice(ob_check_idx) = 0.5*(obuice(ob_check_idx-1)+obuice(ob_check_idx+1));
-
+        if(ob_check_idx~=0)
+            obuice(ob_check_idx) = 0.5*(obuice(ob_check_idx-1)+obuice(ob_check_idx+1));
+        end
         % Nsponge = length(yidx_northernsponge);
         % obuice(Ny-Nsponge:Ny)=flip([0:(obuice(Ny-Nsponge)/Nsponge):obuice(Ny-Nsponge)]);
 

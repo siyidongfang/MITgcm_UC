@@ -11,6 +11,8 @@ load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_E
 
 DXG = rdmds(fullfile(resultspath,'DXG'));
 DYF = rdmds(fullfile(resultspath,'DYF'));
+% DXC = rdmds(fullfile(resultspath,'DXC'));
+% DYC = rdmds(fullfile(resultspath,'DYC'));
 RAZ = rdmds(fullfile(resultspath,'RAZ'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
