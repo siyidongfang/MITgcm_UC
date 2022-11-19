@@ -10,8 +10,8 @@ load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_E
     'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext','Um_Cori','Vm_Cori',...
     'Um_AdvZ3','Um_AdvRe','Vm_AdvZ3','Vm_AdvRe');
 
-DXG = rdmds(fullfile(resultspath,'DXG'));
-DYF = rdmds(fullfile(resultspath,'DYF'));
+DXC = rdmds(fullfile(resultspath,'DXC'));
+DYC = rdmds(fullfile(resultspath,'DYC'));
 RAZ = rdmds(fullfile(resultspath,'RAZ'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -62,20 +62,20 @@ zeta_Ext = zeros(Nx,Ny);
 for i = 2:Nx
     for j = 2:Ny
         %%% Pressure torque
-        zeta_dPhi(i,j) = ( Um_dPhiX_zint(i,j-1)*DXG(i,j-1) + Vm_dPhiY_zint(i,j)*DYF(i,j) ...
-                         - Um_dPhiX_zint(i,j)*DXG(i,j)     - Vm_dPhiY_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_dPhi(i,j) = ( Um_dPhiX_zint(i,j-1)*DXC(i,j-1) + Vm_dPhiY_zint(i,j)*DYC(i,j) ...
+                         - Um_dPhiX_zint(i,j)*DXC(i,j)     - Vm_dPhiY_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j); 
         
         %%% Advection term
-        zeta_Advec(i,j) = ( Um_Advec_zint(i,j-1)*DXG(i,j-1) + Vm_Advec_zint(i,j)*DYF(i,j) ...
-                          - Um_Advec_zint(i,j)*DXG(i,j)     - Vm_Advec_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_Advec(i,j) = ( Um_Advec_zint(i,j-1)*DXC(i,j-1) + Vm_Advec_zint(i,j)*DYC(i,j) ...
+                          - Um_Advec_zint(i,j)*DXC(i,j)     - Vm_Advec_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j); 
         
         %%% Dissipation term
-        zeta_Diss(i,j) = ( Um_Diss_zint(i,j-1)*DXG(i,j-1) + Vm_Diss_zint(i,j)*DYF(i,j) ...
-                         - Um_Diss_zint(i,j)*DXG(i,j)     - Vm_Diss_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_Diss(i,j) = ( Um_Diss_zint(i,j-1)*DXC(i,j-1) + Vm_Diss_zint(i,j)*DYC(i,j) ...
+                         - Um_Diss_zint(i,j)*DXC(i,j)     - Vm_Diss_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j); 
        
         %%% Surface stress term
-        zeta_Ext(i,j) = ( Um_Ext_zint(i,j-1)*DXG(i,j-1) + Vm_Ext_zint(i,j)*DYF(i,j) ...
-                        - Um_Ext_zint(i,j)*DXG(i,j)     - Vm_Ext_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);   
+        zeta_Ext(i,j) = ( Um_Ext_zint(i,j-1)*DXC(i,j-1) + Vm_Ext_zint(i,j)*DYC(i,j) ...
+                        - Um_Ext_zint(i,j)*DXC(i,j)     - Vm_Ext_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j);   
     end
 end
       
@@ -103,16 +103,16 @@ zeta_AdvRe = zeros(Nx,Ny);
 for i = 2:Nx
     for j = 2:Ny
         %%% Coriolis term (planetary vorticity advection)
-        zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXG(i,j-1) + Vm_Cori_zint(i,j)*DYF(i,j) ...
-                         - Um_Cori_zint(i,j)*DXG(i,j)     - Vm_Cori_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXC(i,j-1) + Vm_Cori_zint(i,j)*DYC(i,j) ...
+                         - Um_Cori_zint(i,j)*DXC(i,j)     - Vm_Cori_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j); 
 
         %%% Vorticity Advection
-        zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXG(i,j-1) + Vm_AdvZ3_zint(i,j)*DYF(i,j) ...
-                          - Um_AdvZ3_zint(i,j)*DXG(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+        zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXC(i,j-1) + Vm_AdvZ3_zint(i,j)*DYC(i,j) ...
+                          - Um_AdvZ3_zint(i,j)*DXC(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j);
 
         %%% Vertical Advection (Explicit part)
-        zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXG(i,j-1) + Vm_AdvRe_zint(i,j)*DYF(i,j) ...
-                          - Um_AdvRe_zint(i,j)*DXG(i,j)     - Vm_AdvRe_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+        zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXC(i,j-1) + Vm_AdvRe_zint(i,j)*DYC(i,j) ...
+                          - Um_AdvRe_zint(i,j)*DXC(i,j)     - Vm_AdvRe_zint(i-1,j)*DYC(i-1,j) ) ./RAZ(i,j);
     end
 end
 
@@ -179,7 +179,7 @@ xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Int
 subplot(3,2,5)
 pcolor(XX/1000,YY/1000,zeta_residual)
 shading flat;colorbar;
-caxis([-1 1]/1e5);
+caxis([-1 1]/1e6);
 title('Residual term  (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])

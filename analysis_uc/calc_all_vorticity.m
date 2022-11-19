@@ -16,7 +16,7 @@
     savefigure = false;
 
 %     for n=1:nEXP
-for n=26
+for n=1
     if(is_prod_run(n))
         close all
         expname = EXPNAME{n}
@@ -24,8 +24,8 @@ for n=26
         load_data;
         load_spacing;
 
-%         calc_BTvorticity_curl_int;  
-        calc_BTvorticity_int_curl;  
+        calc_BTvorticity_curl_int;  
+%         calc_BTvorticity_int_curl;  
 %         calc_pressure_torque;
 %         calc_BTvorticity_uc;
 %         calc_BTvorticity_cdw;
