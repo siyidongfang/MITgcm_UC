@@ -25,7 +25,7 @@ for n=1
         load_spacing;
 
         calc_BTvorticity_curl_int;  
-        calc_IntVorticity_FoverH;
+        calc_BTVorticity_fh_int;
 %         calc_BTvorticity_int_curl;  
 %         calc_pressure_torque;
 %         calc_BTvorticity_uc;
@@ -33,6 +33,10 @@ for n=1
 %         calc_BTvorticity_sw;
     end
 end
+
+
+
+
 
 
 
