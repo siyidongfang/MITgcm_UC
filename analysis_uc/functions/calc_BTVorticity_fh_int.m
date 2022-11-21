@@ -92,7 +92,8 @@
     Wmaskf = ones(Nxf,Nyf); 
     Wmaskf(XXf>0)=NaN;
     Wmaskf(YYf<130*m1km)=NaN;
-    
+    Wmaskf(XXf<-278*m1km)=NaN;
+
     fh_westf = fhf.*Wmaskf;
     
     figure(6)
@@ -146,6 +147,7 @@
     plot(fh_select,zeta_Diss_fhint)
     plot(fh_select,zeta_Ext_fhint)
     plot(fh_select,zeta_residual_fhint)
+    legend('Pressure torque','Advection','Dissipation','External','Residual')
 
 
 
