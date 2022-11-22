@@ -7,7 +7,15 @@
 
     %%% Calculate f/h
     ff = f0+beta*YY;
-    fh = -ff./abs(bathy);
+
+    %%% Find the depth of water column
+    hh = sum(DZ.*hFacC,3);
+    hh(hh==0)=NaN;
+    hh([1 end],:,:) = NaN;
+    figure(4);clf;set(gcf,'color','w');
+    pcolor(hh);colorbar;shading flat;
+
+    fh = -ff./hh;
     bathy(bathy==0)=NaN;
     
     %%% Find closed f/h contours
@@ -16,25 +24,41 @@
     max_fh = max(max(fh));
     
     %%% plot f/h contours 
-    figure(4)
-    clf
-    contour(XX/1000,YY/1000,fh,(0:0.05:3)*1e-7)
+    figure(5)
+    clf;set(gcf,'color','w');
+    contour(XX/1000,YY/1000,fh,(0:0.1:13)*1e-7)
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
     hold off;
-    colorbar;colormap(jet);caxis([0 3e-7])
+    colorbar; colormap(WhiteBlueGreenYellowRed(0));caxis([0 5e-7]);
+    title('f/h (m^{-1}s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+
+    figure(6)
+    clf;set(gcf,'color','w');
+    pcolor(XX/1000,YY/1000,fh);shading flat;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar;
+    % colormap(jet);
+    colormap(WhiteBlueGreenYellowRed(0))
+    caxis([0 5e-7]);
+    title('f/h (m^{-1}s^{-1})','FontSize',fontsize+3)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
 
     %%% Select f/h contours  over the shelf and slope
-    Wmin = 2.1e-7;
+    Wmin = 1e-7;
     Wmax = 2.6e-7;
     fh_select = Wmin:0.05e-7:Wmax;
     LL = length(fh_select);
 
     %%% Create a finer horizontal grid
-    ffac = 1;
+    ffac = 7;
     Nxf = ffac*Nx;
     Nyf = ffac*Ny;
     delXf = zeros(1,Nxf); 
@@ -70,7 +94,6 @@
     fhf = interp2(YY,XX,fh,YYf,XXf,'linear');
     
 
-
     %%% Calculate the area integral
     zeta_dPhi_fhint = zeros(1,LL);
     zeta_Advec_fhint = zeros(1,LL);
@@ -78,8 +101,8 @@
     zeta_Ext_fhint = zeros(1,LL);
     zeta_residual_fhint = zeros(1,LL);
 
-    figure(5)
-    clf;
+    figure(7)
+    clf;set(gcf,'color','w');
     contour(XX/1000,YY/1000,fh,fh_select)
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
@@ -90,14 +113,30 @@
     
     %%% For west shelf/slope
     Wmaskf = ones(Nxf,Nyf); 
-    Wmaskf(XXf>0)=NaN;
-    Wmaskf(YYf<130*m1km)=NaN;
+    Wmaskf(XXf>40*m1km)=NaN;
     Wmaskf(XXf<-278*m1km)=NaN;
+
+    for i=1:Nxf
+        for j=1:Nyf
+            if (XXf(i,j)>10*m1km && fhf(i,j)>1.9e-7)
+                Wmaskf(i,j)=NaN;
+            end
+            if (XXf(i,j)>10*m1km && YYf(i,j)>220*m1km && fhf(i,j)<=1.9e-7)
+                Wmaskf(i,j)=NaN;
+            end
+            if (XXf(i,j)>-85*m1km && YYf(i,j)<110*m1km)
+                Wmaskf(i,j)=NaN;
+            end
+            if (XXf(i,j)<-85*m1km && YYf(i,j)<140*m1km)
+                Wmaskf(i,j)=NaN;
+            end
+        end
+    end
 
     fh_westf = fhf.*Wmaskf;
     
-    figure(6)
-    clf;
+    figure(8)
+    clf;set(gcf,'color','w');
     contour(XXf/1000,YYf/1000,fh_westf,fh_select)
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
@@ -128,27 +167,38 @@
     end
 
 
-    figure(13)
-    clf;
+    figure(9)
+    clf;set(gcf,'color','w');
     pcolor(XXf/1000,YYf/1000,test(:,:,1));
+    colormap(WhiteBlueGreenYellowRed(0));
     shading flat;
     hold on;
     for n=2:LL-1
         pcolor(XXf/1000,YYf/1000,test(:,:,n));shading flat;
+        colormap(WhiteBlueGreenYellowRed(0));
     end
     hold off;
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
 
-
-    figure(14)
-    clf;
-    plot(fh_select,zeta_dPhi_fhint)
+    figure(10)
+    clf;set(gcf,'color','w');
+    plot(fh_select,zeta_dPhi_fhint/1e3,'LineWidth',2)
     hold on;
-    plot(fh_select,zeta_Advec_fhint)
-    plot(fh_select,zeta_Diss_fhint)
-    plot(fh_select,zeta_Ext_fhint)
-    plot(fh_select,zeta_residual_fhint)
-    legend('Pressure torque','Advection','Dissipation','External','Residual')
-
-
+    plot(fh_select,zeta_Advec_fhint/1e3,'LineWidth',2)
+    plot(fh_select,zeta_Diss_fhint/1e3,'LineWidth',2)
+    plot(fh_select,zeta_Ext_fhint/1e3,'LineWidth',2)
+    plot(fh_select,zeta_residual_fhint/1e3,'--','LineWidth',2,'Color',gray)
+    leg1  = legend('Pressure torque','Advection','Dissipation','External','Residual');
+    set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
+    set(gca,'FontSize',fontsize);
+    xlim([min(fh_select) max(fh_select)])
+    xlabel('Selected f/h contours, (m^{-1}s^{-1})');
+    ylabel('(10^3 N/m)');
+    title('Volume integrated vorticity budget of west shelf');
+    grid on;
+    figdir = '/Users/csi/MITgcm_UC/figures_uc/vorticity/westshelf/'
+    print('-dpng','-r200',[figdir expname '_westshelf.png']);
 
 

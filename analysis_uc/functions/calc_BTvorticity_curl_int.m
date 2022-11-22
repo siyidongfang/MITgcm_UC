@@ -105,7 +105,6 @@ zeta_ageo_3D = zeta_Advec_3D + zeta_dPhi_3D;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hFacZeta = zeros(Nx,Ny,Nr);
 
-
 for i=1:Nx-1
     for j=2:Ny
         hFacZeta(i,j,:) = 0.25*( hFacW(i,j,:) + hFacW(i,j-1,:)...
