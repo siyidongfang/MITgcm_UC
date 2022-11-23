@@ -56,6 +56,7 @@
     Wmax = 2.6e-7;
     fh_select = Wmin:0.05e-7:Wmax;
     LL = length(fh_select);
+    fh_select_mid = 0.5*(fh_select(1:end-1)+fh_select(2:end));
 
     %%% Create a finer horizontal grid
     ffac = 7;
@@ -97,15 +98,15 @@
     zeta_AdvRef = interp2(YY,XX,zeta_AdvRe,YYf,XXf,'linear');
 
     %%% Calculate the area integral
-    zeta_dPhi_fhint = zeros(1,LL);
-    zeta_Advec_fhint = zeros(1,LL);
-    zeta_Diss_fhint = zeros(1,LL);
-    zeta_Ext_fhint = zeros(1,LL);
-    zeta_residual_fhint = zeros(1,LL);
+    zeta_dPhi_fhint = zeros(1,LL-1);
+    zeta_Advec_fhint = zeros(1,LL-1);
+    zeta_Diss_fhint = zeros(1,LL-1);
+    zeta_Ext_fhint = zeros(1,LL-1);
+    zeta_residual_fhint = zeros(1,LL-1);
 
-    zeta_Cori_fhint = zeros(1,LL);
-    zeta_AdvZ3_fhint = zeros(1,LL);
-    zeta_AdvRe_fhint = zeros(1,LL);
+    zeta_Cori_fhint = zeros(1,LL-1);
+    zeta_AdvZ3_fhint = zeros(1,LL-1);
+    zeta_AdvRe_fhint = zeros(1,LL-1);
 
 %     figure(7)
 %     clf;set(gcf,'color','w');
@@ -154,6 +155,7 @@
     dAf = dxf*dyf;
 
     test = NaN.*zeros(Nxf,Nyf,LL-1);
+    area = zeros(1,LL-1);
 
     for n=1:LL-1
         fh_a = fh_select(n);
@@ -174,8 +176,65 @@
                 end
             end
         end
+        area(n) = sum(test(:,:,n)/n*dAf,'all','omitnan'); 
     end
 
+    area(area==0)=NaN;
+
+
+
+
+    figure(10)
+    clf;set(gcf,'color','w');
+    plot(fh_select_mid,zeta_dPhi_fhint,'LineWidth',2)
+    hold on;
+    plot(fh_select_mid,zeta_Advec_fhint,'LineWidth',2)
+    plot(fh_select_mid,zeta_Diss_fhint,'LineWidth',2)
+    plot(fh_select_mid,zeta_Ext_fhint,'LineWidth',2)
+    plot(fh_select_mid,zeta_residual_fhint,'--','LineWidth',2,'Color',gray)
+    leg1  = legend('Pressure torque','Advection','Dissipation','External','Residual');
+    set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
+    set(gca,'FontSize',fontsize);
+    xlim([min(fh_select) max(fh_select)])
+    xlabel('Selected f/h contours, (m^{-1}s^{-1})');
+    ylabel('(N/m)');
+    title('Volume integrated vorticity budget of west shelf');
+    grid on;
+    figdir = '/Users/csi/MITgcm_UC/figures_uc/vorticity/westshelf/'
+    print('-dpng','-r200',[figdir expname '_westshelf-uc.png']);
+
+
+    zeta_advresidual_fhint = zeta_Advec_fhint-zeta_Cori_fhint-zeta_AdvZ3_fhint-zeta_AdvRe_fhint;
+
+    figure(11)
+    clf;set(gcf,'color','w');
+    plot(fh_select_mid,zeta_Advec_fhint,'LineWidth',2)
+    hold on;
+    plot(fh_select_mid,zeta_Cori_fhint,'-.','LineWidth',2)
+    plot(fh_select_mid,zeta_AdvZ3_fhint,'-.','LineWidth',2)
+    plot(fh_select_mid,zeta_AdvRe_fhint,'-.','LineWidth',2)
+    plot(fh_select_mid,zeta_advresidual_fhint,'--','LineWidth',2,'Color',gray)
+    leg1  = legend('Total advection','Coriolis term','Vorticity advection','Vertical advection','Residual');
+    set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
+    set(gca,'FontSize',fontsize);
+    xlim([min(fh_select) max(fh_select)])
+    xlabel('Selected f/h contours, (m^{-1}s^{-1})');
+    ylabel('(N/m)');
+    title('Volume integrated advection terms of west shelf');
+    grid on;
+    print('-dpng','-r200',[figdir expname '_westshelf_adv-uc.png']);
+
+
+
+
+    zeta_dPhi_fhint = zeta_dPhi_fhint./area; %%% Normalized by area between f/h contours
+    zeta_Advec_fhint = zeta_Advec_fhint./area;
+    zeta_Diss_fhint = zeta_Diss_fhint./area;
+    zeta_Ext_fhint = zeta_Ext_fhint./area;
+    zeta_residual_fhint = zeta_residual_fhint./area;
+    zeta_Cori_fhint = zeta_Cori_fhint./area;
+    zeta_AdvZ3_fhint = zeta_AdvZ3_fhint./area;
+    zeta_AdvRe_fhint = zeta_AdvRe_fhint./area;
 
 %     figure(9)
 %     clf;set(gcf,'color','w');
@@ -192,44 +251,44 @@
 %     ylabel('Latitude, y (km)');
 %     set(gca,'FontSize',fontsize);
 
-    figure(10)
+    figure(12)
     clf;set(gcf,'color','w');
-    plot(fh_select,zeta_dPhi_fhint/1e3,'LineWidth',2)
+    plot(fh_select_mid,zeta_dPhi_fhint,'LineWidth',2)
     hold on;
-    plot(fh_select,zeta_Advec_fhint/1e3,'LineWidth',2)
-    plot(fh_select,zeta_Diss_fhint/1e3,'LineWidth',2)
-    plot(fh_select,zeta_Ext_fhint/1e3,'LineWidth',2)
-    plot(fh_select,zeta_residual_fhint/1e3,'--','LineWidth',2,'Color',gray)
+    plot(fh_select_mid,zeta_Advec_fhint,'LineWidth',2)
+    plot(fh_select_mid,zeta_Diss_fhint,'LineWidth',2)
+    plot(fh_select_mid,zeta_Ext_fhint,'LineWidth',2)
+    plot(fh_select_mid,zeta_residual_fhint,'--','LineWidth',2,'Color',gray)
     leg1  = legend('Pressure torque','Advection','Dissipation','External','Residual');
     set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
     set(gca,'FontSize',fontsize);
     xlim([min(fh_select) max(fh_select)])
     xlabel('Selected f/h contours, (m^{-1}s^{-1})');
-    ylabel('(10^3 N/m)');
-    title('Volume integrated vorticity budget of west shelf');
+    ylabel('(N/m^3)');
+    title({'Vorticity budget of west shelf,', 'normalized by area'});
     grid on;
     figdir = '/Users/csi/MITgcm_UC/figures_uc/vorticity/westshelf/'
-    print('-dpng','-r200',[figdir expname '_westshelf.png']);
+    print('-dpng','-r200',[figdir expname '_westshelf_normalized-uc.png']);
 
 
     zeta_advresidual_fhint = zeta_Advec_fhint-zeta_Cori_fhint-zeta_AdvZ3_fhint-zeta_AdvRe_fhint;
 
-    figure(11)
+    figure(13)
     clf;set(gcf,'color','w');
-    plot(fh_select,zeta_Advec_fhint/1e3,'LineWidth',2)
+    plot(fh_select_mid,zeta_Advec_fhint,'LineWidth',2)
     hold on;
-    plot(fh_select,zeta_Cori_fhint/1e3,'-.','LineWidth',2)
-    plot(fh_select,zeta_AdvZ3_fhint/1e3,'-.','LineWidth',2)
-    plot(fh_select,zeta_AdvRe_fhint/1e3,'-.','LineWidth',2)
-    plot(fh_select,zeta_advresidual_fhint/1e3,'--','LineWidth',2,'Color',gray)
+    plot(fh_select_mid,zeta_Cori_fhint,'-.','LineWidth',2)
+    plot(fh_select_mid,zeta_AdvZ3_fhint,'-.','LineWidth',2)
+    plot(fh_select_mid,zeta_AdvRe_fhint,'-.','LineWidth',2)
+    plot(fh_select_mid,zeta_advresidual_fhint,'--','LineWidth',2,'Color',gray)
     leg1  = legend('Total advection','Coriolis term','Vorticity advection','Vertical advection','Residual');
     set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
     set(gca,'FontSize',fontsize);
     xlim([min(fh_select) max(fh_select)])
     xlabel('Selected f/h contours, (m^{-1}s^{-1})');
-    ylabel('(10^3 N/m)');
-    title('Volume integrated advection terms of west shelf');
+    ylabel('(N/m^3)');
+    title({'Advection terms of west shelf,', 'normalized by area'});
     grid on;
-    print('-dpng','-r200',[figdir expname '_westshelf_adv.png']);
+    print('-dpng','-r200',[figdir expname '_westshelf_adv_normalized-uc.png']);
 
 
