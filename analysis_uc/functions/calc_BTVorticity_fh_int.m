@@ -52,7 +52,7 @@
 %     set(gca,'FontSize',fontsize);
 
     %%% Select f/h contours  over the shelf and slope
-    Wmin = 1e-7;
+    Wmin = 0e-7;
     Wmax = 2.6e-7;
     fh_select = Wmin:0.05e-7:Wmax;
     LL = length(fh_select);
@@ -175,8 +175,6 @@
             end
         end
     end
-
-
 
 
 %     figure(9)

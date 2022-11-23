@@ -105,23 +105,44 @@ zeta_ageo_3D = zeta_Advec_3D + zeta_dPhi_3D;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hFacZeta = zeros(Nx,Ny,Nr);
 
-for i=1:Nx-1
-    for j=2:Ny
-        hFacZeta(i,j,:) = 0.25*( hFacW(i,j,:) + hFacW(i,j-1,:)...
-                              + hFacS(i,j,:) + hFacS(i+1,j,:));
+% for i=1:Nx-1
+%     for j=2:Ny
+% %         hFacZeta(i,j,:) = 0.25*( hFacW(i,j,:) + hFacW(i,j-1,:)...
+% %                               + hFacS(i,j,:) + hFacS(i+1,j,:));
+% %         hFacZeta(i,j,:) = min( [hFacW(i,j,:), hFacW(i,j-1,:), ...
+% %                                hFacS(i,j,:), hFacS(i+1,j,:)]);
+%     end
+% end
+
+for i=1:Nx
+    for j=1:Ny
+        for k=1:Nr
+            hFacZeta(i,j,k) = min([hFacW(i,j,k),hFacS(i,j,k)]);
+        end
     end
 end
 
-zeta_dPhi = rho0.*sum(zeta_dPhi_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_Advec = rho0.*sum(zeta_Advec_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_Diss = rho0.*sum(zeta_Diss_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_Ext = rho0.*sum(zeta_Ext_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_residual = rho0.*sum(zeta_residual_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_Cori = rho0.*sum(zeta_Cori_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_AdvZ3 = rho0.*sum(zeta_AdvZ3_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_AdvRe = rho0.*sum(zeta_AdvRe_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_nonLin = rho0.*sum(zeta_nonLin_3D.*hFacZeta.*DZ,3,'omitnan');
-zeta_ageo = rho0.*sum(zeta_ageo_3D.*hFacZeta.*DZ,3,'omitnan');
+
+%%% Find (x,y,z) indices for the undercurrent on verticity-grid
+% uu_vorgrid = zeros(Nx,Ny,Nr);
+% uu_vorgrid(:,2:Ny,:) = (uu(:,1:Ny-1,:)+ uu(:,2:Ny,:))/2; % vorticity-gird 
+% mask_uc = zeros(Nx,Ny,Nr);
+% mask_uc(uu_vorgrid>0)=1; %%% mask of the undercurrent
+% mask_uc(:,136:Ny,:)=0;
+% mask_uc(:,1:65,:)=0;
+
+mask_uc=ones(Nx,Ny,Nr);
+ 
+zeta_dPhi = rho0.*sum(zeta_dPhi_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_Advec = rho0.*sum(zeta_Advec_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_Diss = rho0.*sum(zeta_Diss_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_Ext = rho0.*sum(zeta_Ext_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_residual = rho0.*sum(zeta_residual_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_Cori = rho0.*sum(zeta_Cori_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_AdvZ3 = rho0.*sum(zeta_AdvZ3_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_AdvRe = rho0.*sum(zeta_AdvRe_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_nonLin = rho0.*sum(zeta_nonLin_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
+zeta_ageo = rho0.*sum(zeta_ageo_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
 
 
 % % zeta_dPhi_3D_ugrid = zeta_dPhi_3D;
