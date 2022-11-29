@@ -124,14 +124,14 @@ end
 
 
 %%% Find (x,y,z) indices for the undercurrent on verticity-grid
-uu_vorgrid = zeros(Nx,Ny,Nr);
-uu_vorgrid(:,2:Ny,:) = (uu(:,1:Ny-1,:)+ uu(:,2:Ny,:))/2; % vorticity-gird 
-mask_uc = zeros(Nx,Ny,Nr);
-mask_uc(uu_vorgrid>0)=1; %%% mask of the undercurrent
-mask_uc(:,136:Ny,:)=0;
-mask_uc(:,1:65,:)=0;
+% uu_vorgrid = zeros(Nx,Ny,Nr);
+% uu_vorgrid(:,2:Ny,:) = (uu(:,1:Ny-1,:)+ uu(:,2:Ny,:))/2; % vorticity-gird 
+% mask_uc = zeros(Nx,Ny,Nr);
+% mask_uc(uu_vorgrid>0)=1; %%% mask of the undercurrent
+% mask_uc(:,136:Ny,:)=0;
+% mask_uc(:,1:65,:)=0;
 
-% mask_uc=ones(Nx,Ny,Nr);
+mask_uc=ones(Nx,Ny,Nr);
  
 zeta_dPhi = rho0.*sum(zeta_dPhi_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
 zeta_Advec = rho0.*sum(zeta_Advec_3D.*hFacZeta.*DZ.*mask_uc,3,'omitnan');
