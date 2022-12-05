@@ -57,7 +57,7 @@
     xlabel('Latitude, y (km)')
     set(gca,'FontSize',fontsize);
     legend('Ref.','Ua-2Va2','Ua-8Va8','Atide0.02','Zn450','Zsb500','dZs50','dZs200','FontSize',fontsize+3)
-    print('-dpng','-r150',[figdir 'Fheat_group1.png']);
+%     print('-dpng','-r150',[figdir 'Fheat_group1.png']);
 
 
 
@@ -131,5 +131,5 @@
     title('Shoreward heat transport (prescribed melt water)','FontSize',fontsize+3)
     set(leg1,'Position',[0.1460 0.6315 0.4190 0.2824])
 
-    print('-dpng','-r150',[figdir 'Fheat_group3.png']);
+%     print('-dpng','-r150',[figdir 'Fheat_group3.png']);
 

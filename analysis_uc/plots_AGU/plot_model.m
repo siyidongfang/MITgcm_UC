@@ -55,6 +55,7 @@
 %     salt_inst = rdmdsWrapper(fullfile(exppath,'/results/S'),nIter); 
 %     theta_inst(hFacC==0) = NaN; %%% Remove topography
 %     salt_inst(hFacC==0) = NaN; 
+    uvel_inst = rdmdsWrapper(fullfile(exppath,'/results/U'),nIter);    
 
     %%% Select potential temperature surface
     theta_plot = 0.5;
@@ -196,17 +197,18 @@
     Ly_end = 280*m1km;
     Ly_start = 200*m1km;
     yidx_u2 = round(Ly_start/delY(1)):round(Ly_end/delY(1));
-    uvel_slice = squeeze(uu(idx_u2,:,:));
+    uvel_slice = squeeze(uvel_inst(idx_u2,:,:));
     % uvel_slice(uvel_slice==0) = NaN;
     p = surface(xx(idx_u2)/1000*ones(length(yidx_u2),Nr),YYY(yidx_u2,:),-ZZZ(yidx_u2,:),uvel_slice(yidx_u2,:));
     p.FaceColor = 'texturemap';
 %     colormap(cmocean('delta'))
-    clim([-0.08 0.08]);
+    clim([-0.1 0.1]);
     p.EdgeColor = 'none';         
     alpha(p,0.9);
     freezeColors;
 
-    handle_uc = colorbar;
+%     handle_uc = colorbar(gca,'TickLabels', {'-0.1','0','0.1'},'Ticks', [-0.1 0 0.1]);
+    handle_uc = colorbar;    
     set(handle_uc,'Position',[0.58-0.03    0.22+0.06    0.01    0.15]);
     annotation('textbox',[0.42-0.02 0.34+0.06 0.15 0.01],'String',{'Zonal';'velocity';'(m/s)'},'FontSize',fontsize,'LineStyle','None','horizontalAlignment','right');
  

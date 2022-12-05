@@ -156,13 +156,13 @@ dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern bo
     uEast = uEast_TWV;
 
 
-
+%%
     figure(1)
     set(gcf,'Position',[1  107 500 700])
-%     clf;    
+    clf;    
 
     ax1 = subplot('position',[0.1 0.58 subplotsize]);
-    annotation('textbox',[0.015 0.955 0.05 0.05],'String','(b)','FontSize',fontsize+2,'LineStyle','None','fontweight', 'bold');
+    annotation('textbox',[0.015 0.955 0.05 0.05],'String','(b)','FontSize',fontsize+5,'LineStyle','None');
     
     pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
     shading flat;axis ij;
@@ -171,29 +171,31 @@ dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern bo
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);
     colormap(mycolormap);colorbar
     clim([-0.06 0.06])
-    title('Zonal boundary restoring velocity (m/s)')
+    set(gca,'FontSize',fontsize);
+    title('Boundary restoring velocity (m/s)','FontSize',fontsize+4)
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);
-    set(gca,'FontSize',fontsize);
 
     ax2 = subplot('position',[0.1 0.08 subplotsize]);
-    annotation('textbox',[0.015 0.455 0.05 0.05],'String','(c)','FontSize',fontsize+2,'LineStyle','None','fontweight', 'bold');
+    annotation('textbox',[0.015 0.455 0.05 0.05],'String','(c)','FontSize',fontsize+5,'LineStyle','None');
 
     pcolor(yy/1000,-zz/1000,uu_xmean');
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',2);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',2);hold off;
+    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
     hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
     clabel(M,c,'LabelSpacing',200);hold off;
     shading interp;axis ij;colormap(mycolormap);colorbar
-    clim([-0.05 0.05])
-    title('Zonal-mean zonal velocity (m/s)')
+    clim([-0.06 0.06])
+    set(gca,'FontSize',fontsize);
+    title('Zonal-mean zonal velocity (m/s)','FontSize',fontsize+4)
     ylabel('Depth (km)');xlabel('y (km)')
     set(gca,'XTick',[0:20:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);
     ylim([0.25 2])
     xlim([190 270])
-    set(gca,'FontSize',fontsize);
 
+     figdir = '/Users/csi/MITgcm_UC/figures_uc/';
+     print('-dpng','-r200',[figdir 'velocity.png']);
 
 
 
