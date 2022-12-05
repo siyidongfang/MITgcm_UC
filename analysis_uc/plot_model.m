@@ -21,8 +21,8 @@
     list_exps_new;
     load_constants;
     load_colors;
-    nn =1; % Load the reference experiment
-    expname = EXPNAME{nn}
+    n =1; % Load the reference experiment
+    expname = EXPNAME{n}
 %     expdir = EXPDIR{nn};
 %     nIter = NITER(nn);
 %     year = YEAR{nn};
@@ -44,17 +44,17 @@
     %%% Calculate CDW layer properties
 %     prodir = [expdir expname '/'];
 %     load([prodir '/' expname '_tavg_5yrs.mat'], 'THETA','SALT','UVEL','VVEL','VVELTH','ETAN')
-    calc_basics;
-    nIter = 927529;
+%     calc_basics;
+    nIter = 1298541;
 
     %%% Read snapshot data
 %     uu = rdmdsWrapper(fullfile(exppath,'/results/UVEL'),nIter);    
 %     tt = rdmdsWrapper(fullfile(exppath,'/results/THETA'),nIter); 
 %     ss = rdmdsWrapper(fullfile(exppath,'/results/SALT'),nIter); 
-    theta_inst = rdmdsWrapper(fullfile(exppath,'/results/T'),nIter); 
-    salt_inst = rdmdsWrapper(fullfile(exppath,'/results/S'),nIter); 
-    theta_inst(hFacC==0) = NaN; %%% Remove topography
-    salt_inst(hFacC==0) = NaN; 
+%     theta_inst = rdmdsWrapper(fullfile(exppath,'/results/T'),nIter); 
+%     salt_inst = rdmdsWrapper(fullfile(exppath,'/results/S'),nIter); 
+%     theta_inst(hFacC==0) = NaN; %%% Remove topography
+%     salt_inst(hFacC==0) = NaN; 
 
     %%% Select potential temperature surface
     theta_plot = 0.5;
@@ -144,11 +144,18 @@
     ZZZ(:,end)=-4;
     p_bct = surface(xx(idx_1)/1000*ones(size(YYY)),YYY,-ZZZ,BC_t);
     colormap(colormap(cmocean('balance',ncolor)))
-    caxis([-2.3 2.3]);
+    clim([-2.3 2.3]);
     p_bct.FaceColor = 'texturemap';
     p_bct.EdgeColor = 'none';         
     alpha(p_bct,1);
     freezeColors;
+
+    handle_tt = colorbar(gca,'TickLabels', [ ],'Ticks', [ ]);
+    set(handle_tt,'Position',[0.795    0.3    0.01    0.15]);
+    annotation('textbox',[0.645 0.43 0.15 0.01],'String',{'Restoring';'temperature';['(' char(176) 'C)']},'FontSize',fontsize-1,'LineStyle','None','horizontalAlignment','right');
+    annotation('textbox',[0.13 0.86 0.15 0.01],'String',{'(a)'},'FontSize',fontsize+1,'LineStyle','None');
+    anno51 = annotation('textbox',[0.805 0.352 0.05 0.1],'String',{'\fontsize{22}2','\fontsize{26}','\fontsize{22}0','\fontsize{26}','\fontsize{22}-2'},'EdgeColor','none');     
+
 % %     p_bcu = contour3(XX_bc,YY_bc,BC_u,...
 % %         [-0.08:0.01:0.01],'LineColor','k','LineWidth',1.5,'ShowText','on');
 % % %     colormap(redblue)
@@ -174,8 +181,6 @@
 
 
 
-
-
 %     %%% Plot 0 degC isotherms
 %     fv = isosurface(XX(:,2:end-1,:),YY(:,2:end-1,:),-ZZ(:,2:end-1,:),theta_inst(:,2:end-1,:),theta_plot);
 %     p = patch(fv);
@@ -185,10 +190,10 @@
 
 
 
-    %%% Plot a slice of zonal velocity near x = -80km
-    Lx_u2 = 220*m1km;
+    %%% Plot a slice of zonal velocity near x = -50km
+    Lx_u2 = 250*m1km;
     idx_u2 = round(Lx_u2/delX(1));
-    Ly_end = 300*m1km;
+    Ly_end = 280*m1km;
     Ly_start = 200*m1km;
     yidx_u2 = round(Ly_start/delY(1)):round(Ly_end/delY(1));
     uvel_slice = squeeze(uu(idx_u2,:,:));
@@ -196,38 +201,43 @@
     p = surface(xx(idx_u2)/1000*ones(length(yidx_u2),Nr),YYY(yidx_u2,:),-ZZZ(yidx_u2,:),uvel_slice(yidx_u2,:));
     p.FaceColor = 'texturemap';
 %     colormap(redblue)
-    caxis([-0.08 0.08]);
+    clim([-0.08 0.08]);
     p.EdgeColor = 'none';         
     alpha(p,0.9);
     freezeColors;
 
-    %%% Plot CDW heat flux
-    Ly_end = 280*m1km;
-    Ly_start = 2*m1km;
-    yidx_cdw = round(Ly_start/delY(1)):round(Ly_end/delY(1))+10;
-    xidx_cdw = round(160*m1km/delX(1)):round(440*m1km/delX(1));
-%     yidx_cdw = 1:Ny;
-%     xidx_cdw = 1:Nx;
-    p = surface(X(xidx_cdw,yidx_cdw),Y(xidx_cdw,yidx_cdw),0.5*ones(size(X(xidx_cdw,yidx_cdw))),-Fheat_cdw(xidx_cdw,yidx_cdw)/1e9);
-    Fmax = max(max(abs(Fheat_cdw(xidx_cdw,yidx_cdw)/1e9)));
-    caxis([-Fmax/1.2 Fmax/1.2]);
-    
-    % colormap(colormap(cmocean('balance',ncolor)))
-    colormap(redblue);
-    set(p,'FaceColor','texturemap','EdgeColor','none')
-    alpha(p,1);
+    handle_uc = colorbar;
+    set(handle_uc,'Position',[0.58    0.22    0.01    0.15]);
+    annotation('textbox',[0.42 0.34 0.15 0.01],'String',{'Zonal';'velocity';'(m/s)'},'FontSize',fontsize,'LineStyle','None','horizontalAlignment','right');
+ 
 
-
-    %%% Plot CDW volume flux
-    svx = 7; svy = 7;
-    yidx_cdw = round(Ly_start/delY(1)):svy:round(Ly_end/delY(1))+10;
-    xidx_cdw = round(160*m1km/delX(1))-40:svx:round(440*m1km/delX(1));
-%     yidx_cdw = 1:Ny;
-%     xidx_cdw = 1:Nx;
-    curr = quiver3(xx(xidx_cdw)'/1000,yy(yidx_cdw)'/1000,0.5*ones(size(UU_cdw(xidx_cdw,yidx_cdw)')), ...
-        UU_cdw(xidx_cdw,yidx_cdw)',VV_cdw(xidx_cdw,yidx_cdw)',0*ones(size(UU_cdw(xidx_cdw,yidx_cdw)')),4);
-    curr.Color = [0 102 0]/255;
-    curr.LineWidth = 1.5;
+%     %%% Plot CDW heat flux
+%     Ly_end = 280*m1km;
+%     Ly_start = 2*m1km;
+%     yidx_cdw = round(Ly_start/delY(1)):round(Ly_end/delY(1))+10;
+%     xidx_cdw = round(160*m1km/delX(1)):round(440*m1km/delX(1));
+% %     yidx_cdw = 1:Ny;
+% %     xidx_cdw = 1:Nx;
+%     p = surface(X(xidx_cdw,yidx_cdw),Y(xidx_cdw,yidx_cdw),0.5*ones(size(X(xidx_cdw,yidx_cdw))),-Fheat_cdw(xidx_cdw,yidx_cdw)/1e9);
+%     Fmax = max(max(abs(Fheat_cdw(xidx_cdw,yidx_cdw)/1e9)));
+%     caxis([-Fmax/1.2 Fmax/1.2]);
+%     
+%     % colormap(colormap(cmocean('balance',ncolor)))
+%     colormap(redblue);
+%     set(p,'FaceColor','texturemap','EdgeColor','none')
+%     alpha(p,1);
+% 
+% 
+%     %%% Plot CDW volume flux
+%     svx = 7; svy = 7;
+%     yidx_cdw = round(Ly_start/delY(1)):svy:round(Ly_end/delY(1))+10;
+%     xidx_cdw = round(160*m1km/delX(1))-40:svx:round(440*m1km/delX(1));
+% %     yidx_cdw = 1:Ny;
+% %     xidx_cdw = 1:Nx;
+%     curr = quiver3(xx(xidx_cdw)'/1000,yy(yidx_cdw)'/1000,0.5*ones(size(UU_cdw(xidx_cdw,yidx_cdw)')), ...
+%         UU_cdw(xidx_cdw,yidx_cdw)',VV_cdw(xidx_cdw,yidx_cdw)',0*ones(size(UU_cdw(xidx_cdw,yidx_cdw)')),4);
+%     curr.Color = [0 102 0]/255;
+%     curr.LineWidth = 1.5;
 
 
 
@@ -239,21 +249,26 @@
     ylabel('y (km)');
     zlabel('Depth (km)');
     set(gca,'FontSize',fontsize);
-    set(gca,'ZTick',[0:1:4]);
-    set(gca,'YTick',[0:100:400]);
+    set(gca,'ZTick',[0:1:4],'fontsize',fontsize-1);
+    set(gca,'YLim',[0 400]);
+    set(gca,'YTick',[0:100:400],'fontsize',fontsize-1);
+    set(gca,'XLim',[-300 300]);
+    set(gca,'XTick',[-300:100:300],'fontsize',fontsize-1);
     set(gca, 'ZDir','reverse')
     axis tight;
     pbaspect([Lx/Ly 1 1]);
-    camlight('right');
-    lightangle(10,-34); 
-%     lighting flat;
+    camlight('headlight');
+    lightangle(140,-34);
+    lighting flat;
+    box on;
+    grid off;
 
 
 
 
 
      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-     print('-dpng','-r150',[figdir 'model_ver2.png']);
+     print('-dpng','-r150',[figdir 'model_ver3.png']);
     
     
 
