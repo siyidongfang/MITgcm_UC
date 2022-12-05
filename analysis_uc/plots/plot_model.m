@@ -153,7 +153,7 @@
     handle_tt = colorbar(gca,'TickLabels', [ ],'Ticks', [ ]);
     set(handle_tt,'Position',[0.795    0.3    0.01    0.15]);
     annotation('textbox',[0.645 0.43 0.15 0.01],'String',{'Restoring';'temperature';['(' char(176) 'C)']},'FontSize',fontsize-1,'LineStyle','None','horizontalAlignment','right');
-    annotation('textbox',[0.13 0.86 0.15 0.01],'String',{'(a)'},'FontSize',fontsize+1,'LineStyle','None');
+    annotation('textbox',[0.15 0.86 0.15 0.01],'String',{'(a)'},'FontSize',fontsize+2,'LineStyle','None');
     anno51 = annotation('textbox',[0.805 0.352 0.05 0.1],'String',{'\fontsize{22}2','\fontsize{26}','\fontsize{22}0','\fontsize{26}','\fontsize{22}-2'},'EdgeColor','none');     
 
 % %     p_bcu = contour3(XX_bc,YY_bc,BC_u,...
@@ -191,7 +191,7 @@
 
 
     %%% Plot a slice of zonal velocity near x = -50km
-    Lx_u2 = 250*m1km;
+    Lx_u2 = 220*m1km;
     idx_u2 = round(Lx_u2/delX(1));
     Ly_end = 280*m1km;
     Ly_start = 200*m1km;
@@ -200,15 +200,15 @@
     % uvel_slice(uvel_slice==0) = NaN;
     p = surface(xx(idx_u2)/1000*ones(length(yidx_u2),Nr),YYY(yidx_u2,:),-ZZZ(yidx_u2,:),uvel_slice(yidx_u2,:));
     p.FaceColor = 'texturemap';
-%     colormap(redblue)
+%     colormap(cmocean('delta'))
     clim([-0.08 0.08]);
     p.EdgeColor = 'none';         
     alpha(p,0.9);
     freezeColors;
 
     handle_uc = colorbar;
-    set(handle_uc,'Position',[0.58    0.22    0.01    0.15]);
-    annotation('textbox',[0.42 0.34 0.15 0.01],'String',{'Zonal';'velocity';'(m/s)'},'FontSize',fontsize,'LineStyle','None','horizontalAlignment','right');
+    set(handle_uc,'Position',[0.58-0.03    0.22+0.06    0.01    0.15]);
+    annotation('textbox',[0.42-0.02 0.34+0.06 0.15 0.01],'String',{'Zonal';'velocity';'(m/s)'},'FontSize',fontsize,'LineStyle','None','horizontalAlignment','right');
  
 
 %     %%% Plot CDW heat flux
@@ -268,7 +268,7 @@
 
 
      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-     print('-dpng','-r150',[figdir 'model_ver3.png']);
+     print('-dpng','-r200',[figdir 'model_ver3.png']);
     
     
 
