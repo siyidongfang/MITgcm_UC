@@ -173,7 +173,7 @@ dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern bo
     clim([-0.06 0.06])
     set(gca,'FontSize',fontsize);
     title('Boundary restoring velocity (m/s)','FontSize',fontsize+4)
-    ylabel('Depth (km)');xlabel('y (km)')
+    ylabel('Depth (km)');xlabel('Latitude, y (km)')
     set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);
 
@@ -188,14 +188,14 @@ dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern bo
     clim([-0.06 0.06])
     set(gca,'FontSize',fontsize);
     title('Zonal-mean zonal velocity (m/s)','FontSize',fontsize+4)
-    ylabel('Depth (km)');xlabel('y (km)')
+    ylabel('Depth (km)');xlabel('Latitude, y (km)')
     set(gca,'XTick',[0:20:300 round(Ly/1000)]);
     set(gca,'YTick',[0:1:4]);
     ylim([0.25 2])
     xlim([190 270])
 
      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-     print('-dpng','-r200',[figdir 'velocity.png']);
+     print('-dpng','-r300',[figdir 'velocity.png']);
 
 
 

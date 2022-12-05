@@ -270,7 +270,7 @@
 
 
      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-     print('-dpng','-r200',[figdir 'model_ver3.png']);
+     print('-dpng','-r300',[figdir 'model_ver3.png']);
     
     
 
