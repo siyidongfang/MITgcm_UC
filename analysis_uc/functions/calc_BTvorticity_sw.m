@@ -20,8 +20,8 @@ RAZ = raz;
 
 %%% Find (x,y,z) indices for surface waters
 mask_sw = zeros(Nx,Ny,Nr);
-% mask_cdw(tt>0)=1;
-mask_sw(:,:,1:20)=1;
+% mask_sw(tt>0)=1;
+% mask_sw(:,:,1:20)=1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -24,7 +24,7 @@ for n=1
         load_data;
         load_spacing;
 
-        calc_BTvorticity_curl_int; 
+%         calc_BTvorticity_curl_int; 
 %         calc_BTvorticity_Aint;
 %         calc_BTVorticity_fh_int;
 %         calc_BTvorticity_int_curl;  
