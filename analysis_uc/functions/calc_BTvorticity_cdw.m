@@ -22,9 +22,15 @@ mask_cdw_sw;
 
 
 test_mask_cdw_ugrid = sum(mask_cdw_ugrid.*hFacW.*DZ,3,'omitnan');
-figure(10)
-pcolor(test_mask_cdw_ugrid);shading flat; colorbar;
+test_mask_cdw_ugrid(test_mask_cdw_ugrid==0)=NaN;
 
+figure(10)
+pcolor(XX/1000,YY/1000,test_mask_cdw_ugrid);shading flat; colorbar;
+colormap(jet)
+clim([100 500])
+ylim([0 230])
+title('CDW thickness (m)')
+set(gca,'FontSize',fontsize);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Depth-integrated momentum equation %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -210,6 +216,22 @@ title('Surface stress term (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 if(savefigure)
 print('-dpng','-r150',[figdir expname '_cdw_vort.png']);
 end
+
+
+figure(11)
+pcolor(XX/1000,YY/1000,zeta_residual)
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis(CLIM);
+set(gca,'FontSize',fontsize);colormap(cmocean('balance'));
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+title('Residual (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
+
+
 
 % figure(2)
 % set(gcf,'Position',[1 142 2503 1000])
