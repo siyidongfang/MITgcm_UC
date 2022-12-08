@@ -140,7 +140,7 @@ subplot(3,2,1)
 pcolor(XX/1000,YY/1000,zeta_dPhi)
 shading flat;colorbar;colormap(cmocean('balance'));
 caxis([-1 1]/1e5);
-title('Pressure torque (Pa/m)','Interpreter','latex')
+title('Topographic form stress torque (Pa/m)','Interpreter','latex')
 set(gca,'FontSize',fontsize);
 ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
