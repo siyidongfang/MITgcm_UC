@@ -40,7 +40,7 @@ xlabeltext = 'Total CDW heat transport at the ice front, T_{uc}+T_{bc} (TW)';
 % dataY = MeltRate_m;
 %     ylabeltext = 'Ice shelf melt rate (m/yr)';
 dataY = MeltRate_m;
-    ylabeltext = 'Ice shelf melt rate (m/yr)';
+ylabeltext = 'Ice shelf melt rate (m/yr)';
 %     figname = 'Tot_east_Sv-Totg_east_Sv';
 %     ylabeltext='Mean undercurrent velocity (m/s)';
 %     titletext = 'Undercurrent sensitivity';
@@ -68,10 +68,8 @@ titletext ='Melt rate vs T_{uc}+T_{bc}'
     f2 = fit(dataX(group2)',dataY(group2)','poly1');
     f3 = fit(dataX(group3)',dataY(group3)','poly1');
 
-
     lores = [29:37 41:46];
     no_lores = [1:28 38:40 47:49];
-
 
     CORR_ALL = corrcoef(dataX(no_lores),dataY(no_lores));
     if(plotMeltrate)

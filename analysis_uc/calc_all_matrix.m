@@ -38,12 +38,12 @@
     list_exps_new;
     load_constants;
     load_colors;
-    savefigure = true;
-    showfigure = true;
+    savefigure = false;
+    showfigure = false;
 
 for n=1:nEXP
-% for n=8
-    expname = EXPNAME{n}
+    n
+    expname = EXPNAME{n};
     loadexp;
     load_data;
     load_spacing;
@@ -59,12 +59,11 @@ for n=1:nEXP
     calc_matrix_cdw;
     calc_heat_IceShelfCavity;
 
-
 end
 
     save([prodir 'matrix_' exp_group '.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
-        'u_xmean_max','U_east_avg','U_west_avg','Tot_east_Sv','Tot_west_Sv','Tot_Sv',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
+        'Tot_west_Sv','Tot_Sv','Tot_east_Sv','U_west_avg','U_east_avg','u_xmean_max',...
         'Umin','Umax','U_west_avg_upper','Tot_west_upper','Vol_west_upper',...
         'MeltRate_m','MeltRate_Gt',...
         'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
@@ -76,7 +75,5 @@ end
 
 
 %     calc_matrix_combine;
-
-
 %         'min_slope_2805','max_slope_2800','avg_slope_2805','avg_slope_2800',...
 %         'db_463','db_490','db_520','db_547','db_575','db_603',...

@@ -10,9 +10,9 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
 
 
-    expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod'
-    prodir = '/Users/csi/MITgcm_UC/products_uc/pseudo_shelfice_seaice/';
+    expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
+    expname = 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7'
+    prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
     loadexp;
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','ETAN',...
