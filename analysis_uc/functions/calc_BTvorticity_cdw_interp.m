@@ -16,57 +16,101 @@
     DYF = dyf;
     RAZ = raz;
 
+
+    %%% Create a finer horizontal grid
+    ffac = 1;
+    Nxf = ffac*Nx;
+    Nyf = ffac*Ny;
+    delXf = zeros(1,Nxf); 
+    delYf = zeros(1,Nyf); 
+    for n=1:Nx
+        for m=1:ffac
+            delXf((n-1)*ffac+m) = delX(n)/ffac;
+        end
+    end
+    for n=1:Ny
+        for m=1:ffac
+            delYf((n-1)*ffac+m) = delY(n)/ffac;
+        end
+    end
+
+    dxf = delXf(1); dyf = delYf(1);
+    xx  = cumsum((delX +  [0 delX(1:Nx-1)])/2)  -Lx/2;
+    xxf= cumsum((delXf + [0 delXf(1:Nxf-1)])/2)-Lx/2;
+    
+    yy  = cumsum((delY +  [0 delY(1:Ny-1)])/2);
+    yyf= cumsum((delYf + [0 delYf(1:Nyf-1)])/2);
+
+    [YY,XX] = meshgrid(yy,xx);
+    [YYf,XXf] = meshgrid(yyf,xxf);
+
+    DXGf = zeros(Nxf,Nyf);
+    DYFf = zeros(Nxf,Nyf);
+    RAZf = zeros(Nxf,Nyf);
+    DXGf = interp2(YY,XX,DXG,YYf,XXf,'linear');
+    DYFf = interp2(YY,XX,DYF,YYf,XXf,'linear');
+    RAZf = interp2(YY,XX,RAZ,YYf,XXf,'linear');
+
+
     %%% Create a finer vertical grid
-    ffac = 10;
-    Nrf = ffac*Nr;
+    ffacZ = 5;
+    Nrf = ffacZ*Nr;
     delRf = zeros(1,Nrf); 
     for n=1:Nr
-        for m=1:ffac
-            delRf((n-1)*ffac+m) = delR(n)/ffac;
+        for m=1:ffacZ
+            delRf((n-1)*ffacZ+m) = delR(n)/ffacZ;
         end
     end
 
     zzf  = -cumsum((delRf +  [0 delRf(1:Nrf-1)])/2);
-    DZf = repmat(reshape(delRf,[1 1 Nrf]),[Nx Ny 1]);
+    DZf = repmat(reshape(delRf,[1 1 Nrf]),[Nxf Nyf 1]);
 
-    hFacWf = zeros(Nx,Ny,Nrf);
-    hFacSf = zeros(Nx,Ny,Nrf);
-    hFacCf = zeros(Nx,Ny,Nrf);
+
+    hFacWf = zeros(Nxf,Nyf,Nrf);
+    hFacSf = zeros(Nxf,Nyf,Nrf);
+    hFacCf = zeros(Nxf,Nyf,Nrf);
 
     %%% Piecewise-constant interpolation for hFac
      for i=1:Nx
         for j=1:Ny
             for k=1:Nr
-                hFacWf(i,j,(k-1)*ffac+1:k*ffac) = hFacW(i,j,k);
-                hFacSf(i,j,(k-1)*ffac+1:k*ffac) = hFacS(i,j,k);
-                hFacCf(i,j,(k-1)*ffac+1:k*ffac) = hFacC(i,j,k);
+                hFacWf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = hFacW(i,j,k);
+                hFacSf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = hFacS(i,j,k);
+                hFacCf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = hFacC(i,j,k);
             end
         end
      end
 
     %%% Linear interpolation for temperature
-    ttf = zeros(Nx,Ny,Nrf);
+    ttf_mid = zeros(Nx,Ny,Nrf);
+    ttf = zeros(Nxf,Nyf,Nrf);
     for i=1:Nx
         for j=1:Ny   
-            ttf(i,j,:) = interp1(zz,squeeze(tt(i,j,:))',zzf,'linear','extrap');
+            ttf_mid(i,j,:) = interp1(zz,squeeze(tt(i,j,:))',zzf,'linear','extrap');
         end
     end
+
+    for k=1:Nrf
+        ttf(:,:,k) = interp2(YY,XX,ttf_mid(:,:,k),YYf,XXf,'linear');
+    end
+
+
     ttf(hFacCf==0)=NaN;
 
     tt_vgridf = ttf;
     tt_ugridf = ttf;
     
-    tt_vgridf(:,2:Ny,:) = (ttf(:,1:Ny-1,:)+ttf(:,2:Ny,:))/2; %%% v-grid
-    tt_ugridf(2:Nx,:,:) = 0.5.*(ttf(1:Nx-1,:,:)+ttf(2:Nx,:,:));
+    tt_vgridf(:,2:Nyf,:) = (ttf(:,1:Nyf-1,:)+ttf(:,2:Nyf,:))/2; %%% v-grid
+    tt_ugridf(2:Nxf,:,:) = 0.5.*(ttf(1:Nxf-1,:,:)+ttf(2:Nxf,:,:)); %%% u-grid
     
-    mask_cdw_ugridf = NaN*zeros(Nx,Ny,Nrf);
-    mask_cdw_vgridf = NaN*zeros(Nx,Ny,Nrf);
+    mask_cdw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
+    mask_cdw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
     
     mask_cdw_ugridf(tt_ugridf>=0)=1;
     mask_cdw_vgridf(tt_vgridf>=0)=1;
     
-    mask_sw_ugridf = NaN*zeros(Nx,Ny,Nrf);
-    mask_sw_vgridf = NaN*zeros(Nx,Ny,Nrf);
+    mask_sw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
+    mask_sw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
     
     mask_sw_ugridf(tt_ugridf<0)=1;
     mask_sw_vgridf(tt_vgridf<0)=1;
@@ -80,7 +124,7 @@
     test_mask_cdw_ugridf(test_mask_cdw_ugridf==0)=NaN;
     
     figure(10)
-    pcolor(XX/1000,YY/1000,test_mask_cdw_ugridf);shading flat; colorbar;
+    pcolor(XXf/1000,YYf/1000,test_mask_cdw_ugridf);shading flat; colorbar;
     colormap(jet)
     clim([100 500])
     ylim([0 230])
@@ -90,40 +134,40 @@
     %%
 
     %%% Interpolate the momentum terms onto this new grid
-    Um_dPhiXf = zeros(Nx,Ny,Nrf);
-    Um_Advecf = zeros(Nx,Ny,Nrf);
-    Um_Dissf = zeros(Nx,Ny,Nrf);
-    Um_Extf = zeros(Nx,Ny,Nrf);
-    Vm_dPhiYf = zeros(Nx,Ny,Nrf);
-    Vm_Advecf = zeros(Nx,Ny,Nrf);
-    Vm_Dissf = zeros(Nx,Ny,Nrf);
-    Vm_Extf = zeros(Nx,Ny,Nrf);
-    Um_Corif = zeros(Nx,Ny,Nrf);
-    Vm_Corif = zeros(Nx,Ny,Nrf);
-    Um_AdvZ3f = zeros(Nx,Ny,Nrf);
-    Um_AdvRef = zeros(Nx,Ny,Nrf);
-    Vm_AdvZ3f = zeros(Nx,Ny,Nrf);
-    Vm_AdvRef = zeros(Nx,Ny,Nrf);
+    Um_dPhiXf = zeros(Nxf,Nyf,Nrf);
+    Um_Advecf = zeros(Nxf,Nyf,Nrf);
+    Um_Dissf = zeros(Nxf,Nyf,Nrf);
+    Um_Extf = zeros(Nxf,Nyf,Nrf);
+    Vm_dPhiYf = zeros(Nxf,Nyf,Nrf);
+    Vm_Advecf = zeros(Nxf,Nyf,Nrf);
+    Vm_Dissf = zeros(Nxf,Nyf,Nrf);
+    Vm_Extf = zeros(Nxf,Nyf,Nrf);
+    Um_Corif = zeros(Nxf,Nyf,Nrf);
+    Vm_Corif = zeros(Nxf,Nyf,Nrf);
+    Um_AdvZ3f = zeros(Nxf,Nyf,Nrf);
+    Um_AdvRef = zeros(Nxf,Nyf,Nrf);
+    Vm_AdvZ3f = zeros(Nxf,Nyf,Nrf);
+    Vm_AdvRef = zeros(Nxf,Nyf,Nrf);
 
     %%% Piecewise-constant interpolation for momentum terms
 for i=1:Nx
     i
     for j=1:Ny
         for k=1:Nr
-            Um_dPhiXf(i,j,(k-1)*ffac+1:k*ffac) = Um_dPhiX(i,j,k);
-            Um_Advecf(i,j,(k-1)*ffac+1:k*ffac) = Um_Advec(i,j,k);
-            Um_Dissf(i,j,(k-1)*ffac+1:k*ffac) = Um_Diss(i,j,k);
-            Um_Extf(i,j,(k-1)*ffac+1:k*ffac) = Um_Ext(i,j,k);
-            Vm_dPhiYf(i,j,(k-1)*ffac+1:k*ffac) = Vm_dPhiY(i,j,k);
-            Vm_Advecf(i,j,(k-1)*ffac+1:k*ffac) = Vm_Advec(i,j,k);
-            Vm_Dissf(i,j,(k-1)*ffac+1:k*ffac) = Vm_Diss(i,j,k);
-            Vm_Extf(i,j,(k-1)*ffac+1:k*ffac) = Vm_Ext(i,j,k);
-            Um_Corif(i,j,(k-1)*ffac+1:k*ffac) = Um_Cori(i,j,k);
-            Vm_Corif(i,j,(k-1)*ffac+1:k*ffac) = Vm_Cori(i,j,k);
-            Um_AdvZ3f(i,j,(k-1)*ffac+1:k*ffac) = Um_AdvZ3(i,j,k);
-            Um_AdvRef(i,j,(k-1)*ffac+1:k*ffac) = Um_AdvRe(i,j,k);
-            Vm_AdvZ3f(i,j,(k-1)*ffac+1:k*ffac) = Vm_AdvZ3(i,j,k);
-            Vm_AdvRef(i,j,(k-1)*ffac+1:k*ffac) = Vm_AdvRe(i,j,k);
+            Um_dPhiXf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_dPhiX(i,j,k);
+            Um_Advecf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_Advec(i,j,k);
+            Um_Dissf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_Diss(i,j,k);
+            Um_Extf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_Ext(i,j,k);
+            Vm_dPhiYf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_dPhiY(i,j,k);
+            Vm_Advecf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_Advec(i,j,k);
+            Vm_Dissf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_Diss(i,j,k);
+            Vm_Extf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_Ext(i,j,k);
+            Um_Corif((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_Cori(i,j,k);
+            Vm_Corif((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_Cori(i,j,k);
+            Um_AdvZ3f((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_AdvZ3(i,j,k);
+            Um_AdvRef((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_AdvRe(i,j,k);
+            Vm_AdvZ3f((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_AdvZ3(i,j,k);
+            Vm_AdvRef((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_AdvRe(i,j,k);
         end
     end
 end
@@ -170,28 +214,28 @@ Vm_AdvRe_zint = rho0.*sum(mask_cdw_vgridf.*Vm_AdvRef.*hFacSf.*DZf,3,'omitnan');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Calculate the vorticity terms %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-zeta_dPhi = zeros(Nx,Ny);
-zeta_Advec = zeros(Nx,Ny);
-zeta_Diss = zeros(Nx,Ny);
-zeta_Ext = zeros(Nx,Ny);
+zeta_dPhi = zeros(Nxf,Nyf);
+zeta_Advec = zeros(Nxf,Nyf);
+zeta_Diss = zeros(Nxf,Nyf);
+zeta_Ext = zeros(Nxf,Nyf);
 
-for i = 2:Nx
-    for j = 2:Ny
+for i = 2:Nxf
+    for j = 2:Nyf
         %%% Pressure torque
-        zeta_dPhi(i,j) = ( Um_dPhiX_zint(i,j-1)*DXG(i,j-1) + Vm_dPhiY_zint(i,j)*DYF(i,j) ...
-                         - Um_dPhiX_zint(i,j)*DXG(i,j)     - Vm_dPhiY_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_dPhi(i,j) = ( Um_dPhiX_zint(i,j-1)*DXGf(i,j-1) + Vm_dPhiY_zint(i,j)*DYFf(i,j) ...
+                         - Um_dPhiX_zint(i,j)*DXGf(i,j)     - Vm_dPhiY_zint(i-1,j)*DYFf(i-1,j) ) ./RAZf(i,j); 
         
         %%% Advection term
-        zeta_Advec(i,j) = ( Um_Advec_zint(i,j-1)*DXG(i,j-1) + Vm_Advec_zint(i,j)*DYF(i,j) ...
-                          - Um_Advec_zint(i,j)*DXG(i,j)     - Vm_Advec_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_Advec(i,j) = ( Um_Advec_zint(i,j-1)*DXGf(i,j-1) + Vm_Advec_zint(i,j)*DYFf(i,j) ...
+                          - Um_Advec_zint(i,j)*DXGf(i,j)     - Vm_Advec_zint(i-1,j)*DYFf(i-1,j) ) ./RAZf(i,j); 
         
         %%% Dissipation term
-        zeta_Diss(i,j) = ( Um_Diss_zint(i,j-1)*DXG(i,j-1) + Vm_Diss_zint(i,j)*DYF(i,j) ...
-                         - Um_Diss_zint(i,j)*DXG(i,j)     - Vm_Diss_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+        zeta_Diss(i,j) = ( Um_Diss_zint(i,j-1)*DXGf(i,j-1) + Vm_Diss_zint(i,j)*DYFf(i,j) ...
+                         - Um_Diss_zint(i,j)*DXGf(i,j)     - Vm_Diss_zint(i-1,j)*DYFf(i-1,j) ) ./RAZf(i,j); 
        
         %%% Surface stress term
-        zeta_Ext(i,j) = ( Um_Ext_zint(i,j-1)*DXG(i,j-1) + Vm_Ext_zint(i,j)*DYF(i,j) ...
-                        - Um_Ext_zint(i,j)*DXG(i,j)     - Vm_Ext_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);   
+        zeta_Ext(i,j) = ( Um_Ext_zint(i,j-1)*DXGf(i,j-1) + Vm_Ext_zint(i,j)*DYFf(i,j) ...
+                        - Um_Ext_zint(i,j)*DXGf(i,j)     - Vm_Ext_zint(i-1,j)*DYFf(i-1,j) ) ./RAZf(i,j);   
     end
 end
       
@@ -205,42 +249,43 @@ zeta_Ext(zeta_Ext==0)=NaN;
 zeta_residual(zeta_residual==0)=NaN;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Decompose the vorticity balance %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-VV = sum(mask_cdw_vgrid.*vv.*hFacS.*DZ,3);
-zeta_Cori_betaV = -rho0*beta.*VV;
-zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
-
-zeta_Cori = zeros(Nx,Ny);
-zeta_AdvZ3 = zeros(Nx,Ny);
-zeta_AdvRe = zeros(Nx,Ny);
-
-for i = 2:Nx
-    for j = 2:Ny
-        %%% Coriolis term (planetary vorticity advection)
-        zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXG(i,j-1) + Vm_Cori_zint(i,j)*DYF(i,j) ...
-                         - Um_Cori_zint(i,j)*DXG(i,j)     - Vm_Cori_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
-
-        %%% Vorticity Advection
-        zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXG(i,j-1) + Vm_AdvZ3_zint(i,j)*DYF(i,j) ...
-                          - Um_AdvZ3_zint(i,j)*DXG(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
-
-        %%% Vertical Advection (Explicit part)
-        zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXG(i,j-1) + Vm_AdvRe_zint(i,j)*DYF(i,j) ...
-                          - Um_AdvRe_zint(i,j)*DXG(i,j)     - Vm_AdvRe_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
-    end
-end
-
-zeta_Cori(zeta_Cori==0)=NaN;
-zeta_AdvZ3(zeta_AdvZ3==0)=NaN;
-zeta_AdvRe(zeta_AdvRe==0)=NaN;
-
-%%% Nonlinear advection term
-zeta_nonLin = zeta_Advec - zeta_Cori; 
-
-%%% Ageostrophic term
-zeta_ageo = zeta_Advec + zeta_dPhi;
+%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%% Decompose the vorticity balance %%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% VV = sum(mask_cdw_vgrid.*vv.*hFacS.*DZ,3);
+% zeta_Cori_betaV = -rho0*beta.*VV;
+% zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
+% 
+% zeta_Cori = zeros(Nx,Ny);
+% zeta_AdvZ3 = zeros(Nx,Ny);
+% zeta_AdvRe = zeros(Nx,Ny);
+% 
+% for i = 2:Nx
+%     for j = 2:Ny
+%         %%% Coriolis term (planetary vorticity advection)
+%         zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXG(i,j-1) + Vm_Cori_zint(i,j)*DYF(i,j) ...
+%                          - Um_Cori_zint(i,j)*DXG(i,j)     - Vm_Cori_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+% 
+%         %%% Vorticity Advection
+%         zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXG(i,j-1) + Vm_AdvZ3_zint(i,j)*DYF(i,j) ...
+%                           - Um_AdvZ3_zint(i,j)*DXG(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+% 
+%         %%% Vertical Advection (Explicit part)
+%         zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXG(i,j-1) + Vm_AdvRe_zint(i,j)*DYF(i,j) ...
+%                           - Um_AdvRe_zint(i,j)*DXG(i,j)     - Vm_AdvRe_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+%     end
+% end
+% 
+% zeta_Cori(zeta_Cori==0)=NaN;
+% zeta_AdvZ3(zeta_AdvZ3==0)=NaN;
+% zeta_AdvRe(zeta_AdvRe==0)=NaN;
+% 
+% %%% Nonlinear advection term
+% zeta_nonLin = zeta_Advec - zeta_Cori; 
+% 
+% %%% Ageostrophic term
+% zeta_ageo = zeta_Advec + zeta_dPhi;
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,7 +301,7 @@ figure(1)
 set(gcf,'Position',[1 503 1839 1000])
 clf;set(gcf,'color','w');
 subplot(2,2,1)
-pcolor(XX/1000,YY/1000,zeta_dPhi)
+pcolor(XXf/1000,YYf/1000,zeta_dPhi)
 shading flat;colorbar;colormap(cmocean('balance'));
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
@@ -271,7 +316,7 @@ title('Pressure torque (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 
 
 subplot(2,2,2)
-pcolor(XX/1000,YY/1000,zeta_Advec)
+pcolor(XXf/1000,YYf/1000,zeta_Advec)
 shading flat;colorbar;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
@@ -286,7 +331,7 @@ title('Advection term = Coriolis + nonlinear  (Pa/m)','Interpreter','latex','Fon
 
 
 subplot(2,2,3)
-pcolor(XX/1000,YY/1000,zeta_Diss)
+pcolor(XXf/1000,YYf/1000,zeta_Diss)
 shading flat;colorbar;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
@@ -299,7 +344,7 @@ xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Int
 title('Dissipation term (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 
 subplot(2,2,4)
-pcolor(XX/1000,YY/1000,zeta_Ext)
+pcolor(XXf/1000,YYf/1000,zeta_Ext)
 shading flat;colorbar;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
@@ -318,7 +363,7 @@ end
 
 
 figure(11)
-pcolor(XX/1000,YY/1000,zeta_residual)
+pcolor(XXf/1000,YYf/1000,zeta_residual)
 shading flat;colorbar;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
@@ -391,23 +436,23 @@ title('Residual (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 % if(savefigure)
 % print('-dpng','-r150',[figdir expname '_cdw_decomposeAdv.png']);
 % end
-
-
-% figure(3)
-% clf;set(gcf,'color','w');
-% set(gcf,'Position',[704 169 1000 500])
-% pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
-% shading flat;colorbar;colormap(cmocean('balance'));
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% caxis([-1 1]/5e6);
-% title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
-% set(gca,'FontSize',fontsize);
-% ylim(YLIM);xlim([-300 300])
-% yticks(0:100:400);xticks(-300:100:300)
-% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 % 
-% if(savefigure)
-% print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
-% end
+% 
+% % figure(3)
+% % clf;set(gcf,'color','w');
+% % set(gcf,'Position',[704 169 1000 500])
+% % pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
+% % shading flat;colorbar;colormap(cmocean('balance'));
+% % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+% % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+% % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+% % caxis([-1 1]/5e6);
+% % title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
+% % set(gca,'FontSize',fontsize);
+% % ylim(YLIM);xlim([-300 300])
+% % yticks(0:100:400);xticks(-300:100:300)
+% % xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% % 
+% % if(savefigure)
+% % print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
+% % end
