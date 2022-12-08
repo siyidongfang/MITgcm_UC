@@ -16,6 +16,7 @@
     DYF = dyf;
     RAZ = raz;
 
+    calcCDW = true; %%% true: for CDW layer; false: for surface water layer 
 
     %%% Create a finer horizontal grid
     ffac = 1;
@@ -47,13 +48,18 @@
     DXGf = zeros(Nxf,Nyf);
     DYFf = zeros(Nxf,Nyf);
     RAZf = zeros(Nxf,Nyf);
-    DXGf = interp2(YY,XX,DXG,YYf,XXf,'linear');
-    DYFf = interp2(YY,XX,DYF,YYf,XXf,'linear');
-    RAZf = interp2(YY,XX,RAZ,YYf,XXf,'linear');
+    %%% Piecewise-constant interpolation
+    for i=1:Nx
+        for j=1:Ny
+            DXGf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac) = DXG(i,j);
+            DYFf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac) = DYF(i,j);
+            RAZf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac) = RAZ(i,j);
+        end
+    end
 
 
     %%% Create a finer vertical grid
-    ffacZ = 5;
+    ffacZ = 40;
     Nrf = ffacZ*Nr;
     delRf = zeros(1,Nrf); 
     for n=1:Nr
@@ -94,7 +100,6 @@
         ttf(:,:,k) = interp2(YY,XX,ttf_mid(:,:,k),YYf,XXf,'linear');
     end
 
-
     ttf(hFacCf==0)=NaN;
 
     tt_vgridf = ttf;
@@ -130,6 +135,17 @@
     ylim([0 230])
     title('CDW thickness (m)')
     set(gca,'FontSize',fontsize);
+
+
+    if(calcCDW)
+        mask_ugrid = mask_cdw_ugridf;
+        mask_vgrid = mask_cdw_vgridf;
+    else
+        mask_ugrid = mask_sw_ugridf;
+        mask_vgrid = mask_sw_vgridf;
+    end
+
+
 
     %%
 
@@ -179,36 +195,36 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% momentum tendency from hydrostatic pressure gradient
-Um_dPhiX_zint = rho0.*sum(mask_cdw_ugridf.*Um_dPhiXf.*hFacWf.*DZf,3,'omitnan');
-Vm_dPhiY_zint = rho0.*sum(mask_cdw_vgridf.*Vm_dPhiYf.*hFacSf.*DZf,3,'omitnan');
+Um_dPhiX_zint = rho0.*sum(mask_ugrid.*Um_dPhiXf.*hFacWf.*DZf,3,'omitnan');
+Vm_dPhiY_zint = rho0.*sum(mask_vgrid.*Vm_dPhiYf.*hFacSf.*DZf,3,'omitnan');
 
 %%% momentum tendency from advection terms
-Um_Advec_zint = rho0.*sum(mask_cdw_ugridf.*Um_Advecf.*hFacWf.*DZf,3,'omitnan');
-Vm_Advec_zint = rho0.*sum(mask_cdw_vgridf.*Vm_Advecf.*hFacSf.*DZf,3,'omitnan');
+Um_Advec_zint = rho0.*sum(mask_ugrid.*Um_Advecf.*hFacWf.*DZf,3,'omitnan');
+Vm_Advec_zint = rho0.*sum(mask_vgrid.*Vm_Advecf.*hFacSf.*DZf,3,'omitnan');
 
 %%% momentum tendency from dissipation
-Um_Diss_zint = rho0.*sum(mask_cdw_ugridf.*Um_Dissf.*hFacWf.*DZf,3,'omitnan');
-Vm_Diss_zint = rho0.*sum(mask_cdw_vgridf.*Vm_Dissf.*hFacSf.*DZf,3,'omitnan');
+Um_Diss_zint = rho0.*sum(mask_ugrid.*Um_Dissf.*hFacWf.*DZf,3,'omitnan');
+Vm_Diss_zint = rho0.*sum(mask_vgrid.*Vm_Dissf.*hFacSf.*DZf,3,'omitnan');
 
 %%% momentum tendency from external forcing (ice-ocean stress)
-Um_Ext_zint = rho0.*sum(mask_cdw_ugridf.*Um_Extf.*hFacWf.*DZf,3,'omitnan');
-Vm_Ext_zint = rho0.*sum(mask_cdw_vgridf.*Vm_Extf.*hFacSf.*DZf,3,'omitnan');
+Um_Ext_zint = rho0.*sum(mask_ugrid.*Um_Extf.*hFacWf.*DZf,3,'omitnan');
+Vm_Ext_zint = rho0.*sum(mask_vgrid.*Vm_Extf.*hFacSf.*DZf,3,'omitnan');
 
 %%% Residual term
 residualU = Um_dPhiX_zint+Um_Advec_zint+Um_Diss_zint+Um_Ext_zint;
 residualV = Vm_dPhiY_zint+Vm_Advec_zint+Vm_Diss_zint+Vm_Ext_zint;
 
 %%% momentum tendency from Coriolis term
-Um_Cori_zint = rho0.*sum(mask_cdw_ugridf.*Um_Corif.*hFacWf.*DZf,3,'omitnan');
-Vm_Cori_zint = rho0.*sum(mask_cdw_vgridf.*Vm_Corif.*hFacSf.*DZf,3,'omitnan');
+Um_Cori_zint = rho0.*sum(mask_ugrid.*Um_Corif.*hFacWf.*DZf,3,'omitnan');
+Vm_Cori_zint = rho0.*sum(mask_vgrid.*Vm_Corif.*hFacSf.*DZf,3,'omitnan');
  
 %%% momentum tendency from Vorticity Advection
-Um_AdvZ3_zint = rho0.*sum(mask_cdw_ugridf.*Um_AdvZ3f.*hFacWf.*DZf,3,'omitnan');
-Vm_AdvZ3_zint = rho0.*sum(mask_cdw_vgridf.*Vm_AdvZ3f.*hFacSf.*DZf,3,'omitnan');
+Um_AdvZ3_zint = rho0.*sum(mask_ugrid.*Um_AdvZ3f.*hFacWf.*DZf,3,'omitnan');
+Vm_AdvZ3_zint = rho0.*sum(mask_vgrid.*Vm_AdvZ3f.*hFacSf.*DZf,3,'omitnan');
 
 %%% momentum tendency from Vertical Advection (Explicit part)
-Um_AdvRe_zint = rho0.*sum(mask_cdw_ugridf.*Um_AdvRef.*hFacWf.*DZf,3,'omitnan');
-Vm_AdvRe_zint = rho0.*sum(mask_cdw_vgridf.*Vm_AdvRef.*hFacSf.*DZf,3,'omitnan');
+Um_AdvRe_zint = rho0.*sum(mask_ugrid.*Um_AdvRef.*hFacWf.*DZf,3,'omitnan');
+Vm_AdvRe_zint = rho0.*sum(mask_vgrid.*Vm_AdvRef.*hFacSf.*DZf,3,'omitnan');
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -250,42 +266,42 @@ zeta_residual(zeta_residual==0)=NaN;
 
 
 %%
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %%% Decompose the vorticity balance %%%
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Decompose the vorticity balance %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % VV = sum(mask_cdw_vgrid.*vv.*hFacS.*DZ,3);
 % zeta_Cori_betaV = -rho0*beta.*VV;
 % zeta_Cori_betaV(zeta_Cori_betaV==0)=NaN;
-% 
-% zeta_Cori = zeros(Nx,Ny);
-% zeta_AdvZ3 = zeros(Nx,Ny);
-% zeta_AdvRe = zeros(Nx,Ny);
-% 
-% for i = 2:Nx
-%     for j = 2:Ny
-%         %%% Coriolis term (planetary vorticity advection)
-%         zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXG(i,j-1) + Vm_Cori_zint(i,j)*DYF(i,j) ...
-%                          - Um_Cori_zint(i,j)*DXG(i,j)     - Vm_Cori_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
-% 
-%         %%% Vorticity Advection
-%         zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXG(i,j-1) + Vm_AdvZ3_zint(i,j)*DYF(i,j) ...
-%                           - Um_AdvZ3_zint(i,j)*DXG(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
-% 
-%         %%% Vertical Advection (Explicit part)
-%         zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXG(i,j-1) + Vm_AdvRe_zint(i,j)*DYF(i,j) ...
-%                           - Um_AdvRe_zint(i,j)*DXG(i,j)     - Vm_AdvRe_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
-%     end
-% end
-% 
-% zeta_Cori(zeta_Cori==0)=NaN;
-% zeta_AdvZ3(zeta_AdvZ3==0)=NaN;
-% zeta_AdvRe(zeta_AdvRe==0)=NaN;
-% 
-% %%% Nonlinear advection term
-% zeta_nonLin = zeta_Advec - zeta_Cori; 
-% 
-% %%% Ageostrophic term
-% zeta_ageo = zeta_Advec + zeta_dPhi;
+
+zeta_Cori = zeros(Nx,Ny);
+zeta_AdvZ3 = zeros(Nx,Ny);
+zeta_AdvRe = zeros(Nx,Ny);
+
+for i = 2:Nx
+    for j = 2:Ny
+        %%% Coriolis term (planetary vorticity advection)
+        zeta_Cori(i,j) = ( Um_Cori_zint(i,j-1)*DXG(i,j-1) + Vm_Cori_zint(i,j)*DYF(i,j) ...
+                         - Um_Cori_zint(i,j)*DXG(i,j)     - Vm_Cori_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j); 
+
+        %%% Vorticity Advection
+        zeta_AdvZ3(i,j) = ( Um_AdvZ3_zint(i,j-1)*DXG(i,j-1) + Vm_AdvZ3_zint(i,j)*DYF(i,j) ...
+                          - Um_AdvZ3_zint(i,j)*DXG(i,j)     - Vm_AdvZ3_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+
+        %%% Vertical Advection (Explicit part)
+        zeta_AdvRe(i,j) = ( Um_AdvRe_zint(i,j-1)*DXG(i,j-1) + Vm_AdvRe_zint(i,j)*DYF(i,j) ...
+                          - Um_AdvRe_zint(i,j)*DXG(i,j)     - Vm_AdvRe_zint(i-1,j)*DYF(i-1,j) ) ./RAZ(i,j);
+    end
+end
+
+zeta_Cori(zeta_Cori==0)=NaN;
+zeta_AdvZ3(zeta_AdvZ3==0)=NaN;
+zeta_AdvRe(zeta_AdvRe==0)=NaN;
+
+%%% Nonlinear advection term
+zeta_nonLin = zeta_Advec - zeta_Cori; 
+
+%%% Ageostrophic term
+zeta_ageo = zeta_Advec + zeta_dPhi;
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -377,82 +393,82 @@ title('Residual (Pa/m)','Interpreter','latex','FontSize',fontsize+3)
 
 
 
-% figure(2)
-% set(gcf,'Position',[1 142 2503 1000])
+figure(2)
+set(gcf,'Position',[1 142 2503 1000])
+clf;set(gcf,'color','w');
+subplot(2,3,1)
+colormap(cmocean('balance'));
+pcolor(XX/1000,YY/1000,zeta_Cori)
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis(CLIM);
+title('Coriolis term (model diagnosed) (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(2,3,2)
+pcolor(XX/1000,YY/1000,zeta_AdvZ3)
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis(CLIM);
+title('Vorticity Advection (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(2,3,3)
+pcolor(XX/1000,YY/1000,zeta_AdvRe)
+shading flat;colorbar;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis(CLIM);
+title('Vertical Advection (explicit part) (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+subplot(2,3,5)
+pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
+shading flat;colorbar;colormap(cmocean('balance'));
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
+caxis(CLIM);
+title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim(YLIM);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+if(savefigure)
+print('-dpng','-r150',[figdir expname '_cdw_decomposeAdv.png']);
+end
+
+
+% figure(3)
 % clf;set(gcf,'color','w');
-% subplot(2,3,1)
-% colormap(cmocean('balance'));
-% pcolor(XX/1000,YY/1000,zeta_Cori)
-% shading flat;colorbar;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% caxis(CLIM);
-% title('Coriolis term (model diagnosed) (Pa/m)','Interpreter','latex')
-% set(gca,'FontSize',fontsize);
-% ylim(YLIM);xlim([-300 300])
-% yticks(0:100:400);xticks(-300:100:300)
-% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-% 
-% subplot(2,3,2)
-% pcolor(XX/1000,YY/1000,zeta_AdvZ3)
-% shading flat;colorbar;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% caxis(CLIM);
-% title('Vorticity Advection (Pa/m)','Interpreter','latex')
-% set(gca,'FontSize',fontsize);
-% ylim(YLIM);xlim([-300 300])
-% yticks(0:100:400);xticks(-300:100:300)
-% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-% 
-% subplot(2,3,3)
-% pcolor(XX/1000,YY/1000,zeta_AdvRe)
-% shading flat;colorbar;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% caxis(CLIM);
-% title('Vertical Advection (explicit part) (Pa/m)','Interpreter','latex')
-% set(gca,'FontSize',fontsize);
-% ylim(YLIM);xlim([-300 300])
-% yticks(0:100:400);xticks(-300:100:300)
-% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-% 
-% subplot(2,3,5)
-% pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
+% set(gcf,'Position',[704 169 1000 500])
+% pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
 % shading flat;colorbar;colormap(cmocean('balance'));
 % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
 % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% caxis(CLIM);
-% title('Total Adv - (Cori + Vort Adv + Vert Adv) (Pa/m)','Interpreter','latex')
+% caxis([-1 1]/5e6);
+% title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
 % set(gca,'FontSize',fontsize);
 % ylim(YLIM);xlim([-300 300])
 % yticks(0:100:400);xticks(-300:100:300)
 % xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 % 
 % if(savefigure)
-% print('-dpng','-r150',[figdir expname '_cdw_decomposeAdv.png']);
+% print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
 % end
-% 
-% 
-% % figure(3)
-% % clf;set(gcf,'color','w');
-% % set(gcf,'Position',[704 169 1000 500])
-% % pcolor(XX/1000,YY/1000,zeta_Cori_betaV)
-% % shading flat;colorbar;colormap(cmocean('balance'));
-% % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
-% % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
-% % caxis([-1 1]/5e6);
-% % title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','Interpreter','latex')
-% % set(gca,'FontSize',fontsize);
-% % ylim(YLIM);xlim([-300 300])
-% % yticks(0:100:400);xticks(-300:100:300)
-% % xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-% % 
-% % if(savefigure)
-% % print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
-% % end
