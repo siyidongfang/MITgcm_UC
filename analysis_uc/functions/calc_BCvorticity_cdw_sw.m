@@ -10,7 +10,7 @@
         'Vm_dPhiY','Vm_Advec','Vm_Diss','Vm_Ext','Um_Cori','Vm_Cori',...
         'Um_AdvZ3','Um_AdvRe','Vm_AdvZ3','Vm_AdvRe');
 
-    calcCDW = false; %%% true: for CDW layer; false: for surface water layer 
+    calcCDW = true; %%% true: for CDW layer; false: for surface water layer 
     mask_interpolate;
 
 
