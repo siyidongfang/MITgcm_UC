@@ -75,6 +75,10 @@
     Volg_east = sum(hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
     Ug_east_avg(n) = Totg_east/Volg_east;
 
+    Totg_east_weighted = sum(ug_east.^2.*hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
+    Totg_weight = sum(ug_east.^1.*hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
+    Ug_east_transportweighted(n) = Totg_east_weighted/Totg_weight;
+
     %%% Maximum eastward velocity
     ug_xmean_max(n) = max(ug_xmean,[],'all','omitnan');
 

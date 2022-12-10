@@ -5,33 +5,33 @@
 %%% Calculate the cumulative heat transport within the ice shelf cavity
 
 
-    %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+%     %%% Add path
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+%     addpath /Users/csi/Software/eos80_legacy_gamma_n/;
+%     addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
+%     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
+%     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+% 
+%     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+%     exp_group = EXP_GROUP{1}
+%     list_exps_new;
+%     load_constants;
+%     load_colors;
+%     n =1; 
+%     expname = EXPNAME{n}
+%     figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
+%     figname = expname;
+%     showfigure = true;
+%     savefigure = false;
+% 
+%     loadexp;
 
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
-    list_exps_new;
-    load_constants;
-    load_colors;
-    n =1; 
-    expname = EXPNAME{n}
-    figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
-    figname = expname;
-    showfigure = true;
-    savefigure = false;
-
-    loadexp;
-
-    rho_o =1000;
-    cp_o = 3994; % Unit: J/kg/degC
-    m1km = 1000;
-    Yicefront = 100*m1km; %%% Latitude of ice shelf face
+%     rho_o =1000;
+%     cp_o = 3994; % Unit: J/kg/degC
+%     m1km = 1000;
+%     Yicefront = 100*m1km; %%% Latitude of ice shelf face
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'VVELTH','SHI_TauY','THETA','SHIfwFlx');
     vt = VVELTH;

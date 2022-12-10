@@ -7,26 +7,31 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions; 
 %     load('/Users/csi/MITgcm_UC/products_uc/shelfice_seaice/matrix_shelfice_seaice.mat')
 %     load('/Users/csi/MITgcm_UC/products_uc/seaice_boundary/matrix_seaice_boundary.mat')
-    load('/Users/csi/MITgcm_UC/products_uc/matrix_combined.mat')
+    load('/Users/csi/MITgcm_UC/products_uc/matrix_combined-group12.mat')
 
     figdir = '/Users/csi/MITgcm_UC/figures_uc/'; 
     savefigure = false;
 
     dataY = MeltRate_m([1:36 40:42]);
     ylabeltext = 'Ice shelf melt rate (m/yr)';
-    dataX = U_east_avg([1:36 40:42])*100;
-    xlabeltext = 'Mean undercurrent velocity (cm/s)';
-    titletext = {'The melt rate is NOT correlated with the','undercurrent'};
+%     dataX = U_east_avg([1:36 40:42])*100;
+     dataX = Ueast_transportweighted([1:36 40:42])*100;
+    xlabeltext = 'Undercurrent velocity (cm/s)';
+    titletext = {'The melt rate is correlated with the','undercurrent'};
 
 
-%     dataY = U_east_avg([1:36 40:42])*100;
+% %     dataY = U_east_avg([1:36 40:42])*100;
+%     dataY = Ueast_transportweighted([1:36 40:42])*100;
 %     ylabeltext='Undercurrent velocity (cm/s)';
-%     dataX = Ug_east_avg([1:36 40:42])*100;
-%     xlabeltext = 'Eastward geostrophic velocity (cm/s)';
+% %     dataX = Ug_east_avg([1:36 40:42])*100;
+%      dataX = Ug_east_transportweighted([1:36 40:42])*100;
+%     xlabeltext = 'Eastward thermal-wind velocity (cm/s)';
 %     titletext = {'The undercurrent is correlated with the','cross-slope buoyancy gradient'};
 
     f=fit(dataX',dataY','poly1');
     corr =  corrcoef(dataX,dataY)
+%     f=fit(dataX([1:12 17:21 24:end])',dataY([1:12 17:21 24:end])','poly1');
+%     corr =  corrcoef(dataX([1:12 17:21 24:end]),dataY([1:12 17:21 24:end]))
 
 
     xrange = max(dataX)-min(dataX);
@@ -113,10 +118,11 @@
     ylabel(ylabeltext,'FontSize',fontsize+1);
     title(titletext,'FontSize',fontsize+3);
     grid on;grid minor;box on;
-    xlim([0 2.4])
+%     xlim([0 5.5])
+%     ylim([0 8])
     ylim([0 25])
-%     xlim([0 1.2])
-%     ylim([0.2 2.4])
+    xlim([0 8])
+
 
 
      figdir = '/Users/csi/MITgcm_UC/figures_uc/';

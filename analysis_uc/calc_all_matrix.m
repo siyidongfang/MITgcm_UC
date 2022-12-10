@@ -36,42 +36,43 @@
 
     exp_group = EXP_GROUP{1}
     list_exps_new;
-    load_constants;
     load_colors;
     savefigure = false;
     showfigure = false;
 
 for n=1:nEXP
     n
+    clear yidx xidx dy dx
     expname = EXPNAME{n};
     loadexp;
+    load_constants;
     load_data;
     load_spacing;
-   
+
     yidx = round(Ymin/dy):round(Ymax/dy);
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
     
     calc_matrix_transport;
     calc_matrix_melt_rate;
-    calc_matrix_surface_stress;
-    calc_matrix_SSHgradient;
+%     calc_matrix_surface_stress;
+%     calc_matrix_SSHgradient;
     calc_matrix_buoyancy_gradient;
-    calc_matrix_cdw;
-    calc_heat_IceShelfCavity;
+%     calc_matrix_cdw;
+%     calc_heat_IceShelfCavity;
 
 end
 
     save([prodir 'matrix_' exp_group '.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
-        'Tot_west_Sv','Tot_Sv','Tot_east_Sv','U_west_avg','U_east_avg','u_xmean_max',...
+        'Ueast_transportweighted','Tot_west_Sv','Tot_Sv','Tot_east_Sv','U_west_avg','U_east_avg','u_xmean_max',...
         'Umin','Umax','U_west_avg_upper','Tot_west_upper','Vol_west_upper',...
         'MeltRate_m','MeltRate_Gt',...
-        'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
-        'Ug_east_avg','ug_xmean_max','Totg_east_Sv',...
-        'Hcdw','Scdw','Tcdw','Vcdw',...
-        'Fheatcdw_icefront_trough','Fheattot_icefront_trough','Fheatcdw_icefront_all','Fheattot_icefront_all',...
-        'Vcdw_east','Fheatcdw_east','Fheattot_east','Ucdw_west','Ucdw_west_max',...
-        'Tc_bc_cdw','Tc_uc_cdw','Tc_bc','Tc_uc','Tc_bc_cdw_mean','Tc_uc_cdw_mean','Tc_bc_mean','Tc_uc_mean')
+        'Ug_east_transportweighted','Ug_east_avg','ug_xmean_max','Totg_east_Sv')
+%         'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
+%         'Hcdw','Scdw','Tcdw','Vcdw',...
+%         'Fheatcdw_icefront_trough','Fheattot_icefront_trough','Fheatcdw_icefront_all','Fheattot_icefront_all',...
+%         'Vcdw_east','Fheatcdw_east','Fheattot_east','Ucdw_west','Ucdw_west_max',...
+%         'Tc_bc_cdw','Tc_uc_cdw','Tc_bc','Tc_uc','Tc_bc_cdw_mean','Tc_uc_cdw_mean','Tc_bc_mean','Tc_uc_mean')
 
 
 %     calc_matrix_combine;

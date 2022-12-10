@@ -72,5 +72,12 @@
 
 
 
+    %%% Calculate transport weighted velocity
+    Tot_east_weighted = sum(uu_east.^2.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
+    Tot_weight = sum(uu_east.^1.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
+    Ueast_transportweighted(n) = Tot_east_weighted/Tot_weight;
+
+
+
 
 

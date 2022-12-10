@@ -39,10 +39,11 @@
     [C,h]=contour(XX(:,230/2:250/2)/1000,YY(:,230/2:250/2)/1000,bathy(:,230/2:250/2),[-2000 -1000],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);
     [C,h]=contour(XX(:,1:230/2)/1000,YY(:,1:230/2)/1000,bathy(:,1:230/2),[-900:100:-600],'k:','LineWidth',1.5,'ShowText','off');
     [C,h]=contour(XX/1000,YY/1000,bathy,[-300 -300],'k','LineWidth',2,'ShowText','off');
-    svx = 6; svy = 8;
+    svx = 6; svy = 6;
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
     UU_cdw(1:svx:end,1:svy:end)',VV_cdw(1:svx:end,1:svy:end)');
-    curr.Color = [0 102 0]/255;
+%     curr.Color = [0 102 0]/255;
+curr.Color =  green;
     curr.LineWidth = 1.5;
     set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
     plot(xx(98:197)/1000,100*ones(1,100),'LineWidth',3,'Color',darkgray)
@@ -80,10 +81,11 @@
     [C,h]=contour(XX(:,230/2:250/2)/1000,YY(:,230/2:250/2)/1000,bathy(:,230/2:250/2),[-2000 -1000],'k--','ShowText','on');clabel(C,h,'LabelSpacing',800);
     [C,h]=contour(XX(:,1:230/2)/1000,YY(:,1:230/2)/1000,bathy(:,1:230/2),[-900:100:-600],'k:','LineWidth',1.5,'ShowText','off');
     [C,h]=contour(XX/1000,YY/1000,bathy,[-300 -300],'k','LineWidth',2,'ShowText','off');
-    svx = 6; svy = 8;
+    svx = 6; svy = 6;
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
     UU_cdw(1:svx:end,1:svy:end)',VV_cdw(1:svx:end,1:svy:end)');
-    curr.Color = [0 102 0]/255;
+%     curr.Color = [0 102 0]/255;
+ curr.Color = green;
     curr.LineWidth = 1.5;
     set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
     plot(xx(98:197)/1000,100*ones(1,100),'LineWidth',3,'Color',darkgray)
