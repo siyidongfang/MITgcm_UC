@@ -9,12 +9,12 @@
     
     exp_group = EXP_GROUP{1}
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
-    a1 = load([prodir 'matrix_' exp_group '.mat']);
+    a1 = load([prodir 'matrix_' exp_group '-allLx.mat']);
     f1=fieldnames(a1);
 
     exp_group = EXP_GROUP{2}
     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
-    a2 = load([prodir 'matrix_' exp_group '.mat']);
+    a2 = load([prodir 'matrix_' exp_group '-allLx.mat']);
     f2=fieldnames(a2);
 
 %     exp_group = EXP_GROUP{3}
@@ -41,6 +41,6 @@ for nn=2:length(f1)
     matrix.(f1{nn})=[a1.(f1{nn}) a2.(f2{nn})];
 end
 
-save '/Users/csi/MITgcm_UC/products_uc/matrix_combined-group12.mat' '-struct' matrix
+save '/Users/csi/MITgcm_UC/products_uc/matrix_combined-group12-allLx.mat' '-struct' matrix
 
 

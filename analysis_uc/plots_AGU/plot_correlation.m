@@ -7,7 +7,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions; 
 %     load('/Users/csi/MITgcm_UC/products_uc/shelfice_seaice/matrix_shelfice_seaice.mat')
 %     load('/Users/csi/MITgcm_UC/products_uc/seaice_boundary/matrix_seaice_boundary.mat')
-    load('/Users/csi/MITgcm_UC/products_uc/matrix_combined-group12.mat')
+    load('/Users/csi/MITgcm_UC/products_uc/matrix_combined-group12-allLx.mat')
 
     figdir = '/Users/csi/MITgcm_UC/figures_uc/'; 
     savefigure = false;
@@ -20,11 +20,11 @@
     titletext = {'The melt rate is correlated with the','undercurrent'};
 
 
-% %     dataY = U_east_avg([1:36 40:42])*100;
-%     dataY = Ueast_transportweighted([1:36 40:42])*100;
+%     dataY = U_east_avg([1:36 40:42])*100;
+% %     dataY = Ueast_transportweighted([1:36 40:42])*100;
 %     ylabeltext='Undercurrent velocity (cm/s)';
-% %     dataX = Ug_east_avg([1:36 40:42])*100;
-%      dataX = Ug_east_transportweighted([1:36 40:42])*100;
+%     dataX = Ug_east_avg([1:36 40:42])*100;
+% %      dataX = Ug_east_transportweighted([1:36 40:42])*100;
 %     xlabeltext = 'Eastward thermal-wind velocity (cm/s)';
 %     titletext = {'The undercurrent is correlated with the','cross-slope buoyancy gradient'};
 
@@ -120,12 +120,12 @@
     grid on;grid minor;box on;
 %     xlim([0 5.5])
 %     ylim([0 8])
-    ylim([0 25])
-    xlim([0 8])
+%     ylim([0 25])
+%     xlim([0 8])
 
 
 
      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
 %      print('-dpng','-r300',[figdir 'corr_UC.png']);
-     print('-dpng','-r300',[figdir 'corr_melt.png']);
+%      print('-dpng','-r300',[figdir 'corr_melt.png']);
 
