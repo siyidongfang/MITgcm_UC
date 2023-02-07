@@ -530,8 +530,12 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
   
   %%% Add trough
-  y_interp = [0 Yshelfbreak Yslope Ly];
-  h_interp = [0 -Htr 0 0];
+%   y_interp = [0 Yshelfbreak Yslope Ly];
+%   h_interp = [0 -Htr 0 0];
+  % Add a trough over the continental which does not extend to the
+  % continental slope and the deep ocean.
+  y_interp = [0 Yshelfbreak-55*m1km Yshelfbreak-30*m1km Yshelfbreak-5*m1km Yslope Ly];
+  h_interp = [0 -Htr -Htr/3*2 0 0 0];
   h_trough_profile = interp1(y_interp,h_interp,yy,'pchip');
   h_trough = repmat(h_trough_profile,[Nx 1]);
   h_trough = h_trough .* 1./(cosh((X-Xtrough)/Wtrough)).^2;

@@ -11,12 +11,12 @@
     load_constants;
     
     prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
-    figdir = ['/Users/csi/MITgcm_UC/figures_uc/vorticity/' exp_group '/'];
+    figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
-    savefigure = false;
+    savefigure = true;
 
-%     for n=1:nEXP
-for n=1
+for n=1:nEXP
+% for n=1
     if(is_prod_run(n))
         close all
         expname = EXPNAME{n}

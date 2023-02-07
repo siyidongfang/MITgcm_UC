@@ -26,7 +26,7 @@ Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
 
-is_ContinuedRun = true;
+is_ContinuedRun = false;
 
 %%% Select resolution
 is_hires = false;
@@ -47,6 +47,9 @@ end
 if(is_ContinuedRun)
     exp_name = [exp_name '_Adv7']
 end
+
+exp_name = [exp_name '_troughOnlyOnShelf']
+
 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
 
