@@ -101,32 +101,26 @@
     
     mask_cdw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
     mask_cdw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
-    mask_cdw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
+%     mask_cdw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
     
     mask_cdw_ugridf(tt_ugridf>=0)=1;
     mask_cdw_vgridf(tt_vgridf>=0)=1;
-    mask_cdw_tgridf(ttf>=0)=1;
+%     mask_cdw_tgridf(ttf>=0)=1;
     
     mask_sw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
     mask_sw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
-    mask_sw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
+%     mask_sw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
     
     mask_sw_ugridf(tt_ugridf<0)=1;
     mask_sw_vgridf(tt_vgridf<0)=1;
-    mask_sw_tgridf(ttf<0)=1;
+%     mask_sw_tgridf(ttf<0)=1;
     
     excludedeepocean = find(zzf<-600);
     mask_sw_ugridf(:,:,excludedeepocean)= NaN;
     mask_sw_vgridf(:,:,excludedeepocean)= NaN;
 
 
-    if(calcCDW)
-        mask_ugrid = mask_cdw_ugridf;
-        mask_vgrid = mask_cdw_vgridf;
-    else
-        mask_ugrid = mask_sw_ugridf;
-        mask_vgrid = mask_sw_vgridf;
-    end
+
 
 %     test_mask_cdw_ugridf = sum(mask_cdw_ugridf.*hFacWf.*DZf,3,'omitnan');
 %     test_mask_cdw_ugridf(test_mask_cdw_ugridf==0)=NaN;
