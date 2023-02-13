@@ -13,11 +13,11 @@
     prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
-    showfigrue = false;
+    showfigrue = true;
     savefigure = true;
 
-% for n=7:nEXP
-for n=7:11
+% for n=12:nEXP
+for n=6:11
     if(is_prod_run(n))
         close all
         expname = EXPNAME{n}
@@ -25,7 +25,8 @@ for n=7:11
         load_data;
         load_spacing;
 
-        calc_BCvorticity_cdw_sw;
+%         calc_BCvorticity_cdw_sw;
+        plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_sponge;
 %         calc_BCvorticity_stretching_Coriolis;
 %         calc_BTvorticity_curl_int; 
