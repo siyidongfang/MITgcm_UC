@@ -8,7 +8,7 @@
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
+    prodir = ['/Users/csi/MITgcm_UC/products_vorticity/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
     showfigrue = true;

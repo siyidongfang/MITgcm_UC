@@ -13,11 +13,11 @@
     prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
-    showfigrue = true;
+    showfigrue = false;
     savefigure = true;
 
 % for n=12:nEXP
-for n=[12 13 23]
+for n=[1:13 23 25 26]
 % for n=1
     if(is_prod_run(n))
         close all
@@ -26,8 +26,9 @@ for n=[12 13 23]
         load_data;
         load_spacing;
 
-        calc_BCvorticity_cdw_sw;
-        plot_BCvorticity_cdw_sw;
+%         calc_w;
+%         calc_BCvorticity_cdw_sw;
+%         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_sponge;
 %         calc_BCvorticity_stretching_Coriolis;
 %         calc_BTvorticity_curl_int; 
@@ -48,9 +49,9 @@ for n=[14:22 24]
         loadexp;
         load_data;
         load_spacing;
-
-        calc_BCvorticity_cdw_sw;
-        plot_BCvorticity_cdw_sw;
+%         calc_w;
+%         calc_BCvorticity_cdw_sw;
+%         plot_BCvorticity_cdw_sw;
     end
 end
 

@@ -1,31 +1,30 @@
 %%%
-%%% plot_w.m
+%%% calc_w.m
 %%% 
-%%% Plot the vertical velocity of the CDW layer
+%%% Calculate and plot the vertical velocity of the CDW layer
 
-    clear;
-%     close all;
-    addpath functions/;
-
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
-    list_exps_new;
-    load_constants;
-    
-    prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
-    figdir = ['/Users/csi/MITgcm_UC/figures_uc/ww/' exp_group '/'];
-    useSEAICE = true;
-    savefigure = false;
-
-    n=27
-
-    expname = EXPNAME{n}
-    loadexp;
-%     load([prodir expname '_tavg_5yrs.mat'],'WVEL','THETA','WVELTH');
-    load_data;
+%     clear;
+% %     close all;
+%     addpath functions/;
+% 
+%     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+%     exp_group = EXP_GROUP{1}
+%     list_exps_new;
+%     load_constants;
+%     
+%     prodir = ['/Users/csi/MITgcm_UC/products_uc/' exp_group '/'];
+%     figdir = ['/Users/csi/MITgcm_UC/figures_uc/ww/' exp_group '/'];
+%     useSEAICE = true;
+%     savefigure = false;
+% 
+%     n=27
+% 
+%     expname = EXPNAME{n}
+%     loadexp;
+% %     load([prodir expname '_tavg_5yrs.mat'],'WVEL','THETA','WVELTH');
+%     load_data;
 
     [YY,XX] = meshgrid(yy,xx);
-
 
     mask_cdw = ones(Nx,Ny,Nr);
     mask_cdw(tt<0)=NaN; %%% Find the CDW layer: temperature above 0 degC
@@ -50,6 +49,15 @@
     wt_cdw(wt_cdw==0)=NaN;
     zz_cdw(zz_cdw==0)=NaN;
 
+
+prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
+prodname_new = [prodir_vorticity expname '_ww_cdw.mat'];
+save(prodname_new,'ww_cdw','wt_cdw','zz_cdw','XX','YY','xx','yy')
+
+
+
+
+if(showfigrue)
     %%% Plotting options
     scrsz = get(0,'ScreenSize');
     fontsize = 17;
@@ -120,6 +128,6 @@
     print('-dpng','-r150',[figdir expname '_zz.png']);
     end
 
-
+end
 
 
