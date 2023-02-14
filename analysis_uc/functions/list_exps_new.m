@@ -4,7 +4,7 @@
 switch(exp_group)
     case 'seaice_boundary'
           expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-          prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+          prodir = '/Users/csi/MITgcm_UC/products_new/seaice_boundary/';
           EXPNAME = {'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...
                 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...
                 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...
@@ -54,7 +54,7 @@ switch(exp_group)
 
     case 'shelfice_seaice'
             expdir = '/Users/csi/MITgcm_UC/exps_uc/shelfice_seaice/';
-            prodir = '/Users/csi/MITgcm_UC/products_uc/shelfice_seaice/';
+            prodir = '/Users/csi/MITgcm_UC/products_new/shelfice_seaice/';
             EXPNAME = {'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_ardbeg_prod';...
                 ...
                 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_stampede2';...
@@ -95,7 +95,7 @@ switch(exp_group)
 
     case 'pseudo_shelfice_seaice'
         expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
-        prodir = '/Users/csi/MITgcm_UC/products_uc/pseudo_shelfice_seaice/';
+        prodir = '/Users/csi/MITgcm_UC/products_new/pseudo_shelfice_seaice/';
         EXPNAME = {...
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7';... %%% is running now, check the time series, may need to run longer than 7years, because the previous runs uses constant sea ice velocity at the boundaries
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_prod_Adv7';...  %%% is running now
@@ -119,7 +119,7 @@ switch(exp_group)
 
     case 'no_seaice'
         expdir = '/Users/csi/MITgcm_UC/exps_uc/no_seaice/';
-        prodir = '/Users/csi/MITgcm_UC/products_uc/no_seaice/';
+        prodir = '/Users/csi/MITgcm_UC/products_new/no_seaice/';
         EXPNAME = {...
             'res2km_Ua-5Va5_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_shelfice_ErestWrest_ardbeg_prod';...
             'res2km_Ua-2Va2_Atide0_Hi0Ai0_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod';...

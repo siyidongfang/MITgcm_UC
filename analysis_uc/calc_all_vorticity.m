@@ -17,7 +17,8 @@
     savefigure = true;
 
 % for n=12:nEXP
-for n=6:11
+for n=[12 13 23]
+% for n=1
     if(is_prod_run(n))
         close all
         expname = EXPNAME{n}
@@ -25,7 +26,7 @@ for n=6:11
         load_data;
         load_spacing;
 
-%         calc_BCvorticity_cdw_sw;
+        calc_BCvorticity_cdw_sw;
         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_sponge;
 %         calc_BCvorticity_stretching_Coriolis;
@@ -37,6 +38,22 @@ for n=6:11
 %         calc_BTvorticity_uc;
     end
 end
+
+
+for n=[14:22 24]
+    if(is_prod_run(n))
+        close all
+        expname = EXPNAME{n}
+        prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+        loadexp;
+        load_data;
+        load_spacing;
+
+        calc_BCvorticity_cdw_sw;
+        plot_BCvorticity_cdw_sw;
+    end
+end
+
 
 
 

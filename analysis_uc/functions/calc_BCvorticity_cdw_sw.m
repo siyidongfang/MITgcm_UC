@@ -57,19 +57,19 @@ end
 %%% Vorticity budget for the CDW layer
     mask_ugrid = mask_cdw_ugridf;
     mask_vgrid = mask_cdw_vgridf;
-    prodname = [prodir expname '_BCvorticity_cdw.mat'];
+    prodname = [prodir 'BCvorticity/' expname '_BCvorticity_cdw.mat'];
     calc_BCvorticity_cdw_sw_zint;
 
 %%% Vorticity budget for the surface layer
     mask_ugrid = mask_sw_ugridf;
     mask_vgrid = mask_sw_vgridf;
-    prodname = [prodir expname '_BCvorticity_sw.mat'];
+    prodname = [prodir 'BCvorticity/' expname '_BCvorticity_sw.mat'];
     calc_BCvorticity_cdw_sw_zint;
 
 %%% Vorticity budget for all-depth integral
     mask_ugrid = 1;
     mask_vgrid = 1;
-    prodname = [prodir expname '_BCvorticity_AllDepth.mat'];
+    prodname = [prodir 'BCvorticity/' expname '_BCvorticity_AllDepth.mat'];
     calc_BCvorticity_cdw_sw_zint;
 
 
@@ -82,5 +82,26 @@ clear Um_Advecf Vm_Advecf
 clear Um_dPhiXf Vm_dPhiYf
 clear hFacWf hFacSf DZf
 
+
+
+prodname = [prodir 'BCvorticity/' expname '_BCvorticity_AllDepth.mat'];
+load(prodname,'zeta_dPhi')
+zeta_BPT = zeta_dPhi; %%% Bottom pressure torque
+
+prodname = [prodir 'BCvorticity/' expname '_BCvorticity_sw.mat'];
+load(prodname,'zeta_dPhi')
+zeta_IPT = - zeta_dPhi; %%% Interfacial (isopycnal) pressure torque exerted on the CDW layer
+
+prodname = [prodir 'BCvorticity/' expname '_BCvorticity_cdw.mat'];
+load(prodname,'zeta_dPhi','zeta_Advec','zeta_Diss','zeta_residual',...
+    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe','XXf','YYf')
+zeta_BPTplusIPT = zeta_dPhi;
+
+prodname_new = [prodir expname '_vorticity_cdw.mat'];
+save(prodname_new,...
+   'zeta_BPT','zeta_IPT','zeta_BPTplusIPT',...
+   'zeta_Advec','zeta_Diss','zeta_residual',...
+   'zeta_Cori','zeta_AdvZ3','zeta_AdvRe',...
+    'XXf','YYf')
 
 
