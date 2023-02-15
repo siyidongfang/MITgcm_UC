@@ -12,21 +12,21 @@
     figdir = '/Users/csi/MITgcm_UC/figures_uc/'; 
     savefigure = false;
 
-    dataY = MeltRate_m([1:36 40:42]);
-    ylabeltext = 'Ice shelf melt rate (m/yr)';
-%     dataX = U_east_avg([1:36 40:42])*100;
-     dataX = Ueast_transportweighted([1:36 40:42])*100;
-    xlabeltext = 'Undercurrent velocity (cm/s)';
-    titletext = {'The melt rate is correlated with the','undercurrent'};
+%     dataY = MeltRate_m([1:36 40:42]);
+%     ylabeltext = 'Ice shelf melt rate (m/yr)';
+% %     dataX = U_east_avg([1:36 40:42])*100;
+%      dataX = Ueast_transportweighted([1:36 40:42])*100;
+%     xlabeltext = 'Undercurrent velocity (cm/s)';
+%     titletext = {'The melt rate is correlated with the','undercurrent'};
 
 
-%     dataY = U_east_avg([1:36 40:42])*100;
-% %     dataY = Ueast_transportweighted([1:36 40:42])*100;
-%     ylabeltext='Undercurrent velocity (cm/s)';
-%     dataX = Ug_east_avg([1:36 40:42])*100;
-% %      dataX = Ug_east_transportweighted([1:36 40:42])*100;
-%     xlabeltext = 'Eastward thermal-wind velocity (cm/s)';
-%     titletext = {'The undercurrent is correlated with the','cross-slope buoyancy gradient'};
+    dataY = U_east_avg([1:36 40:42])*100;
+%     dataY = Ueast_transportweighted([1:36 40:42])*100;
+    ylabeltext='Undercurrent velocity (cm/s)';
+    dataX = Ug_east_avg([1:36 40:42])*100;
+%      dataX = Ug_east_transportweighted([1:36 40:42])*100;
+    xlabeltext = 'Eastward thermal-wind velocity (cm/s)';
+    titletext = {'The undercurrent is correlated with the','cross-slope buoyancy gradient'};
 
     f=fit(dataX',dataY','poly1');
     corr =  corrcoef(dataX,dataY)
@@ -125,7 +125,7 @@
 
 
 
-     figdir = '/Users/csi/MITgcm_UC/figures_uc/';
+%      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
 %      print('-dpng','-r300',[figdir 'corr_UC.png']);
 %      print('-dpng','-r300',[figdir 'corr_melt.png']);
 

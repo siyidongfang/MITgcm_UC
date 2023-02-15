@@ -34,13 +34,14 @@
 
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
 
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_colors;
     savefigure = false;
     showfigure = false;
 
-for n=1:nEXP
+% for n=1:nEXP
+for n=[1:13]
     n
     clear yidx xidx dy dx
     expname = EXPNAME{n};
@@ -62,7 +63,72 @@ for n=1:nEXP
 
 end
 
-    save([prodir 'matrix_' exp_group '-allLx.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
+
+for n=[14:22]
+    n
+    clear yidx xidx dy dx
+    prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+    expname = EXPNAME{n};
+    loadexp;
+    load_constants;
+    load_data;
+    load_spacing;
+
+    yidx = round(Ymin/dy):round(Ymax/dy);
+    xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
+    
+    calc_matrix_transport;
+    calc_matrix_melt_rate;
+    calc_matrix_buoyancy_gradient;
+end
+
+
+for n=[23]
+    n
+    clear yidx xidx dy dx
+    expname = EXPNAME{n};
+    prodir = '/Users/csi/MITgcm_UC/products_new/seaice_boundary/';
+    loadexp;
+    load_constants;
+    load_data;
+    load_spacing;
+
+    yidx = round(Ymin/dy):round(Ymax/dy);
+    xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
+    
+    calc_matrix_transport;
+    calc_matrix_melt_rate;
+    calc_matrix_buoyancy_gradient;
+end
+
+
+for n=[24]
+    n
+    clear yidx xidx dy dx
+    prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+    expname = EXPNAME{n};
+    loadexp;
+    load_constants;
+    load_data;
+    load_spacing;
+
+    yidx = round(Ymin/dy):round(Ymax/dy);
+    xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
+    
+    calc_matrix_transport;
+    calc_matrix_melt_rate;
+    calc_matrix_buoyancy_gradient;
+end
+
+
+
+
+
+
+    prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
+
+
+    save([prodir_vorticity 'matrix_' exp_group '-allLx.mat'],'exp_group','EXPNAME','Ymin','Ymax','Xmin','Xmax',...
         'Ub_east_max','Ub_east_avg','Ub_west_min','Ub_west_avg','Ub_avg',...
         'Ueast_transportweighted','Tot_west_Sv','Tot_Sv','Tot_east_Sv','U_west_avg','U_east_avg','u_xmean_max',...
         'Umin','Umax','U_west_avg_upper','Tot_west_upper','Vol_west_upper',...
