@@ -14,62 +14,78 @@
     showfigrue = false;
     savefigure = true;
 
-prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
-group_adv7 = [1:13 23 25 26];
-group_noAdv7 = [14:22 24];
+    prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
+    group_adv7 = [1:13 23 25 26];
+    group_noAdv7 = [14:22 24];
 
-% ww_all = zeros(1,26);
-% Cori_all = zeros(1,26);
-% IPT_all = zeros(1,26);
-% stir_all = zeros(1,26);
-% 
-% for n=group_adv7
-% % for n=1
-%     if(is_prod_run(n))
-%         close all
-%         expname = EXPNAME{n}
-%         loadexp;
-%         load_data;
-%         load_spacing;
-%         
-%         prodname = [prodir_vorticity expname '_ww_cdw.mat'];
-%         load(prodname)
-%         prodname = [prodir_vorticity expname '_vorticity_cdw.mat'];
-%         load(prodname)
-% 
-%         Yiceshelf = 100*m1km;
-%         zonal_idx = round((30*m1km)/dx):round((Lx-30*m1km)/dx);%%% exclude sponge layers
-%         meri_idx = 1:find(yy<Yiceshelf,1,'last');
-%         ww_all(n) = sum(ww_cdw(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-%         Cori_all(n) = sum(zeta_Cori(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-%         IPT_all(n) = sum(zeta_IPT(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-%         Adv_all(n) = sum(zeta_Advec(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-% %         stir_all(n) = 
-% 
-%     end
-% end
-% 
-% 
+    ww_all = zeros(1,26);
+    Cori_all = zeros(1,26);
+    IPT_all = zeros(1,26);
+    BPTplusIPT_sb = zeros(1,26);
+    BPT_sb = zeros(1,26);
+    IPT_sb = zeros(1,26);
+%     BPTplusIPT_sb_transportweighted = zeros(1,26);
+%     BPT_sb_transportweighted = zeros(1,26);
+%     IPT_sb_transportweighted = zeros(1,26);
+
+
+for n=group_adv7
+% for n=1
+    expname = EXPNAME{n}
+    loadexp;
+    load_data;
+    load_spacing;
+    
+    prodname = [prodir_vorticity expname '_ww_cdw.mat'];
+    load(prodname)
+    prodname = [prodir_vorticity expname '_vorticity_cdw.mat'];
+    load(prodname)
+
+    Yiceshelf = 100*m1km;
+    iceshelfx_idx = round((30*m1km)/dx):round((Lx-30*m1km)/dx);%%% exclude sponge layers
+    iceshelfy_idx = 1:find(yy<Yiceshelf,1,'last');
+    sbx_idx = round((250*m1km)/dx):round((300*m1km)/dx); %%% shelfbreak indices
+    sby_idx = round(Ymin/dy):round(Ymax/dy); %%% shelfbreak indices
+    ww_all(n) = sum(ww_cdw(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+    Cori_all(n) = sum(zeta_Cori(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+    IPT_all(n) = sum(zeta_IPT(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+    Adv_all(n) = sum(zeta_Advec(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+    BPTplusIPT_sb(n) = sum(zeta_BPTplusIPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+    BPT_sb(n) = sum(zeta_BPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+    IPT_sb(n) = sum(zeta_IPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+%     BPTplusIPT_sb_transportweighted(n) = sum(zeta_BPTplusIPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+%     BPT_sb_transportweighted(n) = sum(zeta_BPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+%     IPT_sb_transportweighted(n) = sum(zeta_IPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+
+end
+
 % for n=group_noAdv7
-%     if(is_prod_run(n))
-%         close all
 %         expname = EXPNAME{n}
 %         prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
 %         loadexp;
 %         load_data;
 %         load_spacing;
 % 
-%         ww_all(n) = sum(ww_cdw(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-%         Cori_all(n) = sum(zeta_Cori(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-%         IPT_all(n) = sum(zeta_IPT(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-%         Adv_all(n) = sum(zeta_Advec(zonal_idx,meri_idx)*dx*dy,'all','omitnan');
-% 
-%     end
+%         Yiceshelf = 100*m1km;
+%         iceshelfx_idx = round((30*m1km)/dx):round((Lx-30*m1km)/dx);%%% exclude sponge layers
+%         iceshelfy_idx = 1:find(yy<Yiceshelf,1,'last');
+%         sbx_idx = round((250*m1km)/dx):round((320*m1km)/dx);
+%         sby_idx = round((200*m1km)/dy):round((240*m1km)/dy);
+%         ww_all(n) = sum(ww_cdw(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+%         Cori_all(n) = sum(zeta_Cori(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+%         IPT_all(n) = sum(zeta_IPT(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+%         Adv_all(n) = sum(zeta_Advec(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
+%         BPTplusIPT_sb(n) = sum(zeta_BPTplusIPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+%         BPT_sb(n) = sum(zeta_BPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
+%         IPT_sb(n) = sum(zeta_IPT(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
 % end
-% 
-% save([prodir_vorticity 'matrix_vorticity.mat'],'ww_all','Cori_all','IPT_all','Adv_all','EXPNAME')
 
+save([prodir_vorticity 'matrix_vorticity.mat'],...
+    'ww_all','Cori_all','IPT_all','Adv_all',...
+    'BPTplusIPT_sb','BPT_sb','IPT_sb',...
+    'EXPNAME')
 
+%%
 
 load([prodir_vorticity 'matrix_seaice_boundary-allLx.mat'])
 load([prodir_vorticity 'matrix_vorticity.mat'])
@@ -82,6 +98,20 @@ group = 1:12
 % group = group_noAdv7;
 
 fontsize = 16;
+
+
+figure(9)
+scatter(Cori_all(group),BPTplusIPT_sb(group))
+% xlabel('Coriolis term (m^3/s^2)')
+% ylabel('BPTplusIPT')
+% title({'Area-integrated Coriolis term in the cavity v.s.','Offshore buoyancy gradient'})
+set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
+
+corrcoef(Cori_all(group),BPTplusIPT_sb(group)) %%% 0.73
+corrcoef(Cori_all(group),Ueast_transportweighted(group)) %%% 0.75
+corrcoef(BPTplusIPT_sb(group),Ueast_transportweighted(group)) %%% 0.96
+corrcoef(ww_all(group),BPTplusIPT_sb(group)) %%% 0.67
+corrcoef(BPT_sb(group),Cori_all(group)) %%% 0.70
 
 
 
@@ -143,5 +173,25 @@ set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
 
 
 % scatter(U_east_avg,MeltRate_m)
+
+
+
+figure(10)
+scatter(ww_all(group),BPT_sb(group))
+xlabel('Coriolis term (m^3/s^2)')
+ylabel('BPT')
+% title({'Area-integrated Coriolis term in the cavity v.s.','Offshore buoyancy gradient'})
+set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
+
+figure(11)
+scatter(ww_all(group),IPT_sb(group))
+xlabel('Coriolis term (m^3/s^2)')
+ylabel('IPT')
+% title({'Area-integrated Coriolis term in the cavity v.s.','Offshore buoyancy gradient'})
+set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
+
+
+
+
 
 

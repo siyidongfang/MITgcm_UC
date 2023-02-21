@@ -1,4 +1,17 @@
 
+%%% On hoffman2:
+%%% No output: 'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... %%% _Adv7, year 3, on hoffman2 
+%%% No output: 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr0_Zn350Zsb750dZs250_prod_Adv7';  ... %%% _Adv7 is running now: year 4
+%%% No output: 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7';.. _Adv7 is running now: year 4
+%%% No output: res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod_Adv7';... _Adv7 is running now: year 2
+
+%%% --exclude "0000185506" --exclude "0000371012" --exclude "0000556518" --exclude "0000742024" --exclude "0000927529" --exclude "0001113035"
+%%% Pseudo ice shelf:
+%%% 7 YEARS: res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7
+%%% not running: res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_prod_Adv7
+%%% 5 YEARS: res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_prod_Adv7
+%%% 7 years: res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_prod_Adv7
+
 
 
 switch(exp_group)
@@ -20,7 +33,7 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb550dZs150_prod_Adv7';... 
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_Wtrough15km_prod_Adv7'; ...
                 ...
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... %%% _Adv7 has Adv prod data
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... 
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr0_Zn350Zsb750dZs250_prod';  ... %%% _Adv7 is running now: year 4
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod';... %%% _Adv7 is running now: year 2
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod';... %%% _Adv7 is running now: year 1
@@ -33,14 +46,15 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod';... 
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod';...
                 ...
-                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod';... %%% _Adv7, year 3, on ardbeg?
-                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7'; %%% _Adv7 has Adv prod data
+                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod';... %%% _Adv7, year 3, on hoffman2
+                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...
                 ...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_SEAICEnonLinIterMax100_prod';...
                 ...
 %                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_periodic';... %%% run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr0_Zn350Zsb550dZs150_prod';...  %%% no ice shelf, run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr200_Zn350Zsb550dZs150_prod';...%%% no ice shelf, run with Adv 7
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... %%% run with Adv 7
                 };
             nEXP = length(EXPNAME);
             is_prod_run=true*ones(nEXP,1);

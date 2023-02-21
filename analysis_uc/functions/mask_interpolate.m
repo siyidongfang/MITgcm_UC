@@ -101,19 +101,19 @@
     
     mask_cdw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
     mask_cdw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
-%     mask_cdw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
+    mask_cdw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
     
     mask_cdw_ugridf(tt_ugridf>=0)=1;
     mask_cdw_vgridf(tt_vgridf>=0)=1;
-%     mask_cdw_tgridf(ttf>=0)=1;
+    mask_cdw_tgridf(ttf>=0)=1;
     
     mask_sw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
     mask_sw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
-%     mask_sw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
+    mask_sw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);
     
     mask_sw_ugridf(tt_ugridf<0)=1;
     mask_sw_vgridf(tt_vgridf<0)=1;
-%     mask_sw_tgridf(ttf<0)=1;
+    mask_sw_tgridf(ttf<0)=1;
     
     excludedeepocean = find(zzf<-600);
     mask_sw_ugridf(:,:,excludedeepocean)= NaN;
@@ -122,14 +122,20 @@
 
 
 
-%     test_mask_cdw_ugridf = sum(mask_cdw_ugridf.*hFacWf.*DZf,3,'omitnan');
-%     test_mask_cdw_ugridf(test_mask_cdw_ugridf==0)=NaN;
-%     
-%     figure(10)
-%     pcolor(XXf/1000,YYf/1000,test_mask_cdw_ugridf);shading flat; colorbar;
-%     colormap(jet)
-%     clim([100 500])
-%     ylim([0 230])
-%     title('CDW thickness (m)')
-%     set(gca,'FontSize',fontsize);
+    Hcdw_ugridf = sum(mask_cdw_ugridf.*hFacWf.*DZf,3,'omitnan');
+    Hcdw_ugridf(Hcdw_ugridf==0)=NaN;
+
+    Hcdw_vgridf = sum(mask_cdw_vgridf.*hFacSf.*DZf,3,'omitnan');
+    Hcdw_vgridf(Hcdw_vgridf==0)=NaN;
+
+    Hcdw_tgridf = sum(mask_cdw_tgridf.*hFacCf.*DZf,3,'omitnan');
+    Hcdw_tgridf(Hcdw_tgridf==0)=NaN;
+    
+    figure(10)
+    pcolor(XXf/1000,YYf/1000,Hcdw_ugridf);shading flat; colorbar;
+    colormap(jet)
+    clim([100 500])
+    ylim([0 230])
+    title('CDW thickness (m)')
+    set(gca,'FontSize',fontsize);
 
