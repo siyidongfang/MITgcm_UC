@@ -8,7 +8,6 @@
     DYF = dyf;
     RAZ = raz;
 
-
     %%% Create a finer horizontal grid
     ffac = 1;
     Nxf = ffac*Nx;

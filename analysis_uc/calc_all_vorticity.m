@@ -26,6 +26,8 @@ n=1
         loadexp;
         load_data;
         load_spacing;
+        calc_w_layers;
+%         calc_zeta_cdw;
 %         calc_BCvorticity_fh_int;
 %         calc_w;
 %         calc_BCvorticity_cdw_sw;
