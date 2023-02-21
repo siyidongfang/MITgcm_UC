@@ -14,7 +14,7 @@
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
     showfigrue = true;
-    savefigure = true;
+    savefigure = false;
 
 % for n=12:nEXP
 % for n=[1:13 23 25 26]
@@ -26,7 +26,8 @@ n=1
         loadexp;
         load_data;
         load_spacing;
-        calc_w_layers;
+%         calc_BCvorticity_area_int;
+%         calc_w_layers;
 %         calc_zeta_cdw;
 %         calc_BCvorticity_fh_int;
 %         calc_w;

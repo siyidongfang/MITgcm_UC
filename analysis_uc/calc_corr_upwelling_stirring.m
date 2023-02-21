@@ -27,6 +27,7 @@
     IPT_sb = zeros(1,26);
     zeta_cdw_tr = zeros(1,26);
     zeta_cdw_sbtr_min = zeros(1,26);
+    w_dia_is = zeros(1,26);
 
 
 
@@ -45,6 +46,9 @@ for n=group_adv7
     Yiceshelf = 100*m1km;
     iceshelfx_idx = round((30*m1km)/dx):round((Lx-30*m1km)/dx);%%% exclude sponge layers
     iceshelfy_idx = 1:find(yy<Yiceshelf,1,'last');
+
+    calc_w_layers;
+    w_dia_is(n) = sum(w_cdw_dia(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
 
     sbx_idx = round((250*m1km)/dx):round((300*m1km)/dx); %%% shelfbreak indices
     sby_idx = round(Ymin/dy):round(Ymax/dy); %%% shelfbreak indices
@@ -92,7 +96,7 @@ end
 
 save([prodir_vorticity 'matrix_vorticity.mat'],...
     'ww_all','Cori_all','IPT_all','Adv_all',...
-    'BPTplusIPT_sb','BPT_sb','IPT_sb','zeta_cdw_tr','zeta_cdw_sbtr_min',...
+    'BPTplusIPT_sb','BPT_sb','IPT_sb','zeta_cdw_tr','zeta_cdw_sbtr_min','w_dia_is',...
     'EXPNAME')
 
 %%
@@ -100,15 +104,34 @@ save([prodir_vorticity 'matrix_vorticity.mat'],...
 load([prodir_vorticity 'matrix_seaice_boundary-allLx.mat'])
 load([prodir_vorticity 'matrix_vorticity.mat'])
 
-ww_all = ww_all/1e6;
+ww_all = ww_all/1e6; %%% convert to Sv
+w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
 % group = group_adv7;
 group = 1:12
-
 % group = 1:26;
 % group = group_noAdv7;
-
 fontsize = 16;
+
+
+corrcoef(Cori_all(group),BPTplusIPT_sb(group)) %%% 0.73
+corrcoef(w_dia_is(group),BPTplusIPT_sb(group)) %%% 0.7
+corrcoef(ww_all(group),BPTplusIPT_sb(group)) %%% 0.67
+
+
+corrcoef(Cori_all(group),MeltRate_m(group)) %%% 0.97
+corrcoef(w_dia_is(group),MeltRate_m(group)) %%% 0.97
+corrcoef(ww_all(group),MeltRate_m(group)) %%% 0.93
+
+
+figure()
+scatter(w_dia_is(group),MeltRate_m(group))
+xlabel('Diapycnal upwelling in the cavity (Sv)')
+ylabel('Ice shelf melt rate (m/yr)')
+title({'Diapycnal upwelling in the cavity v.s.','Ice shelf melt rate'})
+set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
+
+
 
 
 figure(9)
@@ -118,10 +141,9 @@ scatter(Cori_all(group),BPTplusIPT_sb(group))
 % title({'Area-integrated Coriolis term in the cavity v.s.','Offshore buoyancy gradient'})
 set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
 
-corrcoef(Cori_all(group),BPTplusIPT_sb(group)) %%% 0.73
+
 corrcoef(Cori_all(group),Ueast_transportweighted(group)) %%% 0.75
 corrcoef(BPTplusIPT_sb(group),Ueast_transportweighted(group)) %%% 0.96
-corrcoef(ww_all(group),BPTplusIPT_sb(group)) %%% 0.67
 corrcoef(BPT_sb(group),Cori_all(group)) %%% 0.70
 
 corrcoef(zeta_cdw_tr(group),BPTplusIPT_sb(group)) %%% 0.71

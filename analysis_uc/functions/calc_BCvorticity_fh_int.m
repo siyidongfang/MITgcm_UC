@@ -116,7 +116,7 @@
     mask_fhcdw(YYf>300.*m1km)=NaN;
     mask_fhcdw(XXf<-200.*m1km)=NaN;
     mask_fhcdw(XXf>100*m1km)=NaN;
-% mask_fhcdw(YYf>220.*m1km)=NaN;
+%     mask_fhcdw(YYf>220.*m1km)=NaN;
 
     fh = fhcdwf.*mask_fhcdw;
 
@@ -192,7 +192,7 @@
     xlim([min(min(fh)) max(fh_select)])
     xlabel('Selected f/h_{CDW} contours, (m^{-1}s^{-1})');
     ylabel('(N/m)');
-    title('Volume integrated vorticity budget of west shelf');
+    title('Area-integrated vorticity budget');
     grid on;
 
 

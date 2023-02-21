@@ -50,9 +50,22 @@
     zz_cdw(zz_cdw==0)=NaN;
 
 
-prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
-prodname_new = [prodir_vorticity expname '_ww_cdw.mat'];
-save(prodname_new,'ww_cdw','wt_cdw','zz_cdw','XX','YY','xx','yy')
+    %%% Find bottom velocity
+    ww_bot = zeros(Nx,Ny);
+    for i = 1:Nx
+        for j = 1:Ny
+            idxb = find(ss(i,j,:)~=0,1,'last'); % Find the vertical grid of bottom pressure
+            if(idxb~=0)
+               ww_bot(i,j) = ww(i,j,idxb);
+            end
+        end
+    end
+    ww_bot(ww_bot==0) = NaN;
+    
+    
+    prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
+    prodname_new = [prodir_vorticity expname '_ww_cdw.mat'];
+    save(prodname_new,'ww_cdw','wt_cdw','zz_cdw','ww_bot','XX','YY','xx','yy')
 
 
 

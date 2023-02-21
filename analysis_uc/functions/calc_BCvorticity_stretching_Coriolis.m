@@ -48,6 +48,7 @@ for i=1:Nx
 end
 
 
+YLIM = [0 250]
 figure(5)
 clf;set(gcf,'color','w');
 set(gcf,'Position', [89 224 572 356])
@@ -69,7 +70,9 @@ print('-dpng','-r300',[figdir 'ww_bot.png']);
 figure(6)
 clf;set(gcf,'color','w');
 set(gcf,'Position', [89 224 572 356])
-pcolor(XX/1000,YY/1000,ww_interf)
+% pcolor(XX/1000,YY/1000,ww_interf)
+pcolor(XX/1000,YY/1000,ww_cdw-ww_bot)
+
 shading flat;colorbar;colormap(cmocean('balance'));
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:200:0],'k:','LineWidth',1.5,'ShowText','off');hold off;
 hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
