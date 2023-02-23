@@ -27,18 +27,18 @@ kidx = find(ptlevs==0); %%% index of the zero degree isotherm in ptlevs
 w_cdw_dia = w_dia(:,:,kidx);
 
 
-figure(1)
-clf;set(gcf,'color','w');
-pcolor(xx/1000,yy/1000,w_cdw_dia');
-hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-hold off;
-shading flat;colorbar;colormap(redblue);
-clim([-5 5]/1e5)
-title('Diapycnal upwelling across the 0 deg isotherm (m/s)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
-yticks(0:100:400);xticks(-300:100:300)
-xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% figure(1)
+% clf;set(gcf,'color','w');
+% pcolor(xx/1000,yy/1000,w_cdw_dia');
+% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+% hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+% hold off;
+% shading flat;colorbar;colormap(redblue);
+% clim([-5 5]/1e5)
+% title('Diapycnal upwelling across the 0 deg isotherm (m/s)','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 

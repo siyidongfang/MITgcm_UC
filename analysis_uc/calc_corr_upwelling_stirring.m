@@ -63,12 +63,12 @@ for n=group_adv7
 
     %%% Calculate integrated zeta in the trough
     trough_xidx = round((290*m1km)/dx):round((310*m1km)/dx);
-    trough_yidx = round(150*m1km/dy):round(220*m1km/dy); 
+    trough_yidx = round(130*m1km/dy):round(220*m1km/dy); 
     calc_zeta_cdw;
     zeta_cdw_tr(n) = sum(zeta_cdw_zint(trough_xidx,trough_yidx)*dx*dy,'all','omitnan');
     
     sbtrx_idx = round((230*m1km)/dx):round((370*m1km)/dx); 
-    sbtry_idx = round((150*m1km)/dx):round(Ymax/dy); 
+    sbtry_idx = round((130*m1km)/dx):round(Ymax/dy); 
     zeta_cdw_sbtr_min(n) = min(min(zeta_cdw_zint(sbtrx_idx,sbtry_idx))); %%% minimum vertically integrated CDW vorticity in the trough
 
 end
@@ -113,11 +113,22 @@ group = 1:12
 % group = group_noAdv7;
 fontsize = 16;
 
+corrcoef(w_dia_is(group),Ug_east_transportweighted(group))
+
+corrcoef(w_dia_is(group),Ueast_transportweighted(group)) %%% 0.73
+corrcoef(w_dia_is(group),Tot_Sv(group)) %%% 0.67
+
+corrcoef(Cori_all(group),zeta_cdw_tr(group)) 
+corrcoef(Cori_all(group),zeta_cdw_sbtr_min(group)) 
 
 corrcoef(Cori_all(group),BPTplusIPT_sb(group)) %%% 0.73
 corrcoef(w_dia_is(group),BPTplusIPT_sb(group)) %%% 0.7
 corrcoef(ww_all(group),BPTplusIPT_sb(group)) %%% 0.67
 
+
+corrcoef(Adv_all(group),Cori_all(group)) 
+
+corrcoef(w_dia_is(group),Cori_all(group)) %%% 0.97
 
 corrcoef(Cori_all(group),MeltRate_m(group)) %%% 0.97
 corrcoef(w_dia_is(group),MeltRate_m(group)) %%% 0.97
