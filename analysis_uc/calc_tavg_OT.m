@@ -3,15 +3,16 @@
     addpath functions/
     addpath colormaps/
     
-%     exp_group = 'seaice_boundary'
-exp_group = 'pseudo_shelfice_seaice'
-    expdir = ['/Users/csi/MITgcm_UC/exps_uc/' exp_group '/'];
-    prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
-
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7'
-
     tmin = 3;
     tmax = 7;
 
-    avg_t
-    calcOverturning_rho_Aocean (expdir,expname,prodir)
+    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
+    exp_group = EXP_GROUP{2}
+    list_exps_new;
+
+% for n=1:nEXP
+for n=4
+    expname = EXPNAME{n}
+    avg_t;
+    calcOverturning_rho_Aocean (expdir,expname,prodir);
+end

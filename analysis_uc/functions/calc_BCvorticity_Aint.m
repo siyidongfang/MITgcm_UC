@@ -29,11 +29,13 @@
     %%% Create a pseudo-latitude coordinate
     figure(1)
     clf;set(gcf,'color','w');
-    [Cslope,h]=contour(XX,YY,bathy,[-3000 3000],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[Cwall,h]=contour(XX,YY,bathy,[0 0],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    [C3000m,h]=contour(XX,YY,bathy,[-3000 -3000],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C500m,h]=contour(XX,YY,bathy,[-500 -500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C600m,h]=contour(XX,YY,bathy,[-600 -600],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C0m,h]=contour(XX,YY,bathy,[0 0],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
     hold off;
-    shading flat;colorbar;colormap(redblue);
-    clim([-5 5]/1e5)
+%     shading flat;colorbar;colormap(redblue);
+%     clim([-5 5]/1e5)
     title('Bathymetry','Interpreter','latex')
     set(gca,'FontSize',fontsize);
     ylim([0 400]);xlim([-300 300])
@@ -55,11 +57,13 @@
       'natural','linear');
     ETA = F(XX,YY);
 
+    ETA(bathy==0)=NaN;
 
 
     figure()
     pcolor(XX/1000,YY/1000,ETA);shading flat;
-    colorbar;clim([-4000 0])
+    colorbar;
+%     clim([-4000 0])
 
 
 %     ETA = NaN*ones(Nx,Ny);

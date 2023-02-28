@@ -10,10 +10,11 @@
     Yicefront = 100*m1km; %%% Latitude of ice shelf face
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'VVELTH','SHI_TauY','THETA','SHIfwFlx','UVEL','VVEL');
-    vt = VVELTH;
     tt = THETA;
     uu = UVEL;
     vv = VVEL;
+    t_freezing = -1.87;
+    vt = VVELTH-vv.*t_freezing; %%% Use freezing temperature as a reference temperature of heat transport
     DZ = repmat(reshape(delR,[1 1 Nr]),[Nx Ny 1]);
     dx = delX(1);
     [YY,XX] = meshgrid(yy,xx);
@@ -29,7 +30,7 @@
     idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/2),:)),1,'last');
 
     %%% For the simulation with 2 narrow ice shelves: 
-    if (n==19)
+    if (ne==19)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
             idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/4),:)),1,'last');
         end

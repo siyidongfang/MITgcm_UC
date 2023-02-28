@@ -29,7 +29,7 @@ for m=1:length(diag_fields)
 % for m=1:73
 %  for m=82:83
 
-    m
+%     m
   if (m == 1) %%% N.B. This won't work if the first field isn't one of those listed below
     flag = '';
   else    

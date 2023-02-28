@@ -2,7 +2,7 @@
 
 
 %%% Load vorticity budget terms
-prodname = [prodir expname '_BCvorticity_cdw.mat'];figname2 = 'cdw'
+prodname = [prodir 'BCvorticity/' expname '_BCvorticity_cdw.mat'];figname2 = 'cdw'
 % prodname = [prodir expname '_BCvorticity_sw.mat'];figname2 = 'sw'
 % prodname = [prodir expname '_BCvorticity_AllDepth.mat'];figname2 = 'AllDepth'
 load(prodname)

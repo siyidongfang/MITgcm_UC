@@ -51,7 +51,7 @@
     idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/2),:)),1,'last');
 
     %%% For the simulation with 2 narrow ice shelves: 
-    if (n==19)
+    if (n==25)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
             idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/4),:)),1,'last');
         end
@@ -79,7 +79,7 @@
     Tc_mean = mean(Tc_xy,2,'omitnan');
 
 
-    if (n==19)
+    if (n==25)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
             Tc_cdw_mean(62:113)=  Tc_cdw_mean(62:113)-Tc_cdw_mean(187);
             Tc_mean(62:113)= Tc_mean(62:113)-Tc_mean(187);
@@ -274,14 +274,14 @@
     Xmax_uc = -15*m1km+Lx/2;
 
     %%% For the simulation with 1 narrow ice shelf: Xmax_bc = 37*m1km+Lx/2;
-    if (n==18)
+    if (n==24)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod')==1)
             Xmax_bc = 37*m1km+Lx/2;
         end
     end
 
     %%% For the simulation with 2 narrow ice shelves: 
-    if (n==19)
+    if (n==25)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
             Xmin_bc = -90*m1km+Lx/2;
             Xmax_bc = -88*m1km+Lx/2;

@@ -24,13 +24,30 @@
 
     fontsize = 16;
 
+%     ne1=1; %%% reference
+%     ne2=15;%%% no trough
+%     ne1 = 2; %%% Weak wind
+%     ne2 = 3; %%% Strong wind
+%     ne1 = 4; %%% Small diffusivity
+%     ne2 = 6; %%% Large diffusivity
+    ne1 = 7; %%% weak tides
+    ne2 = 8; %%% strong tides
+
+%     CLIM = [-0.1 0.1];
+%     YLIM = [-0.2 2.8];
+    CLIM = [-0.25 0.25];
+%     YLIM = [0 6.3];
+YLIM = [-1 6.3];
+    
+
 
     figure(2)
     set(gcf,'Position',[294 476 1326 754])
-    clf;
+    clf;set(gcf,'Color', 'w')
 
-    n=1;
-    expname = EXPNAME{n}
+
+    ne = ne1;
+    expname = EXPNAME{ne}
     calc_heat_compensation;
 
     subplot(2,2,1)
@@ -43,7 +60,7 @@
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
     UU_cdw(1:svx:end,1:svy:end)',VV_cdw(1:svx:end,1:svy:end)');
 %     curr.Color = [0 102 0]/255;
-curr.Color =  green;
+    curr.Color =  green;
     curr.LineWidth = 1.5;
     set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
     plot(xx(98:197)/1000,100*ones(1,100),'LineWidth',3,'Color',darkgray)
@@ -51,18 +68,18 @@ curr.Color =  green;
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
-    clim([-0.1 0.1])
+    clim(CLIM)
     title('Onshore CDW heat flux (color) and volume flux (arrows)','FontSize',fontsize + 2);
     c1 = colorbar;
     annotation('textbox',[0.415 0.065 0.15 0.01],'String','10^9 (W/m)','FontSize',fontsize-1,'LineStyle','None');
 
     subplot(2,2,2)
     plot(xx/1000,Tc_cdw,'LineWidth',2.5);xlim([-110 110]);
-    ylim([-0.2 2.3]);
+    ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
-    rectangle('Position',[30 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
-    rectangle('Position',[-27 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    rectangle('Position',[30 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    rectangle('Position',[-27 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;
     xlabel('Longitude, x (km)');
     ylabel('10^{12} (W)');
@@ -70,8 +87,8 @@ curr.Color =  green;
     title('Cumulative CDW heat transport at ice front (y=100km)','FontSize',fontsize + 2);
 
 
-    n=11;
-    expname = EXPNAME{n}
+    ne = ne2;
+    expname = EXPNAME{ne}
     calc_heat_compensation;
 
   
@@ -85,7 +102,7 @@ curr.Color =  green;
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
     UU_cdw(1:svx:end,1:svy:end)',VV_cdw(1:svx:end,1:svy:end)');
 %     curr.Color = [0 102 0]/255;
- curr.Color = green;
+     curr.Color = green;
     curr.LineWidth = 1.5;
     set(curr,'AutoScale','on', 'AutoScaleFactor', 5)
     plot(xx(98:197)/1000,100*ones(1,100),'LineWidth',3,'Color',darkgray)
@@ -93,18 +110,18 @@ curr.Color =  green;
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
-    clim([-0.1 0.1])
+    clim(CLIM)
     title('Onshore CDW heat flux (color) and volume flux (arrows)','FontSize',fontsize + 2);
     c1 = colorbar;
     annotation('textbox',[0.415 0.545 0.15 0.01],'String','10^9 (W/m)','FontSize',fontsize-1,'LineStyle','None');
 
     subplot(2,2,4)
     plot(xx/1000,Tc_cdw,'LineWidth',2.5);xlim([-110 110]);
-    ylim([-0.2 2.3]);
+    ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
-    rectangle('Position',[30 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
-    rectangle('Position',[-27 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    rectangle('Position',[30 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    rectangle('Position',[-27 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;
     xlabel('Longitude, x (km)');
     ylabel('10^{12} (W)');
@@ -112,8 +129,8 @@ curr.Color =  green;
     title('Cumulative CDW heat transport at ice front (y=100km)','FontSize',fontsize + 2);
 
 
-    figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-    print('-dpng','-r300',[figdir 'heat_compensation.png']);
+%     figdir = '/Users/csi/MITgcm_UC/figures_uc/';
+%     print('-dpng','-r300',[figdir 'heat_compensation.png']);
 
 
    

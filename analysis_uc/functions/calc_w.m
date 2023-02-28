@@ -63,8 +63,7 @@
     ww_bot(ww_bot==0) = NaN;
     
     
-    prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
-    prodname_new = [prodir_vorticity expname '_ww_cdw.mat'];
+    prodname_new = [prodir expname '_ww_cdw.mat'];
     save(prodname_new,'ww_cdw','wt_cdw','zz_cdw','ww_bot','XX','YY','xx','yy')
 
 
