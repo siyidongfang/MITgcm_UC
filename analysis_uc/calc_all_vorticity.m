@@ -6,7 +6,7 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     
@@ -17,19 +17,22 @@
     savefigure = false;
 
 % for ne =[2:6 9:20]  
-for ne=[1:4]
+for ne=1
     close all
         expname = EXPNAME{ne}
         loadexp;
         load_data;
         load_spacing;
 %         calc_BCvorticity_Aint_rectangle
-%         calc_BCvorticity_Aint;
+        calc_BCvorticity_Aint;
+%         calc_CDW_quasi_stfn;
+%         calc_BCvorticity_h_int;
 %         calc_w_layers;
 %         calc_zeta_cdw;
 %         calc_BCvorticity_fh_int;
+%         calc_BCvorticity_stfn_int;
 %         calc_w;
-        calc_BCvorticity_cdw_sw;
+%         calc_BCvorticity_cdw_sw;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_sponge;
 %         calc_BCvorticity_stretching_Coriolis;

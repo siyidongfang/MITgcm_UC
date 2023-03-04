@@ -8,20 +8,18 @@
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products_new/' exp_group '/'];
-    figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
+    prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
     useSEAICE = true;
     showfigrue = true;
     savefigure = false;
 
-    n=1;
-    expname = EXPNAME{n}
+    ne=1;
+    expname = EXPNAME{ne}
     loadexp;
     load_data;
     load_spacing;
 
-    prodir_vorticity = '/Users/csi/MITgcm_UC/products_vorticity/';
-    prodname_new = [prodir_vorticity expname '_vorticity_cdw.mat'];
+    prodname_new = [prodir expname '_vorticity_cdw.mat'];
     load(prodname_new)
 
     %%

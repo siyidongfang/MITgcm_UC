@@ -107,16 +107,18 @@
 
     %%
     %%% Select f/hcdw contours  over the shelf and slope
-    Wmin = 0.55e-7;
-    Wmax = 4.05e-7;
-    fh_select = Wmin:0.05e-7:Wmax;
+%     Wmin = 0.55e-7;
+%     Wmax = 4.05e-7;
+    Wmin = 2.5e-7;
+    Wmax = 2.93e-7;
+    fh_select = Wmin:0.01e-7:Wmax;
     LL = length(fh_select);
     fh_select_mid = 0.5*(fh_select(1:end-1)+fh_select(2:end));
     mask_fhcdw = ones(Nxf,Nyf);
-    mask_fhcdw(YYf>300.*m1km)=NaN;
-    mask_fhcdw(XXf<-200.*m1km)=NaN;
-    mask_fhcdw(XXf>100*m1km)=NaN;
-%     mask_fhcdw(YYf>220.*m1km)=NaN;
+%     mask_fhcdw(YYf>300.*m1km)=NaN;
+%     mask_fhcdw(XXf<-200.*m1km)=NaN;
+%     mask_fhcdw(XXf>100*m1km)=NaN;
+    mask_fhcdw(YYf>205.*m1km)=NaN;
 
     fh = fhcdwf.*mask_fhcdw;
 
@@ -190,7 +192,7 @@
     set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
     set(gca,'FontSize',fontsize);
     xlim([min(min(fh)) max(fh_select)])
-    xlabel('Selected f/h_{CDW} contours, (m^{-1}s^{-1})');
+    xlabel('Selected |f|/h_{CDW} contours, (m^{-1}s^{-1})');
     ylabel('(N/m)');
     title('Area-integrated vorticity budget');
     grid on;
@@ -199,13 +201,23 @@
 
     %%% Calculate the cummulative vorticity budget
 
-    BPT_cumsum = cumsum (flip(zeta_BPT_fhint));
-    IPT_cumsum = cumsum (flip(zeta_IPT_fhint));
-    Advec_cumsum = cumsum (flip(zeta_Advec_fhint));
-    Diss_cumsum = cumsum (flip(zeta_Diss_fhint));
-    residual_cumsum = cumsum (flip(zeta_residual_fhint));
-    
-    flip_fh = flip(fh_select_mid);
+%     BPT_cumsum = cumsum (flip(zeta_BPT_fhint));
+%     IPT_cumsum = cumsum (flip(zeta_IPT_fhint));
+%     Advec_cumsum = cumsum (flip(zeta_Advec_fhint));
+%     Diss_cumsum = cumsum (flip(zeta_Diss_fhint));
+%     residual_cumsum = cumsum (flip(zeta_residual_fhint));
+%     
+%     flip_fh = flip(fh_select_mid);
+
+    BPT_cumsum = cumsum ((zeta_BPT_fhint));
+    IPT_cumsum = cumsum ((zeta_IPT_fhint));
+    Advec_cumsum = cumsum ((zeta_Advec_fhint));
+    Diss_cumsum = cumsum ((zeta_Diss_fhint));
+    residual_cumsum = cumsum ((zeta_residual_fhint));
+%     
+    flip_fh = (fh_select_mid);
+
+
 
     figure(12)
     clf;set(gcf,'color','w');
@@ -220,7 +232,7 @@
     set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
     set(gca,'FontSize',fontsize);
     xlim([min(min(fh)) max(fh_select)])
-    xlabel('Selected f/h_{CDW} contours, (m^{-1}s^{-1})');
+    xlabel('Selected |f|/h_{CDW} contours, (m^{-1}s^{-1})');
     ylabel('(N/m)');
     set(gca, 'XDir','reverse')
     title('Cummulatively integrated vorticity budget');
