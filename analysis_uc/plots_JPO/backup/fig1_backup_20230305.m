@@ -1,5 +1,5 @@
 %%%
-%%% plot_model.m
+%%% fig1_model.m
 %%%
 %%% Plot the model configuration for the undercurrent project 
 %%%
@@ -16,13 +16,13 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     load_colors;
-    n =1; % Load the reference experiment
-    expname = EXPNAME{n}
+    ne =1; % Load the reference experiment
+    expname = EXPNAME{ne}
 %     expdir = EXPDIR{nn};
 %     nIter = NITER(nn);
 %     year = YEAR{nn};
@@ -269,8 +269,8 @@
 
 
 
-     figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-     print('-dpng','-r300',[figdir 'model_ver3.png']);
+%      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
+%      print('-dpng','-r300',[figdir 'model_ver3.png']);
     
     
 

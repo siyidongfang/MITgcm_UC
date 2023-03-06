@@ -1,35 +1,8 @@
 %%%
-%%% plot_velocity.m
+%%% fig1_bc.m
 %%%
-%%% Plot the boundary restoring velocity and mean zonal velocity
-%%%
+%%% Calculate the thermal-wind velocity at the zonal boundaries
 
-
-    clear;close all;
-
-    %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
-    list_exps_new;
-    load_constants;
-    load_colors;
-    n =1; % Load the reference experiment
-    expname = EXPNAME{n}
-    loadexp;
-    fontsize = 17;
-    ncolor=250; % Number of color contours
-    m1km = 1000;
-    load_data;
-
-    nIter = 1298541;
 
     calc_basics;
     u_boundary = squeeze(uu(1,:,:));
@@ -38,22 +11,19 @@
     subplotsize = [0.85 0.38];
 
 
-
-
-
-Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
-Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
-Atide = 0;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
-Hi0 =1;       %%% Reference value 1
-Ai0 =1;       %%% Reference value 1
-m1km = 1000;
-Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
-
-Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
-Htr = 200;    %%% Trough depth, ref 200
-Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
-Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
-dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
+    Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
+    Va = 5;       %%% Reference value 5  ( 4 with no ice shelf)
+    Atide = 0;    %%% Reference value 0.02 (based on Jourdain et al. 2019)
+    Hi0 =1;       %%% Reference value 1
+    Ai0 =1;       %%% Reference value 1
+    m1km = 1000;
+    Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
+    
+    Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
+    Htr = 200;    %%% Trough depth, ref 200
+    Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
+    Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
+    dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,48 +124,3 @@ dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern bo
     uEast_mid = gravity/rho0./f_mid.*cumsum(drhody.*delR,2,'reverse');
     uEast_TWV(2:end-1,:) = (uEast_mid(1:end-1,:)+uEast_mid(2:end,:))/2; %%% Thermal-wind velocity
     uEast = uEast_TWV;
-
-
-%%
-    figure(1)
-    set(gcf,'Position',[1  107 500 700])
-    clf;    
-
-    ax1 = subplot('position',[0.1 0.58 subplotsize]);
-    annotation('textbox',[0.015 0.955 0.05 0.05],'String','(b)','FontSize',fontsize+5,'LineStyle','None');
-    
-    pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
-    shading flat;axis ij;
-    hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
-    clabel(M,c,'LabelSpacing',200);hold off;
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);
-    colormap(mycolormap);colorbar
-    clim([-0.06 0.06])
-    set(gca,'FontSize',fontsize);
-    title('Boundary restoring velocity (m/s)','FontSize',fontsize+4)
-    ylabel('Depth (km)');xlabel('Latitude, y (km)')
-    set(gca,'XTick',[0:100:300 round(Ly/1000)]);
-    set(gca,'YTick',[0:1:4]);
-
-    ax2 = subplot('position',[0.1 0.08 subplotsize]);
-    annotation('textbox',[0.015 0.455 0.05 0.05],'String','(c)','FontSize',fontsize+5,'LineStyle','None');
-
-    pcolor(yy/1000,-zz/1000,uu_xmean');
-    hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
-    clabel(M,c,'LabelSpacing',200);hold off;
-    shading interp;axis ij;colormap(mycolormap);colorbar
-    clim([-0.06 0.06])
-    set(gca,'FontSize',fontsize);
-    title('Zonal-mean zonal velocity (m/s)','FontSize',fontsize+4)
-    ylabel('Depth (km)');xlabel('Latitude, y (km)')
-    set(gca,'XTick',[0:20:300 round(Ly/1000)]);
-    set(gca,'YTick',[0:1:4]);
-    ylim([0.25 2])
-    xlim([190 270])
-
-     figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-     print('-dpng','-r300',[figdir 'velocity.png']);
-
-
-
