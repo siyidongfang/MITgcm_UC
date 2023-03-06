@@ -35,22 +35,22 @@ is_hires = false;
 useSEAICE = true;
 
 %%% Name pf the simulation
-% exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
+exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is_ContinuedRun);
 
-% %%% Create simulations
-% exp_name = ['res2km_' exp_name]
-% 
-% if(is_ContinuedRun)
-%     exp_name = [exp_name '_prod']
-% end
-% 
-% if(is_ContinuedRun)
-%     exp_name = [exp_name '_Adv7']
-% end
+%%% Create simulations
+exp_name = ['res2km_' exp_name]
+
+if(is_ContinuedRun)
+    exp_name = [exp_name '_prod']
+end
+
+if(is_ContinuedRun)
+    exp_name = [exp_name '_Adv7']
+end
 % 
 % exp_name = [exp_name '_troughOnlyOnShelf']
 
-exp_name = 'test'
+% exp_name = 'test'
  
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
 
