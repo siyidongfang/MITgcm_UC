@@ -3,7 +3,7 @@
 %%%
 %%% Plot the model configuration for the undercurrent project 
 %%%
-%%% TO DO: add salinity contours
+%%% TO DO: add salinity contours to panel (a)
 
 
     clear;close all;
@@ -112,7 +112,7 @@
     % Plot the restoring temperature
     ZZZ(:,end)=-4;
     p_bct = surface(ax1,xx(idx_1)/1000*ones(size(YYY)),YYY,-ZZZ,BC_t);
-    colormap(ax1,cmocean('balance',ncolor))
+    colormap(cmocean('balance',ncolor))
     clim([-2.3 2.3]);
     p_bct.FaceColor = 'texturemap';
     p_bct.EdgeColor = 'none';         
@@ -147,7 +147,7 @@
     % uvel_slice(uvel_slice==0) = NaN;
     p = surface(ax2,xx(idx_u2)/1000*ones(length(yidx_u2),Nr),YYY(yidx_u2,:),-ZZZ(yidx_u2,:),uvel_slice(yidx_u2,:));
     p.FaceColor = 'texturemap';
-    colormap(ax2,cmocean('balance',ncolor))
+    colormap(cmocean('balance',ncolor))
 %             colormap(ax2,cmocean('delta'))
     clim([-0.1 0.1]);
     p.EdgeColor = 'none';         
@@ -216,8 +216,8 @@
 %%%%%%%%%%%%%%%%%%%
 
     %%% Zonal boundary conditions: thermal wind velocity + neutral density contours
-    axb = subplot('position',[0.57 0.59 0.2 0.35]);
-    annotation('textbox',[0.54 0.985 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
+    axb = subplot('position',[0.57 0.6 0.19 0.35]);
+    annotation('textbox',[0.54 0.995 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
 
  
     pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
@@ -241,7 +241,7 @@
 %%% panel (c) %%%%%
 %%%%%%%%%%%%%%%%%%%
     %%% Zonal-mean zonal velocity + neutral density contours
-    axc = subplot('position',[0.57 0.1 0.2 0.35]);
+    axc = subplot('position',[0.57 0.1 0.19 0.35]);
     annotation('textbox',[0.54 0.5 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
 
     pcolor(yy/1000,-zz/1000,uu_xmean');
@@ -260,29 +260,83 @@
     xlim([190 270])
     grid on;
     handled = colorbar(axc);    
-    set(handled,'Position',[0.783 0.2 0.005 0.6]);
+    set(handled,'Position',[0.773 0.2 0.005 0.6]);
     cbarrow;
-    annotation('textbox',[0.78 0.845 0.01 0.01],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.77 0.845 0.01 0.01],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
 
 
 
+    %%
 %%%%%%%%%%%%%%%%%%%
 %%% panel (d) %%%%%
 %%%%%%%%%%%%%%%%%%%
     %%% CDW depth at the zonal boundaries
+    axd = subplot('position',[0.85 0.7 0.14 0.25]);
+%      axd = subplot('position',[0.85 0.6 0.14 0.35]);
+    annotation('textbox',[0.82 0.995 0.15 0.01],'String','(d)','FontSize',fontsize+2,'LineStyle','None');
 
+    plot(yy/1000,-Zcdw_pt/1000,'LineWidth',2)
+    hold on
+    plot(yy/1000,-Zcdw_s/1000,'LineWidth',2)
+    hold off;
+    axis ij;
+    ylim([0.3 0.85])
+    ylabel('Depth (km)')
+    xlabel('Latitude, y (km)')
+    leg1 = legend('Depth of \theta_{max}','Depth of S_{max}');
+    set(leg1,'Position',[0.8487 0.8664 0.0943 0.0875]);legend boxoff;
+    set(gca,'fontsize',fontsize);
+%     title('Eastern boundary CDW depth')
+    title('Thermocline/halocline','FontSize',fontsize+3)
+    grid on;grid minor
 
 
 
 %%%%%%%%%%%%%%%%%%%
 %%% panel (e) %%%%%
 %%%%%%%%%%%%%%%%%%%
+    tNorth = tEast(Ny,:);
+    sNorth = sEast(Ny,:);
+
     %%% Restoring T/S at the northern boundary
+    ax51 = subplot('position',[0.85 0.1 0.14 0.4]);
+    annotation('textbox',[0.82 0.58 0.15 0.01],'String','(e)','FontSize',fontsize+2,'LineStyle','None');
+    plot(ax51,tNorth,-zz/1000,'Color',[0.8500 0.3250 0.0980],'LineWidth',1.5);
+    ax52 = axes('Position',get(ax51,'Position'));
+    plot(ax52,sNorth,-zz/1000,'Color','k','LineWidth',1.5);
+%     set(ax51,'YTick',[1 2 3 4]);
+    hold off;
+    text3 = text(ax52,33.63,0.8,{'Northern boundary';'relaxation'},'FontSize',fontsize+3,'color','k','fontweight', 'bold');
+    set(ax51,'YDir','reverse');
+    set(ax52,'YDir','reverse');
+    set(ax51,'XAxisLocation','Bottom');
+    set(ax52,'XAxisLocation','Top');
+    set(ax51,'YAxisLocation','Left')
+    set(ax52,'YAxisLocation','Right');
+    set(ax51,'XColor',[0.8500 0.3250 0.0980]); 
+    set(ax52,'XColor','k');
+    set(ax51,'XLim',[-2 2.1]);
+    set(ax51,'XTick',[-2:1:2]);
+    set(ax51,'FontSize',fontsize);
+    set(ax52,'FontSize',fontsize);
+    set(ax52,'XTick',[33.6 34 34.4 34.8],'fontsize',fontsize-1);
+    set(ax52,'XLim',[min(sNorth)-0.1 max(sNorth)+0.1]);
+    set(ax51,'YLim',[0 4]);
+    set(ax52,'YTick',[]);
+    set(ax52,'YLim',[0 4]);
+    set(ax51,'YColor','k');
+    set(ax52,'YColor','k');
+    set(get(ax51,'XLabel'),'String','Potential temperature (^oC)','FontSize',fontsize);
+    set(get(ax52,'XLabel'),'String','Salinity (psu)','FontSize',fontsize);
+    set(ax52,'Color','none');
+    set(ax51,'Box','off');
+    set(ax52,'Box','off');
+%     annotation('line',[0.85 0.99],[0.1 0.1],'LineWidth',1,'LineStyle','-','color',[0    0.4470    0.7410]);
 
 
 
-%      figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-%      print('-dpng','-r300',[figdir 'model_ver3.png']);
+     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig1/';
+     print('-dpng','-r200',[figdir 'fig1_v1.png']);
     
     
 
