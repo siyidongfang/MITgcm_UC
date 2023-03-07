@@ -231,7 +231,7 @@
     colormap(axb,cmocean('balance',ncolor));
     clim([-0.07 0.07])
     set(gca,'FontSize',fontsize);
-    title('Boundary restoring velocity','FontSize',fontsize+3)
+    title('Boundary restoring velocity','FontSize',fontsize+1,'fontweight', 'normal')
     ylabel('Depth (km)');xlabel('Latitude, y (km)')
     set(gca,'XTick',[0:100:300 round(Ly/1000)]);
     xlim([100 400])
@@ -255,7 +255,7 @@
     colormap(axc,cmocean('balance',ncolor));
     clim([-0.07 0.07])
     set(gca,'FontSize',fontsize);
-    title('Zonal-mean zonal velocity','FontSize',fontsize+3)
+    title('Zonal-mean zonal velocity','FontSize',fontsize+1,'fontweight', 'normal')
     ylabel('Depth (km)');xlabel('Latitude, y (km)')
     set(gca,'XTick',[190:20:270]);
     set(gca,'YTick',[0:0.25:4]);
@@ -290,7 +290,7 @@
     set(leg1,'Position',[0.8487 0.8664 0.0943 0.0875]);legend boxoff;
     set(gca,'fontsize',fontsize);
 %     title('Eastern boundary CDW depth')
-    title('Thermocline/halocline','FontSize',fontsize+3)
+    title('Thermocline/halocline','FontSize',fontsize+1,'fontweight', 'normal')
     grid on;grid minor
 
 
@@ -310,7 +310,7 @@
     plot(ax52,sNorth,-zz/1000,'Color','k','LineWidth',1.5);
 %     set(ax51,'YTick',[1 2 3 4]);
     hold off;
-    text3 = text(ax52,33.63,0.8,{'Northern boundary';'relaxation'},'FontSize',fontsize+3,'color','k','fontweight', 'bold');
+    text3 = text(ax52,33.66,0.8,{'Northern boundary';'relaxation'},'FontSize',fontsize+1,'color','k','fontweight', 'normal');
     set(ax51,'YDir','reverse');
     set(ax52,'YDir','reverse');
     set(ax51,'XAxisLocation','Bottom');

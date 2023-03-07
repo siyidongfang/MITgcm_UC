@@ -16,9 +16,9 @@ longitude = ncread(dataname,'longitude');
 
 %%% convert time to dates
 DateTime = datetime(1950,1,1,'Format','dd-MMM-yyyy HH:mm:ss') + days(time);
-
 sla(sla>1000)=NaN;
-meanSSH = mean(sla(:,:,1:365),3);
+
+%%
 
 %%% Make a figure
 figure(1)
@@ -28,7 +28,7 @@ shading flat;colorbar;
 colormap(redblue)
 clim([-0.1 0.1])
 set(gca,'FontSize',17)
-title('Sea Level Anomaly (m), 2013 mean')
+title('Sea Level Anomaly (m), 2015 mean')
 
 
 %%% Make an animation of daily SSH

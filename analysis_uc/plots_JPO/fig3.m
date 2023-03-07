@@ -19,12 +19,12 @@
 
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{1};
     list_exps_new;
     load_constants;
     load_colors;
     ne =1; % Load the reference experiment
-    expname = EXPNAME{ne}
+    expname = EXPNAME{ne};
     loadexp;
     load_data;
     load_spacing;
@@ -76,7 +76,7 @@
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));
     clim([-2.3 2.3])
-    title('Potential temperature','FontSize',fontsize+3)
+    title('Potential temperature','FontSize',fontsize+3,'fontweight', 'normal');
     ylabel('Depth (km)');
     set(gca,'XTick',XTICK);xlim(XLIM)
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
@@ -94,7 +94,7 @@
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));
     clim([33.5 34.9]);
-    title('Salinity','FontSize',fontsize+3)
+    title('Salinity','FontSize',fontsize+3,'fontweight', 'normal');
     ylabel('Depth (km)');
     set(gca,'XTick',XTICK);xlim(XLIM)
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
@@ -112,13 +112,13 @@
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
     shading flat;axis ij;colormap(cmocean('balance'));
     clim([-0.15 0.15])
-    title('Zonal velocity','FontSize',fontsize+3)
+    title('Zonal velocity','FontSize',fontsize+3,'fontweight', 'normal');
     ylabel('Depth (km)');% xlabel('y (km)')
     set(gca,'XTick',XTICK);xlim(XLIM)
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     handle=colorbar;set(handle,'position',[0.963 0.23 0.005 0.5]);
-    annotation('textbox',[0.96 0.72 0.05 0.05],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.958 0.72 0.05 0.05],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
     text3 = text(ax3,191,1.3,{'u, west of the trough','(x = -50 km)'},'FontSize',fontsize,'color',darkgray);
 
 

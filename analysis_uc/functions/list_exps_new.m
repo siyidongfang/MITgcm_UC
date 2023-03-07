@@ -67,7 +67,7 @@ switch(exp_group)
         prodir = '/Users/csi/MITgcm_UC/products/pseudo_shelfice_seaice/';
         EXPNAME = {...
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7';...      %%% Done, Year 9
-            'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_prod_Adv7';...  %%% Year 7
+            'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_prod_Adv7';...  %%% Year 8
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_prod_Adv7';... %%% Year 5
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_prod_Adv7';... %%% Year 7
             ...

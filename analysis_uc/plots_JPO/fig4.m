@@ -1,7 +1,7 @@
 %%%
-%%% fig2.m
+%%% fig4.m
 %%%
-%%% Model evaluation -- CDW and SSH
+%%% Vorticity budget
 %%%
 
    clear;close all;
@@ -16,7 +16,6 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
 
-
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1};
     list_exps_new;
@@ -27,22 +26,9 @@
     loadexp;
     load_data;
     load_spacing;
-    calc_basics;
 
 
-    fontsize = 18;
-    panelsize = [0.236 0.26];
 
-    figure(1)
-    clf;   
-    set(gcf,'Color','w');
-    scrsz = get(0,'ScreenSize');
-    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1000 900]);
-
-     %%% Plotting options
-    ax1 = subplot('position',[0.042 0.705 panelsize]);
-    annotation('textbox',[0 0.98 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
-    pcolor(yy/1000,-zz/1000,t1');
 
 
 
