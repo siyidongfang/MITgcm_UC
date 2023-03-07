@@ -24,7 +24,7 @@ for ne=1
         load_data;
         load_spacing;
 %         calc_BCvorticity_Aint_rectangle
-        calc_BCvorticity_Aint;
+%         calc_BCvorticity_Aint;
 %         calc_CDW_quasi_stfn;
 %         calc_BCvorticity_h_int;
 %         calc_w_layers;
@@ -32,7 +32,7 @@ for ne=1
 %         calc_BCvorticity_fh_int;
 %         calc_BCvorticity_stfn_int;
 %         calc_w;
-%         calc_BCvorticity_cdw_sw;
+        calc_BCvorticity_cdw_sw;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_sponge;
 %         calc_BCvorticity_stretching_Coriolis;

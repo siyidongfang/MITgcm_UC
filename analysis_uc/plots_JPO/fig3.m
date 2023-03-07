@@ -24,7 +24,7 @@
     load_constants;
     load_colors;
     ne =1; % Load the reference experiment
-    expname = EXPNAME{ne};
+    expname = EXPNAME{ne}
     loadexp;
     load_data;
     load_spacing;
@@ -69,7 +69,7 @@
 
     %%% Plotting options
     ax1 = subplot('position',[0.042 0.705 panelsize]);
-    annotation('textbox',[0 0.98 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0 0.98 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,t1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[1.8:0.05:2.5],'k--');hold off;
@@ -84,10 +84,10 @@
     handle=colorbar;set(handle,'position',[0.295 0.23 0.005 0.5]);
     annotation('textbox',[0.29 0.72 0.05 0.05],'String','(^oC)','FontSize',fontsize,'LineStyle','None');
     text1 = text(ax1,191,1.3,{'\theta, west of the trough','(x = -50 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax1,192,1,{'(a)'},'FontSize',fontsize+2);
 
     ax2 = subplot('position',[0.375 0.705 panelsize]);
-    annotation('textbox',[0.33 0.98 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.33 0.98 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,s1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[32:0.2:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[34.7:0.01:35],'k--');hold off;
@@ -102,10 +102,10 @@
     handle=colorbar;set(handle,'position',[0.627 0.23 0.005 0.5]);
     annotation('textbox',[0.622 0.72 0.05 0.05],'String','(psu)','FontSize',fontsize,'LineStyle','None');
     text2 = text(ax2,191,1.3,{'S, west of the trough','(x = -50 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax2,192,1,{'(b)'},'FontSize',fontsize+2);
 
     ax3 = subplot('position',[0.71 0.705 panelsize]);
-    annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,u1');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[0:0.02:0.2],'EdgeColor','k');hold off;
@@ -120,11 +120,11 @@
     handle=colorbar;set(handle,'position',[0.963 0.23 0.005 0.5]);
     annotation('textbox',[0.958 0.72 0.05 0.05],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
     text3 = text(ax3,191,1.3,{'u, west of the trough','(x = -50 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax3,192,1,{'(c)'},'FontSize',fontsize+2);
 
     %%% Plotting options
     ax4 = subplot('position',[0.042 0.385 panelsize]);
-    annotation('textbox',[0 0.66 0.15 0.01],'String','(d)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0 0.66 0.15 0.01],'String','(d)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,t2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t2,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t2,[1.8:0.05:2.5],'k--');hold off;
@@ -136,10 +136,10 @@
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     text4 = text(ax4,191,1.3,{'\theta, trough center','(x = 0 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax4,192,1,{'(d)'},'FontSize',fontsize+2);
 
     ax5 = subplot('position',[0.375 0.385 panelsize]);
-    annotation('textbox',[0.33 0.66 0.15 0.01],'String','(e)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.33 0.66 0.15 0.01],'String','(e)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,s2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[32:0.2:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[34.7:0.01:35],'k--');hold off;
@@ -151,10 +151,10 @@
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     text5 = text(ax5,191,1.3,{'S, trough center','(x = 0 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax5,192,1,{'(e)'},'FontSize',fontsize+2);
 
     ax6 = subplot('position',[0.71 0.385 panelsize]);
-    annotation('textbox',[0.665 0.66 0.15 0.01],'String','(f)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.665 0.66 0.15 0.01],'String','(f)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,u2');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[0:0.02:0.2],'EdgeColor','k');hold off;
@@ -166,12 +166,12 @@
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     text6 = text(ax6,191,1.3,{'u, trough center','(x = 0 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax6,192,1,{'(f)'},'FontSize',fontsize+2);
 
 
     %%% Plotting options
     ax7 = subplot('position',[0.042 0.07 panelsize]);
-    annotation('textbox',[0 0.345 0.15 0.01],'String','(g)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0 0.345 0.15 0.01],'String','(g)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,t3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t3,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t3,[1.8:0.05:2.5],'k--');hold off;
@@ -184,10 +184,10 @@
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     text7 = text(ax7,191,1.3,{'\theta, east of the trough','(x = 50 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax7,192,1,{'(g)'},'FontSize',fontsize+2);
 
     ax8 = subplot('position',[0.375 0.07 panelsize]);
-    annotation('textbox',[0.33 0.345 0.15 0.01],'String','(h)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.33 0.345 0.15 0.01],'String','(h)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,s3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[32:0.2:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[34.7:0.01:35],'k--');hold off;
@@ -200,10 +200,10 @@
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     text8 = text(ax8,191,1.3,{'S, east of the trough','(x = 50 km)'},'FontSize',fontsize,'color',darkgray);
-
+    text(ax8,192,1,{'(h)'},'FontSize',fontsize+2);
 
     ax9 = subplot('position',[0.71 0.07 panelsize]);
-    annotation('textbox',[0.665 0.345 0.15 0.01],'String','(i)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.665 0.345 0.15 0.01],'String','(i)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,u3');
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[0:0.02:0.2],'EdgeColor','k');hold off;
@@ -216,9 +216,9 @@
     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
     set(gca,'FontSize',fontsize);
     text9 = text(ax9,191,1.3,{'u, east of the trough','(x = 50 km)'},'FontSize',fontsize,'color',darkgray);
+    text(ax9,192,1,{'(i)'},'FontSize',fontsize+2);
 
-
-
+%%
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig3/';
      print('-dpng','-r200',[figdir 'fig3.png']);

@@ -28,6 +28,7 @@
     Um_AdvRef = zeros(Nxf,Nyf,Nrf);
     Vm_AdvZ3f = zeros(Nxf,Nyf,Nrf);
     Vm_AdvRef = zeros(Nxf,Nyf,Nrf);
+    vvf = zeros(Nxf,Nyf,Nrf);
 
     %%% Piecewise-constant interpolation for momentum terms
 for i=1:Nx
@@ -48,6 +49,7 @@ for i=1:Nx
             Um_AdvRef((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Um_AdvRe(i,j,k);
             Vm_AdvZ3f((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_AdvZ3(i,j,k);
             Vm_AdvRef((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = Vm_AdvRe(i,j,k);
+            vvf((i-1)*ffac+1:i*ffac,(j-1)*ffac+1:j*ffac,(k-1)*ffacZ+1:k*ffacZ) = vv(i,j,k);
         end
     end
 end
@@ -73,6 +75,9 @@ end
     calc_BCvorticity_cdw_sw_zint;
 
 
+
+
+
 clear Um_Corif Vm_Corif
 clear Um_AdvZ3f Vm_AdvZ3f
 clear Um_Extf Vm_Extf
@@ -94,14 +99,15 @@ zeta_IPT = - zeta_dPhi; %%% Interfacial (isopycnal) pressure torque exerted on t
 
 prodname = [prodir 'BCvorticity/' expname '_BCvorticity_cdw.mat'];
 load(prodname,'zeta_dPhi','zeta_Advec','zeta_Diss','zeta_residual',...
-    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe','XXf','YYf')
+    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe','XXf','YYf','VV_bc','zeta_betaV')
 zeta_BPTplusIPT = zeta_dPhi;
+VV_cdw = VV_bc;
 
 prodname_new = [prodir expname '_vorticity_cdw.mat'];
 save(prodname_new,...
    'zeta_BPT','zeta_IPT','zeta_BPTplusIPT',...
    'zeta_Advec','zeta_Diss','zeta_residual',...
    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe',...
-    'XXf','YYf','Hcdw_ugridf','Hcdw_vgridf','Hcdw_tgridf')
+    'XXf','YYf','Hcdw_ugridf','Hcdw_vgridf','Hcdw_tgridf','VV_cdw','zeta_betaV')
 
 
