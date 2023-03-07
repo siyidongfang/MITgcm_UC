@@ -50,11 +50,11 @@
     
     %%% Calculate zonal mean T, S, and neutral density
     tt(tt==0)=NaN;
-    tt_xmean= squeeze(mean(tt(2:end-1,:,:),'omitnan'));
+    tt_xmean= squeeze(mean(tt(xidx,:,:),'omitnan'));
     ss(ss==0)=NaN;
-    ss_xmean= squeeze(mean(ss(2:end-1,:,:),'omitnan'));
+    ss_xmean= squeeze(mean(ss(xidx,:,:),'omitnan'));
     uu(uu==0)=NaN;
-    uu_xmean= squeeze(mean(uu(2:end-1,:,:),'omitnan'));
+    uu_xmean= squeeze(mean(uu(xidx,:,:),'omitnan'));
 
     lon_sec = -115;
     lat_sec = -71;

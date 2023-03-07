@@ -26,10 +26,13 @@
     ne =1; % Load the reference experiment
     expname = EXPNAME{ne}
     loadexp;
+    load_data;
+    load_spacing;
+
+
     fontsize = 19;
     ncolor=250; % Number of color contours
     m1km = 1000;
-    load_data;
 
     % bathycolor = hex2rgb('#958872');
     bathycolor = hex2rgb('#bcb099');
@@ -226,7 +229,7 @@
     clabel(M,c,'LabelSpacing',200);hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);
     colormap(axb,cmocean('balance',ncolor));
-    clim([-0.06 0.06])
+    clim([-0.07 0.07])
     set(gca,'FontSize',fontsize);
     title('Boundary restoring velocity','FontSize',fontsize+3)
     ylabel('Depth (km)');xlabel('Latitude, y (km)')
@@ -250,7 +253,7 @@
     clabel(M,c,'LabelSpacing',200);hold off;
     shading interp;axis ij;
     colormap(axc,cmocean('balance',ncolor));
-    clim([-0.06 0.06])
+    clim([-0.07 0.07])
     set(gca,'FontSize',fontsize);
     title('Zonal-mean zonal velocity','FontSize',fontsize+3)
     ylabel('Depth (km)');xlabel('Latitude, y (km)')
@@ -302,6 +305,7 @@
     ax51 = subplot('position',[0.85 0.1 0.14 0.4]);
     annotation('textbox',[0.82 0.58 0.15 0.01],'String','(e)','FontSize',fontsize+2,'LineStyle','None');
     plot(ax51,tNorth,-zz/1000,'Color',[0.8500 0.3250 0.0980],'LineWidth',1.5);
+    ylabel('Depth (km)');
     ax52 = axes('Position',get(ax51,'Position'));
     plot(ax52,sNorth,-zz/1000,'Color','k','LineWidth',1.5);
 %     set(ax51,'YTick',[1 2 3 4]);
@@ -336,7 +340,7 @@
 
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig1/';
-     print('-dpng','-r200',[figdir 'fig1_v1.png']);
+     print('-dpng','-r200',[figdir 'fig1_matlab_v1.png']);
     
     
 
