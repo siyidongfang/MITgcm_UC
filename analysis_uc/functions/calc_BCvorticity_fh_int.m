@@ -110,15 +110,17 @@
 %     Wmin = 0.55e-7;
 %     Wmax = 4.05e-7;
     Wmin = 2.5e-7;
-    Wmax = 2.93e-7;
-    fh_select = Wmin:0.01e-7:Wmax;
+%     Wmax = 2.93e-7;
+    Wmax = 3.7e-7;
+
+    fh_select = Wmin:0.1e-7:Wmax;
     LL = length(fh_select);
     fh_select_mid = 0.5*(fh_select(1:end-1)+fh_select(2:end));
     mask_fhcdw = ones(Nxf,Nyf);
 %     mask_fhcdw(YYf>300.*m1km)=NaN;
-%     mask_fhcdw(XXf<-200.*m1km)=NaN;
-%     mask_fhcdw(XXf>100*m1km)=NaN;
-    mask_fhcdw(YYf>205.*m1km)=NaN;
+    mask_fhcdw(XXf<-200.*m1km)=NaN;
+    mask_fhcdw(XXf>100*m1km)=NaN;
+%     mask_fhcdw(YYf>205.*m1km)=NaN;
 
     fh = fhcdwf.*mask_fhcdw;
 
@@ -127,7 +129,7 @@
     clf;set(gcf,'color','w');
     contour(XXf/1000,YYf/1000,fh,fh_select)
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:500:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
     colorbar;colormap(jet);caxis([Wmin Wmax])
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');

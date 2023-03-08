@@ -20,15 +20,18 @@ sla(sla>1000)=NaN;
 
 %%
 
+meanSSH = mean(sla(:,:,1:end),3,'omitnan');
+
 %%% Make a figure
 figure(1)
 set(gcf,'Color','w');
 pcolor(meanSSH);
 shading flat;colorbar;
 colormap(redblue)
-clim([-0.1 0.1])
+% clim([-0.1 0.1])
+clim([-0.1 0.1]/1e7)
 set(gca,'FontSize',17)
-title('Sea Level Anomaly (m), 2015 mean')
+title('Sea Level Anomaly (m), 2013-2019 mean')
 
 
 %%% Make an animation of daily SSH

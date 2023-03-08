@@ -7,7 +7,7 @@
 %%% Months to average over
 months = [1:12];
 % years = [2011:2013];
- years = [2013];
+ years = [2014:2016];
 
 %%% Extract DOT and grid variables
 DOT = ncread('CS2_combined_Southern_Ocean_2011-2016.nc','DOT');
@@ -38,4 +38,4 @@ n_avg_recip(n_avg==0) = 0;
 DOT_clim = DOT_clim .* n_avg_recip;
 
 %%% Write to .mat file
-save('DOT_climatology_2013.mat','X','Y','months','years','Latitude','Longitude','DOT_clim');
+save('DOT_climatology_2014-2016.mat','X','Y','months','years','Latitude','Longitude','DOT_clim');

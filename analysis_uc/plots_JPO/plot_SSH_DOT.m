@@ -1,7 +1,7 @@
 
 
-    fontsize = 18;
-    linewidth = 2;
+    clear;close all;
+
 
     %%% Plotting options
     fontsize = 12;
@@ -24,7 +24,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/
     %%% Load data
     load AntarcticCoastline.mat
-    load DOT_climatology_2013.mat
+    load DOT_climatology_2014-2016.mat
 
     %%%%%%%%%%% Load the coastline
     load coastlines
@@ -63,7 +63,7 @@
     setm(gca,'MLineLocation',[-180:30:180]);
     setm(gca,'MLabelLocation',[-180:30:180]);
     % DOT_clim(isnan(DOT_clim))=0;
-    aa = pcolorm(LAT,LON,double(DOT_clim));        
+    aa = pcolorm(LAT,LON,double(DOT_clim)/100);        
     shading interp;
     GRAY_NAN = scatterm(scatter_lat,scatter_lon,15,'filled','MarkerFaceColor',[0.93 0.93 0.93]);       
     % hold on;
@@ -74,13 +74,12 @@
     % col4 = colormap(ax4,'haxby');
     % col4=flipud(cmocean('tarn',256));
     % colormap(ax4,col4(1:end,:));
-    colormap(flipud(WhiteBlueGreenYellowRed(1)));
+%     colormap(flipud(WhiteBlueGreenYellowRed(1)));
     % colormap(ax4,flipud(cmocean('rain',100)));
+    colormap(redblue)
 
 
-    % caxis([-200 -165])
-%     caxis([-215 -165])
-    caxis([-190 -170])
+    clim([-1.95 -1.75])
     set(gca,'FontSize',fontsize);
     handle = title({'Winter sea surface elevation (cm)'},'FontSize',fontsize+3,'interpreter','latex');
     % 2011-2016 ,'Armitage et al. (2018)' ,'and geostrophic currents (cm/s)
