@@ -1,34 +1,23 @@
-%%%
-%%% fig5.m
-%%%
-%%% Area-integrated vorticity budget
-%%%
 
 
-   clear;close all;
+    clear;close all;
 
-    %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
-
-    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1};
+    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
-    load_colors;
-    ne =1; % Load the reference experiment
-    expname = EXPNAME{ne};
+    
+    prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
+    useSEAICE = true;
+    showfigrue = true;
+    savefigure = false;
+
+    ne=1;
+    expname = EXPNAME{ne}
     loadexp;
     load_data;
     load_spacing;
     load_colors;
-
 
     prodname_new = [prodir expname '_vorticity_cdw.mat'];
     load(prodname_new)
@@ -41,7 +30,11 @@
     load(prodname_new)
     Hcdw_vorgrid = zeros(Nx,Ny);
     Hcdw_vorgrid(1:Nx-1,:) = (Hcdw_vgridf(1:Nx-1,:)+ Hcdw_vgridf(2:Nx,:))/2; % vorticity-gird
+    %     Hcdw_vorgrid(:,2:Ny) = (Hcdw_ugridf(:,1:Ny-1)+ Hcdw_ugridf(:,2:Ny))/2; % vorticity-gird
     Hcdw_vorgrid(Hcdw_vorgrid==0)=NaN;
+
+    %     figure(6);clf;set(gcf,'color','w');
+    %     pcolor(Hcdw_vorgrid);colorbar;shading flat;
 
     fhcdw = -ff./Hcdw_vorgrid;
     bathy(bathy==0)=NaN;
@@ -102,7 +95,7 @@
     zeta_Corif = interp2(YY,XX,zeta_Cori,YYf,XXf,'linear');
     zeta_AdvZ3f = interp2(YY,XX,zeta_AdvZ3,YYf,XXf,'linear');
     zeta_AdvRef = interp2(YY,XX,zeta_AdvRe,YYf,XXf,'linear');
-    
+
     bathyf = interp2(YY,XX,bathy,YYf,XXf,'linear');
 
     %%% Select f/hcdw contours  over the shelf and slope
@@ -220,9 +213,4 @@
 
 
 
-
-
-
-
-    
 

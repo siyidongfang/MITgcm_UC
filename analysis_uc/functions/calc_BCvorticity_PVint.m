@@ -12,7 +12,7 @@
     showfigrue = true;
     savefigure = false;
 
-    ne=2;
+    ne=1;
     expname = EXPNAME{ne}
     loadexp;
     load_data;

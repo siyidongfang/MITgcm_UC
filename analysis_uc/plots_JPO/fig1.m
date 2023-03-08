@@ -115,25 +115,21 @@
     % Plot the restoring temperature
     ZZZ(:,end)=-4;
     p_bct = surface(ax1,xx(idx_1)/1000*ones(size(YYY)),YYY,-ZZZ,BC_t);
-    colormap(cmocean('balance',ncolor))
+%     colormap(cmocean('balance'))
+    colormap(cmocean('diff'))
     clim([-2.3 2.3]);
     p_bct.FaceColor = 'texturemap';
     p_bct.EdgeColor = 'none';         
     alpha(p_bct,1);
     freezeColors;
 
-    handle_tt = colorbar(gca,'TickLabels', [ ],'Ticks', [ ]);
-    %     handle_tt = colorbar(ax1);
-    set(handle_tt,'Position',[0.48    0.3    0.006    0.15]);
-    annotation('textbox',[0.33 0.425 0.15 0.01],'String',{'Restoring';'temperature';['(' char(176) 'C)']},'FontSize',fontsize-1,'LineStyle','None','horizontalAlignment','right');
-    anno51 = annotation('textbox',[0.485 0.36 0.03 0.1],'String',{'\fontsize{15}2','\fontsize{3}','\fontsize{15}0','\fontsize{3}','\fontsize{15}-2'},'EdgeColor','none');     
 %     cbarrow;
 %     %%% Add contours of restoring salinity
 %     p_bct = contour3(xx(idx_1)/1000*ones(size(YYY)),YYY,-ZZZ,BC_s);
     
 
 
-    ax2 = ax1;
+    ax2 = subplot('position',[0.03 0.055 0.49 0.95]);
     linkaxes([ax1,ax2]);
     %%Hide the top axes
 %     ax2.Visible = 'off';
@@ -150,8 +146,7 @@
     % uvel_slice(uvel_slice==0) = NaN;
     p = surface(ax2,xx(idx_u2)/1000*ones(length(yidx_u2),Nr),YYY(yidx_u2,:),-ZZZ(yidx_u2,:),uvel_slice(yidx_u2,:));
     p.FaceColor = 'texturemap';
-    colormap(cmocean('balance',ncolor))
-%             colormap(ax2,cmocean('delta'))
+    colormap(cmocean('balance'))
     clim([-0.1 0.1]);
     p.EdgeColor = 'none';         
     alpha(p,0.9);
@@ -159,7 +154,7 @@
 
     %     handle_uc = colorbar(gca,'TickLabels', {'-0.1','0','0.1'},'Ticks', [-0.1 0 0.1]);
     handle_uc = colorbar(ax2);    
-    set(handle_uc,'Position',[0.31   0.28    0.006    0.15]);
+    set(handle_uc,'Position',[0.31   0.28    0.005    0.15]);
     annotation('textbox',[0.16 0.415 0.15 0.01],'String',{'Instantaneous';'zonal';'velocity';'(m/s)'},'FontSize',fontsize,'LineStyle','None','horizontalAlignment','right');
 
     %     %%% Plot CDW heat flux
@@ -228,7 +223,7 @@
     hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
     clabel(M,c,'LabelSpacing',200);hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);
-    colormap(axb,cmocean('balance',ncolor));
+    colormap(axb,cmocean('balance'));
     clim([-0.07 0.07])
     set(gca,'FontSize',fontsize);
     title('Boundary restoring velocity','FontSize',fontsize+1,'fontweight', 'normal')
@@ -252,7 +247,7 @@
     hold on;[M,c] = contour(YY_yz/1000,-ZZ_yz/1000,gamma_n_xmean,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
     clabel(M,c,'LabelSpacing',200);hold off;
     shading interp;axis ij;
-    colormap(axc,cmocean('balance',ncolor));
+    colormap(axc,cmocean('balance'));
     clim([-0.07 0.07])
     set(gca,'FontSize',fontsize);
     title('Zonal-mean zonal velocity','FontSize',fontsize+1,'fontweight', 'normal')
@@ -264,7 +259,7 @@
     grid on;
     handled = colorbar(axc);    
     set(handled,'Position',[0.773 0.2 0.005 0.6]);
-    cbarrow;
+%     cbarrow;
     annotation('textbox',[0.77 0.845 0.01 0.01],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
 
 
@@ -344,4 +339,20 @@
     
     
 
+    figure(2)
+    set(gca, 'color', 'none');
+    set(gcf, 'color', 'none');
+    scrsz = get(0,'ScreenSize');
+    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1400 600]);
+    ax1 = subplot('position',[0.03 0.055 0.49 0.95]);
+    colormap(ax1,cmocean('diff'))
+    handle_tt = colorbar(ax1);
+    set(handle_tt,'TickLabels', [ ],'Ticks', [ ]);
+    set(handle_tt,'Position',[0.48    0.3    0.0045    0.15]);
+    annotation('textbox',[0.33 0.425 0.15 0.01],'String',{'Restoring';'temperature';['(' char(176) 'C)']},'FontSize',fontsize-1,'LineStyle','None','horizontalAlignment','right');
+    anno51 = annotation('textbox',[0.485 0.36 0.03 0.1],'String',{'\fontsize{15}2','\fontsize{3}','\fontsize{15}0','\fontsize{3}','\fontsize{15}-2'},'EdgeColor','none');     
+
+%     print('-deps','-r200',[figdir 'fig1_colorbar.eps']);
+
+    exportgraphics(gca,[figdir 'fig1_colorbar.pdf'],'BackgroundColor','none','Resolution',600)
 

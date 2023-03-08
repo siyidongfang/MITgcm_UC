@@ -62,7 +62,7 @@
     ylabel('Latitude, y (km)','Interpreter','latex')
     xlabel('Longitude, x (km)','Interpreter','latex');
     title('Total pressure torque (BPT+IPT)','Interpreter','latex','FontSize',fontsize+3)
-    text(ax1,-290,30,{'(a)'},'FontSize',fontsize+2);
+    text(ax1,-294,25,{'(a)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     ax2 = subplot('position',[0.36 0.74 panelsize]);
 %     annotation('textbox',[0.33 0.98 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
@@ -78,7 +78,7 @@
     ylabel('Latitude, y (km)','Interpreter','latex')
     xlabel('Longitude, x (km)','Interpreter','latex');
     title('Total advection','Interpreter','latex','FontSize',fontsize+3)
-    text(ax2,-290,30,{'(b)'},'FontSize',fontsize+2);
+    text(ax2,-294,25,{'(b)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     ax3 = subplot('position',[0.68 0.74 panelsize]);
 %     annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
@@ -94,7 +94,7 @@
     ylabel('Latitude, y (km)','Interpreter','latex')
     xlabel('Longitude, x (km)','Interpreter','latex');
     title('Dissipation','Interpreter','latex','FontSize',fontsize+3)
-    text(ax3,-290,30,{'(c)'},'FontSize',fontsize+2);
+    text(ax3,-294,25,{'(c)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     handle=colorbar;set(handle,'position',[0.96 0.23 0.005 0.5]);
     annotation('textbox',[0.953 0.735 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
@@ -113,7 +113,7 @@
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)','Interpreter','latex')
     title('Interfacial pressure torque (IPT)','Interpreter','latex','FontSize',fontsize+3)
-    text(ax4,-290,30,{'(d)'},'FontSize',fontsize+2);
+    text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2,'Interpreter','latex')
 
 
     ax5 = subplot('position',[0.36 0.37 panelsize]);
@@ -124,12 +124,12 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:0],'k:','LineWidth',1.5,'ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1000],'k--','ShowText','on');clabel(C,h,'LabelSpacing',1000);hold off;
     clim(CLIM);
-    title('Coriolis term (model diagnosed)','Interpreter','latex')
+    title('Coriolis','Interpreter','latex')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)','Interpreter','latex')
-    text(ax5,-290,30,{'(f)'},'FontSize',fontsize+2);
+    text(ax5,-294,25,{'(f)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     ax6 = subplot('position',[0.68 0.37 panelsize]);
 %     annotation('textbox',[0.665 0.66 0.15 0.01],'String','(f)','FontSize',fontsize+2,'LineStyle','None');
@@ -144,7 +144,7 @@
     ylim(YLIM);xlim([-300 300])
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)','Interpreter','latex')
-    text(ax6,-290,30,{'(g)'},'FontSize',fontsize+2);
+    text(ax6,-294,25,{'(g)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     ax7 = subplot('position',[0.045 0.065 panelsize]);
 %     annotation('textbox',[0 0.345 0.15 0.01],'String','(g)','FontSize',fontsize+2,'LineStyle','None');
@@ -161,7 +161,7 @@
     xlabel('Longitude, x (km)','Interpreter','latex');
     ylabel('Latitude, y (km)','Interpreter','latex')
     title('Bottom pressure torque (BPT)','Interpreter','latex','FontSize',fontsize+3)
-    text(ax7,-290,30,{'(e)'},'FontSize',fontsize+2);
+    text(ax7,-294,25,{'(e)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     ax8 = subplot('position',[0.36 0.065 panelsize]);
 %     annotation('textbox',[0.33 0.345 0.15 0.01],'String','(h)','FontSize',fontsize+2,'LineStyle','None');
@@ -177,7 +177,7 @@
     ylim(YLIM);xlim([-300 300])
     yticks(0:100:400);xticks(-300:100:300)
     xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-    text(ax8,-290,30,{'(h)'},'FontSize',fontsize+2);
+    text(ax8,-294,25,{'(h)'},'FontSize',fontsize+2,'Interpreter','latex')
 
     ax9 = subplot('position',[0.68 0.065 panelsize]);
 %     annotation('textbox',[0.665 0.345 0.15 0.01],'String','(i)','FontSize',fontsize+2,'LineStyle','None');
@@ -192,7 +192,7 @@
     ylim(YLIM);xlim([-300 300])
     yticks(0:100:400);xticks(-300:100:300)
     xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
-    text(ax9,-290,30,{'(i)'},'FontSize',fontsize+2);
+    text(ax9,-294,25,{'(i)'},'FontSize',fontsize+2,'Interpreter','latex')
 
 %%
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig4/';

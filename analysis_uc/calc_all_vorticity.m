@@ -23,9 +23,10 @@ for ne=1
         loadexp;
         load_data;
         load_spacing;
-        calc_BCvorticity_Aint_new;
-%         calc_BCvorticity_Aint_rectangle
-%         calc_BCvorticity_Aint;
+        calc_BCvorticity_PVint;
+%         calc_BCvorticity_fh_lat_int;
+%         calc_BCvorticity_lat_rectangle_int
+%         calc_BCvorticity_lat_int;
 %         calc_CDW_quasi_stfn;
 %         calc_BCvorticity_h_int;
 %         calc_w_layers;
