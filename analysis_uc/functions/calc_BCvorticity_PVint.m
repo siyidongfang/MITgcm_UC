@@ -22,19 +22,56 @@
     prodname_new = [prodir expname '_vorticity_cdw.mat'];
     load(prodname_new)
 
-    %%% Calculate f/h
-    ff = f0+beta*YY;
+    %%% Calculate potential vorticity
+    ff_vorgrid = f0+beta*(YY-1*m1km); %%% f on vorticity grid
+    Hcdw_vorgrid = zeros(Nx,Ny);
+    Hcdw_vorgrid(1:Nx-1,:) = (Hcdw_vgridf(1:Nx-1,:)+ Hcdw_vgridf(2:Nx,:))/2;  %%% CDW thickness on vorticity grid
+
+    uu_cdw_zavg = UU_cdw./Hcdw_ugridf;
+    vv_cdw_zavg = VV_cdw./Hcdw_vgridf;
+
+    zeta = zeros(Nx,Ny);
+    zeta(:,1:Ny-1) = - (uu_cdw_zavg(:,2:Ny)-uu_cdw_zavg(:,1:Ny-1))/dy;
+    zeta = zeta + (vv_cdw_zavg([2:Nx 1],:)-vv_cdw_zavg)/dx;
+
+    pv = (ff_vorgrid + zeta) ./Hcdw_vorgrid; %%% potential vorticity
+
+    maxpv = max(max(pv)); minpv = min(min(pv));
+    %%% Plot PV contours
+    figure(1)
+    clf;set(gcf,'color','w');
+    pcolor(XX/1000,YY/1000,pv);shading flat;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar; 
+    colormap(WhiteBlueGreenYellowRed(5));
+    clim([-1e-6 0]);
+    title('PV','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+
+    %%% plot pv contours 
+    figure(2)
+    clf;set(gcf,'color','w');
+    contour(XX/1000,YY/1000,pv,(-10:0.1:0)*1e-7)
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar; colormap(WhiteBlueGreenYellowRed(0));
+    clim([-1e-6 0]);
+    title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+
+
 
     %%% Calculate CDW depth on vorticity grid
-    prodname_new = [prodir expname '_vorticity_cdw.mat'];
-    load(prodname_new)
     Hcdw_vorgrid = zeros(Nx,Ny);
     Hcdw_vorgrid(1:Nx-1,:) = (Hcdw_vgridf(1:Nx-1,:)+ Hcdw_vgridf(2:Nx,:))/2; % vorticity-gird
-    %     Hcdw_vorgrid(:,2:Ny) = (Hcdw_ugridf(:,1:Ny-1)+ Hcdw_ugridf(:,2:Ny))/2; % vorticity-gird
     Hcdw_vorgrid(Hcdw_vorgrid==0)=NaN;
-
-    %     figure(6);clf;set(gcf,'color','w');
-    %     pcolor(Hcdw_vorgrid);colorbar;shading flat;
 
     fhcdw = -ff./Hcdw_vorgrid;
     bathy(bathy==0)=NaN;

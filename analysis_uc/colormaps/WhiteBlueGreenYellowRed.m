@@ -318,7 +318,9 @@ elseif(n==3)
 elseif(n==4)
     ll=length(cMap);
     c=cMap(20:round((ll-40)/20):ll-20,:);
-    
+elseif(n==5)
+    ll=length(cMap);
+    c=cMap(20:ll-20,:); 
 end
 
 end

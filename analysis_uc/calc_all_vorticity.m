@@ -23,7 +23,7 @@ for ne=1
         loadexp;
         load_data;
         load_spacing;
-        calc_BCvorticity_PVint;
+%         calc_BCvorticity_PVint;
 %         calc_BCvorticity_fh_lat_int;
 %         calc_BCvorticity_lat_rectangle_int
 %         calc_BCvorticity_lat_int;
@@ -34,7 +34,7 @@ for ne=1
 %         calc_BCvorticity_fh_int;
 %         calc_BCvorticity_stfn_int;
 %         calc_w;
-%         calc_BCvorticity_cdw_sw;
+        calc_BCvorticity_cdw_sw;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_sponge;
 %         calc_BCvorticity_stretching_Coriolis;
