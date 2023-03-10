@@ -34,61 +34,37 @@
     zeta(:,1:Ny-1) = - (uu_cdw_zavg(:,2:Ny)-uu_cdw_zavg(:,1:Ny-1))/dy;
     zeta = zeta + (vv_cdw_zavg([2:Nx 1],:)-vv_cdw_zavg)/dx;
 
-    pv = (ff_vorgrid + zeta) ./Hcdw_vorgrid; %%% potential vorticity
+    PV = (ff_vorgrid + zeta) ./Hcdw_vorgrid; %%% potential vorticity
 
-    maxpv = max(max(pv)); minpv = min(min(pv));
-    %%% Plot PV contours
-    figure(1)
-    clf;set(gcf,'color','w');
-    pcolor(XX/1000,YY/1000,pv);shading flat;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-    hold off;
-    colorbar; 
-    colormap(WhiteBlueGreenYellowRed(5));
-    clim([-1e-6 0]);
-    title('PV','FontSize',fontsize+3)
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
+    maxpv = max(max(PV)); minpv = min(min(PV));
 
     %%% plot pv contours 
-    figure(2)
+    figure(1)
     clf;set(gcf,'color','w');
-    contour(XX/1000,YY/1000,pv,(-10:0.1:0)*1e-7)
+    contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7)
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
     hold off;
-    colorbar; colormap(WhiteBlueGreenYellowRed(0));
+    colorbar; colormap(WhiteBlueGreenYellowRed(5));
     clim([-1e-6 0]);
-    title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
+    title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
 
+    %%% plot selected contours 
+    Wmin = -3.5e-7;
+    Wmax = -1e-7;
 
-
-    %%% Calculate CDW depth on vorticity grid
-    Hcdw_vorgrid = zeros(Nx,Ny);
-    Hcdw_vorgrid(1:Nx-1,:) = (Hcdw_vgridf(1:Nx-1,:)+ Hcdw_vgridf(2:Nx,:))/2; % vorticity-gird
-    Hcdw_vorgrid(Hcdw_vorgrid==0)=NaN;
-
-    fhcdw = -ff./Hcdw_vorgrid;
-    bathy(bathy==0)=NaN;
-    
-    %%% Find closed f/hcdw contours
-    min_fhcdw = min(min(fhcdw));
-    max_fhcdw = max(max(fhcdw));
-    
-    %%% plot f/hcdw contours 
-    figure(7)
+    figure(2)
     clf;set(gcf,'color','w');
-    contour(XX/1000,YY/1000,fhcdw,(0:0.1:13)*1e-7)
+    contour(XX/1000,YY/1000,PV,Wmin:1e-8:Wmax)
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
     hold off;
-    colorbar; colormap(WhiteBlueGreenYellowRed(0));clim([0 1e-6]);
-    title('|f|/h_{CDW} (m^{-1}s^{-1})','FontSize',fontsize+3)
+    colorbar; colormap(WhiteBlueGreenYellowRed(5));
+    clim([-4 -1]*1e-7);
+    title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
@@ -120,9 +96,9 @@
     [YY,XX] = meshgrid(yy,xx);
     [YYf,XXf] = meshgrid(yyf,xxf);
 
-
     %%% Interpolate the vorticity terms onto this new grid
-    fhcdwf = interp2(YY,XX,fhcdw,YYf,XXf,'linear');
+    pvf = interp2(YY,XX,PV,YYf,XXf,'linear');
+    zeta_BPTplusIPTf = interp2(YY,XX,zeta_BPTplusIPT,YYf,XXf,'linear');
     zeta_BPTf = interp2(YY,XX,zeta_BPT,YYf,XXf,'linear');
     zeta_IPTf = interp2(YY,XX,zeta_IPT,YYf,XXf,'linear');
     zeta_Advecf = interp2(YY,XX,zeta_Advec,YYf,XXf,'linear');
@@ -136,59 +112,30 @@
     bathyf = interp2(YY,XX,bathy,YYf,XXf,'linear');
 
     %%% Select f/hcdw contours  over the shelf and slope
-    Wmin = 2.5e-7;
-    Wmax = 3.7e-7;
+    pv_select = Wmin:0.1e-7:Wmax;
+    LL = length(pv_select);
+    pv_select_mid = 0.5*(pv_select(1:end-1)+pv_select(2:end));
+    mask_pv = ones(Nxf,Nyf);
+    mask_pv(XXf<-120.*m1km)=NaN;
+    mask_pv(XXf>70*m1km)=NaN;
 
-    fh_select = Wmin:0.1e-7:Wmax;
-    LL = length(fh_select);
-    fh_select_mid = 0.5*(fh_select(1:end-1)+fh_select(2:end));
-    mask_fhcdw = ones(Nxf,Nyf);
-    mask_fhcdw(XXf<-120.*m1km)=NaN;
-    mask_fhcdw(XXf>70*m1km)=NaN;
-
-    fh = fhcdwf.*mask_fhcdw;
-    fh(fh<Wmin)=NaN;
-    fh(fh>Wmax)=NaN;
-
-    figure(8)
-    clf;set(gcf,'color','w');
-    contour(XXf/1000,YYf/1000,fh,fh_select)
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:500:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-    colorbar;colormap(jet);caxis([Wmin Wmax])
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
-
-    figure(9)
-    clf;set(gcf,'color','w');
-    pcolor(XXf/1000,YYf/1000,fh);shading flat;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:500:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-    colorbar;colormap(jet);caxis([Wmin Wmax])
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
-
+    pvf(pvf<Wmin)=NaN;
+    pvf(pvf>Wmax)=NaN;
 
     Amaskf = NaN.*zeros(Nxf,Nyf);
     for ii=1:Nxf
         for jj=1:Nyf
-            if(~isnan(fh(ii,jj)))
+            if(~isnan(pvf(ii,jj)))
                 Amaskf(ii,jj)=bathyf(ii,jj);
             end
-            if(XXf(ii,jj)<=70*m1km && XXf(ii,jj)>=-150*m1km ...
-                    && YYf(ii,jj)<=240*m1km && YYf(ii,jj)>=225*m1km ...
-                    && bathyf(ii,jj)>=-1500 && bathyf(ii,jj)<=-700 )
-                Amaskf(ii,jj)=bathyf(ii,jj);
-            end
-            if(YYf(ii,jj)>=220*m1km && XXf(ii,jj)>=50*m1km) ...
+            if XXf(ii,jj)<=-100*m1km ...
+               || (XXf(ii,jj)>=40*m1km && YYf(ii,jj)>=220*m1km)
                 Amaskf(ii,jj)=NaN;
             end
         end
     end
     
-    figure(1)
+    figure(3)
     clf;set(gcf,'color','w');
     pcolor(XXf/1000,YYf/1000,Amaskf);shading flat;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
@@ -202,42 +149,99 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
 
+    figure(10)
+    clf;set(gcf,'color','w');
+    hold on;
+    contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
+    contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:-600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:1000:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar; colormap(WhiteBlueGreenYellowRed(5));
+    clim([-4 -1]*1e-7);
+    title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+%     xlim([-110 110])
+%     ylim([30 270])
+box on;
+
 
     Amaskf(~isnan(Amaskf))=1;
 
+    BPTplusIPT_Aint = cumsum(sum(zeta_BPTplusIPTf.*Amaskf*dxf*dyf,'omitnan'));
     BPT_Aint = cumsum(sum(zeta_BPTf.*Amaskf*dxf*dyf,'omitnan'));
     IPT_Aint = cumsum(sum(zeta_IPTf.*Amaskf*dxf*dyf,'omitnan'));
     Advec_Aint = cumsum(sum(zeta_Advecf.*Amaskf*dxf*dyf,'omitnan'));
     Diss_Aint = cumsum(sum(zeta_Dissf.*Amaskf*dxf*dyf,'omitnan'));
     residual_Aint = cumsum(sum(zeta_residualf.*Amaskf*dxf*dyf,'omitnan'));
 
+    Cori_Aint = cumsum(sum(zeta_Corif.*Amaskf*dxf*dyf,'omitnan'));
+    AdvZ3f_Aint = cumsum(sum(zeta_AdvZ3f.*Amaskf*dxf*dyf,'omitnan'));
+    AdvRef_Aint = cumsum(sum(zeta_AdvRef.*Amaskf*dxf*dyf,'omitnan'));
+
     for kkk = 500:length(BPT_Aint)-1
         if(BPT_Aint(kkk+1)==BPT_Aint(kkk))
+            BPTplusIPT_Aint(kkk+1:end)=NaN; 
             BPT_Aint(kkk+1:end)=NaN;
             IPT_Aint(kkk+1:end)=NaN;
             Advec_Aint(kkk+1:end)=NaN;
             Diss_Aint(kkk+1:end)=NaN;
             residual_Aint(kkk+1:end)=NaN;
+            Cori_Aint(kkk+1:end)=NaN;
+            AdvZ3f_Aint(kkk+1:end)=NaN;
+            AdvRef_Aint(kkk+1:end)=NaN; 
         end
     end
 
+        for kkk = 1:500
+        if(BPT_Aint(kkk)==0)
+            BPTplusIPT_Aint(kkk)=NaN; 
+            BPT_Aint(kkk)=NaN; 
+            IPT_Aint(kkk)=NaN; 
+            Advec_Aint(kkk)=NaN; 
+            Diss_Aint(kkk)=NaN; 
+            residual_Aint(kkk)=NaN; 
+            Cori_Aint(kkk)=NaN; 
+            AdvZ3f_Aint(kkk)=NaN; 
+            AdvRef_Aint(kkk)=NaN; 
+        end
+        end
+
+
     figure(12)
     clf;set(gcf,'color','w');
-    plot(yyf/1000,BPT_Aint,'-.','LineWidth',2)
+    lres =plot(yyf/1000,residual_Aint/1000,'LineWidth',3,'Color',boxcolor);
     hold on;
-    plot(yyf/1000,IPT_Aint,'-.','LineWidth',2)
-    plot(yyf/1000,BPT_Aint+IPT_Aint,'LineWidth',2)
-    plot(yyf/1000,Advec_Aint,'LineWidth',2)
-    plot(yyf/1000,Diss_Aint,'LineWidth',2)
-    plot(yyf/1000,residual_Aint,'--','LineWidth',2,'Color',gray)
-    leg1  = legend('Bottom pressure torque','Interfacial pressure torque','BPT+IPT','Advection','Dissipation','Residual');
-    set(leg1,'Position', [0.6179 0.1548 0.2804 0.2524])
+    ldis = plot(yyf/1000,Diss_Aint/1000,'LineWidth',2,'Color',yellow);
+    lbpt = plot(yyf/1000,BPT_Aint/1000,'--','LineWidth',1,'Color',blue);
+    lipt = plot(yyf/1000,IPT_Aint/1000,':','LineWidth',2,'Color',blue);
+    lpt =plot(yyf/1000,BPTplusIPT_Aint/1000,'LineWidth',2,'Color',blue);
+%     plot(yyf/1000,BPT_Aint+IPT_Aint,'LineWidth',2)
+    ladv = plot(yyf/1000,Advec_Aint/1000,'LineWidth',2,'Color',green);
+    lcori = plot(yyf/1000,Cori_Aint/1000,':','LineWidth',2,'Color',green);
+    lvortadv = plot(yyf/1000,AdvZ3f_Aint/1000,'--','LineWidth',1,'Color',green);
+    lvertadv = plot(yyf/1000,AdvRef_Aint/1000,'-.','LineWidth',1,'Color',green);
+    leg1  = legend([lpt ladv ldis lres],...
+    'Total pressure torque','Total advection','Dissipation','Residual');
+    legend boxoff;
+    set(leg1,'Position', [0.1384 0.7381 0.3348 0.1893])  
     set(gca,'FontSize',fontsize);
     xlabel('Latitude, y (km)');
-    ylabel('(N/m)');
+    ylabel('(10^3 m^3/s^2)');
     title('Cummulatively integrated vorticity budget');
-    xlim([50 245])
+    xlim([50 250])
     grid on;grid minor;
+
+    ah=axes('position',get(ax1,'position'),'visible','off');
+    leg2 = legend([lbpt lipt lcori lvortadv lvertadv],...
+        'Bottom pressure torque','Interfacial pressure torque',...
+        'Coriolis term','Vorticity advection','Vertical advection');
+
+
 
 
 
