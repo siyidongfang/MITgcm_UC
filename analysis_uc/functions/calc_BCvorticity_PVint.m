@@ -1,22 +1,11 @@
+%%% 
+%%% calc_BCvorticity_PVint.m
+%%%
+%%% Calculate potential vorticity of the CDW layer,
+%%% select PV contours,
+%%% cumulatively integrate the vorticity budget terms for that area
 
 
-    clear;close all;
-
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
-    list_exps_new;
-    load_constants;
-    
-    prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
-    useSEAICE = true;
-    showfigrue = true;
-    savefigure = false;
-
-    ne=1;
-    expname = EXPNAME{ne}
-    loadexp;
-    load_data;
-    load_spacing;
     load_colors;
 
     prodname_new = [prodir expname '_vorticity_cdw.mat'];
@@ -38,36 +27,9 @@
 
     maxpv = max(max(PV)); minpv = min(min(PV));
 
-    %%% plot pv contours 
-    figure(1)
-    clf;set(gcf,'color','w');
-    contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7)
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-    hold off;
-    colorbar; colormap(WhiteBlueGreenYellowRed(5));
-    clim([-1e-6 0]);
-    title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
-
     %%% plot selected contours 
     Wmin = -3.5e-7;
     Wmax = -1e-7;
-
-    figure(2)
-    clf;set(gcf,'color','w');
-    contour(XX/1000,YY/1000,PV,Wmin:1e-8:Wmax)
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-    hold off;
-    colorbar; colormap(WhiteBlueGreenYellowRed(5));
-    clim([-4 -1]*1e-7);
-    title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
 
     %%% Create a finer horizontal grid
     ffac = 7;
@@ -134,41 +96,6 @@
             end
         end
     end
-    
-    figure(3)
-    clf;set(gcf,'color','w');
-    pcolor(XXf/1000,YYf/1000,Amaskf);shading flat;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off
-    hold off;grid on;grid minor
-    colorbar; 
-    colormap(flip(WhiteBlueGreenYellowRed(0)));
-    clim([-1500 -400]);
-    title('Bathymetric contours (m)','FontSize',fontsize+3)
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
-
-    figure(10)
-    clf;set(gcf,'color','w');
-    hold on;
-    contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
-    contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:-600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:1000:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-    hold off;
-    colorbar; colormap(WhiteBlueGreenYellowRed(5));
-    clim([-4 -1]*1e-7);
-    title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
-    xlabel('Longitude, x (km)');
-    ylabel('Latitude, y (km)');
-    set(gca,'FontSize',fontsize);
-%     xlim([-110 110])
-%     ylim([30 270])
-box on;
-
 
     Amaskf(~isnan(Amaskf))=1;
 
@@ -197,7 +124,7 @@ box on;
         end
     end
 
-        for kkk = 1:500
+    for kkk = 1:500
         if(BPT_Aint(kkk)==0)
             BPTplusIPT_Aint(kkk)=NaN; 
             BPT_Aint(kkk)=NaN; 
@@ -209,46 +136,82 @@ box on;
             AdvZ3f_Aint(kkk)=NaN; 
             AdvRef_Aint(kkk)=NaN; 
         end
-        end
+    end
 
 
-    figure(12)
-    clf;set(gcf,'color','w');
-    lres =plot(yyf/1000,residual_Aint/1000,'LineWidth',3,'Color',boxcolor);
-    hold on;
-    ldis = plot(yyf/1000,Diss_Aint/1000,'LineWidth',2,'Color',yellow);
-    lbpt = plot(yyf/1000,BPT_Aint/1000,'--','LineWidth',1,'Color',blue);
-    lipt = plot(yyf/1000,IPT_Aint/1000,':','LineWidth',2,'Color',blue);
-    lpt =plot(yyf/1000,BPTplusIPT_Aint/1000,'LineWidth',2,'Color',blue);
-%     plot(yyf/1000,BPT_Aint+IPT_Aint,'LineWidth',2)
-    ladv = plot(yyf/1000,Advec_Aint/1000,'LineWidth',2,'Color',green);
-    lcori = plot(yyf/1000,Cori_Aint/1000,':','LineWidth',2,'Color',green);
-    lvortadv = plot(yyf/1000,AdvZ3f_Aint/1000,'--','LineWidth',1,'Color',green);
-    lvertadv = plot(yyf/1000,AdvRef_Aint/1000,'-.','LineWidth',1,'Color',green);
-    leg1  = legend([lpt ladv ldis lres],...
-    'Total pressure torque','Total advection','Dissipation','Residual');
-    legend boxoff;
-    set(leg1,'Position', [0.1384 0.7381 0.3348 0.1893])  
-    set(gca,'FontSize',fontsize);
-    xlabel('Latitude, y (km)');
-    ylabel('(10^3 m^3/s^2)');
-    title('Cummulatively integrated vorticity budget');
-    xlim([50 250])
-    grid on;grid minor;
-
-    ah=axes('position',get(ax1,'position'),'visible','off');
-    leg2 = legend([lbpt lipt lcori lvortadv lvertadv],...
-        'Bottom pressure torque','Interfacial pressure torque',...
-        'Coriolis term','Vorticity advection','Vertical advection');
+    prodname = [prodir expname '_vortPVint.mat'];
+    save(prodname,...
+        'XXf','YYf','XX','YY','xxf','yyf',...
+        'PV','pvf','Amaskf','bathy',...
+        'BPTplusIPT_Aint','Advec_Aint','Diss_Aint','residual_Aint',...
+        'BPT_Aint','IPT_Aint','Cori_Aint','AdvZ3f_Aint','AdvRef_Aint',...
+        'Wmin','Wmax')
 
 
 
 
 
+%     %%% plot pv contours 
+%     figure(1)
+%     clf;set(gcf,'color','w');
+%     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7)
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+%     hold off;
+%     colorbar; colormap(WhiteBlueGreenYellowRed(5));
+%     clim([-1e-6 0]);
+%     title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
+%     xlabel('Longitude, x (km)');
+%     ylabel('Latitude, y (km)');
+%     set(gca,'FontSize',fontsize);
+
+%     figure(2)
+%     clf;set(gcf,'color','w');
+%     contour(XX/1000,YY/1000,PV,Wmin:1e-8:Wmax)
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+%     hold off;
+%     colorbar; colormap(WhiteBlueGreenYellowRed(5));
+%     clim([-4 -1]*1e-7);
+%     title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
+%     xlabel('Longitude, x (km)');
+%     ylabel('Latitude, y (km)');
+%     set(gca,'FontSize',fontsize);
 
 
+%     figure(3)
+%     clf;set(gcf,'color','w');
+%     pcolor(XXf/1000,YYf/1000,Amaskf);shading flat;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off
+%     hold off;grid on;grid minor
+%     colorbar; 
+%     colormap(flip(WhiteBlueGreenYellowRed(0)));
+%     clim([-1500 -400]);
+%     title('Bathymetric contours (m)','FontSize',fontsize+3)
+%     xlabel('Longitude, x (km)');
+%     ylabel('Latitude, y (km)');
+%     set(gca,'FontSize',fontsize);
 
-
+%     figure(10)
+%     clf;set(gcf,'color','w');
+%     hold on;
+%     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
+%     contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:-600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:1000:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+%     hold off;
+%     colorbar; colormap(WhiteBlueGreenYellowRed(5));
+%     clim([-4 -1]*1e-7);
+%     title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
+%     xlabel('Longitude, x (km)');
+%     ylabel('Latitude, y (km)');
+%     set(gca,'FontSize',fontsize);
+% %     xlim([-110 110])
+% %     ylim([30 270])
+% box on;
 
 
 
