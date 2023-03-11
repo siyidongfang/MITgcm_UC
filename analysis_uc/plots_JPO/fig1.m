@@ -18,6 +18,8 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
 
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig1/';
+
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1}
     list_exps_new;
@@ -128,7 +130,6 @@
 %     p_bct = contour3(xx(idx_1)/1000*ones(size(YYY)),YYY,-ZZZ,BC_s);
     
 
-
     ax2 = subplot('position',[0.03 0.055 0.49 0.95]);
     linkaxes([ax1,ax2]);
     %%Hide the top axes
@@ -186,6 +187,34 @@
     %     curr.LineWidth = 1.5;
 
 
+
+% %     %%% Calculate the wind stress
+% %     uwind = Ua:-Ua/(Ny-1):0; 
+% %     vwind = Va:-Va/(Ny-1):0; 
+% %     SEAICE_drag = 0.002; %%% air-ice drag coefficient (non-dim.)
+% %     rho_a = 1.3;  %%% Air density, kg/m^3
+% %     taoaix = SEAICE_drag*rho_a*sqrt(uwind.^2+vwind.^2).*uwind;
+% % 
+% %     %%% Calculate the ice-ocean stress
+% %     %     fid = fopen(fullfile(exppath,'input','OBEuiceFile.bin'),'r','b');
+% %     %     OBEuice = fread(fid,[1 Ny],'real*8');
+% %     %     fid = fopen(fullfile(exppath,'input','OBEuFile.bin'),'r','b');
+% %     %     OBEu = fread(fid,[Ny Nr],'real*8');
+% %     %     uos = OBEu(:,1)';
+% %     %     SEAICE_waterDrag = 5.53990000e-03; %%% ice-ocean drag coefficient
+% %     %     taoiox = rho0.*SEAICE_waterDrag.*abs(uos-OBEuice).*(OBEuice-uos);
+% % 
+% %     ax3 = subplot('position',[0.03 0.055 0.49 0.95]);
+% %     linkaxes([ax1 ax2 ax3]);
+% %     %%Hide the top axes
+% %     ax3.XTick = [];
+% %     ax3.YTick = [];
+% % 
+% %     %%% Plot wind stress and ice-ocean stress
+% %     ptaoai = plot3(1500*taoaix-310,yy/1000,0*ones(1,Ny),'LineWidth',1.2,'Color',black);
+% %     %     hold on;
+% %     %     ptaoio = plot3(2000*taoiox-300,yy/1000,0*ones(1,Ny));
+
     %%% Decorations
     hold off;
     %     view(-219,47);
@@ -206,8 +235,13 @@
     camlight('headlight');
     lightangle(140,-34);
     lighting flat;
-    box on;
-    grid on;
+
+%     box on;
+%     grid on;
+
+
+
+    %%
 
 %%%%%%%%%%%%%%%%%%%
 %%% panel (b) %%%%%
@@ -218,6 +252,7 @@
     annotation('textbox',[0.54 0.995 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
 
  
+%      pcolor(yy/1000,-zz/1000,OBEu'.*bathy_east')
     pcolor(yy/1000,-zz/1000,uEast'.*bathy_east')
     shading flat;axis ij;
     hold on;[M,c] = contour(YY/1000,-ZZ/1000,gamma_n_east.*bathy_east,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','k','LineWidth',1);
@@ -334,7 +369,6 @@
 
 
 
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig1/';
      print('-dpng','-r200',[figdir 'fig1_matlab_v1.png']);
     
     
@@ -353,6 +387,5 @@
     anno51 = annotation('textbox',[0.485 0.36 0.03 0.1],'String',{'\fontsize{15}2','\fontsize{3}','\fontsize{15}0','\fontsize{3}','\fontsize{15}-2'},'EdgeColor','none');     
 
 %     print('-deps','-r200',[figdir 'fig1_colorbar.eps']);
-
     exportgraphics(gca,[figdir 'fig1_colorbar.pdf'],'BackgroundColor','none','Resolution',600)
 
