@@ -6,7 +6,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     
@@ -17,8 +17,8 @@
     savefigure = false;
 
 
-for ne =[2:6 9:20]  
-% for ne=[1 2 4]
+% for ne =[2:6 9:20]  
+for ne=[1 2 4]
 % for ne=1
     close all
         expname = EXPNAME{ne}
