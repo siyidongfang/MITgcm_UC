@@ -49,10 +49,35 @@
     t3 = squeeze(tt(idx3,:,:));
     u3 = squeeze(uu(idx3,:,:));
 
-
-
     [ZZ,YY] = meshgrid(zz,yy);
 
+%     ZZ1=ZZ;
+%     ZZ2=ZZ;
+%     ZZ3=ZZ;
+%     hFacC1 = squeeze(hFacC(idx1,:,:));
+%     hFacC2 = squeeze(hFacC(idx2,:,:));
+%     hFacC3 = squeeze(hFacC(idx3,:,:));
+% 
+%     DRC = rdmds(fullfile(resultspath,'DRC'));
+% 
+%     ZZ1(hFacC1==0)=NaN;
+% %     ZZ2(hFacC2==0)=NaN;
+% %     ZZ3(hFacC3==0)=NaN;
+%     for jj=1:Ny
+%         for kk=2:Nr
+%             if( (hFacC1(jj,kk)~=1) && (hFacC1(jj,kk)~=0) )
+%                 ZZ1(jj,kk)= ZZ1(jj,kk-1)-DRC(1,1,kk)*hFacC1(jj,kk);
+%             end
+%         end
+%     end
+
+
+%     figure(10)
+%     pcolor(YY/1000,-ZZ/1000,hFacC1);
+%     set(gca,'XTick',XTICK);xlim(XLIM)
+%     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
+%     shading flat;axis ij;colorbar;
+%     title('hFacC')
     %%
 
     fontsize = 18;
@@ -70,7 +95,7 @@
     %%% Plotting options
     ax1 = subplot('position',[0.042 0.705 panelsize]);
 %     annotation('textbox',[0 0.98 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
-    pcolor(yy/1000,-zz/1000,t1');
+    pcolor(YY/1000,-ZZ/1000,t1);
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[1.8:0.05:2.5],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
@@ -86,6 +111,7 @@
     text1 = text(ax1,191,1.3,{'\theta, west of the trough','(x = -50 km)'},'FontSize',fontsize,'color',darkgray);
     text(ax1,192,1,{'(a)'},'FontSize',fontsize+2);
 
+    %%
     ax2 = subplot('position',[0.375 0.705 panelsize]);
 %     annotation('textbox',[0.33 0.98 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(yy/1000,-zz/1000,s1');
@@ -220,6 +246,9 @@
 
 %%
 
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig3/';
-     print('-dpng','-r200',[figdir 'fig3.png']);
+%      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig3/';
+%      print('-dpng','-r200',[figdir 'fig3.png']);
+
+
+
 

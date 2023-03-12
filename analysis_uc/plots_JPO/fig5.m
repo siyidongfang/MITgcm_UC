@@ -43,13 +43,12 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold off;
     colorbar; colormap(WhiteBlueGreenYellowRed(5));
     clim([-4 -1]*1e-7);
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
-    title('CDW potential vorticity ','FontSize',fontsize+3)
+    title('CDW potential vorticity ','FontSize',fontsize+3,'FontWeight','normal')
     box on;
     annotation('textbox',[0.87 0.55 0.15 0.01],'String','(m^{-1}s^{-1})','FontSize',fontsize,'LineStyle','None');
     text(ax1,50,370,'Gray: CDW PV contours','FontSize',fontsize-1,'Color',darkgray)
@@ -76,7 +75,7 @@
     set(leg1,'Position', [0.11 0.3319 0.3650 0.1169])  
     xlabel('Latitude, y (km)');
     ylabel('(10^3 m^3/s^2)');
-    title('Cumulatively integrated vorticity budget');
+    title('Cumulatively integrated vorticity budget','FontSize',fontsize+3,'FontWeight','normal')
     xlim([50 250])
     grid on;grid minor;
 
