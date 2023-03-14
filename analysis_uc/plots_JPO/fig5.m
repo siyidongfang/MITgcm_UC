@@ -34,8 +34,8 @@
     scrsz = get(0,'ScreenSize');
     set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 600 800]);
 
-    ax1 = subplot('position',[0.105 0.585 0.85 0.38]);
-    annotation('textbox',[0.095 0.995 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
+    ax1 = subplot('position',[0.105 0.575 0.85 0.38]);
+    annotation('textbox',[0.095 0.985 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
     hold on;
     contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
@@ -48,9 +48,9 @@
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
-    title('CDW potential vorticity ','FontSize',fontsize+3,'FontWeight','normal')
+    title('CDW potential vorticity \it q_{cdw}','FontSize',fontsize+3,'FontWeight','normal')
     box on;
-    annotation('textbox',[0.87 0.55 0.15 0.01],'String','(m^{-1}s^{-1})','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.87 0.54 0.15 0.01],'String','(m^{-1}s^{-1})','FontSize',fontsize,'LineStyle','None');
     text(ax1,50,370,'Gray: CDW PV contours','FontSize',fontsize-1,'Color',darkgray)
     text(ax1,50,330,{'Color: selected contours', '           for area integral'},'FontSize',fontsize-1,'Color',blue)
 

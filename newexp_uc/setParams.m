@@ -266,7 +266,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   
   Hice = Hicefront-(Hshelf+Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
   
-  Wtrough = 15*m1km; %%% Trough width, ref 30km
+  Wtrough = 30*m1km; %%% Trough width, ref 30km
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
 
   Wpoly = 20*m1km;   %%% Latitudinal width of polynya

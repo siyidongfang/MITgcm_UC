@@ -16,8 +16,8 @@
     Hcdw_vorgrid = zeros(Nx,Ny);
     Hcdw_vorgrid(1:Nx-1,:) = (Hcdw_vgridf(1:Nx-1,:)+ Hcdw_vgridf(2:Nx,:))/2;  %%% CDW thickness on vorticity grid
 
-    uu_cdw_zavg = UU_cdw./Hcdw_ugridf;
-    vv_cdw_zavg = VV_cdw./Hcdw_vgridf;
+    uu_cdw_zavg = UU_cdwf./Hcdw_ugridf;
+    vv_cdw_zavg = VV_cdwf./Hcdw_vgridf;
 
     zeta = zeros(Nx,Ny);
     zeta(:,1:Ny-1) = - (uu_cdw_zavg(:,2:Ny)-uu_cdw_zavg(:,1:Ny-1))/dy;

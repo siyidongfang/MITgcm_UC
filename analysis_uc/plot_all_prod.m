@@ -10,9 +10,12 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
 
 
-    expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7'
-    prodir = '/Users/csi/MITgcm_UC/products_uc/seaice_boundary/';
+
+    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
+    exp_group = EXP_GROUP{2}
+    list_exps_new;
+    expname = EXPNAME{4}
+
     loadexp;
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','ETAN',...
@@ -25,7 +28,7 @@
     vt = VVELTH;
     eta = ETAN;
 
-    year = '1to5';
+    year = '5to9';
     plot_KE_EKE_T_S_series
     plot_basics
 %     plot_shelfIce

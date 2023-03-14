@@ -5,6 +5,9 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
 
+    load_constants;
+    load_spacing;
+
     rho_o = 1000;
     cp_o = 3994; % Unit: J/kg/degC
 

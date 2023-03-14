@@ -119,8 +119,6 @@
     mask_sw_vgridf(:,:,excludedeepocean)= NaN;
 
 
-
-
     Hcdw_ugridf = sum(mask_cdw_ugridf.*hFacWf.*DZf,3,'omitnan');
     Hcdw_ugridf(Hcdw_ugridf==0)=NaN;
 
@@ -129,6 +127,14 @@
 
     Hcdw_tgridf = sum(mask_cdw_tgridf.*hFacCf.*DZf,3,'omitnan');
     Hcdw_tgridf(Hcdw_tgridf==0)=NaN;
+
+    Hsw_tgridf = sum(mask_sw_tgridf.*hFacCf.*DZf,3,'omitnan');
+    Hsw_tgridf(Hsw_tgridf==0)=NaN;
+
+    tt_cdwf = sum(mask_cdw_tgridf.*ttf.*hFacCf.*DZf,3,'omitnan')./Hcdw_tgridf;
+    tt_cdwf(tt_cdwf==0)=NaN;
+    tt_swf = sum(mask_sw_tgridf.*ttf.*hFacCf.*DZf,3,'omitnan')./Hsw_tgridf;
+    tt_swf(tt_swf==0)=NaN;
     
     figure(10)
     pcolor(XXf/1000,YYf/1000,Hcdw_ugridf);shading flat; colorbar;

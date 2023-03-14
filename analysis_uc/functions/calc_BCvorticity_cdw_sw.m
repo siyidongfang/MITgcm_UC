@@ -101,16 +101,16 @@ zeta_IPT = - zeta_dPhi; %%% Interfacial (isopycnal) pressure torque exerted on t
 
 prodname = [prodir 'BCvorticity/' expname '_BCvorticity_cdw.mat'];
 load(prodname,'zeta_dPhi','zeta_Advec','zeta_Diss','zeta_residual',...
-    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe','XXf','YYf','VV_bc','zeta_betaV','UU_bc')
+    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe','XXf','YYf','VV_bc','zeta_betaV','UU_bc','xxf','yyf')
 zeta_BPTplusIPT = zeta_dPhi;
-VV_cdw = VV_bc;
-UU_cdw = UU_bc;
+VV_cdwf = VV_bc;
+UU_cdwf = UU_bc;
 
 prodname_new = [prodir expname '_vorticity_cdw.mat'];
 save(prodname_new,...
    'zeta_BPT','zeta_IPT','zeta_BPTplusIPT',...
    'zeta_Advec','zeta_Diss','zeta_residual',...
    'zeta_Cori','zeta_AdvZ3','zeta_AdvRe',...
-   'XXf','YYf','Hcdw_ugridf','Hcdw_vgridf','Hcdw_tgridf','VV_cdw','zeta_betaV','UU_cdw')
+   'XXf','YYf','Hcdw_ugridf','Hcdw_vgridf','Hcdw_tgridf','zeta_betaV','UU_cdwf','VV_cdwf','tt_cdwf','tt_swf','xxf','yyf')
 
 

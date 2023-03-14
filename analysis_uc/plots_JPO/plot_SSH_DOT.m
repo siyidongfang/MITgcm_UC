@@ -34,26 +34,42 @@
 
 
 
+
+
     %%
+
+    LAT = double(Latitude);
+    LON = double(Longitude);
+
+
+
+    %%% Find the Amundsen Sea region
+    LON(LON>-60)=NaN;
+    LAT(isnan(LON))=NaN;
+    DOT_clim(isnan(LON))=NaN;
+
+    scatter_lat = LAT(isnan(DOT_clim));
+    scatter_lon = LON(isnan(DOT_clim));
+
+    %%
+
+   
     figure(1)
+    clf
+    set(gca,'Color','w')
+    
     %%% Make the plot
     % [im, map, alpha] = imread('arrows.png');
     % f = imshow(im);
     % set(f, 'AlphaData', alpha);
-
-    LAT = double(Latitude);
-    LON = double(Longitude);
-    scatter_lat = LAT(isnan(DOT_clim));
-    scatter_lon = LON(isnan(DOT_clim));
-
     hold on;
-    % set(gca,'Color','w')
-    set(gca,'Color',[225 225 225]/255);
+
 
     axis off;
+%     axesm('eqdconic','FLonLimit',[-180 -60],'FLatLimit',[-90 -65],'FontSize',fontsize)
     axesm('stereo','Origin',[-90 0],'MapLatLimit',[-90 -65],'FontSize',fontsize)
-    framem on;
-    gridm on;
+%     framem on;
+%     gridm on;
     mlabel on;
     plabel on;
 
@@ -63,13 +79,14 @@
     setm(gca,'MLineLocation',[-180:30:180]);
     setm(gca,'MLabelLocation',[-180:30:180]);
     % DOT_clim(isnan(DOT_clim))=0;
-    aa = pcolorm(LAT,LON,double(DOT_clim)/100);        
+    aa = pcolorm(LAT,LON,double(DOT_clim)/100);  
     shading interp;
-    GRAY_NAN = scatterm(scatter_lat,scatter_lon,15,'filled','MarkerFaceColor',[0.93 0.93 0.93]);       
+    setm(gca,'MapProjection','eqdconic')
+%     GRAY_NAN = scatterm(scatter_lat,scatter_lon,15,'filled','MarkerFaceColor',[0.93 0.93 0.93]);       
     % hold on;
-    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
-    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
-    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+%     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+%     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+%     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;
     % col4 = colormap(ax4,'haxby');
     % col4=flipud(cmocean('tarn',256));
@@ -96,9 +113,9 @@
     % set(leghandle,'Position',legpos);
     % legend boxon;
 
-    leghandle = legend([bathyhandle],{'1000m depth contour'},...
-        'interpreter','latex','orientation','horizontal');
-    set(leghandle,'FontSize',fontsize+2);
-    set(leghandle,'Position',legpos);
-    legend boxon;
+%     leghandle = legend([bathyhandle],{'1000m depth contour'},...
+%         'interpreter','latex','orientation','horizontal');
+%     set(leghandle,'FontSize',fontsize+2);
+%     set(leghandle,'Position',legpos);
+%     legend boxon;
 
