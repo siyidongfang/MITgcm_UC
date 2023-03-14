@@ -12,9 +12,9 @@
 
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
-    expname = EXPNAME{4}
+    expname = EXPNAME{9}
 
     loadexp;
 

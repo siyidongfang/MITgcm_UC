@@ -15,23 +15,22 @@
     savefigure = true;
 
     prodir_vorticity = [prodir 'BCvorticity/'];
-    group_adv7 = [1:6 9:20];
+    group_adv7 = 1:20;
 
-    ww_all = zeros(1,26);
-    Adv_all = zeros(1,26);
-    Cori_all = zeros(1,26);
-    IPT_all = zeros(1,26);
-    BPTplusIPT_sb = zeros(1,26);
-    BPT_sb = zeros(1,26);
-    IPT_sb = zeros(1,26);
-    zeta_cdw_tr = zeros(1,26);
-    zeta_cdw_sbtr_min = zeros(1,26);
-    w_dia_is = zeros(1,26);
+    ww_all = zeros(1,20);
+    Adv_all = zeros(1,20);
+    Cori_all = zeros(1,20);
+    IPT_all = zeros(1,20);
+    BPTplusIPT_sb = zeros(1,20);
+    BPT_sb = zeros(1,20);
+    IPT_sb = zeros(1,20);
+    zeta_cdw_tr = zeros(1,20);
+    zeta_cdw_sbtr_min = zeros(1,20);
+    w_dia_is = zeros(1,20);
 
 
 
 for ne=group_adv7
-% for n=1
     expname = EXPNAME{ne}
     loadexp;
     load_data;
@@ -82,8 +81,12 @@ load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
 
 w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
-group = group_adv7;
+% group = group_adv7;
+% group = [1:6 9 12:17 19 20];
+% group = 1:6
+
 group1 = [1:6 9:11];
+
 fontsize = 16;
 
 corrcoef(w_dia_is(group),Ug_east_transportweighted(group))
@@ -187,12 +190,12 @@ title({'Total upwelling in the cavity v.s.','Ice shelf melt rate'})
 set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
 
 
-figure(5)
-scatter(w_dia_is(1:24),MeltRate_m(1:24))
-xlabel('Total upwelling in the cavity (Sv)')
-ylabel('Ice shelf melt rate (m/yr)')
-title({'(Including Exps. not using Adv7) Total upwelling in the cavity v.s.','Ice shelf melt rate'})
-set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
+% figure(5)
+% scatter(w_dia_is(1:24),MeltRate_m(1:24))
+% xlabel('Total upwelling in the cavity (Sv)')
+% ylabel('Ice shelf melt rate (m/yr)')
+% title({'(Including Exps. not using Adv7) Total upwelling in the cavity v.s.','Ice shelf melt rate'})
+% set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
 
 
 % figure(7)

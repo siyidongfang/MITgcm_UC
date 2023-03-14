@@ -10,7 +10,7 @@
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
+%     prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
     showfigrue = true;
@@ -19,14 +19,14 @@
 
 % for ne =[2:6 9:20]  
 % for ne=[1 2 4]
-for ne=[8]
+for ne=[7]
     close all
         expname = EXPNAME{ne}
         loadexp;
         load_data;
         load_spacing;
-        calc_BCvorticity_cdw_sw;
-        calc_BCvorticity_PVint;
+%         calc_BCvorticity_cdw_sw;
+%         calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
 %         calc_BCvorticity_lat_rectangle_int

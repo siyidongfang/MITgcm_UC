@@ -8,14 +8,12 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
     
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
-    useSEAICE = true;
 % for ne=[2:6 9:20]  
-for ne=8
+for ne=1
     expname = EXPNAME{ne}
     loadexp;
     load_data;

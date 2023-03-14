@@ -3,8 +3,8 @@
 switch(exp_group)
     case 'seaice_boundary'
           expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-          prodir = '/Users/csi/MITgcm_UC/products/seaice_boundary/';
-%     prodir = '/Users/csi/MITgcm_UC/products_backup/products_uc/seaice_boundary/';
+%           prodir = '/Users/csi/MITgcm_UC/products/seaice_boundary/';
+    prodir = '/Users/csi/MITgcm_UC/products_backup/products_uc/seaice_boundary/';
           EXPNAME = {...
                 ... %%% reference case, varying winds
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...
@@ -15,12 +15,12 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.001_prod_Adv7'; ...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.003_prod_Adv7'; ...
                 ... %%% Add tides
-                'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...   %%% bug in topogrphy!! re-run!
-                'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...    %%% bug in topogrphy!! re-run!
+                'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod';...   %%% bug in topogrphy!! re-run!
+                'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod';...    %%% bug in topogrphy!! re-run!
                 ... %%% Deeper thermocline, and co-vary winds
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... 
-                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  %%% bug in topogrphy!! re-run!
-                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  %%% bug in topogrphy!! re-run!
+                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod';...  %%% bug in topogrphy!! re-run!
+                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod';...  %%% bug in topogrphy!! re-run!
                 ...
                 ... %%% Vary bathymetry, reference forcing and thermocline geometry
                 ... %%% Hbed
@@ -36,7 +36,7 @@ switch(exp_group)
                 ...
                 ... %%% co-vary thermocline and bathymetry
                 ... %%% No Hbed
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7';... %%% bug in topogrphy!! re-run!
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod';... %%% bug in topogrphy!! re-run!
                 ... %%% No trough
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod_Adv7';...
                 ... %%% No Hbed and no trough

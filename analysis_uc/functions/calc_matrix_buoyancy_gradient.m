@@ -73,17 +73,17 @@
     %%% Calculate transports
     Totg_east = sum(ug_east.*hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
     Volg_east = sum(hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
-    Ug_east_avg(n) = Totg_east/Volg_east;
+    Ug_east_avg(ne) = Totg_east/Volg_east;
 
     Totg_east_weighted = sum(ug_east.^2.*hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
     Totg_weight = sum(ug_east.^1.*hFAC.*DX(xidx,yidx(2:end),:).*DY(xidx,yidx(2:end),:).*DZ_slope,'all','omitnan');
-    Ug_east_transportweighted(n) = Totg_east_weighted/Totg_weight;
+    Ug_east_transportweighted(ne) = Totg_east_weighted/Totg_weight;
 
     %%% Maximum eastward velocity
-    ug_xmean_max(n) = max(ug_xmean,[],'all','omitnan');
+    ug_xmean_max(ne) = max(ug_xmean,[],'all','omitnan');
 
     %%% Total eastward transport
     Lx_xidx = xx(xidx(end))-xx(xidx(1))+dx;
-    Totg_east_Sv(n) = Totg_east/Lx_xidx/1e6;
+    Totg_east_Sv(ne) = Totg_east/Lx_xidx/1e6;
     
 

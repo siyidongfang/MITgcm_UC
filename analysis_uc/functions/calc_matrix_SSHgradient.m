@@ -8,4 +8,4 @@
     eta_shelf = mean(eta(xidx,yidx_shelf),'all');
     eta_deep  = mean(eta(xidx,yidx_deep),'all');
     deltaY = (Ymax_eta-10*m1km/2) - (Ymin_eta+10*m1km/2);
-    detady(n) = (eta_shelf-eta_deep)/deltaY*100*m1km; %%% Unit: m/(100km)
+    detady(ne) = (eta_shelf-eta_deep)/deltaY*100*m1km; %%% Unit: m/(100km)

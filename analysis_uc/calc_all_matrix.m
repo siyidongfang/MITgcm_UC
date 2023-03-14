@@ -40,12 +40,11 @@
     savefigure = true;
     showfigure = true;
 
-% for n=1:nEXP
-for n =[1:6 9:20]
-% for n=[1:13]
-    n
+% for ne=1:nEXP
+for ne =1:20
+    ne
     clear yidx xidx dy dx
-    expname = EXPNAME{n};
+    expname = EXPNAME{ne};
     loadexp;
     load_constants;
     load_data;

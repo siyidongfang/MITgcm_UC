@@ -17,12 +17,12 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1};
+    exp_group = EXP_GROUP{2};
     list_exps_new;
     load_constants;
     load_colors;
 
-    for ne=8
+    for ne=[1:4]
     expname = EXPNAME{ne};
     loadexp;
     load_data;

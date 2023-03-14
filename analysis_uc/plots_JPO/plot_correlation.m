@@ -7,7 +7,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions; 
 %     load('/Users/csi/MITgcm_UC/products_uc/shelfice_seaice/matrix_shelfice_seaice.mat')
 %     load('/Users/csi/MITgcm_UC/products_uc/seaice_boundary/matrix_seaice_boundary.mat')
-    load('/Users/csi/MITgcm_UC/products_uc/matrix_combined-group12-allLx.mat')
+    load('/Users/csi/MITgcm_UC/products_backup/products_uc/matrix_combined-group12-allLx.mat')
 
     figdir = '/Users/csi/MITgcm_UC/figures_uc/'; 
     savefigure = false;

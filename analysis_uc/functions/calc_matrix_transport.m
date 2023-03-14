@@ -35,47 +35,47 @@
     ub_west(ub_slope>=0)=NaN;
   
     %%% Calculate velocities
-    Ub_east_max(n) = max(ub_east,[],'all','omitnan');
-    Ub_east_avg(n) = mean(ub_east,'all','omitnan');
-    Ub_west_min(n) = min(ub_west,[],'all','omitnan');
-    Ub_west_avg(n) = mean(ub_west,'all','omitnan');
-    Ub_avg(n) = mean(ub_slope,'all','omitnan');
+    Ub_east_max(ne) = max(ub_east,[],'all','omitnan');
+    Ub_east_avg(ne) = mean(ub_east,'all','omitnan');
+    Ub_west_min(ne) = min(ub_west,[],'all','omitnan');
+    Ub_west_avg(ne) = mean(ub_west,'all','omitnan');
+    Ub_avg(ne) = mean(ub_slope,'all','omitnan');
 
     %%% Calculate transports
     Tot_east = sum(uu_east.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
     Vol_east = sum(hFacW_east.*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
-    U_east_avg(n) = Tot_east/Vol_east;
+    U_east_avg(ne) = Tot_east/Vol_east;
     
     Tot_west = sum(uu_west.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
     Vol_west = sum(hFacW_west.*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
-    U_west_avg(n) = Tot_west/Vol_west;
+    U_west_avg(ne) = Tot_west/Vol_west;
     
     Lx_xidx = xx(xidx(end))-xx(xidx(1))+dx;
-    Tot_east_Sv(n) = Tot_east/Lx_xidx/1e6;
-    Tot_west_Sv(n) = Tot_west/Lx_xidx/1e6;
-    Tot_Sv(n) = Tot_east_Sv(n)+Tot_west_Sv(n);
+    Tot_east_Sv(ne) = Tot_east/Lx_xidx/1e6;
+    Tot_west_Sv(ne) = Tot_west/Lx_xidx/1e6;
+    Tot_Sv(ne) = Tot_east_Sv(ne)+Tot_west_Sv(ne);
 
-    Umin(n) = min(uu_slope,[],'all','omitnan');
-    Umax(n) = max(uu_slope,[],'all','omitnan');
+    Umin(ne) = min(uu_slope,[],'all','omitnan');
+    Umax(ne) = max(uu_slope,[],'all','omitnan');
 
     uu_slope(uu_slope==0)=NaN;
     u_xmean = squeeze(mean(uu_slope,'omitnan'));
-    u_xmean_max(n) = max(u_xmean,[],'all','omitnan');
+    u_xmean_max(ne) = max(u_xmean,[],'all','omitnan');
 
     %%% Calculate upper ocean velocity and transport
 
     zupper = 1:sum(zz>=-500);
 
-    Tot_west_upper(n) = sum(uu_west(:,:,zupper).*hFacW(xidx,yidx,zupper).*DX(xidx,yidx,zupper).*DY(xidx,yidx,zupper).*DZ(xidx,yidx,zupper),'all','omitnan');
-    Vol_west_upper(n) = sum(hFacW_west(:,:,zupper).*DX(xidx,yidx,zupper).*DY(xidx,yidx,zupper).*DZ(xidx,yidx,zupper),'all','omitnan');
-    U_west_avg_upper(n) = Tot_west_upper(n)/Vol_west_upper(n);
+    Tot_west_upper(ne) = sum(uu_west(:,:,zupper).*hFacW(xidx,yidx,zupper).*DX(xidx,yidx,zupper).*DY(xidx,yidx,zupper).*DZ(xidx,yidx,zupper),'all','omitnan');
+    Vol_west_upper(ne) = sum(hFacW_west(:,:,zupper).*DX(xidx,yidx,zupper).*DY(xidx,yidx,zupper).*DZ(xidx,yidx,zupper),'all','omitnan');
+    U_west_avg_upper(ne) = Tot_west_upper(ne)/Vol_west_upper(ne);
 
 
 
     %%% Calculate transport weighted velocity
     Tot_east_weighted = sum(uu_east.^2.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
     Tot_weight = sum(uu_east.^1.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
-    Ueast_transportweighted(n) = Tot_east_weighted/Tot_weight;
+    Ueast_transportweighted(ne) = Tot_east_weighted/Tot_weight;
 
 
 

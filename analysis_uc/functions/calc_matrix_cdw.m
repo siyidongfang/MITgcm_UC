@@ -55,22 +55,22 @@
     yidx_uuwest = round(Ymaxcdw/dy):round(Ymaxcdw/dy)+5;
 
     HH_cdw(isnan(HH_cdw))=0;
-    Hcdw(n) = mean(HH_cdw(xidxcdw,yidxcdw),'all');
-    Scdw(n) = mean(SS_cdw(xidxcdw,yidxcdw),'all','omitnan');
-    Tcdw(n) = mean(TT_cdw(xidxcdw,yidxcdw),'all','omitnan');
-    Vcdw(n) = mean(VV_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
+    Hcdw(ne) = mean(HH_cdw(xidxcdw,yidxcdw),'all');
+    Scdw(ne) = mean(SS_cdw(xidxcdw,yidxcdw),'all','omitnan');
+    Tcdw(ne) = mean(TT_cdw(xidxcdw,yidxcdw),'all','omitnan');
+    Vcdw(ne) = mean(VV_cdw(xidxcdw,yidxcdw),'all','omitnan'); 
     
-    Fheatcdw_icefront_trough(n) = sum(Fheat_cdw(xidxcdw,yidxcdw(1))*dx)/1e12; 
-    Fheattot_icefront_trough(n) = sum(Fheat_xy(xidxcdw,yidxcdw(1))*dx)/1e12; 
+    Fheatcdw_icefront_trough(ne) = sum(Fheat_cdw(xidxcdw,yidxcdw(1))*dx)/1e12; 
+    Fheattot_icefront_trough(ne) = sum(Fheat_xy(xidxcdw,yidxcdw(1))*dx)/1e12; 
 
-    Fheatcdw_icefront_all(n) = sum(Fheat_cdw(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
-    Fheattot_icefront_all(n) = sum(Fheat_xy(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
+    Fheatcdw_icefront_all(ne) = sum(Fheat_cdw(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
+    Fheattot_icefront_all(ne) = sum(Fheat_xy(round(Xwest/dx):round(Xeast/dx),yidxcdw(1))*dx)/1e12; 
 
-    Vcdw_east(n) = mean(VV_cdw(xidx_east,yidxcdw),'all','omitnan'); 
+    Vcdw_east(ne) = mean(VV_cdw(xidx_east,yidxcdw),'all','omitnan'); 
 
-    Fheatcdw_east(n) = mean(Fheat_cdw(xidx_east,yidxcdw),'all','omitnan'); 
-    Fheattot_east(n) = mean(Fheat_xy(xidx_east,yidxcdw),'all','omitnan'); 
-    Ucdw_west(n) = mean(UU_cdw(xidx_uuwest,yidx_uuwest),'all','omitnan'); 
-    Ucdw_west_max(n) = max(max(UU_cdw(xidx_uuwest,yidx_uuwest))); 
+    Fheatcdw_east(ne) = mean(Fheat_cdw(xidx_east,yidxcdw),'all','omitnan'); 
+    Fheattot_east(ne) = mean(Fheat_xy(xidx_east,yidxcdw),'all','omitnan'); 
+    Ucdw_west(ne) = mean(UU_cdw(xidx_uuwest,yidx_uuwest),'all','omitnan'); 
+    Ucdw_west_max(ne) = max(max(UU_cdw(xidx_uuwest,yidx_uuwest))); 
 
     %%% Calculate detrainment of CDW (diapycnal transport)
