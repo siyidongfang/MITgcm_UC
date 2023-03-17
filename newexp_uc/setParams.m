@@ -160,7 +160,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   useGMRedi = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useLAYERS = false;
+  useLAYERS = true;
   if(is_ContinuedRun)
       useLAYERS = true;
   end
@@ -1964,7 +1964,7 @@ end
       SA_freezing = 30;
       
       %%% Assume a horizontally uniform basal melt rate, Ffresh
-      Ffresh = -4.15*5; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+      Ffresh = -4.15*0; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
       Sref = 30; %%% Reference salinity of the wet grid right beneath the ice shelf
       rho_o = 1027; %%% Reference density of the seawater
       rho_fresh = 1005; %%% Reference density of the meltwater

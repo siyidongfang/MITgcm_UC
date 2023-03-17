@@ -78,77 +78,75 @@
 %   Nr = 30; %%% no. of z-gridpoints
  
 
-%   %%% Set-up for Hoffman2
-%   opt_file = 'hoffman2_ucla'; %%% options file name
-%   use_mpi = true; %%% set true for parallel processing
-%   use_pbs = true; %%% set true for execution via PBS
-%   cluster = 'hoffman2';
-%   queue = 'all.q';
-%   if (is_hires) %%% 768 x 480 x 70, ~1km grid spacing
-%   sNx = 50; %%% no. of x-gridpoints per tile
-%   sNy = 50; %%% no. of y-gridpoints per tile
-%   nPx = 8; %%% no. of processors in x-direction
-%   nPy = 9; %%% no. of processors in y-direction
-%   Nr = 70; %%% no. of z-gridpoint  
-%   else
-%  %%% ~ 2km grid spacing
-%   sNx = 21; %%% no. of x-gridpoints per tile
-%   sNy = 20; %%% no. of y-gridpoints per tile
-%   nPx = 14; %%% no. of processors in x-direction
-%   nPy = 10; %%% no. of processors in y-direction
-%   Nr = 68; %%% no. of z-gridpoints 
-%   end
-
- 
-%%% Set-up for Stampede2
-  opt_file = 'xsede_stampede'; %%% options file name
+  %%% Set-up for Hoffman2
+  opt_file = 'hoffman2_ucla'; %%% options file name
   use_mpi = true; %%% set true for parallel processing
   use_pbs = true; %%% set true for execution via PBS
-  cluster = 'stampede';   
-  queue = 'normal';  
-%   queue = 'flat-quadrant';
-
- if (is_hires) 
-  %%% 1 node,400*448
+  cluster = 'hoffman2';
+  queue = 'all.q';
+  if (is_hires) %%% 768 x 480 x 70, ~1km grid spacing
   sNx = 50; %%% no. of x-gridpoints per tile
-  sNy = 56; %%% no. of y-gridpoints per tile
+  sNy = 50; %%% no. of y-gridpoints per tile
   nPx = 8; %%% no. of processors in x-direction
-  nPy = 8; %%% no. of processors in y-direction
-  Nr = 70; %%% no. of z-gridpoint 
-
- else   
-%%%% ~ 2km grid spacing
-  sNx = 6; %%% no. of x-gridpoints per tile
+  nPy = 9; %%% no. of processors in y-direction
+  Nr = 70; %%% no. of z-gridpoint  
+  else
+ %%% ~ 2km grid spacing
+  sNx = 25; %%% no. of x-gridpoints per tile
   sNy = 40; %%% no. of y-gridpoints per tile
-  nPx = 49; %%% no. of processors in x-direction
+  nPx = 12; %%% no. of processors in x-direction
   nPy = 5; %%% no. of processors in y-direction
-  Nr = 68; %%% no. of z-gridpoints
-%   sNx = 16; %%% no. of x-gridpoints per tile
-%   sNy = 13; %%% no. of y-gridpoints per tile
-%   nPx = 18; %%% no. of processors in x-direction
-%   nPy = 15; %%% no. of processors in y-direction
-%   Nr = 68; %%% no. of z-gridpoints
-%   sNx = 20; %%% no. of x-gridpoints per tile
-%   sNy = 11; %%% no. of y-gridpoints per tile
-%   nPx = 15; %%% no. of processors in x-direction
-%   nPy = 18; %%% no. of processors in y-direction
-%   Nr = 100; %%% no. of z-gridpoints
-% %%%% ~ 5km grid spacing
-%   sNx = 15; %%% no. of x-gridpoints per tile
-%   sNy = 10; %%% no. of y-gridpoints per tile
-%   nPx = 8; %%% no. of processors in x-direction
-%   nPy = 8; %%% no. of processors in y-direction
-%   Nr = 68; %%% no. of z-gridpoints
-% %%%% ~ 10km grid spacing
-%   sNx = 10; %%% no. of x-gridpoints per tile
-%   sNy = 4; %%% no. of y-gridpoints per tile
-%   nPx = 6; %%% no. of processors in x-direction
-%   nPy = 10; %%% no. of processors in y-direction
-%   Nr = 68; %%% no. of z-gridpoints
- end
-  acct = 'tg854737';
+  Nr = 68; %%% no. of z-gridpoints 
+  end
 
  
+% %%% Set-up for Stampede2
+%   opt_file = 'xsede_stampede'; %%% options file name
+%   use_mpi = true; %%% set true for parallel processing
+%   use_pbs = true; %%% set true for execution via PBS
+%   cluster = 'stampede';   
+%   queue = 'normal';  
+% %   queue = 'flat-quadrant';
+% 
+%  if (is_hires) 
+%   %%% 1 node,400*448
+%   sNx = 50; %%% no. of x-gridpoints per tile
+%   sNy = 56; %%% no. of y-gridpoints per tile
+%   nPx = 8; %%% no. of processors in x-direction
+%   nPy = 8; %%% no. of processors in y-direction
+%   Nr = 70; %%% no. of z-gridpoint 
+% 
+%  else   
+% %%%% ~ 2km grid spacing
+%   sNx = 6; %%% no. of x-gridpoints per tile
+%   sNy = 40; %%% no. of y-gridpoints per tile
+%   nPx = 49; %%% no. of processors in x-direction
+%   nPy = 5; %%% no. of processors in y-direction
+%   Nr = 68; %%% no. of z-gridpoints
+% %   sNx = 16; %%% no. of x-gridpoints per tile
+% %   sNy = 13; %%% no. of y-gridpoints per tile
+% %   nPx = 18; %%% no. of processors in x-direction
+% %   nPy = 15; %%% no. of processors in y-direction
+% %   Nr = 68; %%% no. of z-gridpoints
+% %   sNx = 20; %%% no. of x-gridpoints per tile
+% %   sNy = 11; %%% no. of y-gridpoints per tile
+% %   nPx = 15; %%% no. of processors in x-direction
+% %   nPy = 18; %%% no. of processors in y-direction
+% %   Nr = 100; %%% no. of z-gridpoints
+% % %%%% ~ 5km grid spacing
+% %   sNx = 15; %%% no. of x-gridpoints per tile
+% %   sNy = 10; %%% no. of y-gridpoints per tile
+% %   nPx = 8; %%% no. of processors in x-direction
+% %   nPy = 8; %%% no. of processors in y-direction
+% %   Nr = 68; %%% no. of z-gridpoints
+% % %%%% ~ 10km grid spacing
+% %   sNx = 10; %%% no. of x-gridpoints per tile
+% %   sNy = 4; %%% no. of y-gridpoints per tile
+% %   nPx = 6; %%% no. of processors in x-direction
+% %   nPy = 10; %%% no. of processors in y-direction
+% %   Nr = 68; %%% no. of z-gridpoints
+%  end
+%   acct = 'tg854737';
 
 
 %   %%% Set-up for Ardbeg

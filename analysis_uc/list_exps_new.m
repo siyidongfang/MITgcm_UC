@@ -1,4 +1,27 @@
 
+% %%% Need to submit:
+% 1.  submitted: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7
+% 2.  %%% New exp: no ice shelf, reference parameters
+% 
+% 3. 
+% submitted: % res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7 , obcs balance ===1
+% submitted: % res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7, obcs balance ===1
+% 
+% 4.
+% submitted: % res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
+% submitted: % res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
+% submitted: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7
+% 
+% 5. check cross section:
+% % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_prod_Adv7
+% % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt20.75m_prod_Adv7
+% % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt4.15m_prod_Adv7
+% 
+% 6. 
+% % 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... 
+
+
+
 
 switch(exp_group)
     case 'seaice_boundary'
@@ -49,7 +72,7 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_SEAICEnonLinIterMax100_prod';... %%% To do Adv7
                 ...
                 ... %%% Other experiments
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... %%% Todo, run product run. run with Adv 7
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... %% 15km trough %%% Todo, run product run. run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod';... %%% To do Adv7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod';... %%% To do Adv7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_periodic';... %%% run with Adv 7
