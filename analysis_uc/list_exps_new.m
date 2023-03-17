@@ -26,8 +26,8 @@
 switch(exp_group)
     case 'seaice_boundary'
           expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-%           prodir = '/Users/csi/MITgcm_UC/products/seaice_boundary/';
-    prodir = '/Users/csi/MITgcm_UC/products_backup/products_uc/seaice_boundary/';
+          prodir = '/Users/csi/MITgcm_UC/products/seaice_boundary/';
+%     prodir = '/Users/csi/MITgcm_UC/products_backup/products_uc/seaice_boundary/';
           EXPNAME = {...
                 ... %%% reference case, varying winds
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...

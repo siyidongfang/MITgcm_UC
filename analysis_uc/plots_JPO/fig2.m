@@ -7,6 +7,7 @@
    clear;close all;
 
     %%% Add path
+    addpath /Users/csi/MITgcm_UC/analysis_uc;
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
@@ -111,16 +112,55 @@
 
 
     %%
-    ax1 = subplot('position',[0.045 0.6 panelsize]);
+%     ax1 = subplot('position',[0.045 0.6 panelsize]);
+    ax1 = subplot('position',[0 0.5 0.3 0.5]);
+
+    linewidth = 1.5;
+
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/etopo1/
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/SouthernOceanSSH/
+    %%% Load data
+    load AntarcticCoastline.mat
+    load DOT_climatology_2011-2013.mat
+    %%%%%%%%%%% Load the coastline
+    load coastlines
+    antarctica = shaperead('landareas', 'UseGeoCoords', true,...
+      'Selector',{@(name) strcmp(name,'Antarctica'), 'Name'});
+
+    %%% Find the Amundsen Sea region
+    LAT = double(Latitude);
+    LON = double(Longitude);
+%     LON(LON>-60)=NaN;
+%     LAT(isnan(LON))=NaN;
+%     DOT_clim(isnan(LON))=NaN;
+
+    latlim = [-78 -65];
+    lonlim = [180 -65];
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis off; 
+    framem on; 
+    gridm on; 
+    mlabel on; 
+    plabel on;
+    setm(gca,'MLabelLocation',60)
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    aa = pcolorm(LAT,LON,double(DOT_clim)/100);  
+    shading interp;
+    colormap(redblue)
+    clim([-1.95 -1.75])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;
+    box on;
 
 
-
-
-    ax2 = subplot('position',[0.38 0.6 panelsize]);
-
-
-
-    ax3 = subplot('position',[0.72 0.6 panelsize]);
+%     ax2 = subplot('position',[0.38 0.6 panelsize]);
+% 
+% 
+% 
+%     ax3 = subplot('position',[0.72 0.6 panelsize]);
 
 
 
@@ -129,7 +169,7 @@
 
     %%
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig2/';
-    print('-dpng','-r200',[figdir 'fig2.png']);
+%     print('-dpng','-r200',[figdir 'fig2.png']);
 
 
 
