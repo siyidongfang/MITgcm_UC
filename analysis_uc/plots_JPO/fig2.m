@@ -65,7 +65,7 @@
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
-    title('Sea surface height anomaly (m)','FontSize',fontsize+3,'FontWeight','normal')
+    title('Sea surface height (m)','FontSize',fontsize+3,'FontWeight','normal')
     text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
     freezeColors;
 
@@ -110,10 +110,7 @@
 
 
 
-
-    %%
-%     ax1 = subplot('position',[0.045 0.6 panelsize]);
-    ax1 = subplot('position',[0 0.5 0.3 0.5]);
+    ax1 = subplot('position',[0.045 0.6 panelsize]);
 
     linewidth = 1.5;
 
@@ -130,37 +127,45 @@
     %%% Find the Amundsen Sea region
     LAT = double(Latitude);
     LON = double(Longitude);
-%     LON(LON>-60)=NaN;
-%     LAT(isnan(LON))=NaN;
-%     DOT_clim(isnan(LON))=NaN;
 
     latlim = [-78 -65];
-    lonlim = [180 -65];
+    lonlim = [181 -65];
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
-    axis off; 
+    axis on; 
     framem on; 
     gridm on; 
     mlabel on; 
     plabel on;
-    setm(gca,'MLabelLocation',60)
+    setm(gca,'MLabelLocation',30)
+    setm(gca,'PLabelLocation',3)
+    setm(gca,'MLabelParallel',-77.2)
+    setm(gca,'FontSize',fontsize-1)
     geoshow(coastlat,coastlon,'DisplayType','polygon')
     aa = pcolorm(LAT,LON,double(DOT_clim)/100);  
     shading interp;
-    colormap(redblue)
-    clim([-1.95 -1.75])
+    colormap(cmocean('balance'));
+    clim([-2.15 -1.55])
     hold on;
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;
     box on;
+    axis tight
+    set(gca,'FontSize',fontsize);
+    title('Dynamic ocean topography (2011-2013)','FontSize',fontsize+3,'FontWeight','normal')
+    h1 = colorbar;
+    set(h1,'Position', [0.295 0.685 0.008 0.21]);
+    textm(-77,-178,{'(a)'},'FontSize',fontsize+2)
+
+    %%
+    ax2 = subplot('position',[0.38 0.6 panelsize]);
+
+    
 
 
-%     ax2 = subplot('position',[0.38 0.6 panelsize]);
-% 
-% 
-% 
-%     ax3 = subplot('position',[0.72 0.6 panelsize]);
+
+    ax3 = subplot('position',[0.72 0.6 panelsize]);
 
 
 
