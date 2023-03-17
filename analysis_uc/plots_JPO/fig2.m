@@ -124,7 +124,7 @@
     clim([0 2]);
     h6 = colorbar(ax6);
     set(h6,'Position',[0.97 0.12 0.008 0.38]);
-    text(ax6,315,390,{'(^oC)'},'FontSize',fontsize)
+    text(ax6,315,394,{'(^oC)'},'FontSize',fontsize)
     title('CDW potential temperature','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
@@ -179,33 +179,91 @@
     box on;
     axis tight
     set(gca,'FontSize',fontsize);
-    title('Dynamic ocean topography (2011-2013)','FontSize',fontsize+3,'FontWeight','normal')
+    title('Dynamic ocean topography','FontSize',fontsize+3,'FontWeight','normal')
     h1 = colorbar;
     set(h1,'Position', [0.295 0.673 0.008 0.21]);
     annotation('textbox',[0.288 0.93 0.15 0.01],'String','(m)','FontSize',fontsize,'LineStyle','None');
-    text(-77,-178,{'(a)'},'FontSize',fontsize+2)
+    textm(-77,-178,{'(a)'},'FontSize',fontsize+2)
     freezeColors;
 
 
     %%
     ax2 = subplot('position',[0.38 0.65 panelsize1]);
 
-    title('CDW thickness (1991-2020)','FontSize',fontsize+3,'FontWeight','normal')
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/WOA23/
+    load('tt91_winter_cdw.mat')
 
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis on; 
+    framem on; 
+    gridm on; 
+    mlabel on; 
+    plabel on;
+    setm(gca,'MLabelLocation',30)
+    setm(gca,'PLabelLocation',3)
+    setm(gca,'MLabelParallel',-77.2)
+    setm(gca,'FontSize',fontsize-1)
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    aa = pcolorm(LAT_woa,LON_woa,hh_cdw_woa/1000);  
+    shading interp;
+    colormap(WhiteBlueGreenYellowRed(0));
+    clim([0 5])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;
+    box on;
+    axis tight
+    set(gca,'FontSize',fontsize);
+    title('CDW thickness','FontSize',fontsize+3,'FontWeight','normal')
+    h2 = colorbar;
+    set(h2,'Position', [0.63 0.673 0.008 0.21]);
+    annotation('textbox',[0.625 0.93 0.15 0.01],'String','(km)','FontSize',fontsize,'LineStyle','None');
+    textm(-77,-178,{'(b)'},'FontSize',fontsize+2)
+    freezeColors;
 
 
 
     ax3 = subplot('position',[0.72 0.65 panelsize1]);
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis on; 
+    framem on; 
+    gridm on; 
+    mlabel on; 
+    plabel on;
+    setm(gca,'MLabelLocation',30)
+    setm(gca,'PLabelLocation',3)
+    setm(gca,'MLabelParallel',-77.2)
+    setm(gca,'FontSize',fontsize-1)
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    aa = pcolorm(LAT_woa,LON_woa,tt_cdw_woa);  
+    shading interp;
+    clim([0 2])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;
+    box on;
+    axis tight
+    set(gca,'FontSize',fontsize);
+    title('CDW potential temperature','FontSize',fontsize+3,'FontWeight','normal')
+    h3 = colorbar;
+    set(h3,'Position', [0.97 0.673 0.008 0.21]);
+    annotation('textbox',[0.965 0.935 0.15 0.01],'String','(^oC)','FontSize',fontsize,'LineStyle','None');
+    textm(-77,-178,{'(c)'},'FontSize',fontsize+2)
+    freezeColors;
 
-
-    title('CDW potential temperature (1991-2020)','FontSize',fontsize+3,'FontWeight','normal')
 
 
 
 
     %%
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig2/';
-%     print('-dpng','-r200',[figdir 'fig2.png']);
+    print('-dpng','-r200',[figdir 'fig2_matlab.png']);
+%     print('-dpng','-r200',[figdir 'fig2_colorbar.png']);
+
 
 
 
