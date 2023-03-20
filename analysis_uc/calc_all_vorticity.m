@@ -19,7 +19,7 @@
 
 % for ne =[2:6 9:20]  
 % for ne=[1 2 4]
-for ne=[7]
+for ne=1
     close all
         expname = EXPNAME{ne}
         loadexp;
@@ -29,6 +29,7 @@ for ne=[7]
 %         calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
+%         calc_BCvorticity_stretching_Coriolis;
 %         calc_BCvorticity_lat_rectangle_int
 %         calc_BCvorticity_lat_int;
 %         calc_CDW_quasi_stfn;
@@ -39,7 +40,6 @@ for ne=[7]
 %         calc_BCvorticity_stfn_int;
 %         calc_w;
 %         calc_BCvorticity_sponge;
-%         calc_BCvorticity_stretching_Coriolis;
 %         calc_BTvorticity_curl_int; 
 %         calc_BTvorticity_Aint;
 %         calc_BTVorticity_fh_int;

@@ -1,0 +1,136 @@
+%%% Plot the vertical stretch of the CDW layer
+
+    clear;close all;
+    addpath /Users/csi/MITgcm_UC/analysis_uc
+    addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
+
+    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
+    exp_group = EXP_GROUP{1}
+    list_exps_new;
+    load_constants;
+    load_colors;
+    fontsize = 17;
+
+    ne =1; 
+    expname = EXPNAME{ne}
+    loadexp;
+%     load_data;
+%     load_spacing;
+
+%     mask_interpolate;
+% 
+%     wwf = zeros(Nx,Ny,Nrf);
+%     for i=1:Nx
+%         for j=1:Ny   
+%             wwf(i,j,:) = interp1(zz,squeeze(ww(i,j,:))',zzf,'linear','extrap');
+%             clear vertical_cdwidx;
+%             vertical_cdwidx = find(mask_cdw_tgridf(i,j,:)==1);
+%             if(~isnan(vertical_cdwidx))
+%                 interf_idx(i,j) = vertical_cdwidx(1);%%% vertical index of the interface
+%             else
+%                 interf_idx(i,j) = NaN;
+%             end
+%         end
+%     end
+%     
+%     ww_interf = zeros(Nx,Ny);
+%     for i=1:Nx
+%         for j=1:Ny  
+%             if(~isnan(bot_idx(i,j)))
+%                 ww_interf(i,j) = wwf(i,j,interf_idx(i,j));
+%             else
+%                 ww_interf(i,j) = NaN;
+%             end
+%         end
+%     end
+% 
+% 
+%    %%% Find bottom velocity
+%     ww_bot = zeros(Nx,Ny);
+%     for i = 1:Nx
+%         for j = 1:Ny
+%             idxb = find(ss(i,j,:)~=0,1,'last'); % Find the vertical grid of bottom pressure
+%             if(idxb~=0)
+%                ww_bot(i,j) = ww(i,j,idxb);
+%             end
+%         end
+%     end
+%     ww_bot(ww_bot==0) = NaN;
+    
+
+%     save('fig_supp/figS2.mat','ww_bot','ww_interf','XX','YY')
+
+
+    load('fig_supp/figS2.mat')
+    bathy2=bathy;
+    bathy2(YY>150*m1km)=NaN;
+
+    %%
+    YLIM = [0 250];
+
+    figure(1)
+    clf;   
+    set(gcf,'Color','w');
+    scrsz = get(0,'ScreenSize');
+    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 600 850]);
+    panelsize = [0.75 0.225];
+
+    ax1 = subplot('position',[0.1 0.725 panelsize]);
+    pcolor(XX/1000,YY/1000,ww_bot)
+    shading flat;colormap(cmocean('balance'));
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3000:1000:-1000],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-1500 -1500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    clim([-1 1]/1e4)
+    set(gca,'FontSize',fontsize);
+    title('Vertical velocity at ocean bottom, \omega_{bot}','FontSize',fontsize+3,'FontWeight','normal')
+    ylim(YLIM);xlim([-300 300])
+    yticks(0:50:400);xticks(-300:100:300)
+    ylabel('Latitude, y (km)')
+    box on;
+    text(ax1,-295,18,{'(a)'},'FontSize',fontsize+2);
+
+
+    ax2 = subplot('position',[0.1 0.39 panelsize]);
+    pcolor(XX/1000,YY/1000,ww_interf)
+    shading flat;colormap(cmocean('balance'));
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3000:1000:-1000],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-1500 -1500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    clim([-1 1]/1e4)
+    set(gca,'FontSize',fontsize);
+    title('Vertical velocity at the upper bound of the CDW layer, \omega_{up}','FontSize',fontsize+3,'FontWeight','normal')
+    ylim(YLIM);xlim([-300 300])
+    yticks(0:50:400);xticks(-300:100:300)
+    ylabel('Latitude, y (km)')
+    box on;
+    text(ax2,-295,18,{'(b)'},'FontSize',fontsize+2);
+
+
+    ax3 = subplot('position',[0.1 0.06 panelsize]);
+    box on;
+    pcolor(XX/1000,YY/1000,ww_interf-ww_bot)
+    shading flat;colormap(cmocean('balance'));
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3000:1000:-1000],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-1500 -1500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    clim([-1 1]/1e4)
+    set(gca,'FontSize',fontsize);
+    title({'Vertical stretching of the CDW layer, \omega_{up}- \omega_{bot}'},'FontSize',fontsize+3,'FontWeight','normal')
+    ylim(YLIM);xlim([-300 300])
+    yticks(0:50:400);xticks(-300:100:300)
+    xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+    text(ax3,-295,18,{'(c)'},'FontSize',fontsize+2);
+
+    handle=colorbar;set(handle,'position',[0.914 0.25 0.015 0.5]);
+    annotation('textbox',[0.9 0.755 0.05 0.05],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
+
+
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig_supp/';
+    print('-dpng','-r200',[figdir 'figS2.png']);

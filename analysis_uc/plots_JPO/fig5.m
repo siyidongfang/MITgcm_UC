@@ -6,6 +6,7 @@
 
     clear;close all;
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
+    addpath  /Users/csi/MITgcm_UC/analysis_uc
     
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
     exp_group = EXP_GROUP{1}
@@ -34,8 +35,8 @@
     scrsz = get(0,'ScreenSize');
     set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 600 800]);
 
-    ax1 = subplot('position',[0.105 0.575 0.85 0.38]);
-    annotation('textbox',[0.095 0.985 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
+    ax1 = subplot('position',[0.105 0.575 0.78 0.38]);
+%     annotation('textbox',[0.095 0.985 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
     hold on;
     contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
@@ -43,20 +44,25 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    colorbar; colormap(WhiteBlueGreenYellowRed(5));
+    colormap(WhiteBlueGreenYellowRed(5));
+    handle=colorbar; 
+    set(handle,'Position',[0.905    0.62    0.015    0.29])
+    ylim([0 400])
+    xlim([-300 300])
     clim([-4 -1]*1e-7);
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     title('CDW potential vorticity \it q_{cdw}','FontSize',fontsize+3,'FontWeight','normal')
     box on;
-    annotation('textbox',[0.87 0.54 0.15 0.01],'String','(m^{-1}s^{-1})','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.885 0.95 0.15 0.01],'String','(m^{-1}s^{-1})','FontSize',fontsize,'LineStyle','None');
     text(ax1,50,370,'Gray: CDW PV contours','FontSize',fontsize-1,'Color',darkgray)
     text(ax1,50,330,{'Color: selected contours', '           for area integral'},'FontSize',fontsize-1,'Color',blue)
+    text(ax1,-297,18,'(a)','FontSize',fontsize+2)
 
 
     ax2 = subplot('position',[0.105 0.07 0.85 0.38]);
-    annotation('textbox',[0.095 0.48 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
+%     annotation('textbox',[0.095 0.48 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
     lres =plot(yyf/1000,residual_Aint/1000,'LineWidth',4,'Color',boxcolor);
     hold on;
     ldis = plot(yyf/1000,Diss_Aint/1000,'LineWidth',3,'Color',yellow);
@@ -78,13 +84,14 @@
     title('Cumulatively integrated vorticity budget','FontSize',fontsize+3,'FontWeight','normal')
     xlim([50 250])
     grid on;grid minor;
+    text(ax2,51,-9,'(b)','FontSize',fontsize+2)
 
     ah=axes('position',get(ax2,'position'),'visible','off');
     leg2 = legend(ah,[lbpt lipt],...
         'Bottom pressure torque','Interfacial pressure torque',...
         'FontSize',fontsize-0.5);
     legend boxoff;
-    set(leg2,'Position', [0.11 0.0950 0.4200 0.0606])  
+    set(leg2,'Position', [0.11 0.1 0.4200 0.0606])  
 
     ah2=axes('position',get(ax2,'position'),'visible','off');
     leg3 = legend(ah2,[lcori lvortadv lvertadv],...
