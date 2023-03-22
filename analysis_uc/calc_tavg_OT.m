@@ -3,16 +3,17 @@
     addpath functions/
     addpath colormaps/
     
-    tmin = 5;
-    tmax = 9;
+    tmin = 3;
+    tmax = 5;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
 
-% for n=1:nEXP
-for n=[3]
-    expname = EXPNAME{n}
+% for ne=1:nEXP
+for ne=[7 8 18]
+% for ne=1
+    expname = EXPNAME{ne}
     avg_t;
     calcOverturning_rho_Aocean (expdir,expname,prodir);
 end

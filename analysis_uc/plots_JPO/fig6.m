@@ -198,7 +198,7 @@ panelsize = [0.26 0.38];
 
     %%
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig6/';
-    print('-dpng','-r200',[figdir 'fig6.png']);
+%     print('-dpng','-r200',[figdir 'fig6.png']);
 
 
 

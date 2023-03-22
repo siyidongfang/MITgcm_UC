@@ -14,7 +14,7 @@
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1}
     list_exps_new;
-    expname = EXPNAME{9}
+    expname = EXPNAME{18}
 
     loadexp;
 
@@ -28,10 +28,10 @@
     vt = VVELTH;
     eta = ETAN;
 
-    year = '5to9';
+    year = '3to7';
     plot_KE_EKE_T_S_series
     plot_basics
-%     plot_shelfIce
+    plot_shelfIce
     plot_seaice
 
 

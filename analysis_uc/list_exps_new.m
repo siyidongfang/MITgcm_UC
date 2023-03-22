@@ -1,16 +1,16 @@
 
 % %%% Need to submit:
-% 1.  submitted: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7
+% 1.  start: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7
 % 2.  %%% New exp: no ice shelf, reference parameters
 % 
 % 3. 
-% submitted: % res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7 , obcs balance ===1
-% submitted: % res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7, obcs balance ===1
+% complete: % res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7 , obcs balance ===1
+% complete: % res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7, obcs balance ===1
 % 
 % 4.
-% submitted: % res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
-% submitted: % res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
-% submitted: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7
+% start: % res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
+% start: % res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
+% complete: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7
 % 
 % 5. check cross section:
 % % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt12.45m_prod_Adv7
@@ -38,12 +38,12 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.001_prod_Adv7'; ...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.003_prod_Adv7'; ...
                 ... %%% Add tides
-                'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod';...   %%% bug in topogrphy!! re-run!
-                'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod';...    %%% bug in topogrphy!! re-run!
+                'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...   %%% complete
+                'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...    %%% complete
                 ... %%% Deeper thermocline, and co-vary winds
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... 
-                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod';...  %%% bug in topogrphy!! re-run!
-                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod';...  %%% bug in topogrphy!! re-run!
+                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  %%% bug in topogrphy!! re-run!
+                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  %%% bug in topogrphy!! re-run!
                 ...
                 ... %%% Vary bathymetry, reference forcing and thermocline geometry
                 ... %%% Hbed
@@ -59,7 +59,7 @@ switch(exp_group)
                 ...
                 ... %%% co-vary thermocline and bathymetry
                 ... %%% No Hbed
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod';... %%% bug in topogrphy!! re-run!
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7';... %%% complete
                 ... %%% No trough
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod_Adv7';...
                 ... %%% No Hbed and no trough

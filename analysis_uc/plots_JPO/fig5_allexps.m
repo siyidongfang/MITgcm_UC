@@ -6,21 +6,22 @@
 
     clear;close all;
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
+    addpath /Users/csi/MITgcm_UC/analysis_uc
     
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     
-% for ne=[2:6 9:20]  
-for ne=1
+for ne=[1 7 8 18]  
+
     expname = EXPNAME{ne}
     loadexp;
     load_data;
     load_spacing;
     load_colors;
     
-    prodname = [prodir expname '_vortPVint.mat'];
+    prodname = [prodir expname '_vortPVint-v2.mat'];
     load(prodname)
 
     fontsize = 18;
@@ -95,7 +96,6 @@ for ne=1
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig5/';
 %      print('-dpng','-r200',[figdir 'fig5.png']);
      print('-dpng','-r200',[figdir expname '_PVint.png']);
-
 
 
 end

@@ -17,16 +17,15 @@
     savefigure = false;
 
 
-% for ne =[2:6 9:20]  
-% for ne=[1 2 4]
-for ne=1
+% for ne =[1:20]  
+for ne=[ 7 8 18]  
     close all
         expname = EXPNAME{ne}
         loadexp;
         load_data;
         load_spacing;
 %         calc_BCvorticity_cdw_sw;
-%         calc_BCvorticity_PVint;
+        calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
 %         calc_BCvorticity_stretching_Coriolis;

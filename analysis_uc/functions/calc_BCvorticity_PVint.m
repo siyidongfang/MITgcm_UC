@@ -25,12 +25,11 @@
 
     PV = (ff_vorgrid + zeta) ./Hcdw_vorgrid; %%% potential vorticity
 
+    PV(PV==-Inf)=NaN;
+
     maxpv = max(max(PV)); minpv = min(min(PV));
 
-    %%% plot selected contours 
-    Wmin = -3.5e-7;
-    Wmax = -1e-7;
-
+    
     %%% Create a finer horizontal grid
     ffac = 7;
     Nxf = ffac*Nx;
@@ -72,6 +71,22 @@
     zeta_AdvRef = interp2(YY,XX,zeta_AdvRe,YYf,XXf,'linear');
 
     bathyf = interp2(YY,XX,bathy,YYf,XXf,'linear');
+
+
+    %%% selected contours 
+    %     Wmin = -3.5e-7;
+    %     Wmax = -1e-7;
+    %%% Find the nearest PV contours near h=-1500m (y~=239km) and h=-750m(y~=228km)
+    %%% at x=-100km
+
+    [nnnn xpvidx] = min(abs(xxf-(-100*m1km)));
+    hselect = bathyf(xpvidx,:);
+    [nnnn ypvidx1] = min(abs(hselect-(-1650)));
+    Wmax = pvf(xpvidx,ypvidx1)
+
+    [nnnn ypvidx2] = min(abs(hselect-(-740)));
+    Wmin = pvf(xpvidx,ypvidx2)
+    
 
     %%% Select f/hcdw contours  over the shelf and slope
     pv_select = Wmin:0.1e-7:Wmax;
@@ -139,7 +154,7 @@
     end
 
 
-    prodname = [prodir expname '_vortPVint.mat'];
+    prodname = [prodir expname '_vortPVint-v2.mat'];
     save(prodname,...
         'XXf','YYf','XX','YY','xxf','yyf',...
         'PV','pvf','Amaskf','bathy',...
@@ -151,67 +166,69 @@
 
 
 
-%     %%% plot pv contours 
-%     figure(1)
-%     clf;set(gcf,'color','w');
-%     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7)
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-%     hold off;
-%     colorbar; colormap(WhiteBlueGreenYellowRed(5));
-%     clim([-1e-6 0]);
-%     title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
-%     xlabel('Longitude, x (km)');
-%     ylabel('Latitude, y (km)');
-%     set(gca,'FontSize',fontsize);
+    %%% plot pv contours 
+    figure(1)
+    clf;set(gcf,'color','w');
+    contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7)
+%     contour(XX/1000,YY/1000,PV,(minpv:-minpv/1000:0))
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar; colormap(WhiteBlueGreenYellowRed(5));
+    clim([-1e-6 0]);
+%     clim([minpv/100 0])
+    title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
 
-%     figure(2)
-%     clf;set(gcf,'color','w');
-%     contour(XX/1000,YY/1000,PV,Wmin:1e-8:Wmax)
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-%     hold off;
-%     colorbar; colormap(WhiteBlueGreenYellowRed(5));
-%     clim([-4 -1]*1e-7);
-%     title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
-%     xlabel('Longitude, x (km)');
-%     ylabel('Latitude, y (km)');
-%     set(gca,'FontSize',fontsize);
+    figure(2)
+    clf;set(gcf,'color','w');
+    contour(XX/1000,YY/1000,PV,Wmin:1e-8:Wmax)
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar; colormap(WhiteBlueGreenYellowRed(5));
+    clim([-4 -1]*1e-7);
+    title('PV (m^{-1}s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
 
 
-%     figure(3)
-%     clf;set(gcf,'color','w');
-%     pcolor(XXf/1000,YYf/1000,Amaskf);shading flat;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off
-%     hold off;grid on;grid minor
-%     colorbar; 
-%     colormap(flip(WhiteBlueGreenYellowRed(0)));
-%     clim([-1500 -400]);
-%     title('Bathymetric contours (m)','FontSize',fontsize+3)
-%     xlabel('Longitude, x (km)');
-%     ylabel('Latitude, y (km)');
-%     set(gca,'FontSize',fontsize);
+    figure(3)
+    clf;set(gcf,'color','w');
+    pcolor(XXf/1000,YYf/1000,Amaskf);shading flat;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off
+    hold off;grid on;grid minor
+    colorbar; 
+    colormap(flip(WhiteBlueGreenYellowRed(0)));
+    clim([-1500 -400]);
+    title('Bathymetric contours (m)','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
 
-%     figure(10)
-%     clf;set(gcf,'color','w');
-%     hold on;
-%     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
-%     contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:-600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:1000:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
-%     hold off;
-%     colorbar; colormap(WhiteBlueGreenYellowRed(5));
-%     clim([-4 -1]*1e-7);
-%     title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
-%     xlabel('Longitude, x (km)');
-%     ylabel('Latitude, y (km)');
-%     set(gca,'FontSize',fontsize);
-% %     xlim([-110 110])
-% %     ylim([30 270])
-% box on;
+    figure(10)
+    clf;set(gcf,'color','w');
+    hold on;
+    contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray)
+    contour(XXf/1000,YYf/1000,pvf.*Amaskf,Wmin:1e-8:Wmax,'LineWidth',1.2)
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:200:-600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:1000:-1000],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold off;
+    colorbar; colormap(WhiteBlueGreenYellowRed(5));
+    clim([-4 -1]*1e-7);
+    title('CDW potential vorticity (m^{-1}s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+%     xlim([-110 110])
+%     ylim([30 270])
+box on;
 
 
 
