@@ -1,15 +1,20 @@
 
-% %%% Need to submit:
-% 1.  start: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7
-% 2.  %%% New exp: no ice shelf, reference parameters
-% 
+
+%%% TO submit:
+%                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod';... %%% To do Adv7
+%                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod';... %%% To do Adv7
+
+
+
+
+% 1.  complete2: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7% 
 % 3. 
 % complete: % res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7 , obcs balance ===1
 % complete: % res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7, obcs balance ===1
 % 
 % 4.
-% start: % res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
-% start: % res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
+% complete2: % res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
+% complete2: % res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7
 % complete: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7
 % 
 % 5. check cross section:
@@ -19,6 +24,8 @@
 % 
 % 6. 
 % % 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... 
+
+
 
 
 
@@ -38,12 +45,12 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.001_prod_Adv7'; ...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_kmax0.003_prod_Adv7'; ...
                 ... %%% Add tides
-                'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...   %%% complete
-                'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...    %%% complete
+                'res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...  
+                'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7';...   
                 ... %%% Deeper thermocline, and co-vary winds
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... 
-                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  %%% bug in topogrphy!! re-run!
-                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  %%% bug in topogrphy!! re-run!
+                'res2km_Ua-2Va2_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';...  
+                'res2km_Ua-8Va8_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb750dZs250_prod_Adv7';... 
                 ...
                 ... %%% Vary bathymetry, reference forcing and thermocline geometry
                 ... %%% Hbed
@@ -59,7 +66,7 @@ switch(exp_group)
                 ...
                 ... %%% co-vary thermocline and bathymetry
                 ... %%% No Hbed
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7';... %%% complete
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed0Htr200_Zn350Zsb750dZs250_prod_Adv7';... 
                 ... %%% No trough
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr0_Zn350Zsb750dZs250_prod_Adv7';...
                 ... %%% No Hbed and no trough
@@ -78,6 +85,7 @@ switch(exp_group)
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_periodic';... %%% run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr0_Zn350Zsb550dZs150_prod';...  %%% Forgot to add LAYERS. No ice shelf, run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr200_Zn350Zsb550dZs150_prod';...%%% Forgot to add LAYERS. No ice shelf, run with Adv 7
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_noIceShelf_prod'; %%% No ice shelf, run with Adv 7
                 };
             nEXP = length(EXPNAME);
             is_prod_run=true*ones(nEXP,1);

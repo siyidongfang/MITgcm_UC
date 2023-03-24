@@ -160,7 +160,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
 
   useGMRedi = false;
   varyingtidalphase = false; % Set true to include zonally (along-slope) varying tidal phase 
-  useLAYERS = true;
+  useLAYERS = false;
   if(is_ContinuedRun)
       useLAYERS = true;
   end
@@ -577,6 +577,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   h = h + h_coast;
 
  
+  if(useSHELFICE)
   %%% Construct ice shelf
   icedraft = zeros(Nx,Ny);
   iceidx = find(Y<=Yicefront);  
@@ -593,7 +594,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Hmin = 50;
   wct = icedraft - h;
   h(wct < Hmin) = icedraft(wct < Hmin);
-
+  end
 
   %%% Plot bathymetry and ice draft
   figure(fignum);
@@ -606,6 +607,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   p.FaceColor = [11*16+9 9*16+12 6*16+11]/255;
   p.EdgeColor = 'none';
 
+  if(useSHELFICE)
   %%% Modified ice draft to look good in the plot
   icedraft_plot = icedraft;
   icedraft_plot(icedraft==0) = NaN;
@@ -628,6 +630,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   p.FaceColor = [153, 255, 255]/255;
   p.EdgeColor = 'none';
   hold off;
+  end
 
   
   %%% Decorations

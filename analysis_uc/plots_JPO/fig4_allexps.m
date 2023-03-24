@@ -22,7 +22,7 @@
     load_constants;
     load_colors;
 
-    for ne=[1 7 8 18]  
+    for ne=[2 3]  
     expname = EXPNAME{ne};
     loadexp;
     load_data;

@@ -80,6 +80,19 @@ for i = 1:Nx
 end
 vb(vb==0) = NaN;
 
+wb = zeros(Nx,Ny);          
+idxb = 0;
+for i = 1:Nx
+    for j = 1:Ny
+        idxb = find(ww(i,j,:)~=0,1,'last'); % Find the vertical grid of bottom velocity
+        if(idxb~=0)
+           wb(i,j) = ww(i,j,idxb);
+        end
+    end
+end
+wb(wb==0) = NaN;
+
+
 vb_tgrid = zeros(Nx,Ny);
 vb_tgrid(:,1:Ny-1) = (vb(:,1:Ny-1)+vb(:,2:Ny))/2; 
 ub_tgrid = zeros(Nx,Ny);
@@ -199,9 +212,27 @@ end
 
 
 
-figure(6)
+% figure(6)
+% clf;set(gcf,'color','w');
+% pcolor(XX/1000,YY/1000,zeta_dPhi-zeta_dPhi_bot)
+% shading flat;colorbar;colormap(cmocean('balance'));
+% caxis([-1 1]/1e5);
+% title('','Interpreter','latex')
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
+% yticks(0:100:400);xticks(-300:100:300)
+% xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+% 
+% if(savefigure)
+% print('-dpng','-r150',[figdir expname '_diff.png']);
+% end
+
+
+
+
+figure(7)
 clf;set(gcf,'color','w');
-pcolor(XX/1000,YY/1000,zeta_dPhi-zeta_dPhi_bot)
+pcolor(XX/1000,YY/1000,-rho0*f.*wb)
 shading flat;colorbar;colormap(cmocean('balance'));
 caxis([-1 1]/1e5);
 title('','Interpreter','latex')
@@ -210,6 +241,28 @@ ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
-if(savefigure)
-print('-dpng','-r150',[figdir expname '_diff.png']);
-end
+
+
+
+prodname_new = [prodir expname '_vorticity_cdw.mat'];
+load(prodname_new)
+
+figure(8)
+clf;set(gcf,'color','w');
+pcolor(XX/1000,YY/1000,-VV_cdwf*rho0*beta)
+shading flat;colorbar;colormap(cmocean('balance'));
+caxis([-1 1]/1e6);
+title('','Interpreter','latex')
+set(gca,'FontSize',fontsize);
+ylim([0 400]);xlim([-300 300])
+yticks(0:100:400);xticks(-300:100:300)
+xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
+
+
+
+
+
+
+
+
+
