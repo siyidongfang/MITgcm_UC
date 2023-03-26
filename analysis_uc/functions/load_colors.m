@@ -30,6 +30,7 @@ lightblue = [0.3010 0.7450 0.9330];
 purple = [0.4940 0.1840 0.5560];
 
 green = [0.4660 0.6740 0.1880];
+green2 = [0 153 0]/255;
 seagreen = [46 139 87]/255;
 olive = [107 142 35]/255;
 darkgreen = [21 71 52]/255;
@@ -53,4 +54,19 @@ black
 hex2rgb(red3)
 hex2rgb(red2)
 hex2rgb(red1)];
+
+
+BLUE1 = hex2rgb(blue1);
+BLUE2 = hex2rgb(blue2);
+BLUE3 = hex2rgb(blue3);
+BLUE4 = hex2rgb(blue4);
+RED1 = hex2rgb(red1);
+RED2 = hex2rgb(red2);
+RED3 = hex2rgb(red3);
+
+lightpurple = [204 153 255]/255;
+purple = [153 51 255]/255;
+darkpurple = [102 0 204]/255;
+brown1 = [153 76 0]/255;
+brown2 = [255 178 103]/255;
 

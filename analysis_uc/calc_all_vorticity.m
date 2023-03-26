@@ -17,14 +17,14 @@
 
 
 % for ne =[1:20]  
-for ne=[1]
+for ne=[2:6 9 12:17 19:20]
     close all
         expname = EXPNAME{ne}
         loadexp;
         load_data;
         load_spacing;
-%         calc_BCvorticity_cdw_sw;
-%         calc_BCvorticity_PVint;
+        calc_BCvorticity_cdw_sw;
+        calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
 %         calc_BCvorticity_stretching_Coriolis;
@@ -42,7 +42,7 @@ for ne=[1]
 %         calc_BTvorticity_Aint;
 %         calc_BTVorticity_fh_int;
 %         calc_BTvorticity_int_curl;  
-        calc_pressure_torque;
+        % calc_pressure_torque;
 %         calc_BTvorticity_uc;
 end
 

@@ -10,9 +10,6 @@
     
     prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
-    useSEAICE = true;
-    showfigrue = false;
-    savefigure = true;
 
     prodir_vorticity = [prodir 'BCvorticity/'];
     group_adv7 = 1:20;
@@ -29,8 +26,8 @@
     w_dia_is = zeros(1,20);
 
 
-
 for ne=group_adv7
+% for ne=1
     expname = EXPNAME{ne}
     loadexp;
     load_data;
@@ -66,12 +63,36 @@ for ne=group_adv7
     sbtry_idx = round((130*m1km)/dx):round(Ymax/dy); 
     zeta_cdw_sbtr_min(ne) = min(min(zeta_cdw_zint(sbtrx_idx,sbtry_idx))); %%% minimum vertically integrated CDW vorticity in the trough
 
+
+    prodname = [prodir expname '_vortPVint-v2.mat'];
+    load(prodname)
+
+    yyf_if = find(yyf<Yiceshelf,1,'last');
+    Adv_if_Aint(ne) = Advec_Aint(yyf_if);
+    Cori_if_Aint(ne) = Cori_Aint(yyf_if);
+    BPT_if_Aint(ne) = BPT_Aint(yyf_if);
+    IPT_if_Aint(ne) = IPT_Aint(yyf_if);
+    PT_if_Aint(ne) = BPTplusIPT_Aint(yyf_if);
+
+    yyf_sb1 = find(yyf<227*m1km,1,'last');
+    yyf_sb2 = find(yyf<240*m1km,1,'last');
+    PT_sb_Aint(ne) = BPTplusIPT_Aint(yyf_sb1)-BPTplusIPT_Aint(yyf_sb2);
+    BPT_sb_Aint(ne) = BPT_Aint(yyf_sb1)-BPT_Aint(yyf_sb2);
+    IPT_sb_Aint(ne) = IPT_Aint(yyf_sb1)-IPT_Aint(yyf_sb2);
 end
 
+    % save(prodname,...
+    %     'XXf','YYf','XX','YY','xxf','yyf',...
+    %     'PV','pvf','Amaskf','bathy',...
+    %     'BPTplusIPT_Aint','Advec_Aint','Diss_Aint','residual_Aint',...
+    %     'BPT_Aint','IPT_Aint','Cori_Aint','AdvZ3f_Aint','AdvRef_Aint',...
+    %     'Wmin','Wmax')
 
-save('/Users/csi/MITgcm_UC/products/vorticity_seaice_boundary.mat',...
+save('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat',...
     'Cori_all','IPT_all','Adv_all',...
     'BPTplusIPT_sb','BPT_sb','IPT_sb','zeta_cdw_tr','zeta_cdw_sbtr_min','w_dia_is',...
+    'Adv_if_Aint','Cori_if_Aint','BPT_if_Aint','IPT_if_Aint','PT_if_Aint',...
+    'PT_sb_Aint','BPT_sb_Aint','IPT_sb_Aint',...
     'EXPNAME')
 
 %%
@@ -81,24 +102,31 @@ load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
 
 w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
-% group = group_adv7;
-% group = [1:6 9 12:17 19 20];
-% group = 1:6
+group = 1:20;
 
-group1 = [1:6 9:11];
-
+group1 = [1:14 17 18];  %%% exclude cases with Htr0
+group2 = [1:8 12:14 17]; %%% exclude cases with varying thermocline depth and Htr0
+ 
 fontsize = 16;
 
+
 corrcoef(w_dia_is(group),Ug_east_transportweighted(group))
+corrcoef(w_dia_is(group2),Ug_east_transportweighted(group2))
 
-corrcoef(w_dia_is(group),Ueast_transportweighted(group)) %%% 0.73
-corrcoef(w_dia_is(group),Tot_Sv(group)) %%% 0.67
 
-corrcoef(Cori_all(group),zeta_cdw_tr(group)) 
-corrcoef(Cori_all(group),zeta_cdw_sbtr_min(group)) 
+corrcoef(w_dia_is(group),Ueast_transportweighted(group)) 
+corrcoef(w_dia_is(group2),Ueast_transportweighted(group2)) 
 
-corrcoef(Cori_all(group),BPTplusIPT_sb(group)) %%% 0.73
+
+corrcoef(w_dia_is(group),Tot_Sv(group)) 
+
+
+% corrcoef(Cori_all(group2),zeta_cdw_tr(group2)) 
+corrcoef(Cori_all(group2),zeta_cdw_sbtr_min(group2)) 
+
 corrcoef(w_dia_is(group),BPTplusIPT_sb(group)) %%% 0.7
+corrcoef(w_dia_is(group2),BPTplusIPT_sb(group2)) %%% 0.7
+
 
 
 corrcoef(Adv_all(group),Cori_all(group)) 
@@ -110,7 +138,11 @@ corrcoef(w_dia_is(group),MeltRate_m(group)) %%% 0.97
 
 
 corrcoef(Cori_all(group),Ueast_transportweighted(group)) %%% 0.75
-corrcoef(BPTplusIPT_sb(group),Ueast_transportweighted(group)) %%% 0.96
+
+
+corrcoef(BPTplusIPT_sb(group),Ueast_transportweighted(group)) 
+corrcoef(BPTplusIPT_sb(group2),Ueast_transportweighted(group2)) %%% 0.8
+
 corrcoef(BPT_sb(group),Cori_all(group)) %%% 0.70
 
 corrcoef(zeta_cdw_tr(group),BPTplusIPT_sb(group)) %%% 0.71
@@ -228,6 +260,13 @@ ylabel('IPT')
 % title({'Area-integrated Coriolis term in the cavity v.s.','Offshore buoyancy gradient'})
 set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
 
+
+figure(11)
+scatter(w_dia_is(group),BPTplusIPT_sb(group))
+xlabel('Coriolis term (m^3/s^2)')
+ylabel('IPT')
+% title({'Area-integrated Coriolis term in the cavity v.s.','Offshore buoyancy gradient'})
+set(gca,'FontSize',fontsize);grid on;set(gcf,'color','w');
 
 
 

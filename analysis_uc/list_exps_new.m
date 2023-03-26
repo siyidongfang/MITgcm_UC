@@ -1,14 +1,8 @@
 
-
-%%% TO submit:
-%                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod';... %%% To do Adv7
-%                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod';... %%% To do Adv7
-
-
-
+%   start:        'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod';... %%% To do Adv7
+%   start:        'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod';... %%% To do Adv7
 
 % 1.  complete2: % res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7% 
-% 3. 
 % complete: % res2km_Ua-5Va5_Atide0.025_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7 , obcs balance ===1
 % complete: % res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_prod_Adv7, obcs balance ===1
 % 
@@ -24,9 +18,6 @@
 % 
 % 6. 
 % % 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... 
-
-
-
 
 
 
@@ -117,8 +108,6 @@ switch(exp_group)
         useSHELFICE=true;
         
 end
-
-
 
 
 %     case 'shelfice_seaice'

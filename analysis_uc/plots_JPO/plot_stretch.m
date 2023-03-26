@@ -85,7 +85,7 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim([-1 1]/1e4)
     set(gca,'FontSize',fontsize);
-    title('Vertical velocity at ocean bottom, \omega_{bot}','FontSize',fontsize+3,'FontWeight','normal')
+    title('Vertical velocity at ocean bottom, \it w_{b}','FontSize',fontsize+3,'FontWeight','normal')
     ylim(YLIM);xlim([-300 300])
     yticks(0:50:400);xticks(-300:100:300)
     ylabel('Latitude, y (km)')
@@ -103,7 +103,7 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim([-1 1]/1e4)
     set(gca,'FontSize',fontsize);
-    title('Vertical velocity at the upper bound of the CDW layer, \omega_{up}','FontSize',fontsize+3,'FontWeight','normal')
+    title('Vertical velocity at the top of the CDW layer, \it w_{iso}','FontSize',fontsize+3,'FontWeight','normal')
     ylim(YLIM);xlim([-300 300])
     yticks(0:50:400);xticks(-300:100:300)
     ylabel('Latitude, y (km)')
@@ -122,7 +122,7 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim([-1 1]/1e4)
     set(gca,'FontSize',fontsize);
-    title({'Vertical stretching of the CDW layer, \omega_{up}- \omega_{bot}'},'FontSize',fontsize+3,'FontWeight','normal')
+    title({'Vertical stretching of the CDW layer, \it w_{iso}- \it w_{b}'},'FontSize',fontsize+3,'FontWeight','normal')
     ylim(YLIM);xlim([-300 300])
     yticks(0:50:400);xticks(-300:100:300)
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')

@@ -13,7 +13,7 @@
     list_exps_new;
     load_constants;
     
-for ne=[2 3]  
+for ne=1:20 
 
     expname = EXPNAME{ne}
     loadexp;
