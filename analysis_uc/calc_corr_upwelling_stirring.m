@@ -28,7 +28,8 @@
 
 for ne=group_adv7
 % for ne=1
-    expname = EXPNAME{ne}
+    ne
+    expname = EXPNAME{ne};
     loadexp;
     load_data;
     load_spacing;
@@ -43,7 +44,8 @@ for ne=group_adv7
     calc_w_layers;
     w_dia_is(ne) = sum(w_cdw_dia(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
 
-    sbx_idx = round((250*m1km)/dx):round((300*m1km)/dx); %%% shelfbreak indices
+
+    sbx_idx = round(Xsbmin/dx):round(Xsbmax/dx); %%% shelfbreak indices
     sby_idx = round(Ymin/dy):round(Ymax/dy); %%% shelfbreak indices
 
     Cori_all(ne) = sum(zeta_Cori(iceshelfx_idx,iceshelfy_idx)*dx*dy,'all','omitnan');
@@ -60,7 +62,7 @@ for ne=group_adv7
     zeta_cdw_tr(ne) = sum(zeta_cdw_zint(trough_xidx,trough_yidx)*dx*dy,'all','omitnan');
     
     sbtrx_idx = round((230*m1km)/dx):round((370*m1km)/dx); 
-    sbtry_idx = round((130*m1km)/dx):round(Ymax/dy); 
+    sbtry_idx = round((130*m1km)/dy):round(Ymax/dy); 
     zeta_cdw_sbtr_min(ne) = min(min(zeta_cdw_zint(sbtrx_idx,sbtry_idx))); %%% minimum vertically integrated CDW vorticity in the trough
 
 
@@ -74,21 +76,15 @@ for ne=group_adv7
     IPT_if_Aint(ne) = IPT_Aint(yyf_if);
     PT_if_Aint(ne) = BPTplusIPT_Aint(yyf_if);
 
-    yyf_sb1 = find(yyf<227*m1km,1,'last');
-    yyf_sb2 = find(yyf<240*m1km,1,'last');
+    yyf_sb1 = find(yyf<Ymin,1,'last');
+    yyf_sb2 = find(yyf<Ymax,1,'last');
     PT_sb_Aint(ne) = BPTplusIPT_Aint(yyf_sb1)-BPTplusIPT_Aint(yyf_sb2);
     BPT_sb_Aint(ne) = BPT_Aint(yyf_sb1)-BPT_Aint(yyf_sb2);
     IPT_sb_Aint(ne) = IPT_Aint(yyf_sb1)-IPT_Aint(yyf_sb2);
 end
 
-    % save(prodname,...
-    %     'XXf','YYf','XX','YY','xxf','yyf',...
-    %     'PV','pvf','Amaskf','bathy',...
-    %     'BPTplusIPT_Aint','Advec_Aint','Diss_Aint','residual_Aint',...
-    %     'BPT_Aint','IPT_Aint','Cori_Aint','AdvZ3f_Aint','AdvRef_Aint',...
-    %     'Wmin','Wmax')
 
-save('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat',...
+save('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity',...
     'Cori_all','IPT_all','Adv_all',...
     'BPTplusIPT_sb','BPT_sb','IPT_sb','zeta_cdw_tr','zeta_cdw_sbtr_min','w_dia_is',...
     'Adv_if_Aint','Cori_if_Aint','BPT_if_Aint','IPT_if_Aint','PT_if_Aint',...
@@ -105,9 +101,12 @@ w_dia_is = w_dia_is/1e6; %%% convert to Sv
 group = 1:20;
 
 group1 = [1:14 17 18];  %%% exclude cases with Htr0
-group2 = [1:8 12:14 17]; %%% exclude cases with varying thermocline depth and Htr0
- 
+% group2 = [1:8 12:14 17]; %%% exclude cases with varying thermocline depth and Htr0
+ group2 = [1:8 13:14 17]; %%% exclude cases with varying thermocline depth and Htr0
+
 fontsize = 16;
+
+corrcoef(Adv_if_Aint(group2),PT_sb_Aint(group2))
 
 
 corrcoef(w_dia_is(group),Ug_east_transportweighted(group))

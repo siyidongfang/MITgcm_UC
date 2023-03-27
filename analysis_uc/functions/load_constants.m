@@ -22,7 +22,8 @@
     Lx = 600*m1km;
 
     clear Ymin Ymax Xmin Xmax
-    Ymin = Yshelfbreak-Ws/2;
+    % Ymin = Yshelfbreak-Ws/2;
+    Ymin = 210*m1km;
     Ymax = Yshelfbreak+Ws/2;
     Xmin = Wsponge;
     Xmax = Lx-Wsponge;
@@ -30,6 +31,10 @@
 % %     Xmax = Lx/2;
 %     Xmax = Lx-(Wsponge+10*m1km);
 
+    Xsbmin = 180*m1km;
+    Xsbmax = 300*m1km;
+
+    
     rho_i = 920;
     t1day = 86400;
     t1year = 365*t1day;
@@ -43,6 +48,5 @@
     rho_o = rhoConst; % rho_o = 1027; % rho_o = 1000;
 
     
-
 
 

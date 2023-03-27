@@ -22,5 +22,7 @@
     xidx = round(Xmin/dx):round(Xmax/dx); %%% exclude the eastern and western sponge layers
     zidx = Nr-length(zz(zz<-100))+1:Nr;   %%% exclude the surface 100m
 
+    sbx_idx = round(Xsbmin/dx):round(Xsbmax/dx); %%% shelfbreak indices
+
 
 
