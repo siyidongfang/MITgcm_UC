@@ -21,7 +21,7 @@ for ne=1:20
     load_spacing;
     load_colors;
     
-    prodname = [prodir expname '_vortPVint-v2.mat'];
+    prodname = [prodir expname '_vortPVint-v3.mat'];
     load(prodname)
 
     fontsize = 18;

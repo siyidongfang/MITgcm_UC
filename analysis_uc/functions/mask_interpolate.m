@@ -98,6 +98,7 @@
     tt_vgridf(:,2:Nyf,:) = (ttf(:,1:Nyf-1,:)+ttf(:,2:Nyf,:))/2; %%% v-grid
     tt_ugridf(2:Nxf,:,:) = 0.5.*(ttf(1:Nxf-1,:,:)+ttf(2:Nxf,:,:)); %%% u-grid
     
+
     mask_cdw_ugridf = NaN*zeros(Nxf,Nyf,Nrf);
     mask_cdw_vgridf = NaN*zeros(Nxf,Nyf,Nrf);
     mask_cdw_tgridf = NaN*zeros(Nxf,Nyf,Nrf);

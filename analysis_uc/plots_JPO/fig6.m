@@ -46,7 +46,7 @@
     cor1 = corrcoef(dataX,dataY);
     cor12 = corrcoef(dataX(group2),dataY(group2));
 
-    ax1 = subplot('position',[0.05 0.715 panelsize]);   
+    ax1 = subplot('position',[0.058 0.715 panelsize]);   
     fig6_scatters;
     text(ax1,0.005,28.7,{'(a)'},'FontSize',fontsize+2)
     ylim([0 30])
@@ -62,7 +62,7 @@
     cor2 = corrcoef(dataX,dataY);
     cor22 = corrcoef(dataX(group2),dataY(group2));
 
-    ax2 = subplot('position',[0.393 0.715 panelsize]);
+    ax2 = subplot('position',[0.394 0.715 panelsize]);
     fig6_scatters;
     axis ij;
     text(ax2,0.005,-67,{'(b)'},'FontSize',fontsize+2)
@@ -86,16 +86,35 @@
     xticks([0:0.1:0.5])
 
 
+
+    dataX = w_dia_is(group);
+    Xlabel = 'Upwelling in the cavity (Sv)';
+    % dataY = zeta_cdw_tr(group);
+    dataY = zeta_cdw_sb_v2(group)/1e6;
+    Ylabel = 'Shelf-break relative vorticity (10^6 m^3/s)';
+    cor4 = corrcoef(dataX,dataY);
+    cor42 = corrcoef(dataX(group2),dataY(group2));
+
+    ax4 = subplot('position',[0.058 0.38 panelsize]);
+    fig6_scatters;
+    text(ax4,0.005,-9.65,{'(d)'},'FontSize',fontsize+2)
+    axis ij;
+    ylim([-10 0])
+    xlim([0 0.5])
+    xticks([0:0.1:0.5])
+
+
+
     dataX = w_dia_is(group);
     Xlabel = 'Upwelling in the cavity (Sv)';
     dataY = Ug_east_avg(group)*100; 
     Ylabel='Thermal-wind velocity (cm/s)';
-    cor4 = corrcoef(dataX,dataY);
-    cor42 = corrcoef(dataX(group2),dataY(group2));
+    cor5 = corrcoef(dataX,dataY);
+    cor52 = corrcoef(dataX(group2),dataY(group2));
 
-    ax4 = subplot('position',[0.05 0.38 panelsize]);
+    ax5 = subplot('position',[0.394 0.38 panelsize]);
     fig6_scatters;
-    text(ax4,0.005,1.57,{'(d)'},'FontSize',fontsize+2)
+    text(ax5,0.005,1.57,{'(e)'},'FontSize',fontsize+2)
     ylim([0 1.63])
     xlim([0 0.5])
     xticks([0:0.1:0.5])
@@ -104,29 +123,13 @@
 
     dataX = w_dia_is(group);
     Xlabel = 'Upwelling in the cavity (Sv)';
-    dataY = zeta_cdw_sbtr_min(group)*1000;
-    Ylabel = 'Shelf-break relative vorticity';
-    cor5 = corrcoef(dataX,dataY);
-    cor52 = corrcoef(dataX(group2),dataY(group2));
-
-    ax5 = subplot('position',[0.393 0.38 panelsize]);
-    fig6_scatters;
-    text(ax5,0.005,-1.93,{'(e)'},'FontSize',fontsize+2)
-    axis ij;
-    ylim([-2 0])
-    xlim([0 0.5])
-    xticks([0:0.1:0.5])
-
-
-
-    dataX = w_dia_is(group);
-    Xlabel = 'Upwelling in the cavity (Sv)';
     dataY = Ueast_transportweighted(group)*100;
+    % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
     cor7 = corrcoef(dataX,dataY);
     cor72 = corrcoef(dataX(group2),dataY(group2));
 
-    ax7 = subplot('position',[0.05 0.052 panelsize]);
+    ax7 = subplot('position',[0.058 0.052 panelsize]);
     fig6_scatters;
     text(ax7,0.005,7.6,{'(f)'},'FontSize',fontsize+2)
     ylim([0 8])
@@ -137,11 +140,12 @@
     dataX = BPTplusIPT_sb(group)/1000;
     Xlabel = 'Shelf-break pressure torque (10^3 m^3/s^2)';
     dataY = Ueast_transportweighted(group)*100;
+    % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
     cor8 = corrcoef(dataX,dataY);
     cor82 = corrcoef(dataX(group2),dataY(group2));
 
-    ax8 = subplot('position',[0.393 0.052 panelsize]);
+    ax8 = subplot('position',[0.394 0.052 panelsize]);
     fig6_scatters;
     text(ax8,1.9,7.6,{'(g)'},'FontSize',fontsize+2)
     set(gca,'xdir','reverse')
@@ -151,6 +155,7 @@
 
 
     dataY = Ueast_transportweighted(group)*100;
+    % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
     dataX = Ug_east_avg(group)*100; 
     Xlabel='Thermal-wind velocity (cm/s)';
@@ -169,7 +174,7 @@
         Tide_25 Tide_50 Kmax_1 Kmax_10 Kmax_30 ],...
         'Ref','Wind\_2', 'Wind\_8', 'Hbed\_0', 'Hbed\_150' ,'Hbed\_450' ,'Wtr\_15' ,...
         'Tide\_0.025' ,'Tide\_0.05' ,'Kmax\_1e-4' ,'Kmax\_1e-3', 'Kmax\_3e-3');
-    set(leg1,'Position',[0.7308 0.4125-0.02 0.1150 0.2195])
+    set(leg1,'Position',[0.7308-0.01 0.4125-0.02 0.1150 0.2195])
     legend boxoff;
 
     ah=axes('position',get(ax9,'position'),'visible','off');
@@ -178,7 +183,7 @@
         'DeepThermo', 'DeepWind\_2', 'DeepWind\_8', 'DeepHbed\_0', ...
         'Htr\_0', 'Hbed\_0Htr\_0', 'DeepHtr\_0', 'Hbed\_0Htr\_0');
     legend boxoff;
-    set(leg2,'Position', [0.8573 0.556-0.02 0.1260 0.0755]) 
+    set(leg2,'Position', [0.8573-0.01 0.556-0.02 0.1260 0.0755]) 
 
     
     ah2=axes('position',get(ax9,'position'),'visible','off');
@@ -186,7 +191,7 @@
     leg3 = legend(ah2,[Htr_0 Hbed_0Htr_0 DeepHtr_0 DeepHbed_0Htr_0],...
         'Htr\_0', 'Hbed\_0Htr\_0', 'DeepHtr\_0', 'Hbed\_0Htr\_0');
     legend boxoff;
-    set(leg3,'Position', [0.8573 0.4125-0.02 0.1265 0.0755]) 
+    set(leg3,'Position', [0.8573-0.01 0.4125-0.02 0.1265 0.0755]) 
 
     annotation('textbox',[0.225 0.765 0.15 0.01],'String',['r1 = ' num2str(cor12(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
     annotation('textbox',[0.225 0.74 0.15 0.01],'String',['r2 = ' num2str(cor1(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);

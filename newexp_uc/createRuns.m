@@ -7,8 +7,8 @@
 close all;clear;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
-% batch_name = 'exps_uc/pseudo_shelfice_seaice';
-batch_name = 'exps_uc/seaice_boundary';
+batch_name = 'exps_uc/pseudo_shelfice_seaice';
+% batch_name = 'exps_uc/seaice_boundary';
 
 %%% Input parameters
 Ua = -5;      %%% Reference value -5 (-4 with no ice shelf)
@@ -39,7 +39,7 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is
 %%% Create simulations
 exp_name = ['res2km_' exp_name]
 
-% exp_name = [exp_name '_melt']
+% exp_name = [exp_name '_melt4.15sm']
 
 
 if(is_ContinuedRun)

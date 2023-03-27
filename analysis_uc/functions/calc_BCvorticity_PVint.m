@@ -19,11 +19,16 @@
     uu_cdw_zavg = UU_cdwf./Hcdw_ugridf;
     vv_cdw_zavg = VV_cdwf./Hcdw_vgridf;
 
-    zeta = zeros(Nx,Ny);
-    zeta(:,1:Ny-1) = - (uu_cdw_zavg(:,2:Ny)-uu_cdw_zavg(:,1:Ny-1))/dy;
-    zeta = zeta + (vv_cdw_zavg([2:Nx 1],:)-vv_cdw_zavg)/dx;
+    zeta_cdw = zeros(Nx,Ny);
+    zeta_cdw(:,1:Ny-1) = - (uu_cdw_zavg(:,2:Ny)-uu_cdw_zavg(:,1:Ny-1))/dy;
+    zeta_cdw = zeta_cdw + (vv_cdw_zavg([2:Nx 1],:)-vv_cdw_zavg)/dx;
 
-    PV = (ff_vorgrid + zeta) ./Hcdw_vorgrid; %%% potential vorticity
+    zeta_cdw_zint_v2 = zeros(Nx,Ny); %%%  Curl of the vertical integral, see calc_zeta_cdw for another version of zeta (integral of the curl)
+    zeta_cdw_zint_v2(:,1:Ny-1) = - (UU_cdwf(:,2:Ny)-UU_cdwf(:,1:Ny-1))/dy;
+    zeta_cdw_zint_v2 = zeta_cdw_zint_v2 + (VV_cdwf([2:Nx 1],:)-VV_cdwf)/dx;
+
+
+    PV = (ff_vorgrid + zeta_cdw) ./Hcdw_vorgrid; %%% potential vorticity
 
     PV(PV==-Inf)=NaN;
 
@@ -106,7 +111,8 @@
                 Amaskf(ii,jj)=bathyf(ii,jj);
             end
             if XXf(ii,jj)<=-100*m1km ...
-               || (XXf(ii,jj)>=40*m1km && YYf(ii,jj)>=220*m1km)
+               ...% || (XXf(ii,jj)>=40*m1km && YYf(ii,jj)>=220*m1km)
+                || (XXf(ii,jj)>=22*m1km && YYf(ii,jj)>=220*m1km)
                 Amaskf(ii,jj)=NaN;
             end
         end
@@ -154,18 +160,18 @@
     end
 
 
-    prodname = [prodir expname '_vortPVint-v2.mat'];
+    prodname = [prodir expname '_vortPVint-v3.mat'];
     save(prodname,...
         'XXf','YYf','XX','YY','xxf','yyf',...
         'PV','pvf','Amaskf','bathy',...
         'BPTplusIPT_Aint','Advec_Aint','Diss_Aint','residual_Aint',...
         'BPT_Aint','IPT_Aint','Cori_Aint','AdvZ3f_Aint','AdvRef_Aint',...
-        'Wmin','Wmax')
+        'Wmin','Wmax','zeta_cdw','zeta_cdw_zint_v2')
 
 
 
 
-
+if(showfigure)
     %%% plot pv contours 
     figure(1)
     clf;set(gcf,'color','w');
@@ -228,10 +234,41 @@
     set(gca,'FontSize',fontsize);
 %     xlim([-110 110])
 %     ylim([30 270])
-box on;
+    box on;
 
 
 
+    figure(4)
+    clf;set(gcf,'color','w');
+    pcolor(XX/1000,YY/1000,zeta_cdw);shading flat;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off
+    hold off;grid on;grid minor
+    colorbar; 
+    colormap(redblue);
+    clim([-3 3]/1e5);
+    title('CDW relative vorticity (s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+
+    
+
+    figure(5)
+    clf;set(gcf,'color','w');
+    pcolor(XX/1000,YY/1000,zeta_cdw_zint_v2);shading flat;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0.5,'ShowText','off');% clabel(C,h,'LabelSpacing',800);hold off
+    hold off;grid on;grid minor
+    colorbar; 
+    colormap(redblue);
+    clim([-0.01 0.01]);
+    title('CDW relative vorticity: vertical integral (m s^{-1})','FontSize',fontsize+3)
+    xlabel('Longitude, x (km)');
+    ylabel('Latitude, y (km)');
+    set(gca,'FontSize',fontsize);
+
+end
 
 
 
