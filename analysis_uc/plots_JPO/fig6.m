@@ -91,7 +91,7 @@
     Xlabel = 'Upwelling in the cavity (Sv)';
     % dataY = zeta_cdw_tr(group);
     dataY = zeta_cdw_sb_v2(group)/1e6;
-    Ylabel = 'Shelf-break relative vorticity (10^6 m^3/s)';
+    Ylabel = 'Integrated cyclonic vorticity (10^6 m^3/s)';
     cor4 = corrcoef(dataX,dataY);
     cor42 = corrcoef(dataX(group2),dataY(group2));
 
@@ -174,7 +174,7 @@
         Tide_25 Tide_50 Kmax_1 Kmax_10 Kmax_30 ],...
         'Ref','Wind\_2', 'Wind\_8', 'Hbed\_0', 'Hbed\_150' ,'Hbed\_450' ,'Wtr\_15' ,...
         'Tide\_0.025' ,'Tide\_0.05' ,'Kmax\_1e-4' ,'Kmax\_1e-3', 'Kmax\_3e-3');
-    set(leg1,'Position',[0.7308-0.01 0.4125-0.02 0.1150 0.2195])
+    set(leg1,'Position',[0.7308-0.015 0.4125-0.03 0.1150 0.2195])
     legend boxoff;
 
     ah=axes('position',get(ax9,'position'),'visible','off');
@@ -183,7 +183,7 @@
         'DeepThermo', 'DeepWind\_2', 'DeepWind\_8', 'DeepHbed\_0', ...
         'Htr\_0', 'Hbed\_0Htr\_0', 'DeepHtr\_0', 'Hbed\_0Htr\_0');
     legend boxoff;
-    set(leg2,'Position', [0.8573-0.01 0.556-0.02 0.1260 0.0755]) 
+    set(leg2,'Position', [0.8573-0.015 0.556-0.03 0.1260 0.0755]) 
 
     
     ah2=axes('position',get(ax9,'position'),'visible','off');
@@ -191,26 +191,26 @@
     leg3 = legend(ah2,[Htr_0 Hbed_0Htr_0 DeepHtr_0 DeepHbed_0Htr_0],...
         'Htr\_0', 'Hbed\_0Htr\_0', 'DeepHtr\_0', 'Hbed\_0Htr\_0');
     legend boxoff;
-    set(leg3,'Position', [0.8573-0.01 0.4125-0.02 0.1265 0.0755]) 
+    set(leg3,'Position', [0.8573-0.015 0.4125-0.03 0.1265 0.0755]) 
 
-    annotation('textbox',[0.225 0.765 0.15 0.01],'String',['r1 = ' num2str(cor12(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225 0.74 0.15 0.01],'String',['r2 = ' num2str(cor1(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.33 0.765 0.15 0.01],'String',['r1 = ' num2str(cor22(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.33 0.74 0.15 0.01],'String',['r2 = ' num2str(cor2(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.67 0.765 0.15 0.01],'String',['r1 = ' num2str(cor32(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.67 0.74 0.15 0.01],'String',['r2 = ' num2str(cor3(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor12(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor1(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.33 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor22(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.33 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor2(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.67 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor32(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.67 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor3(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
-    annotation('textbox',[0.225 0.765-0.335 0.15 0.01],'String',['r1 = ' num2str(cor42(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225 0.74-0.335 0.15 0.01],'String',['r2 = ' num2str(cor4(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.335 0.765-0.335 0.15 0.01],'String',['r1 = ' num2str(cor52(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.335 0.74-0.335 0.15 0.01],'String',['r2 = ' num2str(cor5(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor42(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor4(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.335 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor52(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.335 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor5(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
-    annotation('textbox',[0.225 0.765-0.665 0.15 0.01],'String',['r1 = ' num2str(cor72(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225 0.74-0.665 0.15 0.01],'String',['r2 = ' num2str(cor7(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.335 0.765-0.665 0.15 0.01],'String',['r1 = ' num2str(cor82(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.335 0.74-0.665 0.15 0.01],'String',['r2 = ' num2str(cor8(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.67 0.765-0.665 0.15 0.01],'String',['r1 = ' num2str(cor92(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.67 0.74-0.665 0.15 0.01],'String',['r2 = ' num2str(cor9(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225 0.765-0.665 0.15 0.01],'String',['r_1 = ' num2str(cor72(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor7(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.335 0.765-0.665 0.15 0.01],'String',['r_1 = ' num2str(cor82(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.335 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor8(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.67 0.765-0.665 0.15 0.01],'String',['r_1 = ' num2str(cor92(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.67 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor9(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig6/';

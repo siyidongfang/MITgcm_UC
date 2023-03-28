@@ -69,6 +69,7 @@ for ne=group_adv7
     calc_zeta_cdw;
     zeta_cdw_zint(zeta_cdw_zint>=0)=NaN; 
     zeta_cdw_tr(ne) = sum(zeta_cdw_zint(trough_xidx,trough_yidx)*dx*dy,'all','omitnan');
+    zeta_cdw_tr_avg(ne) = mean(zeta_cdw_zint(trough_xidx,trough_yidx),'all','omitnan');
     zeta_cdw_sbtr_min(ne) = min(min(zeta_cdw_zint(sbtrx_idx,sbtry_idx))); %%% minimum vertically integrated CDW vorticity in the trough
     zeta_cdw_minavg(ne) = mean(min(zeta_cdw_zint(trough_xidx,trough_yidx)),'omitnan');%%% For each latitude, calculate the minimum relative vorticity in the trough, and then calculate the average of the min
 
@@ -77,13 +78,15 @@ for ne=group_adv7
     %%% curl of the vertical integral
     zeta_cdw_zint_v2(zeta_cdw_zint_v2>=0)=NaN; 
     zeta_cdw_tr_v2(ne) = sum(zeta_cdw_zint_v2(trough_xidx_v2,trough_yidx)*dx*dy,'all','omitnan');
+    zeta_cdw_tr_avg_v2(ne) = mean(zeta_cdw_zint_v2(trough_xidx_v2,trough_yidx),'all','omitnan');
     zeta_cdw_sbtr_min_v2(ne) = min(min(zeta_cdw_zint_v2(trough_xidx_v2,sbtry_idx))); %%% minimum vertically integrated CDW vorticity in the trough
     zeta_cdw_minavg_v2(ne) = mean(min(zeta_cdw_zint_v2(trough_xidx_v2,trough_yidx)),'omitnan');%%% For each latitude, calculate the minimum relative vorticity in the trough, and then calculate the average of the min
-
 
     zeta_cdw_sb(ne) = sum(zeta_cdw_zint(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
     zeta_cdw_sb_v2(ne) = sum(zeta_cdw_zint_v2(sbx_idx,sby_idx)*dx*dy,'all','omitnan');
 
+    zeta_cdw_sb_avg(ne) = mean(zeta_cdw_zint(sbx_idx,sby_idx),'all','omitnan');
+    zeta_cdw_sb_avg_v2(ne) = mean(zeta_cdw_zint_v2(sbx_idx,sby_idx),'all','omitnan');
 
 
     yyf_if = find(yyf<Yiceshelf,1,'last');
@@ -104,8 +107,8 @@ end
 save('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity',...
     'Cori_all','IPT_all','Adv_all',...
     'BPTplusIPT_sb','BPT_sb','IPT_sb',...
-    'zeta_cdw_tr','zeta_cdw_sbtr_min','zeta_cdw_minavg','zeta_cdw_sb',...
-    'zeta_cdw_tr_v2','zeta_cdw_sbtr_min_v2','zeta_cdw_minavg_v2','zeta_cdw_sb_v2',...
+    'zeta_cdw_tr','zeta_cdw_tr_avg','zeta_cdw_sbtr_min','zeta_cdw_minavg','zeta_cdw_sb','zeta_cdw_sb_avg',...
+    'zeta_cdw_tr_v2','zeta_cdw_tr_avg_v2','zeta_cdw_sbtr_min_v2','zeta_cdw_minavg_v2','zeta_cdw_sb_v2','zeta_cdw_sb_avg_v2',...
     'w_dia_is',...
     'Adv_if_Aint','Cori_if_Aint','BPT_if_Aint','IPT_if_Aint','PT_if_Aint',...
     'PT_sb_Aint','BPT_sb_Aint','IPT_sb_Aint',...
@@ -124,6 +127,15 @@ group1 = [1:14 17 18];  %%% exclude cases with Htr0
 group2 = [1:8 12:14 17]; %%% exclude cases with varying thermocline depth and Htr0
 
 fontsize = 16;
+
+
+% zeta_cdw_sb_avg
+% zeta_cdw_sb_avg_v2
+% zeta_cdw_tr_avg
+% zeta_cdw_tr_avg_v2
+% corrcoef(w_dia_is(group2),zeta_cdw_sb_v2(group2)) 
+% corrcoef(Ueast_transportweighted(group2),zeta_cdw_sb_avg(group2)) 
+
 
 corrcoef(Adv_if_Aint(group2),PT_sb_Aint(group2))
 

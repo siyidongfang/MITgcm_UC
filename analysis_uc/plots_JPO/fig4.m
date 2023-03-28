@@ -33,7 +33,9 @@
 
     prodname = [prodir expname '_vorticity_cdw.mat'];
     load(prodname)
-    YLIM = [0 400];
+    % YLIM = [0 400];
+    YLIM = [0 270];
+    YTICKS = [0 100 200 270];
     CLIM = [-1 1]/1e5;
 
     bathy2=bathy;
@@ -63,7 +65,7 @@
     clim(CLIM);
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)');
     title('Total pressure torque (BPT+IPT)','FontSize',fontsize+3,'FontWeight','normal')
@@ -81,7 +83,7 @@
     clim(CLIM);
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)');
     title('Total advection','FontSize',fontsize+3,'FontWeight','normal')
@@ -98,7 +100,7 @@
     clim(CLIM);
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)');
     title('Dissipation','FontSize',fontsize+3,'FontWeight','normal')
@@ -119,7 +121,7 @@
     clim(CLIM);
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     title('Interfacial pressure torque (IPT)','FontSize',fontsize+3,'FontWeight','normal')
     text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
@@ -137,7 +139,7 @@
     title('Coriolis','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     text(ax5,-294,25,{'(f)'},'FontSize',fontsize+2)
 
@@ -153,7 +155,7 @@
     title('Vorticity advection','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     text(ax6,-294,25,{'(g)'},'FontSize',fontsize+2)
 
@@ -169,7 +171,7 @@
     clim(CLIM);
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:200:300)
+    yticks(YTICKS);xticks(-300:200:300)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)')
     title('Bottom pressure torque (BPT)','FontSize',fontsize+3,'FontWeight','normal')
@@ -188,7 +190,7 @@
      title('Vertical advection','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:100:300)
+    yticks(YTICKS);xticks(-300:100:300)
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
     text(ax8,-294,25,{'(h)'},'FontSize',fontsize+2)
 
@@ -206,7 +208,7 @@
     title('Total Adv - (Cori + Vort Adv + Vert Adv) ','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:100:300)
+    yticks(YTICKS);xticks(-300:100:300)
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
     text(ax9,-294,25,{'(i)'},'FontSize',fontsize+2)
 
@@ -244,7 +246,7 @@
     title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','FontSize',fontsize+3,'Interpreter','latex')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(0:100:400);xticks(-300:100:300)
+    yticks(YTICKS);xticks(-300:100:300)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)')
     
