@@ -9,6 +9,7 @@
     clear;close all;
 
     %%% Add path
+    addpath /Users/csi/MITgcm_UC/analysis_uc/
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;

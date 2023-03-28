@@ -71,8 +71,8 @@ switch(exp_group)
                 ...
                 ... %%% Other experiments
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf';... %% 15km trough %%% Todo, run product run. run with Adv 7
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod';... %%% To do Adv7
-                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod';... %%% To do Adv7
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod_Adv7';... 
+                'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7';...
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_periodic';... %%% run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr0_Zn350Zsb550dZs150_prod';...  %%% Forgot to add LAYERS. No ice shelf, run with Adv 7
                 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed-200Htr200_Zn350Zsb550dZs150_prod';...%%% Forgot to add LAYERS. No ice shelf, run with Adv 7

@@ -85,11 +85,11 @@
   cluster = 'hoffman2';
   queue = 'all.q';
   if (is_hires) %%% 768 x 480 x 70, ~1km grid spacing
-  sNx = 50; %%% no. of x-gridpoints per tile
-  sNy = 50; %%% no. of y-gridpoints per tile
+  sNx = 100; %%% no. of x-gridpoints per tile
+  sNy = 100; %%% no. of y-gridpoints per tile
   nPx = 8; %%% no. of processors in x-direction
   nPy = 9; %%% no. of processors in y-direction
-  Nr = 70; %%% no. of z-gridpoint  
+  Nr = 269; %%% no. of z-gridpoint  
   else
  %%% ~ 2km grid spacing
   sNx = 25; %%% no. of x-gridpoints per tile

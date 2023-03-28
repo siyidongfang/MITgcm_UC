@@ -449,6 +449,19 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   N2 = 34;
   N3 = 11;
   N4 = 8;
+
+  % dz0 = 2*10/24;
+  % dz1 = 15*10/24; 
+  % dz2 = 20*10/24;
+  % dz3 = 100*10/24;
+  % dz4 = 200*10/24;  
+  % N0 = 2*2;
+  % N1 = 28*2; 
+  % N2 = 68*2;
+  % N3 = 22*2;
+  % N4 = 16*2;
+  
+
   nn_c = cumsum([N0 N1 N2 N3 N4]);
   dz_c = [dz0 dz1 dz2 dz3 dz4];
   nn = 1:(N1+N2+N3+N4+1);

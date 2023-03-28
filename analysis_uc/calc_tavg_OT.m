@@ -11,7 +11,7 @@
     list_exps_new;
 
 % for ne=1:nEXP
-for ne=[10 11]
+for ne=[24 25]
 % for ne=1
     expname = EXPNAME{ne}
     avg_t;

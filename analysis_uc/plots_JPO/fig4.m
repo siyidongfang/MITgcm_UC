@@ -7,6 +7,7 @@
    clear;close all;
 
     %%% Add path
+    addpath /Users/csi/MITgcm_UC/analysis_uc
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
@@ -68,6 +69,7 @@
     title('Total pressure torque (BPT+IPT)','FontSize',fontsize+3,'FontWeight','normal')
     text(ax1,-294,25,{'(a)'},'FontSize',fontsize+2)
 
+    
     ax2 = subplot('position',[0.36 0.74 panelsize]);
 %     annotation('textbox',[0.33 0.98 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_Advec)
@@ -190,6 +192,8 @@
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
     text(ax8,-294,25,{'(h)'},'FontSize',fontsize+2)
 
+
+    %%
     ax9 = subplot('position',[0.68 0.065 panelsize]);
 %     annotation('textbox',[0.665 0.345 0.15 0.01],'String','(i)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
@@ -205,6 +209,19 @@
     yticks(0:100:400);xticks(-300:100:300)
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
     text(ax9,-294,25,{'(i)'},'FontSize',fontsize+2)
+
+
+    %%% plot the location of shelf break
+    load_constants;
+    hold on; 
+    y1 = Ymin/m1km;
+    y2 = Ymax/m1km;
+    x1 = (Xsbmin-Lx/2)/m1km;
+    x2 = (Xsbmax-Lx/2)/m1km;
+    plot(x1:x2,y1*ones(1,length(x1:x2)),'g-','LineWidth',1.5)
+    plot(x1:x2,y2*ones(1,length(x1:x2)),'g-','LineWidth',1.5)
+    plot(x1*ones(1,length(y1:y2)),y1:y2,'g-','LineWidth',1.5)
+    plot(x2*ones(1,length(y1:y2)),y1:y2,'g-','LineWidth',1.5)
 
 %%
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig4/';

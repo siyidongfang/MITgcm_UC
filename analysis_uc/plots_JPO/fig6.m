@@ -97,7 +97,7 @@
 
     ax4 = subplot('position',[0.058 0.38 panelsize]);
     fig6_scatters;
-    text(ax4,0.005,-9.65,{'(d)'},'FontSize',fontsize+2)
+    text(ax4,0.005,-9.6,{'(d)'},'FontSize',fontsize+2)
     axis ij;
     ylim([-10 0])
     xlim([0 0.5])
