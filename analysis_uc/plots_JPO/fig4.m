@@ -46,15 +46,15 @@
     %%
 
     fontsize = 17;
-    panelsize = [0.25 0.23];
+    panelsize = [0.25 0.21];
 
     figure(1)
     clf;   
     set(gcf,'Color','w');
     scrsz = get(0,'ScreenSize');
-    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1300 900]);
+    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1300 700]);
 
-    ax1 = subplot('position',[0.045 0.74 panelsize]);
+    ax1 = subplot('position',[0.045 0.74+0.01 panelsize]);
 %     annotation('textbox',[0 0.98 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_BPT+zeta_IPT)
     shading flat;colormap(cmocean('balance'));
@@ -70,9 +70,9 @@
     xlabel('Longitude, x (km)');
     title('Total pressure torque (BPT+IPT)','FontSize',fontsize+3,'FontWeight','normal')
     text(ax1,-294,25,{'(a)'},'FontSize',fontsize+2)
-
+%%
     
-    ax2 = subplot('position',[0.36 0.74 panelsize]);
+    ax2 = subplot('position',[0.36 0.74+0.01 panelsize]);
 %     annotation('textbox',[0.33 0.98 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_Advec)
     shading flat;
@@ -84,12 +84,12 @@
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
     yticks(YTICKS);xticks(-300:200:300)
-    ylabel('Latitude, y (km)')
+    ylabel('y (km)')
     xlabel('Longitude, x (km)');
     title('Total advection','FontSize',fontsize+3,'FontWeight','normal')
     text(ax2,-294,25,{'(b)'},'FontSize',fontsize+2)
 
-    ax3 = subplot('position',[0.68 0.74 panelsize]);
+    ax3 = subplot('position',[0.68 0.74+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_Diss)
     shading flat;
@@ -101,16 +101,16 @@
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
     yticks(YTICKS);xticks(-300:200:300)
-    ylabel('Latitude, y (km)')
+    ylabel('y (km)')
     xlabel('Longitude, x (km)');
     title('Dissipation','FontSize',fontsize+3,'FontWeight','normal')
     text(ax3,-294,25,{'(c)'},'FontSize',fontsize+2)
 
     handle=colorbar;set(handle,'position',[0.96 0.23 0.005 0.5]);
-    annotation('textbox',[0.953 0.735 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.953 0.735+0.01 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
+%%
 
-
-    ax4 = subplot('position',[0.045 0.37 panelsize]);
+    ax4 = subplot('position',[0.045 0.37+0.01 panelsize]);
 %     annotation('textbox',[0 0.66 0.15 0.01],'String','(d)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_IPT)
     shading flat;colormap(cmocean('balance'));
@@ -126,8 +126,8 @@
     title('Interfacial pressure torque (IPT)','FontSize',fontsize+3,'FontWeight','normal')
     text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
 
-
-    ax5 = subplot('position',[0.36 0.37 panelsize]);
+%%
+    ax5 = subplot('position',[0.36 0.37+0.01 panelsize]);
 %     annotation('textbox',[0.33 0.66 0.15 0.01],'String','(e)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XX/1000,YY/1000,zeta_Cori)
     shading flat;colormap(cmocean('balance'));
@@ -140,10 +140,10 @@
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
     yticks(YTICKS);xticks(-300:200:300)
-    ylabel('Latitude, y (km)')
+    ylabel('y (km)')
     text(ax5,-294,25,{'(f)'},'FontSize',fontsize+2)
 
-    ax6 = subplot('position',[0.68 0.37 panelsize]);
+    ax6 = subplot('position',[0.68 0.37+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.66 0.15 0.01],'String','(f)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XX/1000,YY/1000,zeta_AdvZ3)
     shading flat;
@@ -156,10 +156,10 @@
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
     yticks(YTICKS);xticks(-300:200:300)
-    ylabel('Latitude, y (km)')
+    ylabel('y (km)')
     text(ax6,-294,25,{'(g)'},'FontSize',fontsize+2)
 
-    ax7 = subplot('position',[0.045 0.065 panelsize]);
+    ax7 = subplot('position',[0.045 0.065+0.01 panelsize]);
 %     annotation('textbox',[0 0.345 0.15 0.01],'String','(g)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_BPT)
     shading flat;
@@ -177,7 +177,7 @@
     title('Bottom pressure torque (BPT)','FontSize',fontsize+3,'FontWeight','normal')
     text(ax7,-294,25,{'(e)'},'FontSize',fontsize+2)
 
-    ax8 = subplot('position',[0.36 0.065 panelsize]);
+    ax8 = subplot('position',[0.36 0.065+0.01 panelsize]);
 %     annotation('textbox',[0.33 0.345 0.15 0.01],'String','(h)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XX/1000,YY/1000,zeta_AdvRe)
     shading flat;
@@ -190,13 +190,13 @@
      title('Vertical advection','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:100:300)
-    xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+    yticks(YTICKS);xticks(-300:200:300)
+    xlabel('Longitude, x (km)');ylabel('y (km)')
     text(ax8,-294,25,{'(h)'},'FontSize',fontsize+2)
 
 
     %%
-    ax9 = subplot('position',[0.68 0.065 panelsize]);
+    ax9 = subplot('position',[0.68 0.065+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.345 0.15 0.01],'String','(i)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XX/1000,YY/1000,zeta_Advec-(zeta_AdvRe+zeta_AdvZ3+zeta_Cori))
     shading flat;colormap(cmocean('balance'));
@@ -208,8 +208,8 @@
     title('Total Adv - (Cori + Vort Adv + Vert Adv) ','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:100:300)
-    xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
+    yticks(YTICKS);xticks(-300:200:300)
+    xlabel('Longitude, x (km)');ylabel('y (km)')
     text(ax9,-294,25,{'(i)'},'FontSize',fontsize+2)
 
 
