@@ -16,13 +16,13 @@
 
     % expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
     expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_1narrowIceShelf_Nr100_prod_Adv7'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 742024;
-    year = num2str(4);
+    nIter = 1441646;
+    year = num2str(8);
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);
