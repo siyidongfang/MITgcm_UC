@@ -89,6 +89,6 @@ handle = colorbar;
 set(handle,'Position',cbpos);
 title('Winter climatology (July-Sept), surface salinity (psu)')
 
-save('ss81_autumn_500m','LA_ss','LO_ss','ss_bot');
+% save('ss81_autumn_500m','LA_ss','LO_ss','ss_bot');
 
 

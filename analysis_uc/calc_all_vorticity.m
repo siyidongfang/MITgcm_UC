@@ -6,7 +6,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     load_colors;
@@ -17,15 +17,15 @@
     savefigure = false;
 
 
-% for ne =[1:20]  
-for ne=1
+for ne =[2 3 4]  
+% for ne=[25]
     close all
         ne
         expname = EXPNAME{ne};
         loadexp;
         load_data;
         load_spacing;
-        % calc_BCvorticity_cdw_sw;
+        calc_BCvorticity_cdw_sw;
         calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;

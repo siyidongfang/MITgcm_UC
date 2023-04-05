@@ -180,18 +180,17 @@
     ah=axes('position',get(ax9,'position'),'visible','off');
     set(gca,'FontSize',fontsize);
     leg2 = legend(ah,[DeepThermo DeepWind_2 DeepWind_8 DeepHbed_0],...
-        'DeepThermo', 'DeepWind\_2', 'DeepWind\_8', 'DeepHbed\_0', ...
-        'Htr\_0', 'Hbed\_0Htr\_0', 'DeepHtr\_0', 'Hbed\_0Htr\_0');
+        'DeepThermo', 'DeepWind\_2', 'DeepWind\_8', 'DeepHbed\_0');
     legend boxoff;
-    set(leg2,'Position', [0.8573-0.015 0.556-0.03 0.1260 0.0755]) 
+    set(leg2,'Position', [0.8383 0.5090 0.1260 0.0775]) 
 
     
     ah2=axes('position',get(ax9,'position'),'visible','off');
     set(gca,'FontSize',fontsize);
     leg3 = legend(ah2,[Htr_0 Hbed_0Htr_0 DeepHtr_0 DeepHbed_0Htr_0],...
-        'Htr\_0', 'Hbed\_0Htr\_0', 'DeepHtr\_0', 'Hbed\_0Htr\_0');
+        'Htr\_0', 'Htr\_0Hbed\_0', 'Htr\_0Deep', 'Htr\_0Hbed\_0Deep');
     legend boxoff;
-    set(leg3,'Position', [0.8573-0.015 0.4125-0.03 0.1265 0.0755]) 
+    set(leg3,'Position', [0.8400 0.4085 0.1610 0.0775]) 
 
     annotation('textbox',[0.225 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor12(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
     annotation('textbox',[0.225 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor1(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);

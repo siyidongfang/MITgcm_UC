@@ -7,11 +7,11 @@
     tmax = 7;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
 
 % for ne=1:nEXP
-for ne=[24 25]
+for ne=[2 3 4]
 % for ne=1
     expname = EXPNAME{ne}
     avg_t;
