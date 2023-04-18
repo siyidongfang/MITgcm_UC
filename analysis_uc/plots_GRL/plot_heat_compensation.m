@@ -8,6 +8,7 @@
     close all;
 
     %%% Add path
+    addpath /Users/csi/MITgcm_UC/analysis_uc
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
@@ -16,22 +17,18 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
-    EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
-    exp_group = EXP_GROUP{1}
+    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     load_colors;
 
-    fontsize = 16;
+    ne = 1;
+    expname = EXPNAME{ne}
+    calc_heat_compensation;
 
-%     ne1=1; %%% reference
-%     ne2=15;%%% no trough
-%     ne1 = 2; %%% Weak wind
-%     ne2 = 3; %%% Strong wind
-%     ne1 = 4; %%% Small diffusivity
-%     ne2 = 6; %%% Large diffusivity
-    ne1 = 7; %%% weak tides
-    ne2 = 8; %%% strong tides
+
+    fontsize = 16;
 
 %     CLIM = [-0.1 0.1];
 %     YLIM = [-0.2 2.8];
@@ -46,9 +43,6 @@ YLIM = [-1 6.3];
     clf;set(gcf,'Color', 'w')
 
 
-    ne = ne1;
-    expname = EXPNAME{ne}
-    calc_heat_compensation;
 
     subplot(2,2,1)
     pcolor(xx/1000,yy/1000,-Fheat_cdw'/1e9);colorbar;colormap(redblue);shading flat;
@@ -87,7 +81,7 @@ YLIM = [-1 6.3];
     title('Cumulative CDW heat transport at ice front (y=100km)','FontSize',fontsize + 2);
 
 
-    ne = ne2;
+    ne = 4;
     expname = EXPNAME{ne}
     calc_heat_compensation;
 

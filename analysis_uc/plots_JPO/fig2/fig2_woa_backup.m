@@ -190,8 +190,8 @@
     %%
     ax2 = subplot('position',[0.38 0.65 panelsize1]);
 
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/WOA/
-    load('tt91_annual_cdw.mat')
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/WOA23/
+    load('tt91_winter_cdw.mat')
 
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; 
@@ -260,7 +260,7 @@
 
 
     %%
-    % figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig2/';
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig2/';
     % print('-dpng','-r200',[figdir 'fig2_matlab.png']);
 %     print('-dpng','-r200',[figdir 'fig2_colorbar.png']);
 

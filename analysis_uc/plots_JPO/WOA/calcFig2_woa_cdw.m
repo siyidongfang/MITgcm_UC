@@ -5,9 +5,10 @@
 %%% WOA2023
 
 clear;
+addpath ../../colormaps 
 
-load tt91_annual.mat
-tt_woa=tt91_annual; clear tt91_annual;
+load tt81_annual.mat
+tt_woa=tt81_annual; clear tt81_annual;
 
 Nx_woa = length(lon);
 Ny_woa = length(lat);
@@ -36,7 +37,7 @@ tt_cdw_woa = sum(tt_woa.*DZ_woa.*mask_cdw_woa,3,'omitnan')./hh_cdw_woa;
 tt_cdw_woa(tt_cdw_woa==0)=NaN;
 
 
-save('tt91_winter_cdw.mat','LAT_woa','LON_woa','hh_cdw_woa','tt_cdw_woa','lat_woa','lon_woa');
+save('tt81_annual_cdw.mat','LAT_woa','LON_woa','hh_cdw_woa','tt_cdw_woa','lat_woa','lon_woa');
 
 
 %%% Plotting options

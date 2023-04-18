@@ -9,9 +9,13 @@
 % datavar = {'s_an','s_an','s_an'};
 % outvar = {'ss81_annual','ss81_winter','ss55_annual'};
 
-fnames = {'woa23_decav91C0_t00_04'};
+% fnames = {'woa23_decav91C0_t00_04'};
+% datavar = {'t_an'};
+% outvar = {'tt91_annual'};
+
+fnames = {'woa18_decav81B0_t00_04'};
 datavar = {'t_an'};
-outvar = {'tt91_annual'};
+outvar = {'tt81_annual'};
 
 for m=1:length(fnames)
 % for m=1:1

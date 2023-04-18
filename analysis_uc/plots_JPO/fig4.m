@@ -36,10 +36,15 @@
     % YLIM = [0 400];
     YLIM = [0 270];
     YTICKS = [0 100 200 270];
+    XL = 50;
+    XLIM = [-300+XL 300-XL];
+    XTICKS = [-300+XL -100 100 300-XL];
     CLIM = [-1 1]/1e5;
 
     bathy2=bathy;
     bathy2(YY>150*m1km)=NaN;
+
+
 
 
 
@@ -64,12 +69,12 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim(CLIM);
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)');
     title('Total pressure torque (BPT+IPT)','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax1,-294,25,{'(a)'},'FontSize',fontsize+2)
+    text(ax1,-294+XL,25,{'(a)'},'FontSize',fontsize+2)
 %%
     
     ax2 = subplot('position',[0.36 0.74+0.01 panelsize]);
@@ -82,12 +87,12 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim(CLIM);
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
     xlabel('Longitude, x (km)');
     title('Total advection','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax2,-294,25,{'(b)'},'FontSize',fontsize+2)
+    text(ax2,-294+XL,25,{'(b)'},'FontSize',fontsize+2)
 
     ax3 = subplot('position',[0.68 0.74+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
@@ -99,12 +104,12 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim(CLIM);
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
     xlabel('Longitude, x (km)');
     title('Dissipation','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax3,-294,25,{'(c)'},'FontSize',fontsize+2)
+    text(ax3,-294+XL,25,{'(c)'},'FontSize',fontsize+2)
 
     handle=colorbar;set(handle,'position',[0.96 0.23 0.005 0.5]);
     annotation('textbox',[0.953 0.735+0.01 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
@@ -120,11 +125,11 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim(CLIM);
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     ylabel('Latitude, y (km)')
     title('Interfacial pressure torque (IPT)','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
+    text(ax4,-294+XL,25,{'(d)'},'FontSize',fontsize+2)
 
 %%
     ax5 = subplot('position',[0.36 0.37+0.01 panelsize]);
@@ -138,10 +143,10 @@
     clim(CLIM);
     title('Coriolis','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
-    text(ax5,-294,25,{'(f)'},'FontSize',fontsize+2)
+    text(ax5,-294+XL,25,{'(f)'},'FontSize',fontsize+2)
 
     ax6 = subplot('position',[0.68 0.37+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.66 0.15 0.01],'String','(f)','FontSize',fontsize+2,'LineStyle','None');
@@ -154,10 +159,10 @@
     clim(CLIM);
     title('Vorticity advection','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
-    text(ax6,-294,25,{'(g)'},'FontSize',fontsize+2)
+    text(ax6,-294+XL,25,{'(g)'},'FontSize',fontsize+2)
 
     ax7 = subplot('position',[0.045 0.065+0.01 panelsize]);
 %     annotation('textbox',[0 0.345 0.15 0.01],'String','(g)','FontSize',fontsize+2,'LineStyle','None');
@@ -170,12 +175,12 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim(CLIM);
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)')
     title('Bottom pressure torque (BPT)','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax7,-294,25,{'(e)'},'FontSize',fontsize+2)
+    text(ax7,-294+XL,25,{'(e)'},'FontSize',fontsize+2)
 
     ax8 = subplot('position',[0.36 0.065+0.01 panelsize]);
 %     annotation('textbox',[0.33 0.345 0.15 0.01],'String','(h)','FontSize',fontsize+2,'LineStyle','None');
@@ -189,10 +194,10 @@
 %     title('Vertical advection (explicit part)')
      title('Vertical advection','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');ylabel('y (km)')
-    text(ax8,-294,25,{'(h)'},'FontSize',fontsize+2)
+    text(ax8,-294+XL,25,{'(h)'},'FontSize',fontsize+2)
 
 
     %%
@@ -207,10 +212,10 @@
     clim(CLIM);
     title('Total Adv - (Cori + Vort Adv + Vert Adv) ','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:200:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');ylabel('y (km)')
-    text(ax9,-294,25,{'(i)'},'FontSize',fontsize+2)
+    text(ax9,-294+XL,25,{'(i)'},'FontSize',fontsize+2)
 
 
     %%% plot the location of shelf break
@@ -245,8 +250,8 @@
     clim(CLIM/10);
     title('$-\rho_0 \beta \int v\, \mathrm{d}z $ (Pa/m)','FontSize',fontsize+3,'Interpreter','latex')
     set(gca,'FontSize',fontsize);
-    ylim(YLIM);xlim([-300 300])
-    yticks(YTICKS);xticks(-300:100:300)
+    ylim(YLIM);xlim(XLIM)
+    yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)')
     

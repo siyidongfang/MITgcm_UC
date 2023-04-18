@@ -5,63 +5,57 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     load_colors;
     fontsize = 17;
 
-    ne =1; 
+    ne =4; 
     expname = EXPNAME{ne}
     loadexp;
-%     load_data;
-%     load_spacing;
+    load_data;
+    load_spacing;
 
-%     mask_interpolate;
-% 
-%     wwf = zeros(Nx,Ny,Nrf);
-%     for i=1:Nx
-%         for j=1:Ny   
-%             wwf(i,j,:) = interp1(zz,squeeze(ww(i,j,:))',zzf,'linear','extrap');
-%             clear vertical_cdwidx;
-%             vertical_cdwidx = find(mask_cdw_tgridf(i,j,:)==1);
-%             if(~isnan(vertical_cdwidx))
-%                 interf_idx(i,j) = vertical_cdwidx(1);%%% vertical index of the interface
-%             else
-%                 interf_idx(i,j) = NaN;
-%             end
-%         end
-%     end
-%     
-%     ww_interf = zeros(Nx,Ny);
-%     for i=1:Nx
-%         for j=1:Ny  
-%             if(~isnan(bot_idx(i,j)))
-%                 ww_interf(i,j) = wwf(i,j,interf_idx(i,j));
-%             else
-%                 ww_interf(i,j) = NaN;
-%             end
-%         end
-%     end
-% 
-% 
-%    %%% Find bottom velocity
-%     ww_bot = zeros(Nx,Ny);
-%     for i = 1:Nx
-%         for j = 1:Ny
-%             idxb = find(ss(i,j,:)~=0,1,'last'); % Find the vertical grid of bottom pressure
-%             if(idxb~=0)
-%                ww_bot(i,j) = ww(i,j,idxb);
-%             end
-%         end
-%     end
-%     ww_bot(ww_bot==0) = NaN;
+    mask_interpolate;
+
+    wwf = zeros(Nx,Ny,Nrf);
+    for i=1:Nx
+        for j=1:Ny   
+            wwf(i,j,:) = interp1(zz,squeeze(ww(i,j,:))',zzf,'linear','extrap');
+            clear vertical_cdwidx;
+            vertical_cdwidx = find(mask_cdw_tgridf(i,j,:)==1);
+            if(~isnan(vertical_cdwidx))
+                interf_idx(i,j) = vertical_cdwidx(1);%%% vertical index of the interface
+            else
+                interf_idx(i,j) = NaN;
+            end
+        end
+    end
+
+%%
+    ww_interf = zeros(Nx,Ny); %%% interfacial vertical velocity
+    ww_bot = zeros(Nx,Ny); %%% bottom vertical velocity
+    for i = 1:Nx
+        for j = 1:Ny
+            idxb = find(ss(i,j,:)~=0,1,'last'); % Find the vertical grid of bottom pressure
+            if(idxb~=0)
+               ww_bot(i,j) = ww(i,j,idxb);
+            end
+            if(~isnan(interf_idx(i,j)))
+                ww_interf(i,j) = wwf(i,j,interf_idx(i,j));
+            else
+                ww_interf(i,j) = NaN;
+            end
+        end
+    end
+    ww_bot(ww_bot==0) = NaN;
     
 
 %     save('fig_supp/figS2.mat','ww_bot','ww_interf','XX','YY')
 
 
-    load('fig_supp/figS2.mat')
+    % load('fig_supp/figS2.mat')
     bathy2=bathy;
     bathy2(YY>150*m1km)=NaN;
 
@@ -133,4 +127,4 @@
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig_supp/';
-    print('-dpng','-r200',[figdir 'figS2.png']);
+    print('-dpng','-r200',[figdir 'figS2' expname '.png']);

@@ -4,7 +4,7 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     showfigure = false;
@@ -13,18 +13,22 @@
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
 
     prodir_vorticity = [prodir 'BCvorticity/'];
-    group_adv7 = 1:20;
 
-    ww_all = zeros(1,20);
-    Adv_all = zeros(1,20);
-    Cori_all = zeros(1,20);
-    IPT_all = zeros(1,20);
-    BPTplusIPT_sb = zeros(1,20);
-    BPT_sb = zeros(1,20);
-    IPT_sb = zeros(1,20);
-    zeta_cdw_tr = zeros(1,20);
-    zeta_cdw_sbtr_min = zeros(1,20);
-    w_dia_is = zeros(1,20);
+    % nnn = 20;
+    nnn = 4;
+
+    group_adv7 = 1:nnn;
+
+    ww_all = zeros(1,nnn);
+    Adv_all = zeros(1,nnn);
+    Cori_all = zeros(1,nnn);
+    IPT_all = zeros(1,nnn);
+    BPTplusIPT_sb = zeros(1,nnn);
+    BPT_sb = zeros(1,nnn);
+    IPT_sb = zeros(1,nnn);
+    zeta_cdw_tr = zeros(1,nnn);
+    zeta_cdw_sbtr_min = zeros(1,nnn);
+    w_dia_is = zeros(1,nnn);
 
 
 for ne=group_adv7
@@ -104,7 +108,7 @@ for ne=group_adv7
 end
 
 
-save('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity',...
+save(['/Users/csi/MITgcm_UC/products/matrix_' exp_group '_vorticity'],...
     'Cori_all','IPT_all','Adv_all',...
     'BPTplusIPT_sb','BPT_sb','IPT_sb',...
     'zeta_cdw_tr','zeta_cdw_tr_avg','zeta_cdw_sbtr_min','zeta_cdw_minavg','zeta_cdw_sb','zeta_cdw_sb_avg',...

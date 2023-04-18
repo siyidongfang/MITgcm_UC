@@ -17,7 +17,7 @@
     savefigure = false;
 
 
-for ne =[2 3 4]  
+for ne =[1 2 3 4]  
 % for ne=[25]
     close all
         ne
@@ -25,16 +25,16 @@ for ne =[2 3 4]
         loadexp;
         load_data;
         load_spacing;
-        calc_BCvorticity_cdw_sw;
-        calc_BCvorticity_PVint;
+        % calc_BCvorticity_cdw_sw;
+        % calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
-%         calc_BCvorticity_stretching_Coriolis;
+        % calc_BCvorticity_stretching_Coriolis;
 %         calc_BCvorticity_lat_rectangle_int
 %         calc_BCvorticity_lat_int;
         % calc_CDW_quasi_stfn;
 %         calc_BCvorticity_h_int;
-%         calc_w_layers;
+        % calc_w_layers;
         % calc_zeta_cdw;
 %         calc_BCvorticity_fh_int;
 %         calc_BCvorticity_stfn_int;

@@ -34,14 +34,14 @@
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
 
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_colors;
     savefigure = true;
     showfigure = true;
 
 % for ne=1:nEXP
-for ne =1:20
+for ne =1:4
     ne
     clear yidx xidx dy dx
     expname = EXPNAME{ne};
@@ -131,6 +131,7 @@ end
         'Umin','Umax','U_west_avg_upper','Tot_west_upper','Vol_west_upper',...
         'MeltRate_m','MeltRate_Gt',...
         'Ug_east_transportweighted','Ug_east_avg','ug_xmean_max','Totg_east_Sv')
+
 %         'detady','TAUx','TAUy','TAUx_estimate','TAUy_estimate',...
 %         'Hcdw','Scdw','Tcdw','Vcdw',...
 %         'Fheatcdw_icefront_trough','Fheattot_icefront_trough','Fheatcdw_icefront_all','Fheattot_icefront_all',...

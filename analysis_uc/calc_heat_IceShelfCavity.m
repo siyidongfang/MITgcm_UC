@@ -21,8 +21,8 @@
 %     load_colors;
 %     n =1; 
 %     expname = EXPNAME{n}
-%     figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
-%     figname = expname;
+    figdir = ['/Users/csi/MITgcm_UC/figures_uc/heat_IceShelfCavity/' exp_group '/'];
+    figname = expname;
 %     showfigure = true;
 %     savefigure = false;
 % 
@@ -52,7 +52,7 @@
 
     %%% For the simulation with 2 narrow ice shelves: 
     if (ne==25)
-        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
             idx_Tc = find(~isnan(idx_iceshelf_vgrid(round(Nx/4),:)),1,'last');
         end
     end
@@ -80,7 +80,7 @@
 
 
     if (ne==25)
-        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
             Tc_cdw_mean(62:113)=  Tc_cdw_mean(62:113)-Tc_cdw_mean(187);
             Tc_mean(62:113)= Tc_mean(62:113)-Tc_mean(187);
             Tc_cdw(62:113)=  Tc_cdw(62:113)-Tc_cdw(187);
@@ -116,157 +116,179 @@
     end
 
 
-%     if(showfigure)
-%     %%% Make and save the figure
-% %     fontsize = 17; 
-% 
-%     figure(1)
-%     set(gcf,'Position',[294 476 1326 754])
-%     clf;
-%     subplot(2,2,1)
-%     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint.*idx_iceshelf_vgrid)');colorbar;colormap(redblue);shading flat;xlim([-110 110]);ylim([0 110])
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('Latitude, y (km)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     caxis([-0.1 0.1])
-%     colorbar
-%     title('Onshore heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
-%     freezeColors;
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-%     subplot(2,2,2)
-%     pcolor(xx/1000,yy/1000,Tc_xy');colorbar;colormap(WhiteBlueGreenYellowRed(0));shading flat;xlim([-110 110]);ylim([0 110])
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('Latitude, y (km)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     caxis([0 2.5])
-%     title('Cumulative heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-%     subplot(2,2,3)
-%     plot(xx/1000,Tc,'LineWidth',2);xlim([-110 110]);
+    if(showfigure)
+    %%% Make and save the figure
+    fontsize = 17; 
+
+    bathy2=bathy;
+    bathy2(YY>150*m1km)=NaN;
+
+    figure(1)
+    set(gcf,'Position',[294 476 1326 754])
+    clf;
+    subplot(2,2,1)
+    % pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint.*idx_iceshelf_vgrid)');
+    pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint)');
+    colorbar;colormap(redblue);shading flat;
+    % xlim([-110 110]);ylim([0 110])
+    xlim([-230 230]);ylim([0 248]);
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('Latitude, y (km)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    caxis([-0.1 0.1])
+    colorbar
+    title('Onshore heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
+    freezeColors;
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    subplot(2,2,2)
+    pcolor(xx/1000,yy/1000,Tc_xy');
+    colorbar;colormap(WhiteBlueGreenYellowRed(0));shading flat;
+    xlim([-110 110]);ylim([0 110])
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('Latitude, y (km)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    caxis([0 2.5])
+    title('Cumulative heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    subplot(2,2,3)
+    plot(xx/1000,Tc,'LineWidth',2);xlim([-110 110]);
+    ylim([-0.5 4]);
+    hold on;
+    plot(xx/1000,zeros(1,length(xx)),'k--')
+    hold off;grid on;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('($10^{12}\,$W)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    title('Cumulative heat transport at ice front (y = 100 km)','interpreter','latex');
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    subplot(2,2,4)
+    plot(xx/1000,Tc_mean,'LineWidth',2);xlim([-110 110]);
+    ylim([-0.5 2.5]);
+    hold on;
+    plot(xx/1000,zeros(1,length(xx)),'k--')
+    hold off;grid on;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('($10^{12}\,$W)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    title('Meridional-mean heat transport in the cavity','interpreter','latex');
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+
+    if(savefigure)
+    print('-dpng','-r150',[figdir figname '_alldepth_allLat.png']);
+    end
+
+    figure(2)
+    set(gcf,'Position',[294 476 1326 754])
+    clf;
+    subplot(2,2,1)
+    % pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw.*idx_iceshelf_vgrid)');
+    pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
+    colorbar;colormap(redblue);shading flat;
+    % xlim([-110 110]);ylim([0 110])
+    xlim([-230 230]);ylim([0 248]);
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
+    % hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('Latitude, y (km)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    caxis([-0.1 0.1])
+    title('Onshore $\bf{CDW}$ heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
+    c1 = colorbar;
+    freezeColors;
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    subplot(2,2,2)
+    pcolor(xx/1000,yy/1000,Tc_xy_cdw');colorbar;colormap(WhiteBlueGreenYellowRed(0));shading flat;
+    xlim([-110 110]);ylim([0 110])
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('Latitude, y (km)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    caxis([0 2.5])
+    title('Cumulative $\bf{CDW}$ heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    subplot(2,2,3)
+    plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
 %     ylim([-0.5 4]);
-%     hold on;
-%     plot(xx/1000,zeros(1,length(xx)),'k--')
-%     hold off;grid on;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('($10^{12}\,$W)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     title('Cumulative heat transport at ice front (y = 100 km)','interpreter','latex');
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-%     subplot(2,2,4)
-%     plot(xx/1000,Tc_mean,'LineWidth',2);xlim([-110 110]);
-%     ylim([-0.5 2.5]);
-%     hold on;
-%     plot(xx/1000,zeros(1,length(xx)),'k--')
-%     hold off;grid on;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('($10^{12}\,$W)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     title('Meridional-mean heat transport in the cavity','interpreter','latex');
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-% 
-%     if(savefigure)
-%     print('-dpng','-r150',[figdir figname '_alldepth.png']);
-%     end
-% 
-%     figure(2)
-%     set(gcf,'Position',[294 476 1326 754])
-%     clf;
-%     subplot(2,2,1)
-%     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw.*idx_iceshelf_vgrid)');colorbar;colormap(redblue);shading flat;xlim([-110 110]);ylim([0 110])
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('Latitude, y (km)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     caxis([-0.1 0.1])
-%     title('Onshore $\bf{CDW}$ heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
-%     c1 = colorbar;
-%     freezeColors;
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-%     subplot(2,2,2)
-%     pcolor(xx/1000,yy/1000,Tc_xy_cdw');colorbar;colormap(WhiteBlueGreenYellowRed(0));shading flat;xlim([-110 110]);ylim([0 110])
-%     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-900:30:-680],'k:','LineWidth',1,'ShowText','on');clabel(C,h,'LabelSpacing',2000);hold off;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('Latitude, y (km)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     caxis([0 2.5])
-%     title('Cumulative $\bf{CDW}$ heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-%     subplot(2,2,3)
-%     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-% %     ylim([-0.5 4]);
-%     ylim([-0.5 2.5]);
-%     hold on;
-%     plot(xx/1000,zeros(1,length(xx)),'k--')
-%     rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
-%     rectangle('Position',[-25 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
-%     hold off;grid on;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('($10^{12}\,$W)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     title('Cumulative $\bf{CDW}$ heat transport at ice front (y = 100 km)','interpreter','latex');
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-%     
-%     subplot(2,2,4)
-%     plot(xx/1000,Tc_cdw_mean,'LineWidth',2);xlim([-110 110]);
-%     ylim([-0.5 2.5]);
-%     hold on;
-%     plot(xx/1000,zeros(1,length(xx)),'k--')
-%     rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
-%     rectangle('Position',[-25 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
-%     hold off;grid on;
-%     xlabel('Longitude, x (km)','interpreter','latex');
-%     ylabel('($10^{12}\,$W)','interpreter','latex');
-%     set(gca,'FontSize',fontsize);
-%     title('Meridional-mean $\bf{CDW}$ heat transport in the cavity','interpreter','latex');
-%     if (ne==19)
-%         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
-%             xlim([-180 180])
-%         end
-%     end
-% 
-%     if(savefigure)
-%     print('-dpng','-r150',[figdir figname '_cdw.png']);
-%     end
+    ylim([-0.5 2.5]);
+    hold on;
+    plot(xx/1000,zeros(1,length(xx)),'k--')
+    % rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    % rectangle('Position',[-25 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    hold off;grid on;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('($10^{12}\,$W)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    title('Cumulative $\bf{CDW}$ heat transport at ice front (y = 100 km)','interpreter','latex');
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    subplot(2,2,4)
+    plot(xx/1000,Tc_cdw_mean,'LineWidth',2);xlim([-110 110]);
+    ylim([-0.5 2.5]);
+    hold on;
+    plot(xx/1000,zeros(1,length(xx)),'k--')
+    % rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    % rectangle('Position',[-25 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    hold off;grid on;
+    xlabel('Longitude, x (km)','interpreter','latex');
+    ylabel('($10^{12}\,$W)','interpreter','latex');
+    set(gca,'FontSize',fontsize);
+    title('Meridional-mean $\bf{CDW}$ heat transport in the cavity','interpreter','latex');
+    if (ne==25)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
+            xlim([-180 180])
+        end
+    end
+
+    if(savefigure)
+    print('-dpng','-r150',[figdir figname '_cdw_allLat.png']);
+    end
 
 
    
-%     end
+    end
 
     Xmin_bc = 35*m1km+Lx/2;
     Xmax_bc = 45*m1km+Lx/2;
@@ -282,7 +304,7 @@
 
     %%% For the simulation with 2 narrow ice shelves: 
     if (ne==25)
-        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod')==1)
+        if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
             Xmin_bc = -90*m1km+Lx/2;
             Xmax_bc = -88*m1km+Lx/2;
             Xmin_uc = -155*m1km+Lx/2;

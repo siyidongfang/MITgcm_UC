@@ -1,10 +1,16 @@
 
 %%% Calculate the stretching term and the Coriolis term at the CDW/surface
 %%% water interface and ocean bottom
+%%% Calculate the ocean bottom vertical velocity and interfacial vertical
+%%% velocity.
+
+%%% Has bugs unfixed for vertical velocity, use plot_stretch.m in plots_JPO instead.
 
 
 % calcCDW = true;
 mask_interpolate;
+
+figdir = ['/Users/csi/MITgcm_UC/figures_uc/wdia/' exp_group '/'];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -17,35 +23,35 @@ mask_interpolate;
 %%% Find bottom vertical velocity
 
 
-% wwf = zeros(Nx,Ny,Nrf);
-% for i=1:Nx
-%     for j=1:Ny   
-%         wwf(i,j,:) = interp1(zz,squeeze(ww(i,j,:))',zzf,'linear','extrap');
-%         clear vertical_cdwidx;
-%         vertical_cdwidx = find(mask_cdw_tgridf(i,j,:)==1);
-%         if(~isnan(vertical_cdwidx))
-%             bot_idx(i,j) = vertical_cdwidx(end);%%% vertical index of the bottom layer
-%             interf_idx(i,j) = vertical_cdwidx(1);%%% vertical index of the interface
-%         else
-%             bot_idx(i,j) = NaN;
-%             interf_idx(i,j) = NaN;
-%         end
-%     end
-% end
-% 
-% ww_bot = zeros(Nx,Ny);
-% ww_interf = zeros(Nx,Ny);
-% for i=1:Nx
-%     for j=1:Ny  
-%         if(~isnan(bot_idx(i,j)))
-%             ww_bot(i,j) = wwf(i,j,bot_idx(i,j));
-%             ww_interf(i,j) = wwf(i,j,interf_idx(i,j));
-%         else
-%             ww_bot(i,j) = NaN;
-%             ww_interf(i,j) = NaN;
-%         end
-%     end
-% end
+wwf = zeros(Nx,Ny,Nrf);
+for i=1:Nx
+    for j=1:Ny   
+        wwf(i,j,:) = interp1(zz,squeeze(ww(i,j,:))',zzf,'linear','extrap');
+        clear vertical_cdwidx;
+        vertical_cdwidx = find(mask_cdw_tgridf(i,j,:)==1);
+        if(~isnan(vertical_cdwidx))
+            bot_idx(i,j) = vertical_cdwidx(end);%%% vertical index of the bottom layer
+            interf_idx(i,j) = vertical_cdwidx(1);%%% vertical index of the interface
+        else
+            bot_idx(i,j) = NaN;
+            interf_idx(i,j) = NaN;
+        end
+    end
+end
+
+ww_bot = zeros(Nx,Ny);
+ww_interf = zeros(Nx,Ny);
+for i=1:Nx
+    for j=1:Ny  
+        if(~isnan(bot_idx(i,j)))
+            ww_bot(i,j) = wwf(i,j,bot_idx(i,j));
+            ww_interf(i,j) = wwf(i,j,interf_idx(i,j));
+        else
+            ww_bot(i,j) = NaN;
+            ww_interf(i,j) = NaN;
+        end
+    end
+end
 
 
 
@@ -104,8 +110,7 @@ ylim(YLIM);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
-figdir = '/Users/csi/Desktop/2022_AGU_posters/'
-% print('-dpng','-r300',[figdir 'ww_bot.png']);
+print('-dpng','-r150',[figdir expname 'ww_bot.png']);
 
 figure(6)
 clf;set(gcf,'color','w');
@@ -124,8 +129,7 @@ ylim(YLIM);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
-figdir = '/Users/csi/Desktop/2022_AGU_posters/'
-% print('-dpng','-r300',[figdir 'ww_interf.png']);
+print('-dpng','-r150',[figdir expname 'ww_interf.png']);
 
 
 %%% Find the vertical velocity at the interface between the CDW layer and
@@ -178,5 +182,5 @@ yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
 if(savefigure)
-% print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
+print('-dpng','-r150',[figdir expname '_cdw_betaV.png']);
 end
