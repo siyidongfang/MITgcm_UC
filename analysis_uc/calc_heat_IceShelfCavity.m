@@ -321,12 +321,13 @@
     Tc_bc(ne) = mean(Tc(xidx_bc),'omitnan');
     Tc_uc(ne) = mean(Tc(xidx_uc),'omitnan') - Tc_bc(ne);
 
-    Tc_bc_cdw_mean(ne) = mean(Tc_cdw_mean(xidx_bc),'omitnan');
+    Tc_bc_cdw_mean(ne) = mean(Tc_cdw_mean(xidx_bc),'omitnan'); %%% Meridional-mean in the cavity
     Tc_uc_cdw_mean(ne) = mean(Tc_cdw_mean(xidx_uc),'omitnan') - Tc_bc_cdw_mean(ne);
 
     Tc_bc_mean(ne) = mean(Tc_mean(xidx_bc),'omitnan');
     Tc_uc_mean(ne) = mean(Tc_mean(xidx_uc),'omitnan') - Tc_bc_mean(ne);
 
+    Tcdw_cumulative(ne) = Tc_cdw(find(Tc_cdw>0,1));
 
 %     clear Tc_xy Tc_xy_cdw Tc Tc_cdw vt_zint idx_iceshelf_vgrid idx_iceshelf_massgrid vt DZ hFacS
 
