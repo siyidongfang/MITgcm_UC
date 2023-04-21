@@ -7,7 +7,7 @@
     w_middle = zeros(Nx,Ny,Nr);
     wu_ugrid_middle = zeros(Nx,Ny,Nr);
     
-    u_massgrid = UVEL+ UVEL([2:Nx 1],:,:);
+    u_massgrid = 0.5*(UVEL+ UVEL([2:Nx 1],:,:));
     w_middle(:,:,1) = 0.5*(0+WVEL(:,:,1));
     w_middle(:,:,2:Nr) = 0.5*(WVEL(:,:,1:Nr-1)+WVEL(:,:,2:Nr)); 
     wu_ugrid_middle(:,:,1) = 0.5*(0+WU_VEL(:,:,1));
