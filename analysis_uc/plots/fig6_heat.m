@@ -78,6 +78,7 @@
 
     dataX = Ueast_transportweighted(group)*100;
     Xlabel = 'Undercurrent velocity';
+    % dataY= Tcdw_cumulative(group);
     dataY = Tc_uc_cdw(group); %%% or Fheatcdw_icefront_trough
     Ylabel='Trough heat transport';
     cor2 = corrcoef(dataX,dataY);
@@ -303,8 +304,7 @@
     % annotation('textbox',[0.225+0.67 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor9(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig6/';
-    % % print('-dpng','-r200',[figdir 'fig6_pseudo.png']);
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
     % print('-dpng','-r200',[figdir 'fig6_heat.png']);
 
 

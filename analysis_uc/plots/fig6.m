@@ -17,8 +17,6 @@
 
 
 
-
-
     load_colors;
 
     % XLIM_WDIA= [-0.002 0.5];
