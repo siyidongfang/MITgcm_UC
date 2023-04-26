@@ -51,7 +51,8 @@
 
     ax1 = subplot('position',[0.058 0.715 panelsize]);   
     fig6_scatters;
-    text(ax1,0.005,28.7,{'(a)'},'FontSize',fontsize+2)
+    % text(ax1,0.005,28.7,{'(a)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.055 0.98 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 30])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
@@ -68,7 +69,8 @@
     ax2 = subplot('position',[0.394 0.715 panelsize]);
     fig6_scatters;
     axis ij;
-    text(ax2,0.005,-67,{'(b)'},'FontSize',fontsize+2)
+    % text(ax2,0.005,-67,{'(b)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.39 0.98 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([-70 0])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
@@ -84,7 +86,8 @@
 
     ax3 = subplot('position',[0.725 0.715 panelsize]);
     fig6_scatters;
-    text(ax3,0.005,-7.6,{'(c)'},'FontSize',fontsize+2)
+    % text(ax3,0.005,-7.6,{'(c)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.72 0.98 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     axis ij;
     ylim([-8 2])
     xlim(XLIM_WDIA)
@@ -102,7 +105,8 @@
 
     ax4 = subplot('position',[0.058 0.38 panelsize]);
     fig6_scatters;
-    text(ax4,0.005,-9.6,{'(d)'},'FontSize',fontsize+2)
+    % text(ax4,0.005,-9.6,{'(d)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.055 0.645 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     axis ij;
     ylim([-10 0])
     xlim(XLIM_WDIA)
@@ -121,7 +125,8 @@
 
     ax5 = subplot('position',[0.394 0.38 panelsize]);
     fig6_scatters;
-    text(ax5,0.005,7.6,{'(e)'},'FontSize',fontsize+2)
+    % text(ax5,0.005,7.6,{'(e)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.39 0.645 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 8])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
@@ -236,6 +241,6 @@
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
     % print('-dpng','-r200',[figdir 'fig6_pseudo.png']);
-    print('-dpng','-r200',[figdir 'fig6_new.png']);
+    print('-dpng','-r300',[figdir 'fig6.png']);
 
 

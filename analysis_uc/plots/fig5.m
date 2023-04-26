@@ -58,7 +58,9 @@
     annotation('textbox',[0.885 0.95 0.15 0.01],'String','(m^{-1}s^{-1})','FontSize',fontsize,'LineStyle','None');
     text(ax1,50,370,'Gray: CDW PV contours','FontSize',fontsize-1,'Color',darkgray)
     text(ax1,50,330,{'Color: selected contours', '           for area integral'},'FontSize',fontsize-1,'Color',blue)
-    text(ax1,-297,18,'(a)','FontSize',fontsize+2)
+    % text(ax1,-297,18,'(a)','FontSize',fontsize+2)
+    annotation('textbox',[0 1 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
 
     ax2 = subplot('position',[0.105 0.07 0.85 0.38]);
@@ -84,7 +86,9 @@
     title('Cumulatively integrated vorticity budget','FontSize',fontsize+3,'FontWeight','normal')
     xlim([50 250])
     grid on;grid minor;
-    text(ax2,51,-9,'(b)','FontSize',fontsize+2)
+    % text(ax2,51,-9,'(b)','FontSize',fontsize+2)
+    annotation('textbox',[0 0.485 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
     ah=axes('position',get(ax2,'position'),'visible','off');
     leg2 = legend(ah,[lbpt lipt],...
@@ -100,8 +104,8 @@
     set(leg3,'Position', [0.5467 0.0750 0.3183 0.0887])  
 
 
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig5/';
-     print('-dpng','-r200',[figdir 'fig5.png']);
+     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
+     print('-dpng','-r300',[figdir 'fig5.png']);
 
 
 

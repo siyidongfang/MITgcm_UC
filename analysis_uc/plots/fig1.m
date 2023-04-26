@@ -17,9 +17,8 @@
     addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig1/';
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1}
@@ -83,7 +82,7 @@
 %%%%%%%%%%%%%%%%%%%
     %%% Plotting options
     ax1 = subplot('position',[0.03 0.055 0.49 0.95]);
-    annotation('textbox',[0.025 0.88 0.15 0.01],'String','(a)','FontSize',fontsize+2,'LineStyle','None');
+    annotation('textbox',[0.025 0.88 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     %%% Bathymetry  
     p = surface(X(:,2:end-1),Y(:,2:end-1),-h(:,2:end-1)/1000);
@@ -250,7 +249,7 @@
 
     %%% Zonal boundary conditions: thermal wind velocity + neutral density contours
     axb = subplot('position',[0.57 0.6 0.19 0.35]);
-    annotation('textbox',[0.54 0.995 0.15 0.01],'String','(b)','FontSize',fontsize+2,'LineStyle','None');
+    annotation('textbox',[0.54 0.995 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
  
 %      pcolor(yy/1000,-zz/1000,OBEu'.*bathy_east')
@@ -276,7 +275,7 @@
 %%%%%%%%%%%%%%%%%%%
     %%% Zonal-mean zonal velocity + neutral density contours
     axc = subplot('position',[0.57 0.1 0.19 0.35]);
-    annotation('textbox',[0.54 0.5 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
+    annotation('textbox',[0.54 0.5 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     pcolor(yy/1000,-zz/1000,uu_xmean');
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
@@ -307,7 +306,7 @@
     %%% CDW depth at the zonal boundaries
     axd = subplot('position',[0.85 0.7 0.14 0.25]);
 %      axd = subplot('position',[0.85 0.6 0.14 0.35]);
-    annotation('textbox',[0.82 0.995 0.15 0.01],'String','(d)','FontSize',fontsize+2,'LineStyle','None');
+    annotation('textbox',[0.82 0.995 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     plot(yy/1000,-Zcdw_pt/1000,'LineWidth',2)
     hold on
@@ -334,7 +333,7 @@
 
     %%% Restoring T/S at the northern boundary
     ax51 = subplot('position',[0.85 0.1 0.14 0.4]);
-    annotation('textbox',[0.82 0.58 0.15 0.01],'String','(e)','FontSize',fontsize+2,'LineStyle','None');
+    annotation('textbox',[0.82 0.58 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     plot(ax51,tNorth,-zz/1000,'Color',[0.8500 0.3250 0.0980],'LineWidth',1.5);
     ylabel('Depth (km)');
     ax52 = axes('Position',get(ax51,'Position'));
@@ -370,7 +369,8 @@
 
 
 
-     print('-dpng','-r200',[figdir 'fig1_matlab_v1.png']);
+     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig1/';
+     print('-dpng','-r300',[figdir 'fig1_matlab_v1.png']);
     
     
 
@@ -388,5 +388,5 @@
     anno51 = annotation('textbox',[0.485 0.36 0.03 0.1],'String',{'\fontsize{15}2','\fontsize{3}','\fontsize{15}0','\fontsize{3}','\fontsize{15}-2'},'EdgeColor','none');     
 
 %     print('-deps','-r200',[figdir 'fig1_colorbar.eps']);
-    exportgraphics(gca,[figdir 'fig1_colorbar.pdf'],'BackgroundColor','none','Resolution',600)
+    exportgraphics(gca,[figdir 'fig1_colorbar.pdf'],'BackgroundColor','none','Resolution',300)
 

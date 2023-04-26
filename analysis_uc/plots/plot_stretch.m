@@ -54,12 +54,12 @@
 
 %     save('fig_supp/figS2.mat','ww_bot','ww_interf','XX','YY')
 
-
-    % load('fig_supp/figS2.mat')
+%%
+    load('fig_supp/figS2.mat')
     bathy2=bathy;
     bathy2(YY>150*m1km)=NaN;
 
-    %%
+    
     YLIM = [0 250];
 
     figure(1)
@@ -84,7 +84,9 @@
     yticks(0:50:400);xticks(-300:100:300)
     ylabel('Latitude, y (km)')
     box on;
-    text(ax1,-295,18,{'(a)'},'FontSize',fontsize+2);
+    % text(ax1,-295,18,{'(a)'},'FontSize',fontsize+2);
+    annotation('textbox',[0.005 0.99 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
 
     ax2 = subplot('position',[0.1 0.39 panelsize]);
@@ -102,7 +104,8 @@
     yticks(0:50:400);xticks(-300:100:300)
     ylabel('Latitude, y (km)')
     box on;
-    text(ax2,-295,18,{'(b)'},'FontSize',fontsize+2);
+    % text(ax2,-295,18,{'(b)'},'FontSize',fontsize+2);
+    annotation('textbox',[0.005 0.655 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax3 = subplot('position',[0.1 0.06 panelsize]);
@@ -120,11 +123,12 @@
     ylim(YLIM);xlim([-300 300])
     yticks(0:50:400);xticks(-300:100:300)
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
-    text(ax3,-295,18,{'(c)'},'FontSize',fontsize+2);
+    % text(ax3,-295,18,{'(c)'},'FontSize',fontsize+2);
+    annotation('textbox',[0.005 0.325 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     handle=colorbar;set(handle,'position',[0.914 0.25 0.015 0.5]);
     annotation('textbox',[0.9 0.755 0.05 0.05],'String','(m/s)','FontSize',fontsize,'LineStyle','None');
 
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig_supp/';
-    print('-dpng','-r200',[figdir 'figS2' expname '.png']);
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_supp/';
+    print('-dpng','-r300',[figdir 'figS1.png']);

@@ -53,7 +53,8 @@
 
     ax4 = subplot('position',[0.058 0.38 panelsize]);
     fig6_scatters;
-    text(ax4,0.025,28.7,{'(a)'},'FontSize',fontsize+2)
+    % text(ax4,0.025,28.7,{'(a)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.01 0.64 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 30])
     xlim([0 3.3])
 
@@ -70,7 +71,8 @@
 
     ax5 = subplot('position',[0.394 0.38 panelsize]);
     fig6_scatters;
-    text(ax5,0.005,1.57,{'(b)'},'FontSize',fontsize+2)
+    % text(ax5,0.005,1.57,{'(b)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.342 0.64 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 1.63])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
@@ -86,7 +88,8 @@
 
     ax7 = subplot('position',[0.058 0.052 panelsize]);
     fig6_scatters;
-    text(ax7,1.9,7.6,{'(c)'},'FontSize',fontsize+2)
+    % text(ax7,1.9,7.6,{'(c)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.01 0.31 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     set(gca,'xdir','reverse')
     ylim([0 8])
     xlim([-8 2])
@@ -104,7 +107,8 @@
 
     ax8 = subplot('position',[0.394 0.052 panelsize]);
     fig6_scatters;
-    text(ax8,0.005,7.6,{'(d)'},'FontSize',fontsize+2)
+    % text(ax8,0.005,7.6,{'(d)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.342 0.31 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 8])
     xlim([0 1.7])
     % xticks([0:0.5:1.5])
@@ -154,6 +158,6 @@
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
     % print('-dpng','-r200',[figdir 'fig6_pseudo.png']);
-    print('-dpng','-r200',[figdir 'fig6_supp.png']);
+    print('-dpng','-r300',[figdir 'fig6_supp.png']);
 
 

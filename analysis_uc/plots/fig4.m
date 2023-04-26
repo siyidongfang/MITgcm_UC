@@ -15,7 +15,7 @@
     addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1};
@@ -74,7 +74,9 @@
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)');
     title('Total pressure torque (BPT+IPT)','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax1,-294+XL,25,{'(a)'},'FontSize',fontsize+2)
+    % text(ax1,-294+XL,25,{'(a)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.001 1 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 %%
     
     ax2 = subplot('position',[0.36 0.74+0.01 panelsize]);
@@ -92,7 +94,9 @@
     ylabel('y (km)')
     xlabel('Longitude, x (km)');
     title('Total advection','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax2,-294+XL,25,{'(b)'},'FontSize',fontsize+2)
+    % text(ax2,-294+XL,25,{'(b)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.315 1 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
     ax3 = subplot('position',[0.68 0.74+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
@@ -109,7 +113,9 @@
     ylabel('y (km)')
     xlabel('Longitude, x (km)');
     title('Dissipation','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax3,-294+XL,25,{'(c)'},'FontSize',fontsize+2)
+    % text(ax3,-294+XL,25,{'(c)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.635 1 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
     handle=colorbar;set(handle,'position',[0.96 0.23 0.005 0.5]);
     annotation('textbox',[0.953 0.735+0.01 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
@@ -129,7 +135,9 @@
     yticks(YTICKS);xticks(XTICKS)
     ylabel('Latitude, y (km)')
     title('Interfacial pressure torque (IPT)','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax4,-294+XL,25,{'(d)'},'FontSize',fontsize+2)
+    % text(ax4,-294+XL,25,{'(d)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.001 0.63 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
 %%
     ax5 = subplot('position',[0.36 0.37+0.01 panelsize]);
@@ -146,7 +154,9 @@
     ylim(YLIM);xlim(XLIM)
     yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
-    text(ax5,-294+XL,25,{'(f)'},'FontSize',fontsize+2)
+    % text(ax5,-294+XL,25,{'(f)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.315 0.63 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
     ax6 = subplot('position',[0.68 0.37+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.66 0.15 0.01],'String','(f)','FontSize',fontsize+2,'LineStyle','None');
@@ -162,7 +172,9 @@
     ylim(YLIM);xlim(XLIM)
     yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
-    text(ax6,-294+XL,25,{'(g)'},'FontSize',fontsize+2)
+    % text(ax6,-294+XL,25,{'(g)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.635 0.63 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
     ax7 = subplot('position',[0.045 0.065+0.01 panelsize]);
 %     annotation('textbox',[0 0.345 0.15 0.01],'String','(g)','FontSize',fontsize+2,'LineStyle','None');
@@ -180,7 +192,9 @@
     xlabel('Longitude, x (km)');
     ylabel('Latitude, y (km)')
     title('Bottom pressure torque (BPT)','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax7,-294+XL,25,{'(e)'},'FontSize',fontsize+2)
+    % text(ax7,-294+XL,25,{'(e)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.001 0.325 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
     ax8 = subplot('position',[0.36 0.065+0.01 panelsize]);
 %     annotation('textbox',[0.33 0.345 0.15 0.01],'String','(h)','FontSize',fontsize+2,'LineStyle','None');
@@ -197,7 +211,9 @@
     ylim(YLIM);xlim(XLIM)
     yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');ylabel('y (km)')
-    text(ax8,-294+XL,25,{'(h)'},'FontSize',fontsize+2)
+    % text(ax8,-294+XL,25,{'(h)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.315 0.325 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
 
     %%
@@ -215,7 +231,9 @@
     ylim(YLIM);xlim(XLIM)
     yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');ylabel('y (km)')
-    text(ax9,-294+XL,25,{'(i)'},'FontSize',fontsize+2)
+    % text(ax9,-294+XL,25,{'(i)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.635 0.325 0.15 0.01],'String','i','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
 
 
     %%% plot the location of shelf break
@@ -231,8 +249,8 @@
     plot(x2*ones(1,length(y1:y2)),y1:y2,'g-','LineWidth',1.5)
 
 %%
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig4/';
-     print('-dpng','-r200',[figdir 'fig4_matlab_v1.png']);
+     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig4/';
+     print('-dpng','-r300',[figdir 'fig4_matlab_v1.png']);
 
 
     %%% plot beta*V

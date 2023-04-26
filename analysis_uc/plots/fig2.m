@@ -15,7 +15,7 @@
     addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/cbarrow;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
@@ -68,7 +68,8 @@
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
     title('Sea surface height','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
+    % text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.005 0.605 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
     
@@ -100,7 +101,8 @@
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
     title('CDW thickness','FontSize',fontsize+3,'FontWeight','normal')
-    text(ax5,-294,25,{'(e)'},'FontSize',fontsize+2)
+    % text(ax5,-294,25,{'(e)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.34 0.605 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
@@ -131,7 +133,8 @@
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
-    text(ax6,-294,25,{'(f)'},'FontSize',fontsize+2)
+    % text(ax6,-294,25,{'(f)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.68 0.605 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 %%
@@ -140,8 +143,8 @@
 
     linewidth = 1.5;
 
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/etopo1/
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/SouthernOceanSSH/
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/etopo1/
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/SouthernOceanSSH/
     %%% Load data
     load AntarcticCoastline.mat
     load DOT_climatology_2011-2013.mat
@@ -183,14 +186,15 @@
     h1 = colorbar;
     set(h1,'Position', [0.295 0.673 0.008 0.21]);
     annotation('textbox',[0.288 0.93 0.15 0.01],'String','(m)','FontSize',fontsize,'LineStyle','None');
-    textm(-77,-178,{'(a)'},'FontSize',fontsize+2)
+    % textm(-77,-178,{'(a)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.005 0.98 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
     %%
     ax2 = subplot('position',[0.38 0.65 panelsize1]);
 
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots_JPO/WOA/
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/WOA/
     load('tt91_annual_cdw.mat')
 
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
@@ -220,7 +224,8 @@
     h2 = colorbar;
     set(h2,'Position', [0.63 0.673 0.008 0.21]);
     annotation('textbox',[0.625 0.93 0.15 0.01],'String','(km)','FontSize',fontsize,'LineStyle','None');
-    textm(-77,-178,{'(b)'},'FontSize',fontsize+2)
+    % textm(-77,-178,{'(b)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.34 0.98 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
@@ -252,7 +257,8 @@
     h3 = colorbar;
     set(h3,'Position', [0.97 0.673 0.008 0.21]);
     annotation('textbox',[0.965 0.935 0.15 0.01],'String','(^oC)','FontSize',fontsize,'LineStyle','None');
-    textm(-77,-178,{'(c)'},'FontSize',fontsize+2)
+    % textm(-77,-178,{'(c)'},'FontSize',fontsize+2)
+    annotation('textbox',[0.68 0.98 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
@@ -260,9 +266,9 @@
 
 
     %%
-    % figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig2/';
-    % print('-dpng','-r200',[figdir 'fig2_matlab.png']);
-%     print('-dpng','-r200',[figdir 'fig2_colorbar.png']);
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig2/';
+    print('-dpng','-r300',[figdir 'fig2_matlab.png']);
+%     print('-dpng','-r300',[figdir 'fig2_colorbar.png']);
 
 
 
