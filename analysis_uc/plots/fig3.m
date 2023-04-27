@@ -76,7 +76,7 @@
 %     pcolor(YY/1000,-ZZ/1000,hFacC1);
 %     set(gca,'XTick',XTICK);xlim(XLIM)
 %     set(gca,'YTick',[0:0.5:4]);ylim(YLIM)
-%     shading flat;axis ij;colorbar;
+%     shading interp;axis ij;colorbar;
 %     title('hFacC')
     %%
 
@@ -101,7 +101,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t1,[1.8:0.05:2.5],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([-2.3 2.3])
     title('Potential temperature','FontSize',fontsize+3,'fontweight', 'normal');
     ylabel('Depth (km)');
@@ -121,7 +121,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[32:0.2:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s1,[34.7:0.01:35],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([33.5 34.9]);
     title('Salinity','FontSize',fontsize+3,'fontweight', 'normal');
     ylabel('Depth (km)');
@@ -141,7 +141,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u1,[0:0.02:0.2],'EdgeColor','k');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([-0.15 0.15])
     title('Zonal velocity','FontSize',fontsize+3,'fontweight', 'normal');
     ylabel('Depth (km)');% xlabel('y (km)')
@@ -162,7 +162,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t2,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t2,[1.8:0.05:2.5],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([-2.3 2.3])
     ylabel('Depth (km)');
     set(gca,'XTick',XTICK);xlim(XLIM)
@@ -179,7 +179,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[32:0.2:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s2,[34.7:0.01:35],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([33.5 34.9]);
     ylabel('Depth (km)');
     set(gca,'XTick',XTICK);xlim(XLIM)
@@ -195,7 +195,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u2,[0:0.02:0.2],'EdgeColor','k');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([-0.15 0.15])
     ylabel('Depth (km)');
     set(gca,'XTick',XTICK);xlim(XLIM)
@@ -214,7 +214,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t3,[-2:0.5:2.5],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,t3,[1.8:0.05:2.5],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([-2.3 2.3])
     ylabel('Depth (km)');
     xlabel('Latitude, y (km)')
@@ -231,7 +231,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[32:0.2:35],'EdgeColor','k');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,s3,[34.7:0.01:35],'k--');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([33.5 34.9]);
     ylabel('Depth (km)');
     xlabel('Latitude, y (km)')
@@ -249,7 +249,7 @@
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[-0.2:0.02:0],'k--');hold off;
     hold on;[C,h]=contour(YY/1000,-ZZ/1000,u3,[0:0.02:0.2],'EdgeColor','k');hold off;
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
-    shading flat;axis ij;colormap(cmocean('balance'));
+    shading interp;axis ij;colormap(cmocean('balance'));
     clim([-0.15 0.15])
     ylabel('Depth (km)');
     xlabel('Latitude, y (km)')

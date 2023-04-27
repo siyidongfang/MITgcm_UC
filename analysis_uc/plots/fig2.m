@@ -55,7 +55,7 @@
     pcolor(xx/1000,yy/1000,eta');
     shading flat;colormap(cmocean('balance'));
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     clim([-0.08 0.08]);
@@ -77,7 +77,7 @@
     pcolor(xxf/1000,yyf/1000,Hcdw_tgridf'/1000);
     shading flat;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;
@@ -110,7 +110,7 @@
     pcolor(xxf/1000,yyf/1000,tt_cdwf')
     shading flat;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],':','LineWidth',1,'ShowText','on','Color',black);% clabel(C,h,'LabelSpacing',1000);hold off;
-    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-800:100:0],':','LineWidth',1,'ShowText','off','Color',black);% clabel(C,h,'LabelSpacing',1000);hold off;
+    hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'--','LineWidth',0.5,'ShowText','on','Color',black);% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],':','LineWidth',1,'ShowText','on','Color',black);% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;

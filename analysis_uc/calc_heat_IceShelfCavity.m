@@ -140,7 +140,7 @@
     xlabel('Longitude, x (km)','interpreter','latex');
     ylabel('Latitude, y (km)','interpreter','latex');
     set(gca,'FontSize',fontsize);
-    caxis([-0.1 0.1])
+    clim([-0.1 0.1])
     colorbar
     title('Onshore heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
     freezeColors;
@@ -158,7 +158,7 @@
     xlabel('Longitude, x (km)','interpreter','latex');
     ylabel('Latitude, y (km)','interpreter','latex');
     set(gca,'FontSize',fontsize);
-    caxis([0 2.5])
+    clim([0 2.5])
     title('Cumulative heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
     if (ne==25)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
@@ -220,7 +220,7 @@
     xlabel('Longitude, x (km)','interpreter','latex');
     ylabel('Latitude, y (km)','interpreter','latex');
     set(gca,'FontSize',fontsize);
-    caxis([-0.1 0.1])
+    clim([-0.1 0.1])
     title('Onshore $\bf{CDW}$ heat flux in the cavity ($10^9\,$W/m)','interpreter','latex');
     c1 = colorbar;
     freezeColors;
@@ -237,7 +237,7 @@
     xlabel('Longitude, x (km)','interpreter','latex');
     ylabel('Latitude, y (km)','interpreter','latex');
     set(gca,'FontSize',fontsize);
-    caxis([0 2.5])
+    clim([0 2.5])
     title('Cumulative $\bf{CDW}$ heat transport in the cavity ($10^{12}\,$W)','interpreter','latex');
     if (ne==25)
         if (min(expname == 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_2narrowIceShelves_Nr100_prod_Adv7')==1)
@@ -343,7 +343,7 @@
 %     title('Depth of the upper bound of the CDW layer (m)')
 %     set(gca,'FontSize',fontsize);
 %     ylim([0 200])
-%     caxis([0 1000])
+%     clim([0 1000])
 % 
 %     subplot(2,2,2)
 %     pcolor(xx/1000,yy/1000,-Zlower');
@@ -354,7 +354,7 @@
 %     title('Depth of the lower bound of the CDW layer (m)')
 %     set(gca,'FontSize',fontsize);
 %     ylim([0 200])
-%     caxis([0 1000])
+%     clim([0 1000])
 %    
 % 
 %     subplot(2,2,3)
@@ -366,7 +366,7 @@
 %     title('CDW thickness (m)')
 %     set(gca,'FontSize',fontsize);
 %     ylim([0 200])
-%     caxis([0 1000])
+%     clim([0 1000])
 % 
 %     subplot(2,2,4)
 %     pcolor(xx/1000,yy/1000,-bathy');
@@ -377,5 +377,5 @@
 %     title('Depth of the seafloor (m)')
 %     set(gca,'FontSize',fontsize);
 %     ylim([0 200])
-%     caxis([0 1000])
+%     clim([0 1000])
 
