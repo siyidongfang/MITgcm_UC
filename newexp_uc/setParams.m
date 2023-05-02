@@ -65,7 +65,7 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   simTime = 7*t1year; 
   if(is_ContinuedRun)
-      simTime = 7*t1year; %%% Simulation time   
+      simTime = 5*t1year; %%% Simulation time   
   end
 %   simTime = 60*t1day;
   nIter0 = 0; %%% Initial iteration 
@@ -1945,8 +1945,9 @@ end
       %%%%% RELAXATION PARAMETERS %%%%%
       useRBCtemp = true;
       useRBCsalt = true;
-      tauRelaxT = 6*t1hour;
       tau_inf = 1e20;
+      % tauRelaxT = 6*t1hour;
+      tauRelaxT = tau_inf;
       tauRelaxS = tau_inf;
       rbcs_parm01.addParm('useRBCtemp',useRBCtemp,PARM_BOOL);
       rbcs_parm01.addParm('useRBCsalt',useRBCsalt,PARM_BOOL);
@@ -1972,44 +1973,55 @@ end
       %%% Set relaxation temp/salt
       temp_relax = zeros(Nx,Ny,Nr);
       salt_relax = zeros(Nx,Ny,Nr);
-      temp_relax_2D = zeros(Nx,Ny); %%% For making plots
+      % temp_relax_2D = zeros(Nx,Ny); %%% For making plots
       equiv_saltflux = zeros(Nx,Ny);
+      equiv_temptendency = zeros(Nx,Ny);
+      equiv_heatflux = zeros(Nx,Ny);
       dz_beneath = zeros(Nx,Ny);
 
       saturation_fraction = 0; % the saturation fraction of dissolved air in seawater, default = 0 (air free)
       SA_freezing = 30;
       
-      %%% Assume a horizontally uniform basal melt rate, Ffresh
-      Ffresh = -4.15*1; %%% in m/yr. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
-      Sref = 30; %%% Reference salinity of the wet grid right beneath the ice shelf
+      %%% Assume a horizontally uniform basal melt rate, Bflux (>0, melt)
+      Bflux = 24/t1year; %%% in m/s. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+      Sref = 34.3; %%% Reference salinity of the wet grid right beneath the ice shelf
       rho_o = 1027; %%% Reference density of the seawater
-      rho_fresh = 1005; %%% Reference density of the meltwater
+      % rho_fresh = 1005; %%% Reference density of the meltwater
+      rho_fresh = 1000; %%% Reference density of the meltwater
+      Lf = 3.34e5; %%% Latent heat fusion, J/kg
+      Cp_o = 3974; %%% heat capacity of the mixed layer J/kg/degC
 
       for i=1:Nx
           for j=1:Ny
               if(icedraft(i,j)~=0 && h(i,j)<icedraft(i,j))
-                  %%% Calculate local freezing temperature using the GSW toolbox
-                  temp_relax(i,j,zidx_shelfice(i,j)) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
-                  temp_relax_2D(i,j) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
-                  %%% Calculate the salt flux equivalent to the basal melt rate Ffresh
+                  %%% Calculate the salt flux equivalent to the basal melt rate Bflux
                   dz_beneath(i,j) = dz(zidx_shelfice(i,j)); %%% The depth of the grid cell right beneath the ice shelf
-                  % equiv_saltflux(i,j) = Ffresh./t1year*Sref/(dz_beneath(i,j)+abs(Ffresh));
-                  equiv_saltflux(i,j) = -Sref/(1+dz_beneath(i,j)*rho_o./abs(Ffresh)./rho_fresh)./t1year;
+                  equiv_saltflux(i,j) = -Sref/(t1year+dz_beneath(i,j)*rho_o./Bflux./rho_fresh);
                   %%% Relaxation salinity
                   salt_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_saltflux(i,j);
+                  % %%% Calculate local freezing temperature using the GSW toolbox
+                  % temp_relax(i,j,zidx_shelfice(i,j)) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
+                  % temp_relax_2D(i,j) = gsw_t_freezing(SA_freezing,-zz(zidx_shelfice(i,j)),saturation_fraction); 
+                  %%% Calculate the heat flux equivalent to the basal melt rate Bflux
+                  equiv_temptendency(i,j) = -Bflux*Lf/Cp_o./dz_beneath(i,j); %%% degC/s
+                  equiv_heatflux(i,j) = Cp_o*rho_o*equiv_temptendency(i,j).*dz_beneath(i,j); %%% W/m^2
+                  %%% Relaxation temperature
+                  temp_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_temptendency(i,j);
               end
           end
       end
 
       %%% Plot relaxation T, and equivalent salt flux
       dz_beneath(dz_beneath==0)=NaN;
-      temp_relax_2D(temp_relax_2D==0)=NaN;
+      % temp_relax_2D(temp_relax_2D==0)=NaN;
       equiv_saltflux(equiv_saltflux==0)=NaN;
+      equiv_heatflux(equiv_heatflux==0)=NaN;
+      equiv_temptendency(equiv_temptendency==0)=NaN;
       if (showplots)
         figure(fignum);
         fignum = fignum + 1;
         clf;
-        subplot(1,3,1)
+        subplot(2,2,1)
         pcolor(X/1000,Y/1000,dz_beneath);
         shading interp;
         colorbar;colormap(jet)
@@ -2018,16 +2030,8 @@ end
         title('Grid cell thickness right beneath the ice shelf (m)') 
         set(gca,'fontsize',fontsize);
         xlim([150 450]);ylim([0 120]);
-        subplot(1,3,2)
-        pcolor(X/1000,Y/1000,temp_relax_2D);
-        shading interp;
-        colorbar;colormap(jet) 
-        xlabel('Longitude, x (km)')
-        ylabel('Latitude, y (km)')
-        title('Relaxation temperature beneath the ice shelf (^oC)')
-        set(gca,'fontsize',fontsize);
-        xlim([150 450]);ylim([0 120]);
-        subplot(1,3,3)
+
+        subplot(2,2,2)
         pcolor(X/1000,Y/1000,equiv_saltflux*t1year);
         shading interp;
         colorbar;colormap(jet) 
@@ -2036,8 +2040,30 @@ end
         title('Equivalent salt flux beneath the ice shelf (g/kg/year)')
         set(gca,'fontsize',fontsize);
         xlim([150 450]);ylim([0 120]);
+
+        subplot(2,2,3)
+        pcolor(X/1000,Y/1000,equiv_temptendency*t1year);
+        shading interp;
+        colorbar;colormap(jet) 
+        xlabel('Longitude, x (km)')
+        ylabel('Latitude, y (km)')
+        title('Equivalent temperature tendency (degC/year)')
+        set(gca,'fontsize',fontsize);
+        xlim([150 450]);ylim([0 120]);
+
+        subplot(2,2,4)
+        pcolor(X/1000,Y/1000,equiv_heatflux);
+        shading interp;
+        colorbar;colormap(jet) 
+        xlabel('Longitude, x (km)')
+        ylabel('Latitude, y (km)')
+        title('Equivalent heat flux beneath the ice shelf (W/m^2)')
+        % title('Relaxation temperature beneath the ice shelf (^oC)')
+        set(gca,'fontsize',fontsize);
+        xlim([150 450]);ylim([0 120]);
+
         PLOT = gcf;
-        PLOT.Position = [-151 496 1913 302];
+        PLOT.Position = [-151 496 1000 1000];
         %%% Save the figure
         savefig([imgpath '/PseudoIceShelfRelaxation.fig']);
         saveas(gcf,[imgpath '/PseudoIceShelfRelaxation.png']);
@@ -2514,13 +2540,13 @@ end
             'UVELSQ','VVELSQ','WVELSQ'...
             'TOTTTEND','TFLUX','VVELTH','UVELTH','WVELTH','ADVy_TH',...
             'oceTAUX','oceTAUY'...
-            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS',...
+            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS','SHIuStar','SHICDrag','SHIgammT','SHIgammS','SHI_mass'...
         };
   else 
         diag_fields_avg = {...   
             ... %%%%%%%%% for analysis
             'UVEL','VVEL', 'WVEL','SALT','THETA',...
-            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS'...
+            'SHIfwFlx','SHIhtFlx','SHI_TauX','SHI_TauY','SHIForcT','SHIForcS','SHIuStar','SHICDrag','SHIgammT','SHIgammS','SHI_mass',...
             ... %%% Heat budget
             'TOTTTEND','TFLUX','KPPg_TH','oceQsw','WTHMASS',...
             'ADVr_TH','ADVx_TH','ADVy_TH','DFxE_TH','DFyE_TH','DFrI_TH','DFrE_TH',...

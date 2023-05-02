@@ -16,6 +16,8 @@
     list_exps_new;
     expname = EXPNAME{14}
 
+    savefigure = true;
+    
     loadexp;
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'THETA','SALT','UVEL','VVEL','VVELTH','ETAN',...

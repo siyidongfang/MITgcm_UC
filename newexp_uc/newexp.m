@@ -84,25 +84,26 @@
   use_pbs = true; %%% set true for execution via PBS
   cluster = 'hoffman2';
   queue = 'all.q';
-  if (is_hires) %%% 768 x 480 x 70, ~1km grid spacing
-  sNx = 100; %%% no. of x-gridpoints per tile
-  sNy = 100; %%% no. of y-gridpoints per tile
-  nPx = 8; %%% no. of processors in x-direction
-  nPy = 9; %%% no. of processors in y-direction
-  Nr = 269; %%% no. of z-gridpoint  
-  else
- %%% ~ 2km grid spacing
-  sNx = 25; %%% no. of x-gridpoints per tile
-  sNy = 40; %%% no. of y-gridpoints per tile
-  nPx = 12; %%% no. of processors in x-direction
-  nPy = 5; %%% no. of processors in y-direction
-  Nr = 68; %%% no. of z-gridpoints 
- % %%% ~ 2km grid spacing
- %  sNx = 12; %%% no. of x-gridpoints per tile
- %  sNy = 65; %%% no. of y-gridpoints per tile
- %  nPx = 24; %%% no. of processors in x-direction
- %  nPy = 3; %%% no. of processors in y-direction
+  if (is_hires) 
+  % sNx = 100; %%% no. of x-gridpoints per tile
+  % sNy = 100; %%% no. of y-gridpoints per tile
+  % nPx = 8; %%% no. of processors in x-direction
+  % nPy = 9; %%% no. of processors in y-direction
+  % Nr = 269; %%% no. of z-gridpoint  
+  % %%% ~ 2km grid spacing
+ %  sNx = 25; %%% no. of x-gridpoints per tile
+ %  sNy = 40; %%% no. of y-gridpoints per tile
+ %  nPx = 12; %%% no. of processors in x-direction
+ %  nPy = 5; %%% no. of processors in y-direction
  %  Nr = 68; %%% no. of z-gridpoints 
+ %%% ~ 2km grid spacing
+  sNx = 12; %%% no. of x-gridpoints per tile
+  sNy = 65; %%% no. of y-gridpoints per tile
+  nPx = 24; %%% no. of processors in x-direction
+  nPy = 3; %%% no. of processors in y-direction
+  Nr = 68; %%% no. of z-gridpoints 
+  else
+
   end
 
  

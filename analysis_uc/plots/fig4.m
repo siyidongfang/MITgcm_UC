@@ -76,6 +76,7 @@
     title('Total pressure torque (BPT+IPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax1,-294+XL,25,{'(a)'},'FontSize',fontsize+2)
     annotation('textbox',[0.001 1 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 %%
     
@@ -96,7 +97,7 @@
     title('Total advection','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax2,-294+XL,25,{'(b)'},'FontSize',fontsize+2)
     annotation('textbox',[0.315 1 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-
+    box on;
 
     ax3 = subplot('position',[0.68 0.74+0.01 panelsize]);
 %     annotation('textbox',[0.665 0.98 0.15 0.01],'String','(c)','FontSize',fontsize+2,'LineStyle','None');
@@ -115,6 +116,7 @@
     title('Dissipation','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax3,-294+XL,25,{'(c)'},'FontSize',fontsize+2)
     annotation('textbox',[0.635 1 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
     handle=colorbar;set(handle,'position',[0.96 0.23 0.005 0.5]);
@@ -137,6 +139,7 @@
     title('Interfacial pressure torque (IPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax4,-294+XL,25,{'(d)'},'FontSize',fontsize+2)
     annotation('textbox',[0.001 0.63 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
 %%
@@ -156,6 +159,7 @@
     ylabel('y (km)')
     % text(ax5,-294+XL,25,{'(f)'},'FontSize',fontsize+2)
     annotation('textbox',[0.315 0.63 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
     ax6 = subplot('position',[0.68 0.37+0.01 panelsize]);
@@ -174,6 +178,7 @@
     ylabel('y (km)')
     % text(ax6,-294+XL,25,{'(g)'},'FontSize',fontsize+2)
     annotation('textbox',[0.635 0.63 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
     ax7 = subplot('position',[0.045 0.065+0.01 panelsize]);
@@ -194,6 +199,7 @@
     title('Bottom pressure torque (BPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax7,-294+XL,25,{'(e)'},'FontSize',fontsize+2)
     annotation('textbox',[0.001 0.325 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
     ax8 = subplot('position',[0.36 0.065+0.01 panelsize]);
@@ -213,6 +219,7 @@
     xlabel('Longitude, x (km)');ylabel('y (km)')
     % text(ax8,-294+XL,25,{'(h)'},'FontSize',fontsize+2)
     annotation('textbox',[0.315 0.325 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
 
@@ -233,6 +240,7 @@
     xlabel('Longitude, x (km)');ylabel('y (km)')
     % text(ax9,-294+XL,25,{'(i)'},'FontSize',fontsize+2)
     annotation('textbox',[0.635 0.325 0.15 0.01],'String','i','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    box on;
 
 
 

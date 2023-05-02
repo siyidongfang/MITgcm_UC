@@ -23,6 +23,7 @@
 
     nIter = 1441646;
     year = num2str(8);
+    savefigure = true;
     
 
     tt = rdmds([exppath,'/results/THETA'],nIter);

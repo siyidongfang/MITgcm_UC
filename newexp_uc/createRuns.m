@@ -19,8 +19,8 @@ Ai0 =1;       %%% Reference value 1
 m1km = 1000;
 Ws =30*m1km;      %%% Reference value 30km, continental slope half-width
 
-Hbed = 550;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
-Htr = 400;    %%% Trough depth, ref 200
+Hbed = 300;   %%% Change in bed elevation from shelf break to southern domain edge, ref 300
+Htr = 200;    %%% Trough depth, ref 200
 Zn = 350;     %%% CDW depth (thermocline) at the Northern boundary, ref 350
 Zsb = 550;    %%% CDW depth (thermocline) over the shelf break, ref 550 (deeper: 750)
 dZs = 150;    %%% The change in CDW depth from the shelfbreak to the Southern boundary (y=0), ref 150  (deeper: 250)
@@ -39,21 +39,12 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is
 %%% Create simulations
 exp_name = ['res2km_' exp_name]
 
-% exp_name = [exp_name '_melt4.15sm']
-
+exp_name = [exp_name '_melt24m']
 
 if(is_ContinuedRun)
     exp_name = [exp_name '_prod']
 end
 
-if(is_ContinuedRun)
-    exp_name = [exp_name '_Adv7']
-end
-% 
-% exp_name = [exp_name '_troughOnlyOnShelf']
-
-exp_name = 'bathy_for_fig7'
- 
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_ContinuedRun,is_hires,useSEAICE);

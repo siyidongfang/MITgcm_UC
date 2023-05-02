@@ -1,5 +1,5 @@
     %%% 
-    %%% plot_shelIce.m
+    %%% plot_shelfIce.m
     %%%
     %%% Plot melt rate and heat flux of the ice shelf, and momentum tendency from ice-shelf drag
 
@@ -166,7 +166,9 @@
     text(-140,140,['Melt rate = ' num2str(round(totalMelt)) ' Gt/yr, ' num2str(round(MeltRate,1)) ' m/yr'],'FontSize', fontsize+2);
     set(gca,'FontSize',fontsize);
 
+    if(savefigure)
     print('-dpng','-r150',[figdir 'Year' year '_ShelfIce.png']);
+    end
 
 
 

@@ -105,7 +105,7 @@
 
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
-     print('-dpng','-r300',[figdir 'fig5.png']);
+     % print('-dpng','-r300',[figdir 'fig5.png']);
 
 
 
