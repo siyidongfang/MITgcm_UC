@@ -75,7 +75,7 @@
     annotation('textbox',[0.863 0.985 0.2 0.01],'String','(10^9 W/m)','FontSize',fontsize,'LineStyle','None');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
-    title('Onshore CDW heat flux','FontSize',fontsize+3,'fontweight', 'normal')
+    title('Onshore CDW heat flux and volume flux','FontSize',fontsize+3,'fontweight', 'normal')
     annotation('textbox',[0 0.995 0.15 0.01],'String','a','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
     freezeColors;
 

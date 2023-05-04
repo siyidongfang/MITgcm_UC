@@ -1983,7 +1983,7 @@ end
       SA_freezing = 30;
       
       %%% Assume a horizontally uniform basal melt rate, Bflux (>0, melt)
-      Bflux = 24/t1year; %%% in m/s. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
+      Bflux = 8/t1year; %%% in m/s. Wei et al 2020: "The area-averaged melt under Getz ice shelf is 4.15 m yr−1, equating to 141.17 Gt yr−1 of freshwater flux into the Southern Ocean.
       Sref = 34.3; %%% Reference salinity of the wet grid right beneath the ice shelf
       rho_o = 1027; %%% Reference density of the seawater
       % rho_fresh = 1005; %%% Reference density of the meltwater
@@ -1996,7 +1996,8 @@ end
               if(icedraft(i,j)~=0 && h(i,j)<icedraft(i,j))
                   %%% Calculate the salt flux equivalent to the basal melt rate Bflux
                   dz_beneath(i,j) = dz(zidx_shelfice(i,j)); %%% The depth of the grid cell right beneath the ice shelf
-                  equiv_saltflux(i,j) = -Sref/(t1year+dz_beneath(i,j)*rho_o./Bflux./rho_fresh);
+                  % equiv_saltflux(i,j) = -Sref/(t1year+dz_beneath(i,j)*rho_o./Bflux./rho_fresh);
+                  equiv_saltflux(i,j) = -Bflux.*Sref.*rho_fresh./dz_beneath(i,j)./rho_o;
                   %%% Relaxation salinity
                   salt_relax(i,j,zidx_shelfice(i,j)) = tau_inf*equiv_saltflux(i,j);
                   % %%% Calculate local freezing temperature using the GSW toolbox

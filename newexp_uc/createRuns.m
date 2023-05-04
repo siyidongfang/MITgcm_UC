@@ -39,7 +39,7 @@ exp_name = createRunName (Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_hires,is
 %%% Create simulations
 exp_name = ['res2km_' exp_name]
 
-exp_name = [exp_name '_melt24m']
+% exp_name = [exp_name '_melt8m']
 
 if(is_ContinuedRun)
     exp_name = [exp_name '_prod']

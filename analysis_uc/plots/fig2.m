@@ -90,7 +90,8 @@
     curr.LineWidth = 1;
     set(curr,'AutoScale','on', 'AutoScaleFactor', 2.5,'Color',[0.4 0.4 0.4])
     hold off;
-    clim([0 3]);
+    % clim([0 3]); 
+    clim([0.2 0.6]);
     colormap(WhiteBlueGreenYellowRed(0));
     h5 = colorbar(ax5);
     set(h5,'Position',[0.63 0.12 0.008 0.38]);
