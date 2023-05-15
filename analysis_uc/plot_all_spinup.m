@@ -14,15 +14,16 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
 
 
-    % expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
-    expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf'
+    expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
+    % expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
+    % expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf'
+    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt24m'
 
     loadexp;
     plot_KE_EKE_T_S_series
 
-    nIter = 1441646;
-    year = num2str(8);
+    nIter = 1261440;
+    year = num2str(7);
     savefigure = true;
     
 

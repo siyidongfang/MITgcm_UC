@@ -15,8 +15,8 @@
 
     nEXP = length(EXPNAME);
 
-    n=2
-    expname = EXPNAME{n}
+    ne=2
+    expname = EXPNAME{ne}
     loadexp;
     load_data;
     calc_basics;
@@ -27,8 +27,8 @@
 
     clear YY_yz ZZ_yz yy zz gamma_n_w
 
-    n=3
-    expname = EXPNAME{n}
+    ne=3
+    expname = EXPNAME{ne}
     loadexp;
     load_data;
     calc_basics;
@@ -40,7 +40,10 @@
     boxcolor = [0.6 0.6 0.6];
     blue = hex2rgb('#3c73a8');
 
+
+    %%
     figure()
+    clf
     set(gcf,'Position',[284         349        1187         857])
     clf;
     subplot(1,2,1)
@@ -48,6 +51,7 @@
     clabel(M,c,'LabelSpacing',200);
     hold on;
     [M,c] = contour(YY_strong/1000,-ZZ_strong/1000,gamma_n_strongwind,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','r','LineWidth',2);
+    clabel(M,c,'LabelSpacing',200);
     hold on;plot(yy/1000,-bathy(1,:)/1000,'Color','k','LineWidth',3);hold on; plot(yy/1000,-bathy(round(Nx/2),:)/1000,'--','Color','k','LineWidth',3);hold off;
     axis ij;
     title('Mean neutral density west of the trough (kg/m^3)')
@@ -61,6 +65,7 @@
     clabel(M,c,'LabelSpacing',200);
     hold on;
     [M,c] = contour(YY_strong/1000,-ZZ_strong/1000,gamma_n_strongwind,[27:0.2:27.8 27.95:0.05:28.3],'LineColor','r','LineWidth',2);
+    clabel(M,c,'LabelSpacing',200);
     hold on;plot(yy/1000,-bathy(1,:)/1000,'Color','k','LineWidth',3);hold on; plot(yy/1000,-bathy(round(Nx/2),:)/1000,'--','Color','k','LineWidth',3);hold off;
     axis ij;
     title('Zoom in')
@@ -70,9 +75,10 @@
     xlim([190 270])
     set(gca,'FontSize',fontsize+3);
 
+    legend('Weak westward wind','Strong westward wind')
 
 
     figdir = '/Users/csi/MITgcm_UC/figures_uc/';
-    print('-dpng','-r150',[figdir 'wind_gamma_n_seaiceboundary.png']);
+    % print('-dpng','-r150',[figdir 'wind_gamma_n_seaiceboundary.png']);
 
 
