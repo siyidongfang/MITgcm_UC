@@ -14,10 +14,10 @@
     figdir = ['/Users/csi/MITgcm_UC/figures/BCvorticity_cdw_sw/' exp_group '/'];
     useSEAICE = true;
     showfigure = true;
-    savefigure = false;
+    savefigure = true;
 
 
-for ne =[1 2 3 4]  
+for ne =[2 3 4]  
 % for ne=[25]
     close all
         ne
@@ -25,8 +25,8 @@ for ne =[1 2 3 4]
         loadexp;
         load_data;
         load_spacing;
-        % calc_BCvorticity_cdw_sw;
-        % calc_BCvorticity_PVint;
+        calc_BCvorticity_cdw_sw;
+        calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
         % calc_BCvorticity_stretching_Coriolis;

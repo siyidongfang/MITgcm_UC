@@ -34,14 +34,15 @@
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
 
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_colors;
-    savefigure = false;
-    showfigure = false;
+    savefigure = true;
+    showfigure = true;
 
 % for ne=1:nEXP
-for ne =1:21
+% for ne =1:21
+for ne=1:4
     ne
     clear yidx xidx dy dx
     expname = EXPNAME{ne};

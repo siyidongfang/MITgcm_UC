@@ -15,6 +15,7 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/quivers/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{2}
@@ -22,7 +23,8 @@
     load_constants;
     load_colors;
     showfigure = false;
-    CLIM=[-0.08 0.08];
+    CLIM=[-0.301 0.301];
+    YLIM = [-0.2 3.6];
 
 
     subplotsize = [0.39 0.195];
@@ -43,7 +45,7 @@
     loadexp;
     load_data;
     load_spacing;
-    % calc_basics;
+    calc_basics;
     calc_heat_IceShelfCavity;
     bathy2=bathy;
     bathy2(YY>150*m1km)=NaN;
@@ -60,23 +62,24 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    % svx = 6; svy = 4;
-    % curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:end)'/1000, ...
-    % UU_cdw(1:svx:end,1:svy:end)',VV_cdw(1:svx:end,1:svy:end)');
-    % curr.Color = [0 102 0]/255;
-    % curr.LineWidth = 1.5;
-    % set(curr,'AutoScale','on', 'AutoScaleFactor',5)
-    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',darkgray)
+    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
+    svx = 6; svy = 4;
+    scalefactor = 0.9;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr.Color = [0.4 0.4 0.4];
+    curr.LineWidth = 1;
+    set(curr,'AutoScale','off');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    title('Onshore CDW heat flux','FontSize',fontsize+2.5,'fontweight', 'normal')
+    title('Onshore CDW heat flux and volume flux','FontSize',fontsize+2.5,'fontweight', 'normal')
     annotation('textbox',[0.001 0.995 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax2 = subplot('position',[0.606 0.77 subplotsize]);
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.2 1.5]);
+    ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;grid minor;
@@ -93,11 +96,13 @@
     loadexp;
     load_data;
     load_spacing;
+    calc_basics;
     calc_heat_IceShelfCavity;
     bathy2=bathy;
     bathy2(YY>150*m1km)=NaN;
     vt_zint_cdw(vt_zint_cdw==0)=NaN;
 
+    %%
     ax3 = subplot('position',[0.065 0.53 subplotsize]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
     shading interp;
@@ -106,7 +111,13 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',darkgray)
+    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
+    svx = 6; svy = 4;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr.Color = [0.4 0.4 0.4];
+    curr.LineWidth = 1;
+    set(curr,'AutoScale','off');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
@@ -115,7 +126,7 @@
 
     ax4 = subplot('position',[0.606 0.53 subplotsize]);
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.2 1.5]);
+    ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;grid minor;
@@ -124,12 +135,13 @@
     annotation('textbox',[0.54 0.738 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
-
+%%
     ne =3; 
     expname = EXPNAME{ne}
     loadexp;
     load_data;
     load_spacing;
+    calc_basics;
     calc_heat_IceShelfCavity;
     bathy2=bathy;
     bathy2(YY>150*m1km)=NaN;
@@ -143,16 +155,22 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',darkgray)
+    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
+    svx = 6; svy = 4;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr.Color = [0.4 0.4 0.4];
+    curr.LineWidth = 1;
+    set(curr,'AutoScale','off');
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
     annotation('textbox',[0.001 0.5 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
-
+%%
     ax6 = subplot('position',[0.606 0.29 subplotsize]);
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.2 1.5]);
+    ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;grid minor;
@@ -162,18 +180,19 @@
 
 
 
-
+%%
     ne =4; 
     expname = EXPNAME{ne}
     loadexp;
     load_data;
     load_spacing;
+    calc_basics;
     calc_heat_IceShelfCavity;
     bathy2=bathy;    
     bathy2(YY>150*m1km)=NaN;
     vt_zint_cdw(vt_zint_cdw==0)=NaN;
 
-    
+    %%
     ax7 = subplot('position',[0.065 0.05 subplotsize]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
     shading interp;
@@ -182,7 +201,13 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',darkgray)
+    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
+    svx = 6; svy = 4;
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr.Color = [0.4 0.4 0.4];
+    curr.LineWidth = 1;
+    set(curr,'AutoScale','off')
     ylabel('Latitude, y (km)');
     xlabel('Longitude, x (km)');
     set(gca,'FontSize',fontsize);
@@ -196,7 +221,7 @@
 
     ax8 = subplot('position',[0.606 0.05 subplotsize]);
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.2 1.5]);
+    ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;grid minor;

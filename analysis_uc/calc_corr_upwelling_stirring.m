@@ -4,7 +4,7 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
     load_constants;
     showfigure = false;
@@ -14,8 +14,8 @@
 
     prodir_vorticity = [prodir 'BCvorticity/'];
 
-    nnn = 20;
-    % nnn = 21;
+    % nnn = 20;
+    nnn = 4;
 
     group_adv7 = 1:nnn;
 

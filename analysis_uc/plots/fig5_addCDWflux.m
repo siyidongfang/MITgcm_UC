@@ -51,26 +51,31 @@
    
     ax1 = subplot('position',[0.105 0.737 0.78 0.24]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
-    % colormap(cmocean('balance'));
-    colormap(redblue);shading interp;
-    handle1=colorbar('XTickLabel',{'-0.15','-0.1','-0.05','0','0.05','0.1','0.15'}, ...
-               'XTick', -0.15:0.05:0.15);
+    colormap(cmocean('balance'));
+    % colormap(redblue);
+    shading interp;
+    handle1=colorbar;
+    % handle1=colorbar('XTickLabel',{'-0.15','-0.1','-0.05','0','0.05','0.1','0.15'}, ...
+               % 'XTick', -0.15:0.05:0.15);
     set(handle1,'Position',[0.905    0.755    0.012    0.2])
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
-    svx = 6; svy = 6;
+    svx = 6; svy = 4;
+    scalefactor=0.9;
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
-    UU_cdw(1:svx:end,1:svy:135)',VV_cdw(1:svx:end,1:svy:135)');
+    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
     plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     % curr.Color = [0 102 0]/255;
     curr.Color = [0.4 0.4 0.4];
-    curr.LineWidth = 1.3;
-    set(curr,'AutoScale','on', 'AutoScaleFactor',1.6)
+    curr.LineWidth = 1;
+    % set(curr,'AutoScale','on', 'AutoScaleFactor',1.6)
+    set(curr,'AutoScale','off')
     ylim(YLIM);xlim(XLIM);
     yticks(YTICKS);xticks(XTICKS);
-    clim([-0.15 0.15])
+    % clim([-0.15 0.15])
+    clim([-0.301 0.301])
     box on;
     annotation('textbox',[0.863 0.985 0.2 0.01],'String','(10^9 W/m)','FontSize',fontsize,'LineStyle','None');
     ylabel('Latitude, y (km)');
@@ -153,9 +158,9 @@
 
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
-     print('-dpng','-r300',[figdir 'fig5_matlab.png']);
+     % print('-dpng','-r300',[figdir 'fig5_matlab.png']);
 
-     % print('-dpng','-r300',[figdir 'fig5_colorbar.png']);
+     print('-dpng','-r300',[figdir 'fig5_colorbar.png']);
 
 
 

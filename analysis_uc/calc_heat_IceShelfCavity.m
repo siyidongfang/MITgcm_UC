@@ -184,7 +184,7 @@
 
     subplot(2,2,4)
     plot(xx/1000,Tc_mean,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.5 2.5]);
+    ylim([-0.5 6]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     hold off;grid on;
@@ -248,7 +248,7 @@
     subplot(2,2,3)
     plot(xx/1000,Tc_cdw,'LineWidth',2);xlim([-110 110]);
 %     ylim([-0.5 4]);
-    ylim([-0.5 2.5]);
+    ylim([-0.5 6]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     % rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
@@ -266,7 +266,7 @@
 
     subplot(2,2,4)
     plot(xx/1000,Tc_cdw_mean,'LineWidth',2);xlim([-110 110]);
-    ylim([-0.5 2.5]);
+    ylim([-0.5 6]);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
     % rectangle('Position',[35 -0.5 10 3],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
