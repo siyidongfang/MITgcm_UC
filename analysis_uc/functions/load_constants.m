@@ -25,14 +25,17 @@
     % Ymin = Yshelfbreak-Ws/2;
     Ymin = 210*m1km;
     Ymax = Yshelfbreak+Ws/2;
-    Xmin = Wsponge;
-    Xmax = Lx-Wsponge;
-%     Xmin = Wsponge+10*m1km;
-% %     Xmax = Lx/2;
-%     Xmax = Lx-(Wsponge+10*m1km);
 
     Xsbmin = 180*m1km;
     Xsbmax = 300*m1km;
+    
+    % Xmin = Xsbmin;
+    % Xmax = Xsbmax;
+    Xmin = Wsponge;
+    % Xmin = 100*m1km;
+    Xmax = 300*m1km;
+    % Xmax = Lx-Wsponge;
+
 
     
     rho_i = 920;

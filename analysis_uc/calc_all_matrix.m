@@ -37,8 +37,8 @@
     exp_group = EXP_GROUP{1}
     list_exps_new;
     load_colors;
-    savefigure = true;
-    showfigure = true;
+    savefigure = false;
+    showfigure = false;
 
 % for ne=1:nEXP
 for ne =1:21

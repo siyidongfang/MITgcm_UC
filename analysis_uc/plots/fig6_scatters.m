@@ -19,18 +19,17 @@
     Tide_25 =  scatter(dataX(7),dataY(7),sz,green,'h','filled','MarkerEdgeColor',green);
     Tide_50 =  scatter(dataX(8),dataY(8),sz*1.5,green2,'h','filled','MarkerEdgeColor',green2);
     Kmax_1 =  scatter(dataX(4),dataY(4),sz,BLUE1,'s','filled','MarkerEdgeColor',BLUE1);
-    Kmax_10 =  scatter(dataX(5),dataY(5),sz*1.4,BLUE2,'s','filled','MarkerEdgeColor',BLUE2);
-    Kmax_30 =  scatter(dataX(6),dataY(6),sz*1.8,BLUE3,'s','filled','MarkerEdgeColor',BLUE3);
-    DeepThermo = scatter(dataX(9),dataY(9),sz,darkgray,'d','MarkerEdgeColor',darkgray,'LineWidth',1);
-    DeepWind_8 = scatter(dataX(11),dataY(11),sz*2,yellow,'d','MarkerEdgeColor',green,'LineWidth',1);
-    DeepWind_2 = scatter(dataX(10),dataY(10),sz,gold,'d','MarkerEdgeColor',gold,'LineWidth',1);
+    Kmax_10 =  scatter(dataX(5),dataY(5),sz*1.3,BLUE2,'s','filled','MarkerEdgeColor',BLUE2);
+    Kmax_30 =  scatter(dataX(6),dataY(6),sz*1.5,BLUE3,'s','filled','MarkerEdgeColor',BLUE3);
+    DeepThermo = scatter(dataX(9),dataY(9),sz*0.9,darkgray,'d','MarkerEdgeColor',darkgray,'LineWidth',1);
+    DeepWind_8 = scatter(dataX(11),dataY(11),sz*1.1,brown2,'d','MarkerEdgeColor',brown2,'LineWidth',1);
+    DeepWind_2 = scatter(dataX(10),dataY(10),sz*0.8,gold,'d','MarkerEdgeColor',gold,'LineWidth',1);
     DeepHbed_0 = scatter(dataX(18),dataY(18),sz,RED3,'d','MarkerEdgeColor',red,'LineWidth',1);
     Htr_0 = scatter(dataX(15),dataY(15),sz,'^','MarkerEdgeColor',green,'LineWidth',1);
     Hbed_0Htr_0 = scatter(dataX(16),dataY(16),sz,'^','MarkerEdgeColor',blue,'LineWidth',1);
     DeepHtr_0 = scatter(dataX(19),dataY(19),sz,'o','MarkerEdgeColor',green,'LineWidth',1);
     DeepHbed_0Htr_0 = scatter(dataX(20),dataY(20),sz,'o','MarkerEdgeColor',blue,'LineWidth',1);
     Ref = scatter(dataX(1),dataY(1),sz*2,'k','o','filled');
-    % line(dataX([12 13 1 14]),dataY([12 13 1 14]),'Color',black);
     ylabel(Ylabel)
     xlabel(Xlabel)
     set(gca,'FontSize',fontsize);grid on;grid minor;box on;

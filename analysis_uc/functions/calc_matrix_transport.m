@@ -41,6 +41,7 @@
     Ub_west_avg(ne) = mean(ub_west,'all','omitnan');
     Ub_avg(ne) = mean(ub_slope,'all','omitnan');
 
+
     %%% Calculate transports
     Tot_east = sum(uu_east.*hFacW(xidx,yidx,:).*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');
     Vol_east = sum(hFacW_east.*DX(xidx,yidx,:).*DY(xidx,yidx,:).*DZ(xidx,yidx,:),'all','omitnan');

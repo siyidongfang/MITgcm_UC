@@ -3,7 +3,8 @@
 %%%
 %%% Sensitivity plots
 
-   clear;close all;
+   clear;
+   % close all;
 
     %%% Add path
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
@@ -31,7 +32,7 @@
     group2 = [1:8 12:14 17]; %%% exclude cases with varying thermocline depth and Htr0
     % group2 = [1:5 7 8 12:14 17]; %%% exclude cases with varying thermocline depth, Htr0, and extreme diffusivity
 
-    figure(2)
+    figure(3)
     clf;   
     set(gcf,'Color','w');
     scrsz = get(0,'ScreenSize');
@@ -73,16 +74,19 @@
     fig6_scatters;
     % text(ax5,0.005,1.57,{'(b)'},'FontSize',fontsize+2)
     annotation('textbox',[0.342 0.64 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-    ylim([0 1.63])
+    ylim([0 2.1])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
 
-%%%% %%%% %%%% %%%% panel 8
+%%%% %%%% %%%% %%%% panel 7
     dataX = BPTplusIPT_sb(group)/1000;
     Xlabel = 'Shelf-break pressure torque (10^3 m^3/s^2)';
     dataY = Ueast_transportweighted(group)*100;
     % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
+    % dataY = Tot_east_Sv(group);
+    % Ylabel = 'Undercurrent transport (Sv)';
+
     cor7 = corrcoef(dataX,dataY);
     cor72 = corrcoef(dataX(group2),dataY(group2));
 
@@ -91,16 +95,17 @@
     % text(ax7,1.9,7.6,{'(c)'},'FontSize',fontsize+2)
     annotation('textbox',[0.01 0.31 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     set(gca,'xdir','reverse')
-    ylim([0 8])
-    xlim([-8 2])
+    ylim([0 10])
+    xlim([-7 2])
     % xticks([-8:2:2])
 
 
-%%%% %%%% %%%% %%%% panel 9
+%%%% %%%% %%%% %%%% panel 8
     dataY = Ueast_transportweighted(group)*100;
     % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
     dataX = Ug_east_avg(group)*100; 
+    % dataX = Tot_east_Sv(group)*100; 
     Xlabel='Thermal-wind velocity (cm/s)';
     cor8 = corrcoef(dataX,dataY);
     cor82 = corrcoef(dataX(group2),dataY(group2));
@@ -109,8 +114,8 @@
     fig6_scatters;
     % text(ax8,0.005,7.6,{'(d)'},'FontSize',fontsize+2)
     annotation('textbox',[0.342 0.31 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-    ylim([0 8])
-    xlim([0 1.7])
+    ylim([0 10])
+    xlim([0 2.1])
     % xticks([0:0.5:1.5])
 
 
@@ -158,6 +163,6 @@
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
     % print('-dpng','-r200',[figdir 'fig6_pseudo.png']);
-    print('-dpng','-r300',[figdir 'fig6_supp.png']);
+    % print('-dpng','-r300',[figdir 'fig6_supp.png']);
 
 

@@ -1,5 +1,5 @@
 %%%
-%%% fig6_new.m
+%%% fig6.m
 %%%
 %%% Sensitivity plots
 
@@ -27,9 +27,7 @@
     LineWidthsz = 1;
 
     group=1:20;
-    % group = [1:5 7:20]
     % group2 = [1:14 17 18];  %%% exclude cases with Htr0
-    % group2 = [1:5 7:8 12:14 17];
     group2 = [1:8 12:14 17]; %%% exclude cases with varying thermocline depth and Htr0
     % group2 = [1:5 7 8 12:14 17]; %%% exclude cases with varying thermocline depth, Htr0, and extreme diffusivity
 
@@ -91,7 +89,7 @@
     % text(ax3,0.005,-7.6,{'(c)'},'FontSize',fontsize+2)
     annotation('textbox',[0.72 0.98 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     axis ij;
-    ylim([-7 2])
+    ylim([-8 2])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
 
@@ -110,7 +108,7 @@
     % text(ax4,0.005,-9.6,{'(d)'},'FontSize',fontsize+2)
     annotation('textbox',[0.055 0.645 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     axis ij;
-    ylim([-9 0])
+    ylim([-10 0])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
 
@@ -118,9 +116,9 @@
 
 %%%% %%%% %%%% %%%% panel 5
     dataX = w_dia_is(group);
+    % dataX = MeltRate_m(group); 
     Xlabel = 'Upwelling in the cavity (Sv)';
     dataY = Ueast_transportweighted(group)*100;
-    % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
     cor5 = corrcoef(dataX,dataY);
     cor52 = corrcoef(dataX(group2),dataY(group2));
@@ -129,26 +127,9 @@
     fig6_scatters;
     % text(ax5,0.005,7.6,{'(e)'},'FontSize',fontsize+2)
     annotation('textbox',[0.39 0.645 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-    ylim([0 10])
-    % ylim([0 6])
+    ylim([0 8])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
-
-
-
-    %%%% %%%% %%%% %%%% panel 6
-    dataX = MeltRate_m(group); 
-    Xlabel = 'Ice shelf melt rate (m/yr)';
-    dataY = Tot_east_Sv(group);
-    Ylabel = 'Undercurrent transport (Sv)';
-    cor6 = corrcoef(dataX,dataY);
-    cor62 = corrcoef(dataX(group2),dataY(group2));
-
-    ax6 = subplot('position',[0.72 0.38 panelsize]);
-    fig6_scatters;
-    annotation('textbox',[0.72 0.645 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-    ylim([0 0.4])
-    xlim([0 30])
 
 
 % %%%% %%%% %%%% %%%% panel 7
@@ -216,40 +197,19 @@
 %     % xticks([0:0.5:1.5])
 
 
-    % leg1 = legend([Ref Wind_2 Wind_8 Hbed_0 Hbed_150 Hbed_450 Wtr_15 ...
-    %     Tide_25 Tide_50 Kmax_1 Kmax_10 Kmax_30 ],...
-    %     'Ref','Wind\_2', 'Wind\_8', 'Hbed\_0', 'Hbed\_150' ,'Hbed\_450' ,'Wtr\_15' ,...
-    %     'Tide\_0.025' ,'Tide\_0.05' ,'Kmax\_1e-4' ,'Kmax\_1e-3', 'Kmax\_3e-3');
-    % set(leg1,'Position',[0.7308-0.015 0.4125-0.03 0.1150 0.2195])
-    % legend boxoff;
-    leg11 = legend([Ref Hbed_0 Hbed_150 Hbed_450],...
-        'Ref','Hbed\_0', 'Hbed\_150' ,'Hbed\_450');
-    set(leg11,'Position',[0.1398    0.2215    0.1080    0.0775])
+    leg1 = legend([Ref Wind_2 Wind_8 Hbed_0 Hbed_150 Hbed_450 Wtr_15 ...
+        Tide_25 Tide_50 Kmax_1 Kmax_10 Kmax_30 ],...
+        'Ref','Wind\_2', 'Wind\_8', 'Hbed\_0', 'Hbed\_150' ,'Hbed\_450' ,'Wtr\_15' ,...
+        'Tide\_0.025' ,'Tide\_0.05' ,'Kmax\_1e-4' ,'Kmax\_1e-3', 'Kmax\_3e-3');
+    set(leg1,'Position',[0.7308-0.015 0.4125-0.03 0.1150 0.2195])
     legend boxoff;
-     
-
-    ah12=axes('position',get(ax1,'position'),'visible','off');
-    set(gca,'FontSize',fontsize);
-    leg12 = legend(ah12,[Wind_2 Wind_8 Tide_25 Tide_50],...
-         'Wind\_2', 'Wind\_8','Tide\_0.025' ,'Tide\_0.05');
-    legend boxoff;
-    set(leg12,'Position', [0.2588    0.2215    0.1120    0.0775]) 
-
-
-    ah13=axes('position',get(ax1,'position'),'visible','off');
-    set(gca,'FontSize',fontsize);
-    leg13 = legend(ah13,[Kmax_1 Kmax_10 Kmax_30 Wtr_15],...
-        'Kmax\_1e-4' ,'Kmax\_1e-3', 'Kmax\_3e-3','Wtr\_15');
-    legend boxoff;
-    set(leg13,'Position', [0.3778    0.2215    0.1150    0.0775]) 
-    
 
     ah=axes('position',get(ax1,'position'),'visible','off');
     set(gca,'FontSize',fontsize);
     leg2 = legend(ah,[DeepThermo DeepWind_2 DeepWind_8 DeepHbed_0],...
         'DeepThermo', 'DeepWind\_2', 'DeepWind\_8', 'DeepHbed\_0');
     legend boxoff;
-    set(leg2,'Position', [0.6278    0.2215    0.1260    0.0775]) 
+    set(leg2,'Position', [0.8383 0.5090 0.1260 0.0775]) 
 
     
     ah2=axes('position',get(ax1,'position'),'visible','off');
@@ -257,21 +217,19 @@
     leg3 = legend(ah2,[Htr_0 Hbed_0Htr_0 DeepHtr_0 DeepHbed_0Htr_0],...
         'Htr\_0', 'Htr\_0Hbed\_0', 'Htr\_0Deep', 'Htr\_0Hbed\_0Deep');
     legend boxoff;
-    set(leg3,'Position', [0.7728    0.2215    0.1610    0.0775]) 
+    set(leg3,'Position', [0.8400 0.4085 0.1610 0.0775]) 
 
-    annotation('textbox',[0.225+0.01 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor12(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.01 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor1(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.33+0.01 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor22(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.33+0.01 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor2(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.67+0.01 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor32(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.67+0.01 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor3(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor12(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor1(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.33 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor22(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.33 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor2(1,2),'%.3f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.67 0.765 0.15 0.01],'String',['r_1 = ' num2str(cor32(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.67 0.74 0.15 0.01],'String',['r_2 = ' num2str(cor3(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
-    annotation('textbox',[0.225+0.005 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor42(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.005 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor4(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.335+0.015 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor52(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.335+0.015 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor5(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
-    annotation('textbox',[0.225+0.67+0.01 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor62(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.225+0.67+0.01 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor6(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor42(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor4(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.335 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor52(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.335 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor5(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
     % annotation('textbox',[0.225 0.765-0.665 0.15 0.01],'String',['r_1 = ' num2str(cor72(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
     % annotation('textbox',[0.225 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor7(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
@@ -283,6 +241,6 @@
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
     % print('-dpng','-r200',[figdir 'fig6_pseudo.png']);
-    print('-dpng','-r300',[figdir 'fig6.png']);
+    % print('-dpng','-r300',[figdir 'fig6.png']);
 
 
