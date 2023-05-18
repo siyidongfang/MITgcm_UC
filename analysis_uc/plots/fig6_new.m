@@ -51,6 +51,12 @@
     cor1 = corrcoef(dataX,dataY);
     cor12 = corrcoef(dataX(group2),dataY(group2));
 
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    dataX2 = w_dia_is;
+    dataY2 = [0 8 16 24]; 
+
     ax1 = subplot('position',[0.058 0.715 panelsize]);   
     fig6_scatters;
     % text(ax1,0.005,28.7,{'(a)'},'FontSize',fontsize+2)
@@ -61,12 +67,22 @@
 
 
 %%%% %%%% %%%% %%%% panel 2
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+
     dataX = w_dia_is(group);
     Xlabel = 'Upwelling in the cavity (Sv)';
     dataY = Cori_all(group)/1000; 
     Ylabel ='Coriolis term in the cavity (10^3 m^3/s^2)';
     cor2 = corrcoef(dataX,dataY);
     cor22 = corrcoef(dataX(group2),dataY(group2));
+
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    dataX2 = w_dia_is;
+    dataY2 = Cori_all/1000; 
 
     ax2 = subplot('position',[0.394 0.715 panelsize]);
     fig6_scatters;
@@ -79,12 +95,22 @@
 
 
 %%%% %%%% %%%% %%%% panel 3
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+
     dataX = w_dia_is(group);
     Xlabel = 'Upwelling in the cavity (Sv)';
     dataY = BPTplusIPT_sb(group)/1000;
     Ylabel = 'Shelf-break pressure torque (10^3 m^3/s^2)';
     cor3 = corrcoef(dataX,dataY);
     cor32 = corrcoef(dataX(group2),dataY(group2));
+
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    dataX2 = w_dia_is;
+    dataY2 = BPTplusIPT_sb/1000;
 
     ax3 = subplot('position',[0.725 0.715 panelsize]);
     fig6_scatters;
@@ -97,6 +123,10 @@
 
 
 %%%% %%%% %%%% %%%% panel 4
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+
     dataX = w_dia_is(group);
     Xlabel = 'Upwelling in the cavity (Sv)';
     % dataY = zeta_cdw_tr(group);
@@ -104,6 +134,12 @@
     Ylabel = 'Integrated cyclonic vorticity (10^6 m^3/s)';
     cor4 = corrcoef(dataX,dataY);
     cor42 = corrcoef(dataX(group2),dataY(group2));
+
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    dataX2 = w_dia_is;
+    dataY2 = zeta_cdw_sb_v2/1e6;
 
     ax4 = subplot('position',[0.058 0.38 panelsize]);
     fig6_scatters;
@@ -117,13 +153,22 @@
 
 
 %%%% %%%% %%%% %%%% panel 5
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+
     dataX = w_dia_is(group);
     Xlabel = 'Upwelling in the cavity (Sv)';
     dataY = Ueast_transportweighted(group)*100;
-    % dataY = U_east_avg(group)*100;
     Ylabel = 'Undercurrent velocity (cm/s)';
     cor5 = corrcoef(dataX,dataY);
     cor52 = corrcoef(dataX(group2),dataY(group2));
+
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    dataX2 = w_dia_is;
+    dataY2 = Ueast_transportweighted*100; 
 
     ax5 = subplot('position',[0.394 0.38 panelsize]);
     fig6_scatters;
@@ -137,12 +182,23 @@
 
 
     %%%% %%%% %%%% %%%% panel 6
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+
     dataX = MeltRate_m(group); 
     Xlabel = 'Ice shelf melt rate (m/yr)';
     dataY = Tot_east_Sv(group);
     Ylabel = 'Undercurrent transport (Sv)';
     cor6 = corrcoef(dataX,dataY);
     cor62 = corrcoef(dataX(group2),dataY(group2));
+
+
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    dataX2 = [0 8 16 24];
+    dataY2 = Tot_east_Sv; 
 
     ax6 = subplot('position',[0.72 0.38 panelsize]);
     fig6_scatters;
@@ -151,77 +207,6 @@
     xlim([0 30])
 
 
-% %%%% %%%% %%%% %%%% panel 7
-%     dataX = Tcdw_cumulative(group);
-%     Xlabel = 'Heat transport at ice-shelf front (TW)';
-%     dataY = MeltRate_m(group); 
-%     Ylabel='Ice shelf melt rate (m/yr)';
-%     cor7 = corrcoef(dataX,dataY);
-%     cor72 = corrcoef(dataX(group2),dataY(group2));
-% 
-%     ax7 = subplot('position',[0.058 0.052 panelsize]);
-%     fig6_scatters;
-%     text(ax5,0.005,1.57,{'(e)'},'FontSize',fontsize+2)
-%     ylim([0 30])
-%     xlim([0 3.4])
-
-
-
-%     dataX = w_dia_is(group);
-%     Xlabel = 'Upwelling in the cavity (Sv)';
-%     dataY = Ug_east_avg(group)*100; 
-%     Ylabel='Thermal-wind velocity (cm/s)';
-%     cor5 = corrcoef(dataX,dataY);
-%     cor52 = corrcoef(dataX(group2),dataY(group2));
-% 
-%     ax5 = subplot('position',[0.394 0.38 panelsize]);
-%     fig6_scatters;
-%     text(ax5,0.005,1.57,{'(e)'},'FontSize',fontsize+2)
-%     ylim([0 1.63])
-%     xlim(XLIM_WDIA)
-%     xticks([0:0.1:0.5])
-
-% %%%% %%%% %%%% %%%% panel 8
-%     dataX = BPTplusIPT_sb(group)/1000;
-%     Xlabel = 'Shelf-break pressure torque (10^3 m^3/s^2)';
-%     dataY = Ueast_transportweighted(group)*100;
-%     % dataY = U_east_avg(group)*100;
-%     Ylabel = 'Undercurrent velocity (cm/s)';
-%     cor8 = corrcoef(dataX,dataY);
-%     cor82 = corrcoef(dataX(group2),dataY(group2));
-% 
-%     ax8 = subplot('position',[0.394 0.052 panelsize]);
-%     fig6_scatters;
-%     text(ax8,1.9,7.6,{'(g)'},'FontSize',fontsize+2)
-%     set(gca,'xdir','reverse')
-%     ylim([0 8])
-%     xlim([-8 2])
-%     % xticks([-8:2:2])
-
-
-% %%%% %%%% %%%% %%%% panel 9
-%     dataY = Ueast_transportweighted(group)*100;
-%     % dataY = U_east_avg(group)*100;
-%     Ylabel = 'Undercurrent velocity (cm/s)';
-%     dataX = Ug_east_avg(group)*100; 
-%     Xlabel='Thermal-wind velocity (cm/s)';
-%     cor9 = corrcoef(dataX,dataY);
-%     cor92 = corrcoef(dataX(group2),dataY(group2));
-% 
-%     ax9 = subplot('position',[0.725 0.052 panelsize]);
-%     fig6_scatters;
-%     text(ax9,0.005,7.6,{'(h)'},'FontSize',fontsize+2)
-%     ylim([0 8])
-%     xlim([0 1.7])
-%     % xticks([0:0.5:1.5])
-
-
-    % leg1 = legend([Ref Wind_2 Wind_8 Hbed_0 Hbed_150 Hbed_450 Wtr_15 ...
-    %     Tide_25 Tide_50 Kmax_1 Kmax_10 Kmax_30 ],...
-    %     'Ref','Wind\_2', 'Wind\_8', 'Hbed\_0', 'Hbed\_150' ,'Hbed\_450' ,'Wtr\_15' ,...
-    %     'Tide\_0.025' ,'Tide\_0.05' ,'Kmax\_1e-4' ,'Kmax\_1e-3', 'Kmax\_3e-3');
-    % set(leg1,'Position',[0.7308-0.015 0.4125-0.03 0.1150 0.2195])
-    % legend boxoff;
     leg11 = legend([Ref Hbed_0 Hbed_150 Hbed_450],...
         'Ref','Hbed\_0', 'Hbed\_150' ,'Hbed\_450');
     set(leg11,'Position',[0.1398    0.2215    0.1080    0.0775])
@@ -282,7 +267,7 @@
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
-    % print('-dpng','-r200',[figdir 'fig6_pseudo.png']);
-    print('-dpng','-r300',[figdir 'fig6.png']);
+    print('-dpng','-r200',[figdir 'fig6_with_pseudo.png']);
+    % print('-dpng','-r300',[figdir 'fig6.png']);
 
 

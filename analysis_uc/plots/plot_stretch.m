@@ -11,7 +11,7 @@
     load_colors;
     fontsize = 17;
 
-    ne =4; 
+    ne =1; 
     expname = EXPNAME{ne}
     loadexp;
     load_data;
@@ -131,4 +131,5 @@
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_supp/';
-    print('-dpng','-r300',[figdir 'figS1.png']);
+    % print('-dpng','-r300',[figdir 'figS1.png']);
+    print('-dpng','-r300',[figdir 'stretch_nomelt.png']);

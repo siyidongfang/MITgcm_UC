@@ -54,10 +54,11 @@
     %%
     ax1 = subplot('position',[0.065 0.77 subplotsize]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
-    % colormap(cmocean('balance'));
-    colormap(redblue)
+    colormap(cmocean('balance'));
+    % colormap(redblue)
     shading interp;
-    xlim([-230 230]);ylim([0 250]);
+    xlim([-300 300]);ylim([0 400]);
+    % xlim([-230 230]);ylim([0 230]);
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
@@ -65,6 +66,8 @@
     plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     svx = 6; svy = 4;
     scalefactor = 0.9;
+    % curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:Ny)'/1000, ...
+    % scalefactor*UU_cdw(1:svx:end,1:svy:Ny)',scalefactor*VV_cdw(1:svx:end,1:svy:Ny)');
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
     scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
     curr.Color = [0.4 0.4 0.4];
@@ -106,15 +109,15 @@
     ax3 = subplot('position',[0.065 0.53 subplotsize]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
     shading interp;
-    xlim([-230 230]);ylim([0 250]);
+    xlim([-300 300]);ylim([0 400]);
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     svx = 6; svy = 4;
-    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
-    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:Ny)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:Ny)',scalefactor*VV_cdw(1:svx:end,1:svy:Ny)');
     curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
     set(curr,'AutoScale','off');
@@ -150,15 +153,15 @@
     ax5 = subplot('position',[0.065 0.29 subplotsize]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
     shading interp;
-    xlim([-230 230]);ylim([0 250]);
+    xlim([-300 300]);ylim([0 400]);
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     svx = 6; svy = 4;
-    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
-    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:Ny)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:Ny)',scalefactor*VV_cdw(1:svx:end,1:svy:Ny)');
     curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
     set(curr,'AutoScale','off');
@@ -196,15 +199,15 @@
     ax7 = subplot('position',[0.065 0.05 subplotsize]);
     pcolor(xx/1000,yy/1000,-(1e-9)*cp_o*rho_o*(vt_zint_cdw)');
     shading interp;
-    xlim([-230 230]);ylim([0 250]);
+    xlim([-300 300]);ylim([0 400]);
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-600 -600],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-700 -500:100:0],'k:','LineWidth',1,'ShowText','off');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     svx = 6; svy = 4;
-    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
-    scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
+    curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:Ny)'/1000, ...
+    scalefactor*UU_cdw(1:svx:end,1:svy:Ny)',scalefactor*VV_cdw(1:svx:end,1:svy:Ny)');
     curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
     set(curr,'AutoScale','off')
@@ -235,5 +238,5 @@
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_pseudo/';
-    print('-dpng','-r300',[figdir 'fig_pseudo_matlab.png']);
+    print('-dpng','-r300',[figdir 'fig_pseudo_allLat.png']);
 

@@ -18,7 +18,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1};
+    exp_group = EXP_GROUP{2};
     list_exps_new;
     load_constants;
     load_colors;
@@ -46,6 +46,7 @@
 
 
 
+    zeta_IPT(isnan(zeta_IPT))=0;
 
 
     %%
@@ -123,6 +124,7 @@
     annotation('textbox',[0.953 0.735+0.01 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
 %%
 
+    zeta_IPT(zeta_IPT==0)=NaN;
     ax4 = subplot('position',[0.045 0.37+0.01 panelsize]);
 %     annotation('textbox',[0 0.66 0.15 0.01],'String','(d)','FontSize',fontsize+2,'LineStyle','None');
     pcolor(XXf/1000,YYf/1000,zeta_IPT)
@@ -258,7 +260,9 @@
 
 %%
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig4/';
-     print('-dpng','-r300',[figdir 'fig4_matlab_v1.png']);
+     % print('-dpng','-r300',[figdir 'fig4_matlab_v1.png']);
+     print('-dpng','-r300',[figdir 'vorticity_nomelt.png']);
+
 
 
     %%% plot beta*V

@@ -13,7 +13,7 @@
     list_exps_new;
     load_constants;
     
-for ne=[1 2 3 4]
+for ne=1
 
     expname = EXPNAME{ne}
     loadexp;
@@ -93,7 +93,7 @@ for ne=[1 2 3 4]
     legend boxoff;
     set(leg3,'Position', [0.5467 0.0750 0.3183 0.0887])  
 
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots_JPO/fig5/';
+     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
 %      print('-dpng','-r200',[figdir 'fig5.png']);
      print('-dpng','-r200',[figdir expname '_PVint.png']);
 
