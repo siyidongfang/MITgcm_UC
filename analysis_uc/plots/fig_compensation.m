@@ -1,5 +1,5 @@
 %%%
-%%% fig_pseudo.m
+%%% fig_compensation.m
 %%%
 %%% plot heat transport of 4 simulations with pseudo ice shelf
 
@@ -18,7 +18,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/quivers/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     load_colors;
@@ -85,6 +85,8 @@
     ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
+    % rectangle('Position',[17 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    % rectangle('Position',[-50 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
@@ -94,7 +96,7 @@
 %%
 
 
-    ne =2; 
+    ne =15; 
     expname = EXPNAME{ne}
     loadexp;
     load_data;
@@ -132,6 +134,8 @@
     ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
+    % rectangle('Position',[17 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    % rectangle('Position',[-50 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
@@ -139,7 +143,7 @@
 
 
 %%
-    ne =3; 
+    ne =2; 
     expname = EXPNAME{ne}
     loadexp;
     load_data;
@@ -176,6 +180,8 @@
     ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
+    % rectangle('Position',[17 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    % rectangle('Position',[-50 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
@@ -184,7 +190,7 @@
 
 
 %%
-    ne =4; 
+    ne =3; 
     expname = EXPNAME{ne}
     loadexp;
     load_data;
@@ -227,6 +233,8 @@
     ylim(YLIM);
     hold on;
     plot(xx/1000,zeros(1,length(xx)),'k--')
+    % rectangle('Position',[17 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
+    % rectangle('Position',[-50 -2 10 10],'EdgeColor',boxcolor,'FaceColor',[boxcolor/1.3 0.2])
     hold off;grid on;grid minor;
     xlabel('Longitude, x (km)');
     ylabel('(10^{12} W)');
@@ -237,6 +245,6 @@
 
 
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_pseudo/';
-    print('-dpng','-r300',[figdir 'fig_pseudo_matlab.png']);
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_compensation/';
+    print('-dpng','-r300',[figdir 'fig_compensation_matlab.png']);
 

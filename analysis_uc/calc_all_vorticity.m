@@ -17,7 +17,7 @@
     savefigure = true;
 
 
-for ne =[2 3 4]  
+for ne =[3]  
 % for ne=[25]
     close all
         ne
@@ -29,7 +29,7 @@ for ne =[2 3 4]
         calc_BCvorticity_PVint;
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
-        % calc_BCvorticity_stretching_Coriolis;
+        calc_BCvorticity_stretching_Coriolis;
 %         calc_BCvorticity_lat_rectangle_int
 %         calc_BCvorticity_lat_int;
         % calc_CDW_quasi_stfn;

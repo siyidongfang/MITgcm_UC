@@ -79,6 +79,7 @@
     Ueast_transportweighted(ne) = Tot_east_weighted/Tot_weight;
 
 
+    %%% Calculate southward transport in the trough
 
 
 
