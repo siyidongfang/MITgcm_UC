@@ -4,18 +4,18 @@
     addpath functions/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
-    load_constants;
     showfigure = false;
+    load_colors;
     
     prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
     figdir = ['/Users/csi/MITgcm_UC/figures_uc/BCvorticity_cdw_sw/' exp_group '/'];
 
     prodir_vorticity = [prodir 'BCvorticity/'];
 
-    % nnn = 20;
-    nnn = 4;
+    nnn = 20;
+    % nnn = 4;
 
     group_adv7 = 1:nnn;
 
@@ -36,8 +36,10 @@ for ne=group_adv7
     ne
     expname = EXPNAME{ne};
     loadexp;
+    load_constants;
     load_data;
     load_spacing;
+
     
     prodname = [prodir expname '_vorticity_cdw.mat'];
     load(prodname)

@@ -239,12 +239,12 @@
     xlabel('Longitude, x (km)');
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.26 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.26 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_compensation/';
-    print('-dpng','-r300',[figdir 'fig_compensation_matlab.png']);
+    % print('-dpng','-r300',[figdir 'fig_compensation_matlab.png']);
 

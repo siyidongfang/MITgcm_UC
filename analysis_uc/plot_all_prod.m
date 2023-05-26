@@ -12,9 +12,10 @@
 
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
+    exp_group = EXP_GROUP{2}
     list_exps_new;
-    expname = EXPNAME{1}
+    ne = 4
+    expname = EXPNAME{ne}
 
     savefigure = true;
     
@@ -33,8 +34,9 @@
     year = '3to7';
     plot_KE_EKE_T_S_series
     plot_basics
-    plot_shelfIce
+    % plot_shelfIce
     plot_seaice
+
 
 
 

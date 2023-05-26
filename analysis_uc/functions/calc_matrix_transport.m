@@ -1,6 +1,7 @@
 
 
 
+
     %%% Find bottom velocity
     uu_bottom = zeros(Nx,Ny);   % bottom velocity
     uu(uu==0) = NaN;            % make the topography (where tt==0) NaN values
@@ -79,7 +80,15 @@
     Ueast_transportweighted(ne) = Tot_east_weighted/Tot_weight;
 
 
-    %%% Calculate southward transport in the trough
+    %%% Calculate the meridionally averaged southward CDW transport in the
+    %%% trough, in Sverdrup
+    load([prodir expname '_vorticity_cdw.mat'],'VV_cdwf')
+    trough_x = round((250*m1km)/dx):round((350*m1km)/dx);
+    trough_y = round(100*m1km/dy):round(225*m1km/dy); 
+    Ltrough = yy(trough_y(end))-yy(trough_y(1)); %%% Length of the trough
+    VV_cdwf_south=VV_cdwf;
+    VV_cdwf_south(VV_cdwf_south>0)=NaN;
+    Tcdw_south_trough(ne) = sum(VV_cdwf_south(trough_x,trough_y)*dx*dy,'all','omitnan')./Ltrough./1e6;
 
 
 

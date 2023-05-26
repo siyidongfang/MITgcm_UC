@@ -6,10 +6,10 @@
     lfit = plot(xgrid,f2.p1*xgrid+f2.p2,'k','LineWidth',0.5);
 
     hold on;
-    pseudo0 = scatter(dataX2(1),dataY2(1),sz,blue,'*');
-    pseudo4 = scatter(dataX2(2),dataY2(2),sz*2,blue,'*');
-    pseudo12 = scatter(dataX2(3),dataY2(3),sz*3,blue,'*');
-    pseudo21 = scatter(dataX2(4),dataY2(4),sz*4,blue,'*');
+    % pseudo0 = scatter(dataX2(1),dataY2(1),sz,blue,'*');
+    % pseudo4 = scatter(dataX2(2),dataY2(2),sz*2,blue,'*');
+    % pseudo12 = scatter(dataX2(3),dataY2(3),sz*3,blue,'*');
+    % pseudo21 = scatter(dataX2(4),dataY2(4),sz*4,blue,'*');
     Wind_2 = scatter(dataX(2),dataY(2),sz,gold,'<','filled','MarkerEdgeColor',gold);
     Wind_8 = scatter(dataX(3),dataY(3),sz*2,yellow,'<','filled','MarkerEdgeColor',yellow);
     Hbed_0 = scatter(dataX(12),dataY(12),sz,RED3,'^','filled','MarkerEdgeColor',RED3);

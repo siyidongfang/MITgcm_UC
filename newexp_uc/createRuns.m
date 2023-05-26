@@ -45,6 +45,8 @@ if(is_ContinuedRun)
     exp_name = [exp_name '_prod']
 end
 
+
+exp_name = 'test'
 %%%%%% TODO: EXCLUDE LAND FROM OBCS grids
 
 newexp(batch_name,exp_name,Ua,Va,Atide,Hi0,Ai0,Ws,Hbed,Htr,Zn,Zsb,dZs,is_ContinuedRun,is_hires,useSEAICE);

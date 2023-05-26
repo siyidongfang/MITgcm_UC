@@ -111,7 +111,7 @@ zeta_nonLin = zeta_Advec - zeta_Cori;
 %%% Ageostrophic term
 zeta_ageo = zeta_Advec + zeta_dPhi;
 
-VV_bc = sum(mask_vgrid.*vvf.*hFacSf.*DZf,3,'omitnan');
+VV_bc = sum(mask_vgrid.*vvf.*hFacSf.*DZf,3,'omitnan'); %%% Vertically integrate the horizontal velocity
 UU_bc = sum(mask_ugrid.*uuf.*hFacWf.*DZf,3,'omitnan');
 %%% beta*V
 zeta_betaV = -rho0*beta.*VV_bc;

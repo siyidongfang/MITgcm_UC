@@ -9,11 +9,11 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc
     
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2}
+    exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     
-for ne=1
+for ne=10
 
     expname = EXPNAME{ne}
     loadexp;
@@ -95,7 +95,7 @@ for ne=1
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
 %      print('-dpng','-r200',[figdir 'fig5.png']);
-     print('-dpng','-r200',[figdir expname '_PVint.png']);
+     % print('-dpng','-r200',[figdir expname '_PVint.png']);
 
 
 end

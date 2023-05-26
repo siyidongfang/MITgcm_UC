@@ -185,26 +185,40 @@
     load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
     load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    
 
-    dataX = MeltRate_m(group); 
-    Xlabel = 'Ice shelf melt rate (m/yr)';
-    dataY = Tot_east_Sv(group);
-    Ylabel = 'Undercurrent transport (Sv)';
-    cor6 = corrcoef(dataX,dataY);
-    cor62 = corrcoef(dataX(group2),dataY(group2));
-
+    dataX = Ueast_transportweighted(group)*100;
+    Xlabel = 'Undercurrent velocity (cm/s)';
+    dataY = -Tcdw_south_trough(group); 
+    Ylabel='Onshore CDW transport in the trough (Sv)';
+    cor3 = corrcoef(dataX,dataY);
+    cor32 = corrcoef(dataX(group2),dataY(group2));
 
     load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
     load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
-    dataX2 = [0 8 16 24];
-    dataY2 = Tot_east_Sv; 
+    dataX2 = Ueast_transportweighted*100;
+    dataY2 = -Tcdw_south_trough;
+    cor6 = corrcoef(dataX,dataY);
+    cor62 = corrcoef(dataX(group2),dataY(group2));
 
-    ax6 = subplot('position',[0.72 0.38 panelsize]);
+    ax6 = subplot('position',[0.725 0.38 panelsize]);
     fig6_scatters;
     annotation('textbox',[0.72 0.645 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-    ylim([0 0.4])
-    xlim([0 30])
+    ylim([0 1])
+    xlim([0 10])
+    % dataX = MeltRate_m(group); 
+    % Xlabel = 'Ice shelf melt rate (m/yr)';
+    % dataY = Tot_east_Sv(group);
+    % Ylabel = 'Undercurrent transport (Sv)';
+    % load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    % load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    % w_dia_is = w_dia_is/1e6; %%% convert to Sv
+    % dataX2 = [0 8 16 24];
+    % dataY2 = Tot_east_Sv; 
+    % ylim([0 0.4])
+    % xlim([0 30])
+
 
 
     leg11 = legend([Ref Hbed_0 Hbed_150 Hbed_450],...
@@ -267,7 +281,7 @@
 
 
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
-    print('-dpng','-r200',[figdir 'fig6_with_pseudo.png']);
-    % print('-dpng','-r300',[figdir 'fig6.png']);
+    % print('-dpng','-r200',[figdir 'fig6_includeVaryingThermo-v1.png']);
+    print('-dpng','-r300',[figdir 'fig6.png']);
 
 

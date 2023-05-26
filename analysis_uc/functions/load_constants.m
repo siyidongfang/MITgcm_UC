@@ -14,7 +14,7 @@
     Yicefront = 100*m1km; %%% Latitude of ice shelf face
     Ycoast = 120*m1km; %%% Latitude of coastline
     Yshelfbreak = Ycoast+Wshelf; %%% Latitude of shelf break
-    Ydeep = Ycoast+Wshelf+3*Ws; %%% Latitude of deep ocean
+    Ydeep = Ycoast+Wshelf+3*Ws; %%% Latitude of deep oceanYmax
     Xeast = 400*m1km; %%% Longitude of eastern trough wall
     Xwest = 200*m1km; %%% Longitude of western trough wall
     Wsponge = 20*m1km;
@@ -26,6 +26,10 @@
     Ymin = 210*m1km;
     Ymax = Yshelfbreak+Ws/2;
 
+    % if(ne ==9 || ne==10 || ne==11 || ne==18 || ne==19 || ne==20) %%% simulations with deeper thermocline
+    %    Ymax = 280*m1km;
+    % end
+
     Xsbmin = 180*m1km;
     Xsbmax = 300*m1km;
     
@@ -35,7 +39,6 @@
     % Xmin = 100*m1km;
     Xmax = 300*m1km;
     % Xmax = Lx-Wsponge;
-
 
     
     rho_i = 920;

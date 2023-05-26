@@ -78,6 +78,25 @@
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
 
+
+
+% %%%% %%%% %%%% %%%% panel 6
+    % dataX = w_dia_is(group);
+    dataX = Tot_east_Sv(group);
+    Xlabel = 'Upwelling in the cavity (Sv)';
+    dataY = -Tcdw_south_trough(group); 
+    Ylabel='Thermal-wind velocity (cm/s)';
+    cor6 = corrcoef(dataX,dataY);
+    cor62 = corrcoef(dataX(group2),dataY(group2));
+
+    ax6 = subplot('position',[0.72 0.38 panelsize]);
+    fig6_scatters;
+    annotation('textbox',[0.72 0.645 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    % ylim([0 0.85])
+    % xlim(XLIM_WDIA)
+    % xticks([0:0.1:0.5])
+
+
 %%%% %%%% %%%% %%%% panel 7
     dataX = BPTplusIPT_sb(group)/1000;
     Xlabel = 'Shelf-break pressure torque (10^3 m^3/s^2)';
@@ -152,6 +171,8 @@
     annotation('textbox',[0.225 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor4(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
     annotation('textbox',[0.225+0.335 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor52(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
     annotation('textbox',[0.225+0.335 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor5(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
+    annotation('textbox',[0.225+0.67+0.01 0.765-0.335 0.15 0.01],'String',['r_1 = ' num2str(cor62(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.225+0.67+0.01 0.74-0.335 0.15 0.01],'String',['r_2 = ' num2str(cor6(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
     annotation('textbox',[0.225 0.765-0.665 0.15 0.01],'String',['r_1 = ' num2str(cor72(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None');
     annotation('textbox',[0.225 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor7(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
