@@ -191,16 +191,15 @@
     Xlabel = 'Undercurrent velocity (cm/s)';
     dataY = -Tcdw_south_trough(group); 
     Ylabel='Onshore CDW transport in the trough (Sv)';
-    cor3 = corrcoef(dataX,dataY);
-    cor32 = corrcoef(dataX(group2),dataY(group2));
+    cor6 = corrcoef(dataX,dataY);
+    cor62 = corrcoef(dataX(group2),dataY(group2));
 
     load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
     load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
     dataX2 = Ueast_transportweighted*100;
     dataY2 = -Tcdw_south_trough;
-    cor6 = corrcoef(dataX,dataY);
-    cor62 = corrcoef(dataX(group2),dataY(group2));
+
 
     ax6 = subplot('position',[0.725 0.38 panelsize]);
     fig6_scatters;

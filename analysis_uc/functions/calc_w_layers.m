@@ -35,9 +35,11 @@ hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-4000:500:-500],'k--','LineWidth',0
 hold off;
 shading flat;colorbar;colormap(redblue);
 clim([-5 5]/1e5)
-title('Diapycnal upwelling across the 0 deg isotherm (m/s)','Interpreter','latex')
-set(gca,'FontSize',fontsize);
-ylim([0 400]);xlim([-300 300])
+xlim([-250 250])
+ylim([0 380])
+title('Diapycnal upwelling across the 0$^\circ$C isotherm (m/s)','Interpreter','latex','FontSize',24)
+% set(gca,'FontSize',fontsize);
+% ylim([0 400]);xlim([-300 300])
 yticks(0:100:400);xticks(-300:100:300)
 xlabel('Longitude, x (km)','Interpreter','latex');ylabel('Latitude, y (km)','Interpreter','latex')
 
