@@ -188,10 +188,10 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   useEmPmRFile = false;
 
   useSHELFICE = true; 
-  usePseudoSHELFICE = false; %%% Use pseudo-ice-shelf, turn off thermodynamics
+  usePseudoSHELFICE = true; %%% Use pseudo-ice-shelf, turn off thermodynamics
   if(usePseudoSHELFICE)
-      useRBCS = true; %%% if melt is non-zero
-%     useRBCS = false; %%% if melt = 0
+      % useRBCS = true; %%% if melt is non-zero
+    useRBCS = false; %%% if melt = 0
   end
 
   
@@ -2575,6 +2575,8 @@ end
             'Um_Diss','Um_Advec','Um_dPhiX','Um_Ext','Um_AdvZ3','Um_AdvRe','Um_Cori',...
             'Vm_Diss','Vm_Advec','Vm_Cori','Vm_dPhiY','Vm_Ext','Vm_AdvZ3','Vm_AdvRe',...
             'VISrI_Um','VISrI_Vm',...
+            ... %%% KPP diagnostics
+            'KPPviscA','KPPdiffS','KPPdiffT','KPPghat','KPPhbl','KPPmld','KPPfrac',...
         };
 
   end

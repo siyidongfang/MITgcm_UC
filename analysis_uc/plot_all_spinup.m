@@ -17,7 +17,7 @@
     expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
     % expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
     % expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_troughOnlyOnShelf'
-    expname = 'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt24m'
+    expname = 'res2km_Ua-5Va5_Atide0.05_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0'
 
     loadexp;
     plot_KE_EKE_T_S_series
