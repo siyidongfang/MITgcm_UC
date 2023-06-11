@@ -258,13 +258,13 @@ function [nTimeSteps,h,obsuice,obsvice,lwdown,...
   Xwest = 200*m1km; %%% Longitude of western trough wall, default 200*m1km
   if(useSHELFICE)
       Yicefront = 100*m1km; %%% Latitude of ice shelf face
-      Hicefront = 200; %%% Depth of ice shelf frace
+      Hicefront = 200; %%% Depth of ice shelf face
   else
       Yicefront = 0;
       Hicefront = 0;
   end
   
-  Hice = Hicefront-(Hshelf+Hbed); %%% Change in ice thickness from ice fromt to southern domain edge
+  Hice = Hicefront-(Hshelf+Hbed); %%% Change in ice thickness from ice front to southern domain edge
   
   Wtrough = 30*m1km; %%% Trough width, ref 30km
   Xtrough = (Xeast+Xwest)/2; %%% Longitude of trough
