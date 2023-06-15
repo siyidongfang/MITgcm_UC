@@ -93,16 +93,16 @@ clear hFacWf hFacSf DZf
 
 prodname = [prodir 'BCvorticity/' expname '_BCvorticity_AllDepth.mat'];
 load(prodname,'zeta_dPhi')
-zeta_BPT = zeta_dPhi; %%% Bottom pressure torque
+zeta_BPT = zeta_dPhi; %%% Bottom pressure torque (plus ice-shelf pressure torque)
 
 prodname = [prodir 'BCvorticity/' expname '_BCvorticity_sw.mat'];
 load(prodname,'zeta_dPhi')
-zeta_IPT = - zeta_dPhi; %%% Interfacial (isopycnal) pressure torque exerted on the CDW layer
+zeta_IPT = - zeta_dPhi; %%% Interfacial (isopycnal) pressure torque exerted on the CDW layer (plus ice-shelf pressure torque)
 
 prodname = [prodir 'BCvorticity/' expname '_BCvorticity_cdw.mat'];
 load(prodname,'zeta_dPhi','zeta_Advec','zeta_Diss','zeta_residual',...
     'zeta_Cori','zeta_AdvZ3','zeta_AdvRe','XXf','YYf','VV_bc','zeta_betaV','UU_bc','xxf','yyf')
-zeta_BPTplusIPT = zeta_dPhi;
+zeta_BPTplusIPT = zeta_dPhi; %%% BPT plus IPT plus ice-shelf pressure torque in the inner cavity
 VV_cdwf = VV_bc;
 UU_cdwf = UU_bc;
 

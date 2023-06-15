@@ -8,6 +8,7 @@
    clear;close all;
 
     %%% Add path
+    addpath /Users/csi/MITgcm_UC/analysis_uc;
     addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
@@ -81,7 +82,8 @@
     %%
 
     fontsize = 18;
-    XLIM = [190 270];
+     XLIM = [0 400];
+    % XLIM = [190 270];
     YLIM = [0 1.5];
     % XLIM = [200 400];
     % YLIM = [0 4];
@@ -264,7 +266,7 @@
 %%
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig3/';
-     print('-dpng','-r300',[figdir 'fig3.png']);
+     print('-dpng','-r300',[figdir 'fig3-cavity.png']);
 
 
 

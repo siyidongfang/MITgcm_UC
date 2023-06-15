@@ -26,7 +26,7 @@
     end
 
     dxf = delXf(1); dyf = delYf(1);
-    xx  = cumsum((delX +  [0 delX(1:Nx-1)])/2)  -Lx/2;
+    xx  = cumsum((delX +  [0 delX(1:Nx-1)])/2) -Lx/2;
     xxf= cumsum((delXf + [0 delXf(1:Nxf-1)])/2)-Lx/2;
     
     yy  = cumsum((delY +  [0 delY(1:Ny-1)])/2);
@@ -118,6 +118,7 @@
     excludedeepocean = find(zzf<-600);
     mask_sw_ugridf(:,:,excludedeepocean)= NaN;
     mask_sw_vgridf(:,:,excludedeepocean)= NaN;
+    mask_sw_tgridf(:,:,excludedeepocean)= NaN;
 
 
     Hcdw_ugridf = sum(mask_cdw_ugridf.*hFacWf.*DZf,3,'omitnan');
@@ -138,10 +139,21 @@
     tt_swf(tt_swf==0)=NaN;
     
     figure(10)
+    set(gcf,'Position',[75 285 1088 352])
+    subplot(1,2,1)
     pcolor(XXf/1000,YYf/1000,Hcdw_ugridf);shading flat; colorbar;
     colormap(jet)
     clim([100 500])
-    ylim([0 230])
+    ylim([0 400])
     title('CDW thickness (m)')
     set(gca,'FontSize',fontsize);
+
+    subplot(1,2,2)
+    pcolor(XXf/1000,YYf/1000,Hsw_tgridf);shading flat; colorbar;
+    colormap(jet)
+    clim([0 400])
+    ylim([0 400])
+    title('Surface layer thickness (m)')
+    set(gca,'FontSize',fontsize);
+
 
