@@ -18,7 +18,7 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2};
+    exp_group = EXP_GROUP{1};
     list_exps_new;
     load_constants;
     load_colors;
@@ -261,7 +261,7 @@
 %%
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig4/';
      % print('-dpng','-r300',[figdir 'fig4_matlab_v1.png']);
-     print('-dpng','-r300',[figdir 'vorticity_nomelt.png']);
+     % print('-dpng','-r300',[figdir 'vorticity_nomelt.png']);
 
 
 
