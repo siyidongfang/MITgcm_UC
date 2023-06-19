@@ -2,28 +2,28 @@
 %%% calc_IceShelfPressureTorque.m
 %%%
 %%% Calculate the pressure torque exerted from the ice shelf to the CDW
-%%% layer
+%%% layer or the surface layer
 
-    clear;close all;
-
-    %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions/;    
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-
-    %%% Load experiment and data
-    EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{1}
-    list_exps_new;
-    load_colors;
-
-for ne =1:20
-% for ne =1:1
+    % clear;close all;
+% 
+%     %%% Add path
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/functions/;    
+%     addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/;
+%     addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
+%     addpath /Users/csi/Software/eos80_legacy_gamma_n/;
+%     addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
+%     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
+% 
+%     %%% Load experiment and data
+%     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
+%     exp_group = EXP_GROUP{2}
+%     list_exps_new;
+%     load_colors;
+% 
+% for ne =1:4
     clear xx yy zz tt Nr Nx Ny DXG DYF RAZ Um_dPhiX Vm_dPhiY zeta_ISdPhi diff_idx expname isb_surf isb_bot
 
+        ne
         expname = EXPNAME{ne}
         loadexp;
         load_constants;
@@ -149,7 +149,7 @@ for ne =1:20
     
     zeta_ISdPhi(zeta_ISdPhi==0)=NaN;
     
-    prodname = [prodir '/BCvorticity/' expname '_IceShelfPT']
+    prodname = [prodir '/BCvorticity/' expname '_IceShelfPT'];
     save(prodname,'expname','zeta_ISdPhi','xx','yy','diff_idx','isb_surf','isb_bot','tt_isbs','tt_isbb','zz_surf','zz_bot')
     
     figure(5)
@@ -161,5 +161,5 @@ for ne =1:20
     set(gca,'fontsize',fontsize)
 
    
-end
+% end
 

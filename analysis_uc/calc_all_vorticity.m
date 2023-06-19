@@ -17,18 +17,25 @@
     savefigure = true;
 
 
-for ne =1
+for ne =1:20
     close all
         ne
         expname = EXPNAME{ne};
         loadexp;
         load_data;
         load_spacing;
-        calc_BCvorticity_cdw_sw;
-        calc_BCvorticity_PVint;
+%%%%%%%%%%%% The following functions are used for the manuscript
+        % calc_BCvorticity_cdw_sw;
+        % calc_IceShelfPressureTorque;
+        calc_BCvorticity_ISPT;
+        % calc_BCvorticity_PVint;
+        % calc_BCvorticity_stretching_Coriolis;
+
+%%%%%%%%%%%%
+%%%% Not directly used in the manuscript
+
 %         plot_BCvorticity_cdw_sw;
 %         calc_BCvorticity_fh_lat_int;
-        calc_BCvorticity_stretching_Coriolis;
 %         calc_BCvorticity_lat_rectangle_int
 %         calc_BCvorticity_lat_int;
         % calc_CDW_quasi_stfn;
@@ -45,6 +52,7 @@ for ne =1
 %         calc_BTvorticity_int_curl;  
         % calc_pressure_torque;
 %         calc_BTvorticity_uc;
+
 end
 
 
