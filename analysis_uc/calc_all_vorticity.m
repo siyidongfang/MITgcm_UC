@@ -17,7 +17,7 @@
     savefigure = true;
 
 
-for ne =1:20
+for ne =1:1
     close all
         ne
         expname = EXPNAME{ne};
