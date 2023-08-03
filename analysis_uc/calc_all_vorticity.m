@@ -33,25 +33,24 @@ for ne =1:1
 
 %%%%%%%%%%%%
 %%%% Not directly used in the manuscript
-
-%         plot_BCvorticity_cdw_sw;
-%         calc_BCvorticity_fh_lat_int;
-%         calc_BCvorticity_lat_rectangle_int
-%         calc_BCvorticity_lat_int;
+        % plot_BCvorticity_cdw_sw;
+        % calc_BCvorticity_fh_lat_int;
+        % calc_BCvorticity_lat_rectangle_int
+        % calc_BCvorticity_lat_int;
         % calc_CDW_quasi_stfn;
-%         calc_BCvorticity_h_int;
+        % calc_BCvorticity_h_int;
         % calc_w_layers;
         % calc_zeta_cdw;
-%         calc_BCvorticity_fh_int;
-%         calc_BCvorticity_stfn_int;
-%         calc_w;
-%         calc_BCvorticity_sponge;
-%         calc_BTvorticity_curl_int; 
-%         calc_BTvorticity_Aint;
-%         calc_BTVorticity_fh_int;
-%         calc_BTvorticity_int_curl;  
+        % calc_BCvorticity_fh_int;
+        % calc_BCvorticity_stfn_int;
+        % calc_w;
+        % calc_BCvorticity_sponge;
+        % calc_BTvorticity_curl_int; 
+        % calc_BTvorticity_Aint;
+        % calc_BTVorticity_fh_int;
+        % calc_BTvorticity_int_curl;  
         % calc_pressure_torque;
-%         calc_BTvorticity_uc;
+        % calc_BTvorticity_uc;
 
 end
 
