@@ -12,7 +12,7 @@ clear diag_frequency;
 loadexp;
 % loadexp_caolila;
 
-Nlayers = 166;
+Nlayers = 70;
 
 savename = [prodir '/' expname '_tavg_5yrs.mat'];
 
