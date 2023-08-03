@@ -22,7 +22,7 @@
     load_spacing;
     load_colors;
     
-    prodname = [prodir expname '_vortPVint-v3.mat'];
+    prodname = [prodir expname '_vortPVint-v4.mat'];
     load(prodname)
 
     fontsize = 17;
@@ -132,12 +132,13 @@
     leg1  = legend([lpt ladv ldis lres],...
     'Total pressure torque','Total advection','Dissipation','Residual','FontSize',fontsize);
     legend boxoff;
-    set(leg1,'Position', [0.1318 0.235 0.3709 0.0875])  
+    set(leg1,'Position', [0.1318 0.24 0.3709 0.0875])  
     xlabel('Latitude, y (km)');
     ylabel('(10^3 m^3/s^2)');
     title('Cumulatively integrated vorticity budget','FontSize',fontsize+3,'FontWeight','normal')
     xlim([50 250])
-    % ylim([-8 8])
+    ylim([-8 8])
+    yticks([-8:4:8]);
     grid on;grid minor;
     % text(ax2,51,-9,'(b)','FontSize',fontsize+2)
     annotation('textbox',[0 0.35 0.15 0.01],'String','c','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
@@ -148,19 +149,19 @@
         'Bottom pressure torque','Interfacial pressure torque',...
         'FontSize',fontsize-0.5);
     legend boxoff;
-    set(leg2,'Position', [0.1291 0.0665 0.4264 0.0445])  
+    set(leg2,'Position', [0.1291 0.0635 0.4264 0.0445])  
 
     ah2=axes('position',get(ax3,'position'),'visible','off');
     leg3 = legend(ah2,[lcori lvortadv lvertadv],...
         'Coriolis term','Vorticity advection','Vertical advection','FontSize',fontsize-0.5);
     legend boxoff;
-    set(leg3,'Position', [0.5736 0.0570 0.3236 0.0650])  
+    set(leg3,'Position', [0.5736 0.0530 0.3236 0.0650])  
 
 
      figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
-     % print('-dpng','-r300',[figdir 'fig5_matlab.png']);
+     print('-dpng','-r300',[figdir 'fig5_matlab2.png']);
 
-     print('-dpng','-r300',[figdir 'fig5_colorbar.png']);
+     % % print('-dpng','-r300',[figdir 'fig5_colorbar.png']);
 
 
 

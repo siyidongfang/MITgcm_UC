@@ -27,8 +27,8 @@ for ne =1:1
 %%%%%%%%%%%% The following functions are used for the manuscript
         % calc_BCvorticity_cdw_sw;
         % calc_IceShelfPressureTorque;
-        calc_BCvorticity_ISPT;
-        % calc_BCvorticity_PVint;
+        % calc_BCvorticity_ISPT;
+        calc_BCvorticity_PVint;
         % calc_BCvorticity_stretching_Coriolis;
 
 %%%%%%%%%%%%

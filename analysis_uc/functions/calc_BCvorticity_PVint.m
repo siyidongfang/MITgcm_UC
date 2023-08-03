@@ -8,7 +8,8 @@
 
     load_colors;
 
-    prodname_new = [prodir expname '_vorticity_cdw.mat'];
+    load([prodir expname '_vorticity_cdw.mat'],'Hcdw_vgridf','Hcdw_ugridf')
+    prodname_new = [prodir expname '_vorticity_cdw_ISPT.mat'];
     load(prodname_new)
 
     %%% Calculate potential vorticity
@@ -64,7 +65,12 @@
 
     %%% Interpolate the vorticity terms onto this new grid
     pvf = interp2(YY,XX,PV,YYf,XXf,'linear');
-    zeta_BPTplusIPTf = interp2(YY,XX,zeta_BPTplusIPT,YYf,XXf,'linear');
+    % zeta_BPT(isnan(zeta_BPT))=0;zeta_IPT(isnan(zeta_IPT))=0;
+    % zeta_TPT = zeta_BPT+zeta_IPT;
+    % zeta_TPT(zeta_TPT==0)=NaN;
+    % zeta_BPT(zeta_BPT==0)=NaN;
+    % zeta_IPT(zeta_IPT==0)=NaN;
+    zeta_TPTf = interp2(YY,XX,zeta_TPT,YYf,XXf,'linear');
     zeta_BPTf = interp2(YY,XX,zeta_BPT,YYf,XXf,'linear');
     zeta_IPTf = interp2(YY,XX,zeta_IPT,YYf,XXf,'linear');
     zeta_Advecf = interp2(YY,XX,zeta_Advec,YYf,XXf,'linear');
@@ -120,7 +126,7 @@
 
     Amaskf(~isnan(Amaskf))=1;
 
-    BPTplusIPT_Aint = cumsum(sum(zeta_BPTplusIPTf.*Amaskf*dxf*dyf,'omitnan'));
+    BPTplusIPT_Aint = cumsum(sum(zeta_TPTf.*Amaskf*dxf*dyf,'omitnan'));
     BPT_Aint = cumsum(sum(zeta_BPTf.*Amaskf*dxf*dyf,'omitnan'));
     IPT_Aint = cumsum(sum(zeta_IPTf.*Amaskf*dxf*dyf,'omitnan'));
     Advec_Aint = cumsum(sum(zeta_Advecf.*Amaskf*dxf*dyf,'omitnan'));
@@ -160,7 +166,7 @@
     end
 
 
-    prodname = [prodir expname '_vortPVint-v3.mat'];
+    prodname = [prodir expname '_vortPVint-v4.mat'];
     save(prodname,...
         'XXf','YYf','XX','YY','xxf','yyf',...
         'PV','pvf','Amaskf','bathy',...
