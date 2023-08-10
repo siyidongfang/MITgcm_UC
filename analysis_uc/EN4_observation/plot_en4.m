@@ -1,133 +1,109 @@
 %%%
 %%% plot_en4.m
 %%%
-%%% Make cross sections with the EN4 dataset: https://www.metoffice.gov.uk/hadobs/en4/
-%%% 
-%%% Observations of the Amundsen continental shelf:
-%%% 2022 02-08
-%%% 2020 03-09
-%%% 2019 02-11
-%%% 2016 01-02
-%%% Use 2019, 2020, 2022 3-year average??
+%%% Plot locations of cast in the Amundsen Sea and CDW T/h
+%%% https://www.metoffice.gov.uk/hadobs/en4/
 
-%%% Plot one crose-section first??
+%%% TO DO: plot cast locations with shape indicate years and color indicate months
+%%% TO DO: Add bathymetric contours to the plot
 
-
-clear;
-
-addpath /Users/csi/MITgcm_UC/analysis_uc;
-addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
-
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/;
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2022
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2020
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2019
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2016
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2014
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2013
-
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2020
-
-
-% % %%% Load the data
-% ncfname = 'EN.4.2.2.f.analysis.g10.202004.nc';
-% 
-% %%% Load file data
-% lat = ncread(ncfname,'lat');
-% lon = ncread(ncfname,'lon');
-% depth = ncread(ncfname,'depth');
-% temperature = ncread(ncfname,'temperature');
-% salinity = ncread(ncfname,'salinity');
-% 
-% figure(1)
-% pcolor(lon,lat,temperature(:,:,1)');shading flat;colorbar;
-
-
-%%% Load the data
-ncfname = 'EN.4.2.2.f.profiles.g10.201212.nc';
-
-%%% Load file data
-LATITUDE = ncread(ncfname,'LATITUDE');
-LONGITUDE = ncread(ncfname,'LONGITUDE');
-DEPH_CORRECTED = ncread(ncfname,'DEPH_CORRECTED'); %%% corrected depth, m
-TEMP = ncread(ncfname,'TEMP'); %%% temperature in situ t90 scale, degC
-PSAL_CORRECTED = ncread(ncfname,'PSAL_CORRECTED'); %%% corrected practical salinity, unit 1
-JULD = ncread(ncfname,'JULD'); %%% days since 1950-01-01 00:00:00 utc
-% PI_NAME = ncread(ncfname,'PI_NAME'); %%% primary investigator name
-
-% figure(1)
-% scatter(LONGITUDE,LATITUDE)
-
-%%% Find the profiles in the Amundsen Sea
-lat_max = -65;
-lon_min = -150;
-lon_max = -90;
-
-% lat_max = -65;
-% lon_min = -110;
-% lon_max = -95;
-
-idx_Am = [];
-for i=1:length(LATITUDE)
-    if(LATITUDE(i)<=lat_max && LONGITUDE(i)>=lon_min && LONGITUDE(i)<=lon_max)
-        idx_Am = [idx_Am i];
-    end
-end
-
-% PI_Am = PI_NAME(:,idx_Am);
-% for i=1:length(idx_Am)
-%     PI_Am(:,i)'
-% end
-
-
-lat = LATITUDE(idx_Am);
-lon = LONGITUDE(idx_Am);
-temp = TEMP(:,idx_Am);
-depth = DEPH_CORRECTED(:,idx_Am);
-
-figure(4)
-pcolor(temp);shading flat;colorbar;clim([-1 1]);colormap(redblue)
-
-figure(5)
-pcolor(depth);shading flat;colorbar;colormap(jet);clim([0 1000])
-
-
-%%
-    fontsize = 17;linewidth=2;
-    figure(6)
-    clf;set(gcf,'Color','w')
+    clear;
+    
+    addpath /Users/csi/MITgcm_UC/analysis_uc;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/etopo1/
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/SouthernOceanSSH/
-    %%% Load data
+    addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/
+
+    load('CDWproducts_en4.mat')
+
+    fontsize = 17;linewidth=2;
+
+ 
+    figure(1)
+    clf;set(gcf,'Color','w')
     load AntarcticCoastline.mat
-    %%%%%%%%%%% Load the coastline
     load coastlines
     antarctica = shaperead('landareas', 'UseGeoCoords', true,...
       'Selector',{@(name) strcmp(name,'Antarctica'), 'Name'});
+    latlim = [-76 -65];lonlim = [-130 -90];
 
-    latlim = [-78 -65];lonlim = [181 -65];
+    subplot(1,3,1)
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; framem on; gridm on; mlabel on; plabel on;
-    setm(gca,'MLabelLocation',30);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
     setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
-    geoshow(coastlat,coastlon,'DisplayType','polygon')
-    % aa = pcolorm(LAT,LON,double(DOT_clim)/100);  
-    aa = scatterm(lat,lon);  
-    shading interp;colormap(cmocean('balance'));
-    % clim([-2.15 -1.55])
+    % geoshow(coastlat,coastlon,'DisplayType','polygon')
+
+    lat10 = lat(1:7,:)';lat10=lat10(:)';lon10 = lon(1:7,:)';lon10=lon10(:)';
+    mon10 = month_2010'*ones(1,Nn_max);mon10 = mon10';mon10=mon10(:)';
+    aa2010 = scatterm(lat10,lon10,20,mon10,".");  
+    aa2013 = scatterm(lat(8,:),lon(8,:),20,month_2013*ones(1,Nn_max),".");  
+    lat14 = lat(9:18,:)';lat14=lat14(:)';lon14 = lon(9:18,:)';lon14=lon14(:)';
+    mon14 = month_2014'*ones(1,Nn_max);mon14 = mon14';mon14=mon14(:)';
+    aa2014 = scatterm(lat14,lon14,20,mon14,".");  
+    lat16 = lat(19:20,:)';lat16=lat16(:)';lon16 = lon(19:20,:)';lon16=lon16(:)';
+    mon16 = month_2016'*ones(1,Nn_max);mon16 = mon16';mon16=mon16(:)';
+    aa2016 = scatterm(lat16,lon16,20,mon16,".");  
+    lat19 = lat(21:30,:)';lat19=lat19(:)';lon19 = lon(21:30,:)';lon19=lon19(:)';
+    mon19 = month_2019'*ones(1,Nn_max);mon19 = mon19';mon19=mon19(:)';
+    aa2019 = scatterm(lat19,lon19,20,mon19,".");  
+    lat20 = lat(31:37,:)';lat20=lat20(:)';lon20 = lon(31:37,:)';lon20=lon20(:)';
+    mon20 = month_2020'*ones(1,Nn_max);mon20 = mon20';mon20=mon20(:)';
+    aa2020 = scatterm(lat20,lon20,20,mon20,".");  
+    lat22 = lat(38:45,:)';lat22=lat22(:)';lon22 = lon(38:45,:)';lon22=lon22(:)';
+    mon22 = month_2022'*ones(1,Nn_max);mon22 = mon22';mon22=mon22(:)';
+    aa2022 = scatterm(lat22,lon22,20,mon22,".");  
+
+    % shading interp;
+    colormap(WhiteBlueGreenYellowRed(7));
+    colorbar;
+    clim([1 12])
     hold on;
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;box on;axis tight;set(gca,'FontSize',fontsize);
-    % title('Dynamic ocean topography','FontSize',fontsize+3,'FontWeight','normal')
-    % h1 = colorbar;
-    % set(h1,'Position', [0.295 0.673 0.008 0.21]);
-    % annotation('textbox',[0.288 0.93 0.15 0.01],'String','(m)','FontSize',fontsize,'LineStyle','None');
+    % freezeColors;
+    
+    subplot(1,3,2)
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis on; framem on; gridm on; mlabel on; plabel on;
+    setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    aa = scatterm(lat_sort_t,lon_sort_t,50,t_cdw_sort,".");  
+    shading flat;
+    colormap(WhiteBlueGreenYellowRed(0));
+    colorbar;
+    clim([0 2])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;box on;axis tight;set(gca,'FontSize',fontsize);
+
+    subplot(1,3,3)
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis on; framem on; gridm on; mlabel on; plabel on;
+    setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    aa = scatterm(lat_sort_h,lon_sort_h,50,h_cdw_sort,".");  
+    shading flat;
+    colormap(WhiteBlueGreenYellowRed(0));
+    colorbar;
+    clim([0 1500])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;box on;axis tight;set(gca,'FontSize',fontsize);
+
 
 
 
