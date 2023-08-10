@@ -326,6 +326,8 @@ elseif(n==6)
     c=cMap(10:ll,:); 
 elseif(n==7)
     c=cMap(34:20:254,:); 
+elseif(n==8)
+    c=cMap([30:30:210],:); 
 end
 
 end
