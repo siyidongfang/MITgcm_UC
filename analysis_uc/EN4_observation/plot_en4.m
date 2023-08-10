@@ -42,7 +42,7 @@ addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2
 
 
 %%% Load the data
-ncfname = 'EN.4.2.2.f.profiles.g10.202202.nc';
+ncfname = 'EN.4.2.2.f.profiles.g10.202007.nc';
 
 %%% Load file data
 LATITUDE = ncread(ncfname,'LATITUDE');
@@ -77,16 +77,52 @@ end
 %     PI_Am(:,i)'
 % end
 
-figure(3)
-scatter(LONGITUDE(idx_Am),LATITUDE(idx_Am));
-shading flat;colorbar;
+
+lat = LATITUDE(idx_Am);
+lon = LONGITUDE(idx_Am);
+temp = TEMP(:,idx_Am);
+depth = DEPH_CORRECTED(:,idx_Am);
 
 figure(4)
-pcolor(TEMP(:,idx_Am));shading flat;
+pcolor(temp);shading flat;colorbar;clim([-1 1]);colormap(redblue)
+
+figure(5)
+pcolor(depth);shading flat;colorbar;colormap(jet);clim([0 1000])
 
 
-%%% Calculate the CDW depth
+%%
+    fontsize = 17;linewidth=2;
+    figure(6)
+    clf;set(gcf,'Color','w')
 
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/etopo1/
+    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/SouthernOceanSSH/
+    %%% Load data
+    load AntarcticCoastline.mat
+    %%%%%%%%%%% Load the coastline
+    load coastlines
+    antarctica = shaperead('landareas', 'UseGeoCoords', true,...
+      'Selector',{@(name) strcmp(name,'Antarctica'), 'Name'});
+
+    latlim = [-78 -65];lonlim = [181 -65];
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis on; framem on; gridm on; mlabel on; plabel on;
+    setm(gca,'MLabelLocation',30);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    % aa = pcolorm(LAT,LON,double(DOT_clim)/100);  
+    aa = scatterm(lat,lon);  
+    shading interp;colormap(cmocean('balance'));
+    % clim([-2.15 -1.55])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;box on;axis tight;set(gca,'FontSize',fontsize);
+    % title('Dynamic ocean topography','FontSize',fontsize+3,'FontWeight','normal')
+    % h1 = colorbar;
+    % set(h1,'Position', [0.295 0.673 0.008 0.21]);
+    % annotation('textbox',[0.288 0.93 0.15 0.01],'String','(m)','FontSize',fontsize,'LineStyle','None');
 
 
 
