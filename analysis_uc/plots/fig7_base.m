@@ -1,3 +1,6 @@
+
+%%% Plot the bathymetry for the schematic
+
 clear;close all;
 
     %%% Add path

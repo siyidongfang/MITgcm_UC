@@ -1,7 +1,7 @@
 %%%
 %%% fig2.m --- This should be Fig. S1 in the manuscript
 %%%
-%%% Model evaluation -- CDW and SSH
+%%% Model evaluation -- plot cross sections
 %%%
 
    clear;close all;

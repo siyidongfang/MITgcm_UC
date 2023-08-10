@@ -1,5 +1,5 @@
 %%%
-%%% fig_pseudo.m
+%%% fig_pseudo.m --- This should be Fig. 4 in the manuscript 
 %%%
 %%% plot heat transport of 4 simulations with pseudo ice shelf
 

@@ -1,5 +1,5 @@
 %%%
-%%% fig5.m
+%%% fig5.m  --- This should be Fig. 2 in the manuscript 
 %%%
 %%% Area-integrated vorticity budget
 %%%

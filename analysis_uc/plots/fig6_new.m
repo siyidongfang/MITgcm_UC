@@ -1,5 +1,5 @@
 %%%
-%%% fig6_new.m
+%%% fig6_new.m  --- This should be Fig. S3 in the manuscript 
 %%%
 %%% Sensitivity plots
 

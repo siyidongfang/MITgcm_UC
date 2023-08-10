@@ -1,5 +1,5 @@
 %%%
-%%% fig_compensation.m
+%%% fig_compensation.m --- This should be Fig. S7 in the manuscript 
 %%%
 %%% plot heat transport of 4 simulations with pseudo ice shelf
 

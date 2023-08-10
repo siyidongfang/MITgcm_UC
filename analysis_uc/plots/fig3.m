@@ -1,5 +1,5 @@
 %%%
-%%% fig3.m
+%%% fig3.m --- This should be Fig. S2 in the manuscript 
 %%%
 %%% Model evaluation -- cross-sections of T, S, u
 %%%

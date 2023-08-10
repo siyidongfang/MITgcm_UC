@@ -1,5 +1,5 @@
 %%%
-%%% fig4_new.m
+%%% fig4_new.m --- This should be Figs. S3 and S6 in the manuscript 
 %%%
 %%% Vorticity budget
 %%%
