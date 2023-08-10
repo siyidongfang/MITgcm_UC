@@ -19,11 +19,16 @@ addpath /Users/csi/MITgcm_UC/analysis_uc;
 addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
 addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
 addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
+
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/;
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2022
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2020
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2019
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2016
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2014
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2013
+
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2020
 
 
@@ -42,7 +47,7 @@ addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2
 
 
 %%% Load the data
-ncfname = 'EN.4.2.2.f.profiles.g10.202007.nc';
+ncfname = 'EN.4.2.2.f.profiles.g10.201212.nc';
 
 %%% Load file data
 LATITUDE = ncread(ncfname,'LATITUDE');
