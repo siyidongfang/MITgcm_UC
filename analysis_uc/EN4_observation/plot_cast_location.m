@@ -3,6 +3,9 @@
 %%%
 %%% Plot locations of cast with CDW in the Amundsen Sea
 
+%%% TO DO: plot cast locations with shape indicate years and color indicate months
+%%% TO DO: Add bathymetric contours to the plot
+
     clear;
     
     addpath /Users/csi/MITgcm_UC/analysis_uc;
@@ -129,7 +132,7 @@
             if(~isempty(zidx_warm))
                 if(sum(diff(zidx_warm)>1)>0)
                     jump_zidx_warm = find(diff(zidx_warm)>1); %%% exclude surface warm water layer
-                    zidx_cdw = jump_zidx_warm(end)+1:zidx_warm(end);
+                    zidx_cdw = zidx_warm(jump_zidx_warm(end)+1):zidx_warm(end);
                 else
                     zidx_cdw = zidx_warm;
                 end
@@ -162,20 +165,27 @@
     h_cdw_all = h_cdw';
     h_cdw_all = h_cdw_all(:)';
 
+    [t_cdw_sort,I] = sort(t_cdw_all);
+    lat_sort = lat_all(I);
+    lon_sort = lon_all(I);
+    h_cdw_sort = h_cdw_all(I);
+
+
     figure(1)
     clf;set(gcf,'Color','w')
     load AntarcticCoastline.mat
     load coastlines
     antarctica = shaperead('landareas', 'UseGeoCoords', true,...
       'Selector',{@(name) strcmp(name,'Antarctica'), 'Name'});
-    latlim = [-78 -65];lonlim = [181 -65];
+    latlim = [-76 -65];lonlim = [-130 -90];
+
     subplot(2,1,1)
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; framem on; gridm on; mlabel on; plabel on;
-    setm(gca,'MLabelLocation',30);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
     setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
     geoshow(coastlat,coastlon,'DisplayType','polygon')
-    aa = scatterm(lat_all,lon_all,30,t_cdw_all,".");  
+    aa = scatterm(lat_sort,lon_sort,50,t_cdw_sort,".");  
     shading interp;
     colormap(WhiteBlueGreenYellowRed(0));
     colorbar;
@@ -189,10 +199,10 @@
     subplot(2,1,2)
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; framem on; gridm on; mlabel on; plabel on;
-    setm(gca,'MLabelLocation',30);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
     setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
     geoshow(coastlat,coastlon,'DisplayType','polygon')
-    aa = scatterm(lat_all,lon_all,30,h_cdw_all,".");  
+    aa = scatterm(lat_sort,lon_sort,50,h_cdw_sort,".");  
     shading interp;
     colormap(WhiteBlueGreenYellowRed(0));
     colorbar;
