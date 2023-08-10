@@ -20,26 +20,41 @@
     
 
     %%% Load the data
-    month_2016 = 2:9; % months with observations over the Amundsen Sea continental shelf
-    month_2019 = 2:9;
-    month_2020 = 2:9;
+    month_2016 = 1:2; % months with observations over the Amundsen Sea continental shelf
+    month_2019 = 2:11;
+    month_2020 = 3:9;
     month_2022 = 2:9;
 
     FNAME = [];
-    for m = month-month(1)+1
+    for m = 1:2
         %%% Load the data
-        FNAME = [FNAME;'EN.4.2.2.f.profiles.g10.20200' num2str(month(m)) '.nc'];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20160' num2str(m) '.nc']];
     end
-
+    for m = 2:9
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20190' num2str(m) '.nc']];
+    end
+    for m =10:11
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2019' num2str(m) '.nc']];
+    end
+    for m =3:9
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20200' num2str(m) '.nc']];
+    end
+    for m =2:9
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20220' num2str(m) '.nc']];
+    end
+    
     %%% Amundsen Sea
     lat_max = -65;
     lon_min = -150;
     lon_max = -90;
     
 
-
-    Nt = length(month);
-    Nn_max = 500; %%% Max number of profiles with CDW in the Amundsen Sea
+    Nt = size(FNAME,1);
+    Nn_max = 411; %%% Max number of profiles with CDW in the Amundsen Sea
     Nz = 400;
     
     lat = NaN.*zeros(Nt,Nn_max);
@@ -49,9 +64,10 @@
     temp = NaN.*zeros(Nt,Nz,Nn_max);
     salt = NaN.*zeros(Nt,Nz,Nn_max);
     
-    for m = month-month(1)+1
+    for m = 1:Nt
         %%% Load the data
-        ncfname = ['EN.4.2.2.f.profiles.g10.20200' num2str(month(m)) '.nc'];
+        m
+        ncfname = FNAME(m,:);
         clear LATITUDE LONGITUDE DEPH_CORRECTED TEMP PSAL_CORRECTED JULD
         %%% Load file data
         LATITUDE = ncread(ncfname,'LATITUDE')';
@@ -82,7 +98,7 @@
                 idx=[idx i];
             end
         end
-        N = length(idx)
+        N = length(idx);
         if(N>Nn_max)
             error('N > Nprofile_max!!');
         end
@@ -97,12 +113,14 @@
     clear LATITUDE LONGITUDE DEPH_CORRECTED TEMP PSAL_CORRECTED JULD
     clear lat_Am lon_Am time_Am depth_Am temp_Am salt_Am idx_Am 
 
-%%
+    %%
+
     %%% Calculate the thickness and mean temperature of the CDW layer
     t_cdw = zeros(Nt,Nn_max); 
     h_cdw = zeros(Nt,Nn_max);
 
     for m=1:Nt
+        m
         for n=1:Nn_max
             clear zidx_warm zidx_cold jump_zidx_warm zidx_cdw Zcdw temp_cdw
             zidx_warm = find(temp(m,:,n)>=0);
@@ -131,7 +149,7 @@
     h_cdw(h_cdw==0)=NaN;
     t_cdw(t_cdw==0)=NaN;
 
-%%
+    %%
 
     fontsize = 17;linewidth=2;
 
@@ -141,6 +159,8 @@
     lon_all = lon_all(:)';
     t_cdw_all = t_cdw';
     t_cdw_all = t_cdw_all(:)';
+    h_cdw_all = h_cdw';
+    h_cdw_all = h_cdw_all(:)';
 
     figure(1)
     clf;set(gcf,'Color','w')
@@ -149,6 +169,7 @@
     antarctica = shaperead('landareas', 'UseGeoCoords', true,...
       'Selector',{@(name) strcmp(name,'Antarctica'), 'Name'});
     latlim = [-78 -65];lonlim = [181 -65];
+    subplot(2,1,1)
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; framem on; gridm on; mlabel on; plabel on;
     setm(gca,'MLabelLocation',30);setm(gca,'PLabelLocation',3);
@@ -156,17 +177,31 @@
     geoshow(coastlat,coastlon,'DisplayType','polygon')
     aa = scatterm(lat_all,lon_all,30,t_cdw_all,".");  
     shading interp;
-    % colormap(cmocean('balance'));
     colormap(WhiteBlueGreenYellowRed(0));
     colorbar;
     clim([0 2])
-    % clim([0 500])
     hold on;
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;box on;axis tight;set(gca,'FontSize',fontsize);
 
+    subplot(2,1,2)
+    axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
+    axis on; framem on; gridm on; mlabel on; plabel on;
+    setm(gca,'MLabelLocation',30);setm(gca,'PLabelLocation',3);
+    setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
+    geoshow(coastlat,coastlon,'DisplayType','polygon')
+    aa = scatterm(lat_all,lon_all,30,h_cdw_all,".");  
+    shading interp;
+    colormap(WhiteBlueGreenYellowRed(0));
+    colorbar;
+    clim([0 500])
+    hold on;
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
+    patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
+    hold off;box on;axis tight;set(gca,'FontSize',fontsize);
 
 
 
