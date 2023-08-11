@@ -17,6 +17,16 @@
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
     addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
+    addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/
+
+    %%% Load bathymetry data
+    ncfile = 'ETOPO1_Bed_g_gmt4.grd';
+    x = ncread(ncfile,'x');
+    y = ncread(ncfile,'y');
+    b = ncread(ncfile,'z');
+    x = x(1:7724);
+    y = y(667:1453);
+    b = b(1:7724,667:1453);
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1};
@@ -67,9 +77,9 @@
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
-    title('Sea surface height','FontSize',fontsize+3,'FontWeight','normal')
+    title('Sea surface height (model)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax4,-294,25,{'(d)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.005 0.605 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.005 0.605 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
     
@@ -90,8 +100,8 @@
     curr.LineWidth = 1;
     set(curr,'AutoScale','on', 'AutoScaleFactor', 2.5,'Color',[0.4 0.4 0.4])
     hold off;
-    % clim([0 3]); 
-    clim([0.2 0.6]);
+    clim([0 3]); 
+    % clim([0.2 0.6]);
     colormap(WhiteBlueGreenYellowRed(0));
     h5 = colorbar(ax5);
     set(h5,'Position',[0.63 0.12 0.008 0.38]);
@@ -101,9 +111,9 @@
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
-    title('CDW thickness','FontSize',fontsize+3,'FontWeight','normal')
+    title('CDW thickness (model)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax5,-294,25,{'(e)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.34 0.605 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.34 0.605 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
@@ -128,14 +138,14 @@
     h6 = colorbar(ax6);
     set(h6,'Position',[0.97 0.12 0.008 0.38]);
     text(ax6,315,394,{'(^oC)'},'FontSize',fontsize)
-    title('CDW potential temperature','FontSize',fontsize+3,'FontWeight','normal')
+    title('CDW potential temperature (model)','FontSize',fontsize+3,'FontWeight','normal')
     set(gca,'FontSize',fontsize);
     ylim(YLIM);xlim([-300 300])
     yticks(0:100:400);xticks(-300:200:300)
     ylabel('Latitude, y (km)')
     xlabel('Longitude, x (km)')
     % text(ax6,-294,25,{'(f)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.68 0.605 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.68 0.605 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 %%
@@ -176,6 +186,8 @@
     colormap(cmocean('balance'));
     clim([-2.15 -1.55])
     hold on;
+    levels = [-7000:1000:-1000];
+    contourm(y',x,b',levels,'ShowText', 'off','Color',darkgray)
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
@@ -188,7 +200,7 @@
     set(h1,'Position', [0.295 0.673 0.008 0.21]);
     annotation('textbox',[0.288 0.93 0.15 0.01],'String','(m)','FontSize',fontsize,'LineStyle','None');
     % textm(-77,-178,{'(a)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.005 0.98 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.005 0.98 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
@@ -214,6 +226,8 @@
     colormap(WhiteBlueGreenYellowRed(0));
     clim([0 5])
     hold on;
+    levels = [-7000:1000:-1000];
+    contourm(y',x,b',levels,'ShowText','off','Color',darkgray)
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
@@ -221,15 +235,15 @@
     box on;
     axis tight
     set(gca,'FontSize',fontsize);
-    title('CDW thickness','FontSize',fontsize+3,'FontWeight','normal')
+    title('CDW thickness (WOA 2023)','FontSize',fontsize+3,'FontWeight','normal')
     h2 = colorbar;
     set(h2,'Position', [0.63 0.673 0.008 0.21]);
     annotation('textbox',[0.625 0.93 0.15 0.01],'String','(km)','FontSize',fontsize,'LineStyle','None');
     % textm(-77,-178,{'(b)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.34 0.98 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.34 0.98 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
-
+%%
 
     ax3 = subplot('position',[0.72 0.65 panelsize1]);
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
@@ -247,6 +261,8 @@
     shading interp;
     clim([0 2])
     hold on;
+    levels = [-7000:1000:-1000];
+    contourm(y',x,b',levels,'ShowText','off','Color',darkgray)
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
@@ -254,12 +270,12 @@
     box on;
     axis tight
     set(gca,'FontSize',fontsize);
-    title('CDW potential temperature','FontSize',fontsize+3,'FontWeight','normal')
+    title('CDW potential temperature (WOA 2023)','FontSize',fontsize+3,'FontWeight','normal')
     h3 = colorbar;
     set(h3,'Position', [0.97 0.673 0.008 0.21]);
     annotation('textbox',[0.965 0.935 0.15 0.01],'String','(^oC)','FontSize',fontsize,'LineStyle','None');
     % textm(-77,-178,{'(c)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.68 0.98 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.68 0.98 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
 
@@ -268,7 +284,7 @@
 
     %%
     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig2/';
-    % print('-dpng','-r300',[figdir 'fig2_matlab.png']);
+    print('-dpng','-r300',[figdir 'fig2_new1.png']);
 %     print('-dpng','-r300',[figdir 'fig2_colorbar.png']);
 
 

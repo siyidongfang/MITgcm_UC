@@ -65,19 +65,24 @@
     y = y(871:1501);
     b = b(3301:5401,871:1501);
 
-    % figure(3)
-    % contourm(y',x,b')
 
     %%
+    panelsize = [0.24 0.6];
+
     figure(1)
-    clf;set(gcf,'Color','w')
+    clf;   
+    set(gcf,'Color','w');
+    scrsz = get(0,'ScreenSize');
+    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1400 500]);
+
     load AntarcticCoastline.mat
     load coastlines
     antarctica = shaperead('landareas', 'UseGeoCoords', true,...
       'Selector',{@(name) strcmp(name,'Antarctica'), 'Name'});
-    latlim = [-75.5 -65];lonlim = [-125 -90];
+    latlim = [-76 -65];lonlim = [-125 -90];
     
-    subplot(1,2,1)
+    %%% Plotting options
+    ax2 = subplot('position',[0.38 0.325 panelsize]);
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; framem on; gridm off; mlabel on; plabel on;
     setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
@@ -86,17 +91,21 @@
     levels = [-7000:1000:-1000];
     contourm(y',x,b',levels,'ShowText', 'off','Color',darkgray)
     hold on;
-    aa = scatterm(lat_sort_t,lon_sort_t,50,t_cdw_sort,".");  
+    aa = scatterm(lat_sort_h,lon_sort_h,50,h_cdw_sort/1000,".");  
     shading interp;
     colormap(WhiteBlueGreenYellowRed(0));
-    colorbar;
-    clim([0 2])
+    clim([0 1.2])
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;box on;axis tight;set(gca,'FontSize',fontsize);
-%%
-    subplot(1,2,2)
+    title('CDW thickness (EN4)','FontSize',fontsize+3,'FontWeight','normal')
+    h2 = colorbar(ax2);
+    set(h2,'Position', [0.63 0.35 0.008 0.5]);
+    annotation('textbox',[0.62 0.935 0.15 0.01],'String','(km)','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.34 0.98 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+
+    ax3 = subplot('position',[0.72 0.325 panelsize]);
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
     axis on; framem on; gridm off; mlabel on; plabel on;
     setm(gca,'MLabelLocation',15);setm(gca,'PLabelLocation',3);
@@ -105,19 +114,34 @@
     levels = [-7000:1000:-1000];
     contourm(y',x,b',levels,'ShowText', 'off','Color',darkgray)
     hold on;
-    aa = scatterm(lat_sort_h,lon_sort_h,50,h_cdw_sort,".");  
+    aa = scatterm(lat_sort_t,lon_sort_t,50,t_cdw_sort,".");  
     shading interp;
     colormap(WhiteBlueGreenYellowRed(0));
-    colorbar;
-    clim([0 1200])
+    clim([0 2])
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;box on;axis tight;set(gca,'FontSize',fontsize);
+    set(gca,'FontSize',fontsize);
+    title('CDW potential temperature (EN4)','FontSize',fontsize+3,'FontWeight','normal')
+    h3 = colorbar;
+    set(h3,'Position', [0.97 0.35 0.008 0.5]);
+    annotation('textbox',[0.965 0.935 0.15 0.01],'String','(^oC)','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.68 0.98 0.15 0.01],'String','i','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig2/';
+    print('-dpng','-r300',[figdir 'fig2_en4_cdw.png']);
 
+%%
     figure(2)
-    clf;set(gcf,'Color','w')
+    clf;   
+    set(gcf,'Color','w');
+    scrsz = get(0,'ScreenSize');
+    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1400 500]);
+
+    ax1 = subplot('position',[0.045 0.325 panelsize]);
+
+    
     load AntarcticCoastline.mat
     load coastlines
     antarctica = shaperead('landareas', 'UseGeoCoords', true,...
@@ -143,14 +167,20 @@
     aa2022 = scatterm(lat22,lon22,markersize,mon22,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);    
 
     % shading interp;
-    h=colorbar('XTickLabel',{'2010','2013','2014','2016','2019','2020','2022'});
+    h3=colorbar('XTickLabel',{'2010','2013','2014','2016','2019','2020','2022'});
     hold on;
     bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;box on;axis tight;set(gca,'FontSize',fontsize);
-    
+    title('Time and location of EN4 profiles','FontSize',fontsize+3,'FontWeight','normal')
+    set(h3,'Position', [0.295 0.35 0.008 0.5]);
+    annotation('textbox',[0.29 0.935 0.15 0.01],'String','(Year)','FontSize',fontsize,'LineStyle','None');
+    annotation('textbox',[0.005 0.98 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig2/';
+    print('-dpng','-r300',[figdir 'fig2_en4.png']);
    
+
 
 
 
