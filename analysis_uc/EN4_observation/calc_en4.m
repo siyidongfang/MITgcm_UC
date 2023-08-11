@@ -23,6 +23,8 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2013
     addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2010
 
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
+    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     %%% Load the data
     month_2010 = 3:9;
@@ -92,7 +94,7 @@
         %%% Load the data
         m
         ncfname = FNAME(m,:);
-        clear LATITUDE LONGITUDE DEPH_CORRECTED TEMP PSAL_CORRECTED JULD
+        clear LATITUDE LONGITUDE DEPH_CORRECTED TEMP PSAL_CORRECTED JULD SA_Am in_ocean pt_Am
         %%% Load file data
         LATITUDE = ncread(ncfname,'LATITUDE')';
         LONGITUDE = ncread(ncfname,'LONGITUDE')';
@@ -110,15 +112,23 @@
         end
         lat_Am = LATITUDE(idx_Am);
         lon_Am = LONGITUDE(idx_Am);
-        time_Am = JULD(:,idx_Am);
+        time_Am = JULD(idx_Am);
         depth_Am = DEPH_CORRECTED(:,idx_Am);
         temp_Am = TEMP(:,idx_Am);
         salt_Am = PSAL_CORRECTED(:,idx_Am);
     
-        %%% Exclude profiles that does not contain CDW (temp >=0 degC)
+        depth_Am(depth_Am<=0)=NaN;
+        temp_Am(depth_Am<=0)=NaN;
+        salt_Am(depth_Am<=0)=NaN;
+
+        %%%% Convert in-situ temperature to surface-referenced potential temperature
+        [SA_Am, in_ocean] = gsw_SA_from_SP(salt_Am,depth_Am,lon_Am,lat_Am);
+        pt_Am = gsw_pt0_from_t(SA_Am,temp_Am,depth_Am);
+
+        %%% Exclude profiles that does not contain CDW (potential temp >=0 degC)
         idx = [];
         for i=1:length(idx_Am)
-            if(sum(temp_Am(:,i)>=0)~=0)
+            if(sum(pt_Am(:,i)>=0)~=0)
                 idx=[idx i];
             end
         end
@@ -130,12 +140,12 @@
         lon(m,1:N) = lon_Am(idx);
         time(m,1:N) = time_Am(:,idx);
         depth(m,:,1:N) = depth_Am(:,idx);
-        temp(m,:,1:N) = temp_Am(:,idx);
+        temp(m,:,1:N) = pt_Am(:,idx);
         salt(m,:,1:N) = salt_Am(:,idx);
 
     end
     clear LATITUDE LONGITUDE DEPH_CORRECTED TEMP PSAL_CORRECTED JULD
-    clear lat_Am lon_Am time_Am depth_Am temp_Am salt_Am idx_Am 
+    clear lat_Am lon_Am time_Am depth_Am temp_Am salt_Am idx_Am SA_Am in_ocean pt_Am
 
     %%
 
@@ -205,6 +215,10 @@
     [h_cdw_sort,J] = sort(h_cdw_all);
     lat_sort_h = lat_all(J);
     lon_sort_h = lon_all(J);
+
+
+
+
 
 
     %%% Save the data
