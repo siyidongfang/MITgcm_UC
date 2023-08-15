@@ -2,8 +2,7 @@
 %%% calc_BCvorticity_cdw_sw.m
 %%%
 %%% Calculate the baroclinic vorticity budget for the CDW layer and the
-%%% surface layer.
-%%% Interporate the results onto a finer grid
+%%% surface layer, after intepolating the momentum budget terms onto a finer grid
 
 
     load([prodir '/' expname '_tavg_5yrs.mat'],'Um_dPhiX','Um_Advec','Um_Diss','Um_Ext',...

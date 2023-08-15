@@ -22,11 +22,17 @@
     addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2014
     addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2013
     addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2010
+    addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2009
+    addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2008
+    addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2007
 
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/;
     addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
 
     %%% Load the data
+    month_2007 = [2:4 12];
+    month_2008 = [3:6 12];
+    month_2009 = 1:4;
     month_2010 = 3:9;
     month_2013 = 12;
     month_2014 = 1:10;
@@ -36,6 +42,26 @@
     month_2022 = 2:9;
 
     FNAME = [];
+    for m = 2:4
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20070' num2str(m) '.nc']];
+    end
+    for m = 12
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2007' num2str(m) '.nc']];
+    end
+    for m = 3:6
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20080' num2str(m) '.nc']];
+    end
+    for m = 12
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2008' num2str(m) '.nc']];
+    end
+    for m = 1:4
+        %%% Load the data
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20090' num2str(m) '.nc']];
+    end
     for m = 3:9
         %%% Load the data
         FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20100' num2str(m) '.nc']];
@@ -177,10 +203,10 @@
                     t_cdw(m,n)=0;
                     h_cdw(m,n)=0;
                 end
-                if(h_cdw(m,n)==0) %%% in some profiles of 2013 and 2014, the temperature is a constant value of larger than 35, which seems to be an error and should be excluded
+                if(h_cdw(m,n)==0) 
                     t_cdw(m,n)=0;
                 end
-                if(h_cdw(m,n)<20) %%% in some profiles of 2013 and 2014, the temperature is a constant value of larger than 35, which seems to be an error and should be excluded
+                if(h_cdw(m,n)<10) 
                     t_cdw(m,n)=0;
                     h_cdw(m,n)=0;
                 end
@@ -224,6 +250,6 @@
     %%% Save the data
     save('CDWproducts_en4.mat','lat','lon','time','depth','temp','salt', ...
        'h_cdw','h_cdw','t_cdw_sort','lat_sort_t','lon_sort_t','h_cdw_sort','lat_sort_h','lon_sort_h', ...
-       'FNAME','month_2010','month_2013','month_2014','month_2016','month_2019','month_2020','month_2022',...
+       'FNAME','month_2007','month_2008','month_2009','month_2010','month_2013','month_2014','month_2016','month_2019','month_2020','month_2022',...
        'lat_max','lon_min','lon_max','Nn_max','Nt','Nz','lat_all','lon_all','t_cdw_all','h_cdw_all')
 

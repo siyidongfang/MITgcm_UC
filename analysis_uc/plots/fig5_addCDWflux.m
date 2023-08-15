@@ -1,5 +1,5 @@
 %%%
-%%% fig5.m  --- This should be Fig. 2 in the manuscript 
+%%% fig5_addCDWflux.m  --- This should be Fig. 2 in the manuscript 
 %%%
 %%% Area-integrated vorticity budget
 %%%

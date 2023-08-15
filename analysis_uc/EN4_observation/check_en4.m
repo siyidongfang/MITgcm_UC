@@ -22,6 +22,8 @@ addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
 addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/;
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2020
+
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2022
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2020
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2019
@@ -29,7 +31,18 @@ addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2014
 addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2013
 
-addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2020
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2000
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2001
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2002
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2003
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2004
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2005
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2006
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2007
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2008
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2009
+addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2010
+
 
 
 % % %%% Load the data
@@ -47,7 +60,9 @@ addpath /Users/csi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.analyses.g10.2
 
 
 %%% Load the data
-ncfname = 'EN.4.2.2.f.profiles.g10.201212.nc';
+for nm = 200001:200012
+    nm
+ncfname = ['EN.4.2.2.f.profiles.g10.' num2str(nm) '.nc'];
 
 %%% Load file data
 LATITUDE = ncread(ncfname,'LATITUDE');
@@ -88,14 +103,14 @@ lon = LONGITUDE(idx_Am);
 temp = TEMP(:,idx_Am);
 depth = DEPH_CORRECTED(:,idx_Am);
 
-figure(4)
-pcolor(temp);shading flat;colorbar;clim([-1 1]);colormap(redblue)
+% figure(4)
+% pcolor(temp);shading flat;colorbar;clim([-1 1]);colormap(redblue)
 
-figure(5)
-pcolor(depth);shading flat;colorbar;colormap(jet);clim([0 1000])
+% figure(5)
+% pcolor(depth);shading flat;colorbar;colormap(jet);clim([0 1000])
 
 
-%%
+
     fontsize = 17;linewidth=2;
     figure(6)
     clf;set(gcf,'Color','w')
@@ -129,5 +144,5 @@ pcolor(depth);shading flat;colorbar;colormap(jet);clim([0 1000])
     % set(h1,'Position', [0.295 0.673 0.008 0.21]);
     % annotation('textbox',[0.288 0.93 0.15 0.01],'String','(m)','FontSize',fontsize,'LineStyle','None');
 
-
+end
 
