@@ -73,6 +73,11 @@
     curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
     set(curr,'AutoScale','off');
+    currScale = quiver(-178,28,scalefactor*25,0,'MaxHeadSize',30);
+    currScale.Color = [0.4 0.4 0.4];
+    currScale.LineWidth = 1;
+    set(currScale,'AutoScale','off')
+    text(-198,32,'25 m^2/s','verticalalignment','bottom','FontSize',fontsize-3)
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)

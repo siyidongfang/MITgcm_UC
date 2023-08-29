@@ -82,7 +82,7 @@
     annotation('textbox',[0.005 0.605 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     freezeColors;
 
-    
+    %%
     ax5 = subplot('position',[0.38 0.1 panelsize2]);
     pcolor(xxf/1000,yyf/1000,Hcdw_tgridf'/1000);
     shading flat;
@@ -91,14 +91,22 @@
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy,[-3500:1000:-1500],'k--','LineWidth',0.5,'ShowText','on');% clabel(C,h,'LabelSpacing',800);hold off;
     hold on;[C,h]=contour(XX/1000,YY/1000,bathy2,[-800 -800],'k:','LineWidth',1,'ShowText','on');% clabel(C,h,'LabelSpacing',1000);hold off;
     hold on;
+    scalefactor = 1.5;
     svx = 8; svy = 6;
     UU_cdwf(YY/1000>250)=NaN;
     VV_cdwf(YY/1000>250)=NaN;
     curr = quiver(xxf(1:svx:end)'/1000,yyf(1:svy:end)'/1000, ...
-    UU_cdwf(1:svx:end,1:svy:end)',VV_cdwf(1:svx:end,1:svy:end)');
-    curr.Color = [0 102 0]/255;
+    scalefactor*UU_cdwf(1:svx:end,1:svy:end)',scalefactor*VV_cdwf(1:svx:end,1:svy:end)');
+    % curr.Color = [0 102 0]/255;
+    curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
-    set(curr,'AutoScale','on', 'AutoScaleFactor', 2.5,'Color',[0.4 0.4 0.4])
+    set(curr,'AutoScale','off')
+    % set(curr,'AutoScale','off', 'AutoScaleFactor', 2.5,'Color',[0.4 0.4 0.4])
+    currScale = quiver(178,28,scalefactor*25,0,'MaxHeadSize',30);
+    currScale.Color = [0.4 0.4 0.4];
+    currScale.LineWidth = 1;
+    set(currScale,'AutoScale','off')
+    text(148,32,'25 m^2/s','verticalalignment','bottom','FontSize',fontsize-3)
     hold off;
     clim([0 3]); 
     % clim([0.2 0.6]);
@@ -129,10 +137,17 @@
     UU_cdwf(YY/1000>250)=NaN;
     VV_cdwf(YY/1000>250)=NaN;
     curr = quiver(xxf(1:svx:end)'/1000,yyf(1:svy:end)'/1000, ...
-    UU_cdwf(1:svx:end,1:svy:end)',VV_cdwf(1:svx:end,1:svy:end)');
-    curr.Color = [0 102 0]/255;
+    scalefactor*UU_cdwf(1:svx:end,1:svy:end)',scalefactor*VV_cdwf(1:svx:end,1:svy:end)');
+    % curr.Color = [0 102 0]/255;
+    curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
-    set(curr,'AutoScale','on', 'AutoScaleFactor', 2.5,'Color',[0.4 0.4 0.4])
+    set(curr,'AutoScale','off')
+    % set(curr,'AutoScale','off', 'AutoScaleFactor', 2.5,'Color',[0.4 0.4 0.4])
+    currScale = quiver(178,28,scalefactor*25,0,'MaxHeadSize',30);
+    currScale.Color = [0.4 0.4 0.4];
+    currScale.LineWidth = 1;
+    set(currScale,'AutoScale','off')
+    text(148,32,'25 m^2/s','verticalalignment','bottom','FontSize',fontsize-3)
     hold off;
     clim([0 2]);
     h6 = colorbar(ax6);

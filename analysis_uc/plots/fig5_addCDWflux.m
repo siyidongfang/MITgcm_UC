@@ -66,12 +66,17 @@
     scalefactor=0.9;
     curr = quiver(xx(1:svx:end)'/1000,yy(1:svy:135)'/1000, ...
     scalefactor*UU_cdw(1:svx:end,1:svy:135)',scalefactor*VV_cdw(1:svx:end,1:svy:135)');
-    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     % curr.Color = [0 102 0]/255;
     curr.Color = [0.4 0.4 0.4];
     curr.LineWidth = 1;
     % set(curr,'AutoScale','on', 'AutoScaleFactor',1.6)
     set(curr,'AutoScale','off')
+    currScale = quiver(148,28,scalefactor*25,0,'MaxHeadSize',30);
+    currScale.Color = [0.4 0.4 0.4];
+    currScale.LineWidth = 1;
+    set(currScale,'AutoScale','off')
+    text(138,32,'25 m^2/s','verticalalignment','bottom','FontSize',fontsize-3)
+    plot(-100:1:100,100*ones(201,1),'-','LineWidth',1.5,'Color',black)
     ylim(YLIM);xlim(XLIM);
     yticks(YTICKS);xticks(XTICKS);
     % clim([-0.15 0.15])

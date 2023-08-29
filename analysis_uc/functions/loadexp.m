@@ -53,19 +53,19 @@ Cp = 3994;
 
 %%% Load data files
 
-hydrogTheta = zeros(Nx,Ny,Nr);
-fid = fopen(fullfile(inputpath,hydrogThetaFile),'r','b');
-for k=1:Nr  
-  hydrogTheta(:,:,k) = fread(fid,[Nx Ny],'real*8');
-end
-fclose(fid);
-
-hydrogSalt = zeros(Nx,Ny,Nr);
-fid = fopen(fullfile(inputpath,hydrogSaltFile),'r','b');
-for k=1:Nr  
-  hydrogSalt(:,:,k) = fread(fid,[Nx Ny],'real*8');
-end
-fclose(fid);
+% hydrogTheta = zeros(Nx,Ny,Nr);
+% fid = fopen(fullfile(inputpath,hydrogThetaFile),'r','b');
+% for k=1:Nr  
+%   hydrogTheta(:,:,k) = fread(fid,[Nx Ny],'real*8');
+% end
+% fclose(fid);
+% 
+% hydrogSalt = zeros(Nx,Ny,Nr);
+% fid = fopen(fullfile(inputpath,hydrogSaltFile),'r','b');
+% for k=1:Nr  
+%   hydrogSalt(:,:,k) = fread(fid,[Nx Ny],'real*8');
+% end
+% fclose(fid);
 
 % tideSteps = round(repeatPeriod/tidePotPeriod);
 % tidePot = zeros(Nx,Ny,tideSteps);
