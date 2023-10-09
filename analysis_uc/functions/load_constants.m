@@ -37,8 +37,8 @@
     % Xmax = Xsbmax;
     Xmin = Wsponge;
     % Xmin = 100*m1km;
-    Xmax = 300*m1km;
-    % Xmax = Lx-Wsponge;
+    % Xmax = 300*m1km;
+    Xmax = Lx-Wsponge;
 
     
     rho_i = 920;

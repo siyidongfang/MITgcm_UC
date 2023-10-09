@@ -86,7 +86,7 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     title('Onshore CDW heat flux and volume flux','FontSize',fontsize+3,'fontweight', 'normal')
-    annotation('textbox',[0 0.995 0.15 0.01],'String','a','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0 0.995 0.15 0.01],'String','A','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
     freezeColors;
 
     %%
@@ -117,7 +117,7 @@
     text(ax2,45,200,'Gray: CDW PV contours','FontSize',fontsize-1,'Color',darkgray)
     text(ax2,45,160,{'Color: selected contours', '           for area integral'},'FontSize',fontsize-1,'Color',blue)
     % text(ax1,-297,18,'(a)','FontSize',fontsize+2)
-    annotation('textbox',[0 0.69 0.15 0.01],'String','b','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0 0.69 0.15 0.01],'String','B','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
 
 
 
@@ -146,7 +146,7 @@
     yticks([-8:4:8]);
     grid on;grid minor;
     % text(ax2,51,-9,'(b)','FontSize',fontsize+2)
-    annotation('textbox',[0 0.35 0.15 0.01],'String','c','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0 0.35 0.15 0.01],'String','C','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
 
 
     ah=axes('position',get(ax3,'position'),'visible','off');

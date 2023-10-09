@@ -3,7 +3,8 @@
 
 switch(exp_group)
     case 'seaice_boundary'
-          expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
+          expdir = '/Volumes/si/MITgcm_UC/exps_uc/seaice_boundary'
+          % expdir = '/Users/csi/MITgcm_UC/exps_uc/seaice_boundary/';
           prodir = '/Users/csi/MITgcm_UC/products/seaice_boundary/';
 %     prodir = '/Users/csi/MITgcm_UC/products_backup/products_uc/seaice_boundary/';
           EXPNAME = {...

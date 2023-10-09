@@ -82,7 +82,7 @@
     set(gca,'FontSize',fontsize);
     clim(CLIM)
     title('Onshore CDW heat flux and volume flux','FontSize',fontsize+2.5,'fontweight', 'normal')
-    annotation('textbox',[0.001 0.995 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.995 0.15 0.01],'String','A','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax2 = subplot('position',[0.606 0.77 subplotsize]);
@@ -94,7 +94,7 @@
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
     title('Cumulative CDW heat transport at ice front','FontSize',fontsize+2.5,'fontweight', 'normal')
-    annotation('textbox',[0.54 0.995 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.995 0.15 0.01],'String','B','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 %%
 
@@ -129,7 +129,7 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    annotation('textbox',[0.001 0.738 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.738 0.15 0.01],'String','C','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax4 = subplot('position',[0.606 0.53 subplotsize]);
@@ -140,7 +140,7 @@
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.738 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.738 0.15 0.01],'String','D','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 %%
@@ -173,7 +173,7 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    annotation('textbox',[0.001 0.5 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.5 0.15 0.01],'String','E','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 %%
     ax6 = subplot('position',[0.606 0.29 subplotsize]);
@@ -184,7 +184,7 @@
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.5 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.5 0.15 0.01],'String','F','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 
@@ -220,7 +220,7 @@
     xlabel('Longitude, x (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    annotation('textbox',[0.001 0.26 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.26 0.15 0.01],'String','G','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 %%
 
     handle=colorbar;set(handle,'position',[0.47 0.2 0.01 0.59]);
@@ -236,7 +236,7 @@
     xlabel('Longitude, x (km)');
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.26 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.26 0.15 0.01],'String','H','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 

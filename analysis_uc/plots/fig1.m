@@ -82,7 +82,7 @@
 %%%%%%%%%%%%%%%%%%%
     %%% Plotting options
     ax1 = subplot('position',[0.03 0.055 0.49 0.95]);
-    annotation('textbox',[0.025 0.88 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.025 0.88 0.15 0.01],'String','A','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     %%% Bathymetry  
     p = surface(X(:,2:end-1),Y(:,2:end-1),-h(:,2:end-1)/1000);
@@ -249,7 +249,7 @@
 
     %%% Zonal boundary conditions: thermal wind velocity + neutral density contours
     axb = subplot('position',[0.57 0.6 0.19 0.35]);
-    annotation('textbox',[0.54 0.995 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.995 0.15 0.01],'String','B','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
  
 %      pcolor(yy/1000,-zz/1000,OBEu'.*bathy_east')
@@ -260,6 +260,7 @@
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);
     colormap(axb,cmocean('balance'));
     clim([-0.07 0.07])
+    % clim([-0.1 0.1])
     set(gca,'FontSize',fontsize);
     title('Boundary restoring velocity','FontSize',fontsize+1,'fontweight', 'normal')
     ylabel('Depth (km)');xlabel('Latitude, y (km)')
@@ -275,7 +276,7 @@
 %%%%%%%%%%%%%%%%%%%
     %%% Zonal-mean zonal velocity + neutral density contours
     axc = subplot('position',[0.57 0.1 0.19 0.35]);
-    annotation('textbox',[0.54 0.5 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.5 0.15 0.01],'String','C','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     pcolor(yy/1000,-zz/1000,uu_xmean');
     hold on;plot(yy/1000,-bathy(1,:)/1000,'k','LineWidth',3);plot(yy/1000,-bathy(round(Nx/2),:)/1000,'k--','LineWidth',3);hold off;
@@ -284,6 +285,7 @@
     shading interp;axis ij;
     colormap(axc,cmocean('balance'));
     clim([-0.07 0.07])
+    % clim([-0.1 0.1])
     set(gca,'FontSize',fontsize);
     title('Zonal-mean zonal velocity','FontSize',fontsize+1,'fontweight', 'normal')
     ylabel('Depth (km)');xlabel('Latitude, y (km)')
@@ -306,7 +308,7 @@
     %%% CDW depth at the zonal boundaries
     axd = subplot('position',[0.85 0.7 0.14 0.25]);
 %      axd = subplot('position',[0.85 0.6 0.14 0.35]);
-    annotation('textbox',[0.82 0.995 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.82 0.995 0.15 0.01],'String','D','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     plot(yy/1000,-Zcdw_pt/1000,'LineWidth',2)
     hold on
@@ -333,7 +335,7 @@
 
     %%% Restoring T/S at the northern boundary
     ax51 = subplot('position',[0.85 0.1 0.14 0.4]);
-    annotation('textbox',[0.82 0.58 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.82 0.58 0.15 0.01],'String','E','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     plot(ax51,tNorth,-zz/1000,'Color',[0.8500 0.3250 0.0980],'LineWidth',1.5);
     ylabel('Depth (km)');
     ax52 = axes('Position',get(ax51,'Position'));
@@ -373,20 +375,20 @@
      print('-dpng','-r300',[figdir 'fig1_matlab_v1.png']);
     
     
-
-    figure(2)
-    set(gca, 'color', 'none');
-    set(gcf, 'color', 'none');
-    scrsz = get(0,'ScreenSize');
-    set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1400 600]);
-    ax1 = subplot('position',[0.03 0.055 0.49 0.95]);
-    colormap(ax1,cmocean('diff'))
-    handle_tt = colorbar(ax1);
-    set(handle_tt,'TickLabels', [ ],'Ticks', [ ]);
-    set(handle_tt,'Position',[0.48    0.3    0.0045    0.15]);
-    annotation('textbox',[0.33 0.425 0.15 0.01],'String',{'Restoring';'temperature';['(' char(176) 'C)']},'FontSize',fontsize-1,'LineStyle','None','horizontalAlignment','right');
-    anno51 = annotation('textbox',[0.485 0.36 0.03 0.1],'String',{'\fontsize{15}2','\fontsize{3}','\fontsize{15}0','\fontsize{3}','\fontsize{15}-2'},'EdgeColor','none');     
-
-%     print('-deps','-r200',[figdir 'fig1_colorbar.eps']);
-    exportgraphics(gca,[figdir 'fig1_colorbar.pdf'],'BackgroundColor','none','Resolution',300)
-
+% 
+%     figure(2)
+%     set(gca, 'color', 'none');
+%     set(gcf, 'color', 'none');
+%     scrsz = get(0,'ScreenSize');
+%     set(gcf,'Position',[0.03*scrsz(3) 0.3*scrsz(4) 1400 600]);
+%     ax1 = subplot('position',[0.03 0.055 0.49 0.95]);
+%     colormap(ax1,cmocean('diff'))
+%     handle_tt = colorbar(ax1);
+%     set(handle_tt,'TickLabels', [ ],'Ticks', [ ]);
+%     set(handle_tt,'Position',[0.48    0.3    0.0045    0.15]);
+%     annotation('textbox',[0.33 0.425 0.15 0.01],'String',{'Restoring';'temperature';['(' char(176) 'C)']},'FontSize',fontsize-1,'LineStyle','None','horizontalAlignment','right');
+%     anno51 = annotation('textbox',[0.485 0.36 0.03 0.1],'String',{'\fontsize{15}2','\fontsize{3}','\fontsize{15}0','\fontsize{3}','\fontsize{15}-2'},'EdgeColor','none');     
+% 
+% %     print('-deps','-r200',[figdir 'fig1_colorbar.eps']);
+%     exportgraphics(gca,[figdir 'fig1_colorbar.pdf'],'BackgroundColor','none','Resolution',300)
+% 
