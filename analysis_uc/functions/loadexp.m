@@ -17,12 +17,10 @@ inputpath = fullfile(exppath,'input');
 resultspath = fullfile(exppath,'results');
 
 
-%   addpath /data/MITgcm_ASF-csi/newexp_utils/;
-%   addpath /data/MITgcm_ASF-csi/utils/;
-%   addpath /data/MITgcm_ASF-csi/utils/matlab/;
-  addpath /Users/csi/MITgcm_ASF-csi/newexp_utils/;
-  addpath /Users/csi/MITgcm_ASF-csi/utils/;
-  addpath /Users/csi/MITgcm_ASF-csi/utils/matlab/;
+
+  addpath /Users/ysi/MITgcm_UC/newexp_utils/;
+  addpath /Users/ysi/MITgcm_UC/utils/;
+  addpath /Users/ysi/MITgcm_UC/utils/matlab/;
 
 %%% Load parameters used for this experiment
 run(fullfile(inputpath,'params.m'));
@@ -89,6 +87,7 @@ Cp = 3994;
 % end
 % fclose(fid);
 
+DRC = rdmds(fullfile(resultspath,'DRC'));
 DRF = rdmds(fullfile(resultspath,'DRF'));
 hFacS = rdmds(fullfile(resultspath,'hFacS'));
 hFacW = rdmds(fullfile(resultspath,'hFacW'));
