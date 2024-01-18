@@ -83,9 +83,9 @@ for n=1:KElen
   theta = rdmdsWrapper(fullfile(exppath,'/results/THETA'),dumpIters(n));  
   salt  = rdmdsWrapper(fullfile(exppath,'/results/SALT') ,dumpIters(n));  
   
-  Vol = sum(hFacC.*DX_xyz.*DY_xyz.*DY_xyz,'all');
-  Tseries(n) = sum(theta.*hFacC.*DX_xyz.*DY_xyz.*DY_xyz,'all')/Vol;
-  Sseries(n) = sum(salt.*hFacC.*DX_xyz.*DY_xyz.*DY_xyz,'all')/Vol;  
+  Vol = sum(hFacC.*DX_xyz.*DY_xyz.*DZ_xyz,'all');
+  Tseries(n) = sum(theta.*hFacC.*DX_xyz.*DY_xyz.*DZ_xyz,'all')/Vol;
+  Sseries(n) = sum(salt.*hFacC.*DX_xyz.*DY_xyz.*DZ_xyz,'all')/Vol;  
 end
 
 

@@ -1,8 +1,8 @@
 
 
-addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
+addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps;
+addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps/customcolormap/;
 
 mycolormap = customcolormap(linspace(0,1,11), {'#68011d','#b5172f','#d75f4e','#f7a580','#fedbc9','#f5f9f3','#d5e2f0','#93c5dc','#4295c1','#2265ad','#062e61'});
 

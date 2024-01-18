@@ -5,15 +5,15 @@
 %%%
 
     clear;close all;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
-    addpath  /Users/csi/MITgcm_UC/analysis_uc
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/functions/
+    addpath  /Users/ysi/MITgcm_UC/analysis_uc
     
     EXP_GROUP = {'seaice_boundary';'shelfice_seaice';'pseudo_shelfice_seaice';'no_seaice'};
     exp_group = EXP_GROUP{1}
     list_exps_new;
     load_constants;
     
-    prodir = ['/Users/csi/MITgcm_UC/products/' exp_group '/'];
+    prodir = ['/Users/ysi/MITgcm_UC/products/' exp_group '/'];
     useSEAICE = true;
     ne=1;
     expname = EXPNAME{ne}
@@ -89,7 +89,7 @@
     annotation('textbox',[0 0.995 0.15 0.01],'String','A','FontSize',fontsize+3,'fontweight','bold','LineStyle','None');
     freezeColors;
 
-    %%
+    
 
     ax2 = subplot('position',[0.105 0.42 0.78 0.24]);
     contour(XX/1000,YY/1000,PV,(-20:0.1:0)*1e-7,'Color',gray,'LineWidth',0.5)
@@ -130,7 +130,7 @@
     lpt =plot(yyf/1000,BPTplusIPT_Aint/1000,'LineWidth',3,'Color',blue);
 %     plot(yyf/1000,BPT_Aint+IPT_Aint,'LineWidth',2)
     ladv = plot(yyf/1000,Advec_Aint/1000,'LineWidth',3,'Color',green);
-    lcori = plot(yyf/1000,Cori_Aint/1000,':','LineWidth',1.5,'Color',green);
+    lcori = plot(yyf/1000,Cori_Aint/1000,':','LineWidth',5,'Color',green);
     lvortadv = plot(yyf/1000,AdvZ3f_Aint/1000,'--','LineWidth',1,'Color',green);
     lvertadv = plot(yyf/1000,AdvRef_Aint/1000,'-.','LineWidth',1,'Color',green);
     set(gca,'FontSize',fontsize);
@@ -163,7 +163,7 @@
     set(leg3,'Position', [0.5736 0.0530 0.3236 0.0650])  
 
 
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig5/';
+     figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig5/';
      print('-dpng','-r300',[figdir 'fig5_matlab2.png']);
 
      % % print('-dpng','-r300',[figdir 'fig5_colorbar.png']);

@@ -17,10 +17,9 @@ inputpath = fullfile(exppath,'input');
 resultspath = fullfile(exppath,'results');
 
 
-
-  addpath /Users/ysi/MITgcm_UC/newexp_utils/;
-  addpath /Users/ysi/MITgcm_UC/utils/;
-  addpath /Users/ysi/MITgcm_UC/utils/matlab/;
+addpath /Users/ysi/MITgcm_UC/newexp_utils/;
+addpath /Users/ysi/MITgcm_UC/utils/;
+addpath /Users/ysi/MITgcm_UC/utils/matlab/;
 
 %%% Load parameters used for this experiment
 run(fullfile(inputpath,'params.m'));

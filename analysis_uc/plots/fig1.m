@@ -9,15 +9,15 @@
     clear;close all;
 
     %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/functions;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/library/;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11/library/;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
