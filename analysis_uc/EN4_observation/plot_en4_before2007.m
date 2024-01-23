@@ -24,41 +24,41 @@
     load('CDWproducts_en4_before2007.mat')
 
     n1=1; n2=length(month_1962); nidx=n1:n2
-    lat62 = lat(nidx,:)';lat62=lat62(:)';lon62 = lon(nidx,:)';lon62=lon62(:)';
-    mon62 = 1*ones(1,length(month_1962))'*ones(1,Nn_max);
-    mon62 = mon62';mon62=mon62(:)';
+    % lat62 = lat(nidx,:)';lat62=lat62(:)';lon62 = lon(nidx,:)';lon62=lon62(:)';
+    % mon62 = 1*ones(1,length(month_1962))'*ones(1,Nn_max);
+    % mon62 = mon62';mon62=mon62(:)';
 
-    n1=n2+1; n2=n2+length(month_1972); nidx=n1:n2
-    lat72 = lat(nidx,:)';lat72=lat72(:)';lon72 = lon(nidx,:)';lon72=lon72(:)';
-    mon72 = 1*ones(1,length(month_1972))'*ones(1,Nn_max);
-    mon72 = mon72';mon72=mon72(:)';
+    % n1=n2+1; n2=n2+length(month_1972); nidx=n1:n2
+    % lat72 = lat(nidx,:)';lat72=lat72(:)';lon72 = lon(nidx,:)';lon72=lon72(:)';
+    % mon72 = 1*ones(1,length(month_1972))'*ones(1,Nn_max);
+    % mon72 = mon72';mon72=mon72(:)';
+    % 
+    % n1=n2+1; n2=n2+length(month_1975); nidx=n1:n2
+    % lat75 = lat(nidx,:)';lat75=lat75(:)';lon75 = lon(nidx,:)';lon75=lon75(:)';
+    % mon75 = 1*ones(1,length(month_1975))'*ones(1,Nn_max);
+    % mon75 = mon75';mon75=mon75(:)';
+    % 
+    % n1=n2+1; n2=n2+length(month_1981); nidx=n1:n2
+    % lat81 = lat(nidx,:)';lat81=lat81(:)';lon81 = lon(nidx,:)';lon81=lon81(:)';
+    % mon81 = 1*ones(1,length(month_1981))'*ones(1,Nn_max);
+    % mon81 = mon81';mon81=mon81(:)';
+    % 
+    % n1=n2+1; n2=n2+length(month_1984); nidx=n1:n2
+    % lat84 = lat(nidx,:)';lat84=lat84(:)';lon84 = lon(nidx,:)';lon84=lon84(:)';
+    % mon84 = 1*ones(1,length(month_1984))'*ones(1,Nn_max);
+    % mon84 = mon84';mon84=mon84(:)';
 
-    n1=n2+1; n2=n2+length(month_1975); nidx=n1:n2
-    lat75 = lat(nidx,:)';lat75=lat75(:)';lon75 = lon(nidx,:)';lon75=lon75(:)';
-    mon75 = 1*ones(1,length(month_1975))'*ones(1,Nn_max);
-    mon75 = mon75';mon75=mon75(:)';
+    % n1=n2+1; n2=n2+length(month_1989); nidx=n1:n2
+    % lat89 = lat(nidx,:)';lat89=lat89(:)';lon89 = lon(nidx,:)';lon89=lon89(:)';
+    % mon89 = 1*ones(1,length(month_1989))'*ones(1,Nn_max);
+    % mon89 = mon89';mon89=mon89(:)';
+    % 
+    % n1=n2+1; n2=n2+length(month_1992); nidx=n1:n2
+    % lat92 = lat(nidx,:)';lat92=lat92(:)';lon92 = lon(nidx,:)';lon92=lon92(:)';
+    % mon92 = 1*ones(1,length(month_1992))'*ones(1,Nn_max);
+    % mon92 = mon92';mon92=mon92(:)';
 
-    n1=n2+1; n2=n2+length(month_1981); nidx=n1:n2
-    lat81 = lat(nidx,:)';lat81=lat81(:)';lon81 = lon(nidx,:)';lon81=lon81(:)';
-    mon81 = 1*ones(1,length(month_1981))'*ones(1,Nn_max);
-    mon81 = mon81';mon81=mon81(:)';
-
-    n1=n2+1; n2=n2+length(month_1984); nidx=n1:n2
-    lat84 = lat(nidx,:)';lat84=lat84(:)';lon84 = lon(nidx,:)';lon84=lon84(:)';
-    mon84 = 1*ones(1,length(month_1984))'*ones(1,Nn_max);
-    mon84 = mon84';mon84=mon84(:)';
-
-    n1=n2+1; n2=n2+length(month_1989); nidx=n1:n2
-    lat89 = lat(nidx,:)';lat89=lat89(:)';lon89 = lon(nidx,:)';lon89=lon89(:)';
-    mon89 = 1*ones(1,length(month_1989))'*ones(1,Nn_max);
-    mon89 = mon89';mon89=mon89(:)';
-
-    n1=n2+1; n2=n2+length(month_1992); nidx=n1:n2
-    lat92 = lat(nidx,:)';lat92=lat92(:)';lon92 = lon(nidx,:)';lon92=lon92(:)';
-    mon92 = 1*ones(1,length(month_1992))'*ones(1,Nn_max);
-    mon92 = mon92';mon92=mon92(:)';
-
-    n1=n2+1; n2=n2+length(month_1994); nidx=n1:n2
+    n1=1; n2=length(month_1994); nidx=n1:n2
     lat94 = lat(nidx,:)';lat94=lat94(:)';lon94 = lon(nidx,:)';lon94=lon94(:)';
     mon94 = 2*ones(1,length(month_1994))'*ones(1,Nn_max);
     mon94 = mon94';mon94=mon94(:)';
@@ -234,8 +234,8 @@
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig2/';
-    % print('-dpng','-r300',[figdir 'fig2_en4_cdw.png']);
+    figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig2/';
+    print('-dpng','-r300',[figdir 'fig2_en4_cdw.png']);
 
 %%
     figure(2)
@@ -258,19 +258,18 @@
     setm(gca,'MLabelParallel',-77.2);setm(gca,'FontSize',fontsize-1);
     % geoshow(coastlat,coastlon,'DisplayType','polygon')
     colormap(WhiteBlueGreenYellowRed(9));
-    clim([0.5 10.5])
     levels = [-7000:1000:-1000];
     contourm(y',x,b',levels,'ShowText', 'off','Color',darkgray)
     hold on;
-    % clim([0.5 12.5])
-    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--');
+    bathyhandle = plotm(cntrs_sub{1}(2,:),cntrs_sub{1}(1,:),'Color','k','LineWidth',linewidth,'LineStyle','--'); 
+    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     % aa1962 = scatterm(lat62,lon62,markersize,mon62,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     % aa1972 = scatterm(lat72,lon72,markersize,mon72,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     % aa1975 = scatterm(lat75,lon75,markersize,mon75,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     % aa1981 = scatterm(lat81,lon81,markersize,mon81,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     % aa1984 = scatterm(lat84,lon84,markersize,mon84,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     % aa1989 = scatterm(lat89,lon89,markersize,mon89,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
-    aa1992 = scatterm(lat92,lon92,markersize,mon92,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
+    % aa1992 = scatterm(lat92,lon92,markersize,mon92,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     aa1994 = scatterm(lat94,lon94,markersize,mon94,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
     aa2000 = scatterm(lat00,lon00,markersize,mon00,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);
 
@@ -284,23 +283,19 @@
     aa2019 = scatterm(lat19,lon19,markersize,mon19,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);    
     aa2020 = scatterm(lat20,lon20,markersize,mon20,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);    
     aa2022 = scatterm(lat22,lon22,markersize,mon22,'MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3);    
-    coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
-
-    % shading interp;
-    % h3=colorbar([aa1992 aa1994 aa2000 aa2007 aa2008 aa2009 aa2010 aa2013 aa2014 aa2016 aa2019 aa2020  aa2022],...
-    h3=colorbar(...
-        'XTick',[1:13],'XTickLabel',...
-        {'Prior to 1994','1994','2000',...
-         '2007','2008','2009','2010','2013','2014','2016','2019','2020','2022'});
-
     hold off;box on;axis tight;set(gca,'FontSize',fontsize);
+    h3=colorbar;
+    set(h3,...
+        'XTick',2:1:13,'XTickLabel',...
+        {'1994','2000','2007','2008','2009','2010','2013','2014','2016','2019','2020','2022'},'FontSize',fontsize-3);
+    clim([1.5 13.5])
     title('Time and location of EN4 profiles','FontSize',fontsize+3,'FontWeight','normal')
     set(h3,'Position', [0.295 0.35 0.008 0.5]);
     annotation('textbox',[0.29 0.935 0.15 0.01],'String','(Year)','FontSize',fontsize,'LineStyle','None');
     annotation('textbox',[0.005 0.98 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig2/';
-    % print('-dpng','-r300',[figdir 'fig2_en4.png']);
+    figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig2/';
+    print('-dpng','-r300',[figdir 'fig2_en4.png']);
    
 
 

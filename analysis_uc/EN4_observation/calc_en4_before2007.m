@@ -53,34 +53,34 @@
     %     %%% Load the data
     %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19610' num2str(m) '.nc']];
     % end
-    for m = month_1962
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19620' num2str(m) '.nc']];
-    end
-    for m = month_1972
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19720' num2str(m) '.nc']];
-    end
-    for m = month_1975
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19750' num2str(m) '.nc']];
-    end
-    for m = month_1981
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19810' num2str(m) '.nc']];
-    end
-    for m = month_1984
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19840' num2str(m) '.nc']];
-    end
-    for m = month_1989
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19890' num2str(m) '.nc']];
-    end
-    for m = month_1992
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19920' num2str(m) '.nc']];
-    end
+    % for m = month_1962
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19620' num2str(m) '.nc']];
+    % end
+    % for m = month_1972
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19720' num2str(m) '.nc']];
+    % end
+    % for m = month_1975
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19750' num2str(m) '.nc']];
+    % end
+    % for m = month_1981
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19810' num2str(m) '.nc']];
+    % end
+    % for m = month_1984
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19840' num2str(m) '.nc']];
+    % end
+    % for m = month_1989
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19890' num2str(m) '.nc']];
+    % end
+    % for m = month_1992
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19920' num2str(m) '.nc']];
+    % end
     for m = month_1994
         %%% Load the data
         FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19940' num2str(m) '.nc']];
@@ -238,12 +238,12 @@
 
 
 
-
+%%
 
 
     %%% Save the data
     save('CDWproducts_en4_before2007.mat','lat','lon','time','depth','temp','salt', ...
-       'h_cdw','h_cdw','t_cdw_sort','lat_sort_t','lon_sort_t','h_cdw_sort','lat_sort_h','lon_sort_h', ...
+       'h_cdw','t_cdw','t_cdw_sort','lat_sort_t','lon_sort_t','h_cdw_sort','lat_sort_h','lon_sort_h', ...
        'FNAME','month_1962','month_1972','month_1975','month_1981','month_1984','month_1989','month_1992','month_1994','month_2000',...
        'lat_max','lon_min','lon_max','Nn_max','Nt','Nz','lat_all','lon_all','t_cdw_all','h_cdw_all')
 
