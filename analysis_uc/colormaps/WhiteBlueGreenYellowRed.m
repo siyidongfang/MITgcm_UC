@@ -328,6 +328,9 @@ elseif(n==7)
     c=cMap(34:20:254,:); 
 elseif(n==8)
      c=cMap([40:20:220],:); 
+elseif(n==9)
+     c=cMap([10 20 30 40:20:220],:); 
+
 end
 
 end

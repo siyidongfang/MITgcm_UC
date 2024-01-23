@@ -15,90 +15,83 @@
     addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/etopo1/
     addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/SouthernOceanSSH/
     
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2022
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2020
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2019
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2016
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2014
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2013
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2010
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2009
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2008
-    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2007
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.2000
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1994
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1992
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1989
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1984
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1981
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1975
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1972
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1962
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1961
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/EN4_observation/EN.4.2.2.profiles.g10.1960
+
 
     addpath /Users/ysi/Software/gsw_matlab_v3_06_11/;
     addpath /Users/ysi/Software/gsw_matlab_v3_06_11/library/;
 
     %%% Load the data
-    month_2007 = [2:4 12];
-    month_2008 = [3:6 12];
-    month_2009 = 1:4;
-    month_2010 = 3:9;
-    month_2013 = 12;
-    month_2014 = 1:10;
-    month_2016 = 1:2; % months with observations over the Amundsen Sea continental shelf
-    month_2019 = 2:11;
-    month_2020 = 3:9;
-    month_2022 = 2:9;
-
+    % month_1960 = 2;
+    % month_1961 = 2:3;
+    month_1962 = 1:2;
+    month_1972 = 3;
+    month_1975 = 2;
+    month_1981 = 2;
+    month_1984 = 2; % months with observations over the Amundsen Sea continental shelf
+    month_1989 = 3;
+    month_1992 = 2:3;
+    month_1994 = 2:3;
+    month_2000 = 1:3;
+    
     FNAME = [];
-    for m = 2:4
+    % for m = month_1960
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19600' num2str(m) '.nc']];
+    % end
+    % for m = month_1961
+    %     %%% Load the data
+    %     FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19610' num2str(m) '.nc']];
+    % end
+    for m = month_1962
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20070' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19620' num2str(m) '.nc']];
     end
-    for m = 12
+    for m = month_1972
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2007' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19720' num2str(m) '.nc']];
     end
-    for m = 3:6
+    for m = month_1975
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20080' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19750' num2str(m) '.nc']];
     end
-    for m = 12
+    for m = month_1981
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2008' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19810' num2str(m) '.nc']];
     end
-    for m = 1:4
+    for m = month_1984
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20090' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19840' num2str(m) '.nc']];
     end
-    for m = 3:9
+    for m = month_1989
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20100' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19890' num2str(m) '.nc']];
     end
-    for m = 12
+    for m = month_1992
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2013' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19920' num2str(m) '.nc']];
     end
-    for m = 1:9
+    for m = month_1994
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20140' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.19940' num2str(m) '.nc']];
     end
-    for m = 10
+    for m = month_2000
         %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2014' num2str(m) '.nc']];
-    end
-    for m = 1:2
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20160' num2str(m) '.nc']];
-    end
-    for m = 2:9
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20190' num2str(m) '.nc']];
-    end
-    for m =10:11
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.2019' num2str(m) '.nc']];
-    end
-    for m =3:9
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20200' num2str(m) '.nc']];
-    end
-    for m =2:9
-        %%% Load the data
-        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20220' num2str(m) '.nc']];
+        FNAME = [FNAME;['EN.4.2.2.f.profiles.g10.20000' num2str(m) '.nc']];
     end
 
+
+    %%
     %%% Amundsen Sea
     lat_max = -65;
     lon_min = -150;
@@ -117,6 +110,7 @@
     salt = NaN.*zeros(Nt,Nz,Nn_max);
     
     for m = 1:Nt
+    % for m=3
         %%% Load the data
         m
         ncfname = FNAME(m,:);
@@ -248,8 +242,8 @@
 
 
     %%% Save the data
-    save('CDWproducts_en4.mat','lat','lon','time','depth','temp','salt', ...
+    save('CDWproducts_en4_before2007.mat','lat','lon','time','depth','temp','salt', ...
        'h_cdw','h_cdw','t_cdw_sort','lat_sort_t','lon_sort_t','h_cdw_sort','lat_sort_h','lon_sort_h', ...
-       'FNAME','month_2007','month_2008','month_2009','month_2010','month_2013','month_2014','month_2016','month_2019','month_2020','month_2022',...
+       'FNAME','month_1962','month_1972','month_1975','month_1981','month_1984','month_1989','month_1992','month_1994','month_2000',...
        'lat_max','lon_min','lon_max','Nn_max','Nt','Nz','lat_all','lon_all','t_cdw_all','h_cdw_all')
 
