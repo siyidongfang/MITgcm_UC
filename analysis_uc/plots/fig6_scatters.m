@@ -1,5 +1,7 @@
 
 
+    lw_markers = 2;
+
     xrange = max(dataX)-min(dataX);
     xgrid = min(dataX)-xrange/5:xrange/100:max(dataX)+xrange/5;
     f2 = fit(dataX(group2)',dataY(group2)','poly1');
@@ -21,14 +23,14 @@
     Kmax_1 =  scatter(dataX(4),dataY(4),sz,BLUE1,'s','filled','MarkerEdgeColor',BLUE1);
     Kmax_10 =  scatter(dataX(5),dataY(5),sz*1.3,BLUE2,'s','filled','MarkerEdgeColor',BLUE2);
     Kmax_30 =  scatter(dataX(6),dataY(6),sz*1.5,BLUE3,'s','filled','MarkerEdgeColor',BLUE3);
-    DeepThermo = scatter(dataX(9),dataY(9),sz*0.9,darkgray,'d','MarkerEdgeColor',darkgray,'LineWidth',1);
-    DeepWind_8 = scatter(dataX(11),dataY(11),sz*1.1,brown2,'d','MarkerEdgeColor',brown2,'LineWidth',1);
-    DeepWind_2 = scatter(dataX(10),dataY(10),sz*0.8,gold,'d','MarkerEdgeColor',gold,'LineWidth',1);
-    DeepHbed_0 = scatter(dataX(18),dataY(18),sz,RED3,'d','MarkerEdgeColor',red,'LineWidth',1);
-    Htr_0 = scatter(dataX(15),dataY(15),sz,'^','MarkerEdgeColor',green,'LineWidth',1);
-    Hbed_0Htr_0 = scatter(dataX(16),dataY(16),sz,'^','MarkerEdgeColor',blue,'LineWidth',1);
-    DeepHtr_0 = scatter(dataX(19),dataY(19),sz,'o','MarkerEdgeColor',green,'LineWidth',1);
-    DeepHbed_0Htr_0 = scatter(dataX(20),dataY(20),sz,'o','MarkerEdgeColor',blue,'LineWidth',1);
+    DeepThermo = scatter(dataX(9),dataY(9),sz*0.9,darkgray,'d','MarkerEdgeColor',darkgray,'LineWidth',lw_markers);
+    DeepWind_8 = scatter(dataX(11),dataY(11),sz*1.1,brown2,'d','MarkerEdgeColor',brown2,'LineWidth',lw_markers);
+    DeepWind_2 = scatter(dataX(10),dataY(10),sz*0.8,gold,'d','MarkerEdgeColor',gold,'LineWidth',lw_markers);
+    DeepHbed_0 = scatter(dataX(18),dataY(18),sz,RED3,'d','MarkerEdgeColor',red,'LineWidth',lw_markers);
+    Htr_0 = scatter(dataX(15),dataY(15),sz,'^','MarkerEdgeColor',green,'LineWidth',lw_markers);
+    Hbed_0Htr_0 = scatter(dataX(16),dataY(16),sz,'^','MarkerEdgeColor',blue,'LineWidth',lw_markers);
+    DeepHtr_0 = scatter(dataX(19),dataY(19),sz,'o','MarkerEdgeColor',green,'LineWidth',lw_markers);
+    DeepHbed_0Htr_0 = scatter(dataX(20),dataY(20),sz,'o','MarkerEdgeColor',blue,'LineWidth',lw_markers);
     Ref = scatter(dataX(1),dataY(1),sz*2,'k','o','filled');
     ylabel(Ylabel)
     xlabel(Xlabel)

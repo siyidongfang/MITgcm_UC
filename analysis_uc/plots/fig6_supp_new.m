@@ -6,14 +6,14 @@
    clear;close all;
 
     %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/functions;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/library/;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11/library/;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
 
     load_colors;
@@ -40,8 +40,8 @@
     set(gcf,'Position',[0.1*scrsz(3) 0.3*scrsz(4) 1000 1000]);
 
 %%%% %%%% %%%% %%%% panel 1
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
     dataX = Tcdw_cumulative(group);
@@ -51,8 +51,8 @@
     cor1 = corrcoef(dataX,dataY);
     cor12 = corrcoef(dataX(group2),dataY(group2));
 
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
     dataX2 = Tcdw_cumulative;
     dataY2 = [0 8 16 24]; 
@@ -66,8 +66,8 @@
 
 
 %%%% %%%% %%%% %%%% panel 2
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
     dataX = w_dia_is(group);
@@ -77,8 +77,8 @@
     cor2 = corrcoef(dataX,dataY);
     cor22 = corrcoef(dataX(group2),dataY(group2));
 
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
     dataX2 = w_dia_is;
     dataY2 = Ug_east_avg*100; 
@@ -92,8 +92,8 @@
     xticks([0:0.1:0.5])
 
 % %%%% %%%% %%%% %%%% panel 3
-%     load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
-%     load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+%     load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+%     load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary.mat')
 %     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 % 
 %     dataX = Tot_east_Sv(group);
@@ -103,8 +103,8 @@
 %     cor3 = corrcoef(dataX,dataY);
 %     cor32 = corrcoef(dataX(group2),dataY(group2));
 % 
-%     load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
-%     load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+%     load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+%     load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
 %     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 %     dataX2 = Tot_east_Sv;
 %     dataY2 = -Tcdw_south_trough;
@@ -119,8 +119,8 @@
 
 
 %%%% %%%% %%%% %%%% panel 4
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
     dataX = BPTplusIPT_sb(group)/1000;
@@ -130,8 +130,8 @@
     cor4 = corrcoef(dataX,dataY);
     cor42 = corrcoef(dataX(group2),dataY(group2));
 
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
     dataX2 = BPTplusIPT_sb/1000;
     dataY2 = Ueast_transportweighted*100;
@@ -149,8 +149,8 @@
 
 
 %%%% %%%% %%%% %%%% panel 5
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
     dataY = Ueast_transportweighted(group)*100;
@@ -160,8 +160,8 @@
     cor5 = corrcoef(dataX,dataY);
     cor52 = corrcoef(dataX(group2),dataY(group2));
 
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
     dataX2 = Ug_east_avg*100;
     dataY2 = Ueast_transportweighted*100; 
@@ -177,8 +177,8 @@
 
 
     %%%% %%%% %%%% %%%% panel 6
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_seaice_boundary.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_seaice_boundary.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
 
     dataX = MeltRate_m(group); 
@@ -189,8 +189,8 @@
     cor62 = corrcoef(dataX(group2),dataY(group2));
 
 
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
-    load('/Users/csi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice_vorticity.mat')
+    load('/Users/ysi/MITgcm_UC/products/matrix_pseudo_shelfice_seaice.mat')
     w_dia_is = w_dia_is/1e6; %%% convert to Sv
     dataX2 = [0 8 16 24];
     dataY2 = Tot_east_Sv; 
@@ -261,7 +261,7 @@
     % annotation('textbox',[0.225+0.67 0.74-0.665 0.15 0.01],'String',['r_2 = ' num2str(cor9(1,2),'%.2f')],'FontSize',fontsize,'LineStyle','None','Color',gray);
 
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig6/';
+    figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig6/';
     print('-dpng','-r300',[figdir 'fig6_supp.png']);
 
 
