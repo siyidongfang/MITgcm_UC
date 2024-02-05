@@ -7,18 +7,18 @@
    clear;close all;
 
     %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/functions;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/library/;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11/library/;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/cbarrow;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
-    exp_group = EXP_GROUP{2};
+    exp_group = EXP_GROUP{1};
     list_exps_new;
     load_constants;
     load_colors;
@@ -28,7 +28,6 @@
     load_data;
     load_spacing;
     load_colors;
-
 
 
     prodname = [prodir expname '_vorticity_cdw_ISPT.mat'];
@@ -82,7 +81,7 @@
     xlabel('Longitude, x (km)');
     title('Total pressure torque (BPT+IPT+ISPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax1,-294+XL,25,{'(a)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.001 0.995 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.995 0.15 0.01],'String','A','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 %%
@@ -103,7 +102,7 @@
     xlabel('Longitude, x (km)');
     title('Total advection','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax2,-294+XL,25,{'(b)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.315 0.995 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.315 0.995 0.15 0.01],'String','B','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
     ax3 = subplot('position',[0.68 0.74+0.01+0.04 panelsize]);
@@ -122,7 +121,7 @@
     xlabel('Longitude, x (km)');
     title('Dissipation','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax3,-294+XL,25,{'(c)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.635 0.995 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.635 0.995 0.15 0.01],'String','C','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -146,7 +145,7 @@
     yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
     % text(ax5,-294+XL,25,{'(f)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.315 0.63+0.065 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.315 0.63+0.065 0.15 0.01],'String','G','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -165,7 +164,7 @@
     yticks(YTICKS);xticks(XTICKS)
     ylabel('y (km)')
     % text(ax6,-294+XL,25,{'(g)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.635 0.63+0.065 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.635 0.63+0.065 0.15 0.01],'String','H','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -186,7 +185,7 @@
     ylabel('Latitude, y (km)')
     title('Bottom pressure torque (BPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax7,-294+XL,25,{'(e)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.001 0.63+0.065 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.63+0.065 0.15 0.01],'String','D','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -208,7 +207,7 @@
     % xlabel('Longitude, x (km)');
     title('Interfacial pressure torque (IPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax4,-294+XL,25,{'(d)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.001 0.325+0.11 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.325+0.11 0.15 0.01],'String','E','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -229,7 +228,7 @@
     yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');ylabel('y (km)')
     % text(ax8,-294+XL,25,{'(h)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.315 0.325+0.11 0.15 0.01],'String','i','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.315 0.325+0.11 0.15 0.01],'String','I','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -250,7 +249,7 @@
     yticks(YTICKS);xticks(XTICKS)
     xlabel('Longitude, x (km)');ylabel('y (km)')
     % text(ax9,-294+XL,25,{'(i)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.635 0.325+0.11 0.15 0.01],'String','j','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.635 0.325+0.11 0.15 0.01],'String','J','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
@@ -284,14 +283,14 @@
     xlabel('Longitude, x (km)');
     title('Ice-shelf pressure torque (ISPT)','FontSize',fontsize+3,'FontWeight','normal')
     % text(ax4,-294+XL,25,{'(d)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.001 0.17 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.17 0.15 0.01],'String','F','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     box on;
 
 
 %%
-     figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig4/';
-     % print('-dpng','-r300',[figdir 'fig4_matlab_new.png']);
-     print('-dpng','-r300',[figdir 'fig4_vorticity_nomelt.png']);
+     figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig4/';
+     print('-dpng','-r300',[figdir 'fig4_matlab_new.png']);
+     % print('-dpng','-r300',[figdir 'fig4_vorticity_nomelt.png']);
 
 
 
