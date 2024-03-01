@@ -207,7 +207,7 @@
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;
     annotation('textbox',[0.62 0.935 0.15 0.01],'String','(km)','FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.34 0.98 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.34 0.98 0.15 0.01],'String','H','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     ax3 = subplot('position',[0.72 0.325 panelsize]);
     axesm('mercator','MapLatLimit',latlim,'MapLonLimit',lonlim)
@@ -229,7 +229,7 @@
     h3 = colorbar;
     set(h3,'Position', [0.97 0.35 0.008 0.5]);
     annotation('textbox',[0.965 0.935 0.15 0.01],'String','(^oC)','FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.68 0.98 0.15 0.01],'String','i','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.68 0.98 0.15 0.01],'String','I','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     coasthandle = plotm(flip(antarctica.Lat),flip(antarctica.Lon),'Color','k','LineWidth',linewidth-1,'LineStyle','-');
     patchm(antarctica.Lat, antarctica.Lon, [225 225 225]/255)
     hold off;
@@ -293,7 +293,7 @@
     title('Time and location of EN4 profiles','FontSize',fontsize+3,'FontWeight','normal')
     set(h3,'Position', [0.295 0.35 0.008 0.5]);
     annotation('textbox',[0.29 0.935 0.15 0.01],'String','(Year)','FontSize',fontsize,'LineStyle','None');
-    annotation('textbox',[0.005 0.98 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.005 0.98 0.15 0.01],'String','G','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig2/';
     print('-dpng','-r300',[figdir 'fig2_en4.png']);
    

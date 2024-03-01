@@ -3,9 +3,9 @@
 
 switch(exp_group)
     case 'seaice_boundary'
-          % expdir = '/Volumes/MIT/backup_UCLA/MITgcm_UC/exps_uc/seaice_boundary/'
+          expdir = '/Volumes/MIT/backup_UCLA/MITgcm_UC/exps_uc/seaice_boundary/'
           % expdir = '/Volumes/si/MITgcm_UC/exps_uc/seaice_boundary'
-          expdir = '/Users/ysi/MITgcm_UC/exps_uc/seaice_boundary/';
+          % expdir = '/Users/ysi/MITgcm_UC/exps_uc/seaice_boundary/';
           prodir = '/Users/ysi/MITgcm_UC/products/seaice_boundary/';
 %     prodir = '/Users/csi/MITgcm_UC/products_backup/products_uc/seaice_boundary/';
           EXPNAME = {...
@@ -67,8 +67,9 @@ switch(exp_group)
             useSHELFICE=true;
 
     case 'pseudo_shelfice_seaice'
-        expdir = '/Users/csi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
-        prodir = '/Users/csi/MITgcm_UC/products/pseudo_shelfice_seaice/';
+        expdir = '/Volumes/MIT/backup_UCLA/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/'
+        % expdir = '/Users/ysi/MITgcm_UC/exps_uc/pseudo_shelfice_seaice/';
+        prodir = '/Users/ysi/MITgcm_UC/products/pseudo_shelfice_seaice/';
         EXPNAME = {...
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt0_prod_Adv7';...      
             'res2km_Ua-5Va5_Atide0_Hi1Ai1_Ws30_Hbed300Htr200_Zn350Zsb550dZs150_melt8m_prod';...  

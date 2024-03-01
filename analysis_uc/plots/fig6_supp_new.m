@@ -60,7 +60,7 @@
     ax1 = subplot('position',[0.058 0.715 panelsize]);   
     fig6_scatters;
     % text(ax1,0.005,28.7,{'(a)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.055 0.98 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.055 0.98 0.15 0.01],'String','A','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 30])
     xlim([0 3.3])
 
@@ -86,7 +86,7 @@
     ax2 = subplot('position',[0.394 0.715 panelsize]);
     fig6_scatters;
     % text(ax2,0.005,-67,{'(b)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.39 0.98 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.39 0.98 0.15 0.01],'String','B','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 2.1])
     xlim(XLIM_WDIA)
     xticks([0:0.1:0.5])
@@ -139,7 +139,7 @@
     ax4 = subplot('position',[0.058 0.38 panelsize]);
     fig6_scatters;
     % text(ax4,0.005,-9.6,{'(d)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.055 0.645 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.055 0.645 0.15 0.01],'String','D','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     % axis ij;
     set(gca,'xdir','reverse')
     ylim([0 10])
@@ -169,7 +169,7 @@
     ax5 = subplot('position',[0.394 0.38 panelsize]);
     fig6_scatters;
     % text(ax5,0.005,7.6,{'(e)'},'FontSize',fontsize+2)
-    annotation('textbox',[0.39 0.645 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.39 0.645 0.15 0.01],'String','E','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 10])
     xlim([0 2.1])
     % xticks([0:0.5:1.5])
@@ -197,7 +197,7 @@
 
     ax6 = subplot('position',[0.725 0.715 panelsize]);
     fig6_scatters;
-    annotation('textbox',[0.72 0.98 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.72 0.98 0.15 0.01],'String','C','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
     ylim([0 0.4])
     xlim([0 30])
 

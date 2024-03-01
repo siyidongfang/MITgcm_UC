@@ -6,16 +6,16 @@
    clear;close all;
 
     %%% Add path
-    addpath /Users/csi/MITgcm_UC/analysis_uc
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/;
-    addpath /Users/csi/Software/eos80_legacy_gamma_n/library/;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11;
-    addpath /Users/csi/Software/gsw_matlab_v3_06_11/library/;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/cbarrow;
-    addpath /Users/csi/MITgcm_UC/analysis_uc/plots/quivers/;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/functions;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/colormaps/cmocean/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/;
+    addpath /Users/ysi/Software/eos80_legacy_gamma_n/library/;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11;
+    addpath /Users/ysi/Software/gsw_matlab_v3_06_11/library/;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/cbarrow;
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/plots/quivers/;
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1}
@@ -82,7 +82,7 @@
     set(gca,'FontSize',fontsize);
     clim(CLIM)
     title('Onshore CDW heat flux and volume flux','FontSize',fontsize+2.5,'fontweight', 'normal')
-    annotation('textbox',[0.001 0.995 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.995 0.15 0.01],'String','A','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax2 = subplot('position',[0.606 0.77 subplotsize]);
@@ -96,7 +96,7 @@
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
     title('Cumulative CDW heat transport at ice front','FontSize',fontsize+2.5,'fontweight', 'normal')
-    annotation('textbox',[0.54 0.995 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.995 0.15 0.01],'String','B','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 %%
 
@@ -131,7 +131,7 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    annotation('textbox',[0.001 0.738 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.738 0.15 0.01],'String','C','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax4 = subplot('position',[0.606 0.53 subplotsize]);
@@ -144,7 +144,7 @@
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.738 0.15 0.01],'String','d','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.738 0.15 0.01],'String','D','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 %%
@@ -177,7 +177,7 @@
     ylabel('Latitude, y (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    annotation('textbox',[0.001 0.5 0.15 0.01],'String','e','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.5 0.15 0.01],'String','E','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 %%
     ax6 = subplot('position',[0.606 0.29 subplotsize]);
@@ -190,7 +190,7 @@
     hold off;grid on;grid minor;
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.5 0.15 0.01],'String','f','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.5 0.15 0.01],'String','F','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 
@@ -226,7 +226,7 @@
     xlabel('Longitude, x (km)');
     set(gca,'FontSize',fontsize);
     clim(CLIM)
-    annotation('textbox',[0.001 0.26 0.15 0.01],'String','g','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.001 0.26 0.15 0.01],'String','G','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 %%
 
     handle=colorbar;set(handle,'position',[0.47 0.2 0.01 0.59]);
@@ -244,12 +244,12 @@
     xlabel('Longitude, x (km)');
     ylabel('(10^{12} W)');
     set(gca,'FontSize',fontsize);
-    annotation('textbox',[0.54 0.26 0.15 0.01],'String','h','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.54 0.26 0.15 0.01],'String','H','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 
 
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_compensation/';
+    figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig_compensation/';
     print('-dpng','-r300',[figdir 'fig_compensation_matlab.png']);
 

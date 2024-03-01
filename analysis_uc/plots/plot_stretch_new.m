@@ -1,8 +1,8 @@
 %%% Plot the vertical stretch of the CDW layer
 
     clear;close all;
-    addpath /Users/csi/MITgcm_UC/analysis_uc
-    addpath /Users/csi/MITgcm_UC/analysis_uc/functions/
+    addpath /Users/ysi/MITgcm_UC/analysis_uc
+    addpath /Users/ysi/MITgcm_UC/analysis_uc/functions/
 
     EXP_GROUP = {'seaice_boundary';'pseudo_shelfice_seaice'};
     exp_group = EXP_GROUP{1}
@@ -89,7 +89,7 @@
     ylabel('Latitude, y (km)')
     box on;
     % text(ax1,-295,18,{'(a)'},'FontSize',fontsize+2);
-    annotation('textbox',[0.005 0.99 0.15 0.01],'String','a','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.005 0.99 0.15 0.01],'String','A','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
 
@@ -109,7 +109,7 @@
     ylabel('Latitude, y (km)')
     box on;
     % text(ax2,-295,18,{'(b)'},'FontSize',fontsize+2);
-    annotation('textbox',[0.005 0.655 0.15 0.01],'String','b','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.005 0.655 0.15 0.01],'String','B','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
 
     ax3 = subplot('position',[0.1 0.06 panelsize]);
@@ -128,14 +128,14 @@
     yticks(0:50:400);xticks(-300:100:300)
     xlabel('Longitude, x (km)');ylabel('Latitude, y (km)')
     % text(ax3,-295,18,{'(c)'},'FontSize',fontsize+2);
-    annotation('textbox',[0.005 0.325 0.15 0.01],'String','c','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
+    annotation('textbox',[0.005 0.325 0.15 0.01],'String','C','FontSize',fontsize+2,'fontweight','bold','LineStyle','None');
 
     handle=colorbar;set(handle,'position',[0.914 0.25 0.015 0.5]);
     annotation('textbox',[0.9 0.755 0.05 0.05],'String','(Pa/m)','FontSize',fontsize,'LineStyle','None');
 
 
-    figdir = '/Users/csi/MITgcm_UC/analysis_uc/plots/fig_supp/';
-    % print('-dpng','-r300',[figdir 'figS1.png']);
+    figdir = '/Users/ysi/MITgcm_UC/analysis_uc/plots/fig_supp/';
+    print('-dpng','-r300',[figdir 'figS1.png']);
     % print('-dpng','-r300',[figdir 'stretch_nomelt.png']);
-    print('-dpng','-r300',[figdir 'stretch_new.png']);
+    % print('-dpng','-r300',[figdir 'stretch_new.png']);
 
