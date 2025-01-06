@@ -1,5 +1,5 @@
-**MITgcm West Antarctic Slope Undercurrent process-oriented model (MITgcm_UC)
-**
+MITgcm West Antarctic Slope Undercurrent process-oriented model (MITgcm_UC)
+
 
 The Matlab scripts used to generate, run and analyze the MITgcm simulations.
 
